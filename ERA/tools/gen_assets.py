@@ -31,8 +31,14 @@ def lumof(a): return (a @ LW)[..., None]
 
 
 def noise(rng, h, w, r):
-    n = blur(rng.random((h, w)).astype(np.float32), r)
-    return (n - n.mean()) / (n.std() + 1e-6)
+    # smooth value noise: random grid upscaled bicubically in float (no 8-bit banding)
+    out = np.zeros((h, w), np.float32)
+    for o, amp in ((1, 1.0), (2, .5), (4, .25)):
+        rr_ = max(2, int(r * 2 / o))
+        small = rng.random((h // rr_ + 3, w // rr_ + 3)).astype(np.float32)
+        big = np.asarray(Image.fromarray(small, 'F').resize(((w // rr_ + 3) * rr_, (h // rr_ + 3) * rr_), Image.BICUBIC))
+        out += big[:h, :w] * amp
+    return (out - out.mean()) / (out.std() + 1e-6)
 
 
 def matte(src, k=1.32):
@@ -209,3 +215,16 @@ for k, (f, crop, name, mf) in enumerate(G):
     save(blend(img, gloss(Mg, m, .14), m), f'ba-{name}-after.jpg', 80)
 
 print('done')
+
+# ============ item masks (alpha PNG) for sheen/glare effects ============
+def save_mask(m, name, size):
+    a = (np.clip(m[..., 0], 0, 1) * 255).astype(np.uint8)
+    im = Image.fromarray(a, 'L').resize(size, Image.LANCZOS)
+    rgba = Image.new('RGBA', size, (255, 255, 255, 0)); rgba.putalpha(im)
+    rgba.save(f'{OUT}/{name}', optimize=True)
+save_mask(np.clip((mask - .45) * 2.2, 0, 1) ** 1.5, 'shoe-mask.png', (800, 450))
+save_mask(np.clip((bmask - .3) * 1.6, 0, 1), 'bag-mask.png', (500, int(500 * H2 / W2)))
+def edge(a, rows):
+    c = (a[rows].reshape(-1, 3).mean(0) * 255).astype(int); return '#%02x%02x%02x' % tuple(c)
+print('shoe edges', edge(src, slice(0, 6)), edge(src, slice(-6, None)))
+print('bag edges', edge(bag, slice(0, 6)), edge(bag, slice(-6, None)))

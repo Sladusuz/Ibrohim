@@ -14,20 +14,25 @@ Faqat [Node.js](https://nodejs.org) 18+ kerak (qo'shimcha paket o'rnatish shart 
 
 ```bash
 cd ERA
-ADMIN_PASSWORD="kuchli-parol" node server.js
+node server.js
 ```
 
 - Sayt: http://localhost:3000
 - Admin panel: http://localhost:3000/admin
 
-`ADMIN_PASSWORD` berilmasa, parol avtomatik yaratiladi, konsolga chiqariladi va `data/admin-password.txt` fayliga saqlanadi.
+Admin panelga kirish: login **eratashkent**, parol **era2026**. Saytni internetga chiqarganda parolni serverda `ADMIN_PASSWORD` (va xohlasangiz `ADMIN_USER`) orqali almashtirish tavsiya etiladi:
+
+```bash
+ADMIN_USER="eratashkent" ADMIN_PASSWORD="yangi-kuchli-parol" node server.js
+```
 
 ## Sozlamalar (environment)
 
 | O'zgaruvchi | Tavsif |
 |---|---|
 | `PORT` | Port (standart `3000`) |
-| `ADMIN_PASSWORD` | Admin panel paroli |
+| `ADMIN_USER` | Admin login (standart `eratashkent`) |
+| `ADMIN_PASSWORD` | Admin parol (standart `era2026`) |
 | `DATA_DIR` | Zayavkalar (`leads.json`) va rasmlar saqlanadigan papka (standart `./data`) |
 | `TRUST_PROXY=1` | nginx yoki hosting proksisi ortida ishlaganda |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Har bir yangi zayavkani Telegram'ga ham yuborish (ixtiyoriy) |

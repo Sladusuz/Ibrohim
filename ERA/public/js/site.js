@@ -19,16 +19,20 @@
   /* ---------- restoration canvases ---------- */
   const shoe = new Restore($("#shoeCanvas"), {
     images: [0, 1, 2, 3, 4].map(i => `assets/shoe-${i}.jpg`),
+    mask: "assets/shoe-mask.png",
     roi: { x: .265, y: .315, w: .47, h: .315 },
-    pad: 1.22, focusY: .5, edgeBottom: "#0c0b0a",
+    pad: 1.22, focusY: .5, edgeTop: "#211d19", edgeBottom: "#0c0b0a", zoom: 1.28, dim: .55,
     stages: [
       { tool: "brush", path: "rows", n: 4, r: .05, fx: "dust", size: 1 },
       { tool: "cloth", path: "cols", n: 9, r: .05, fx: "foam", wet: true, size: .78 },
-      { tool: "dauber", path: "circles", n: 2, loops: 7, rad: .03, r: .05, size: .9 },
-      { tool: "cloth", path: "circles", n: 2, loops: 5, rad: .045, r: .06, fx: "sparkle", size: .8 }
+      { tool: "dauber", path: "circles", n: 2, loops: 7, rad: .03, r: .05, fx: "cream", size: .9 },
+      { tool: "cloth", path: "circles", n: 2, loops: 5, rad: .045, r: .06, fx: "sparkle", size: .8, sheen: true }
     ],
     sparkles: [[.12, .72, .6], [.3, .62, 1], [.58, .52, .8], [.7, .78, .5], [.82, .25, .7], [.45, .35, .4], [.22, .45, .5]],
-    onDraw: stepsUI("#shoeSteps", "#shoeChip", p => {
+    onStage: i => bigStage("#shoeBig", i),
+    onDraw: stepsUI("#shoeSteps", "#shoeChip", (p, active) => {
+      $(".hero-head").classList.toggle("is-away", p > .035);
+      bigStage("#shoeBig", active, p > .035 && p < .92);
       $("#shoeFinal").classList.toggle("is-on", p > .92);
       $("#shoeSteps").classList.toggle("is-hidden", p > .92);
       $("#scrollHint").style.opacity = p > .01 ? 0 : 1;
@@ -36,16 +40,41 @@
   });
   const bag = new Restore($("#bagCanvas"), {
     images: [0, 1, 2, 3].map(i => `assets/bag-${i}.jpg`),
+    mask: "assets/bag-mask.png",
     roi: { x: .03, y: .27, w: .94, h: .66 },
     fit: "cover", pad: 1.06, focusY: .54, holdStart: .06, holdEnd: .12, tool: 1.15,
+    edgeTop: "#cececb", edgeBottom: "#d4d5d5", zoom: 1.22, dim: .28,
     stages: [
       { tool: "sponge", path: "rows", n: 5, r: .065, fx: "foam" },
       { tool: "paint", path: "cols", n: 8, r: .065, color: "#c2561d", size: 1.1 },
-      { tool: "cloth", path: "circles", n: 3, loops: 5, rad: .05, r: .07, fx: "sparkle" }
+      { tool: "cloth", path: "circles", n: 3, loops: 5, rad: .05, r: .07, fx: "sparkle", sheen: true }
     ],
     sparkles: [[.15, .3, .7], [.4, .18, 1], [.7, .4, .6], [.85, .15, .8], [.3, .7, .5], [.62, .75, .7]],
-    onDraw: stepsUI("#bagSteps", "#bagChip", p => $("#bagDone").classList.toggle("is-on", p > .9))
+    onStage: i => bigStage("#bagBig", i),
+    onDraw: stepsUI("#bagSteps", "#bagChip", (p, active) => {
+      $("#bagDone").classList.toggle("is-on", p > .9);
+      bigStage("#bagBig", active, p > .04 && p < .9);
+      const st = $(".bag-stage");
+      st.style.transform = `perspective(1400px) rotateY(${((.5 - p) * 9).toFixed(2)}deg) rotateX(${(Math.sin(p * Math.PI) * 3).toFixed(2)}deg) translateY(${(-Math.sin(p * Math.PI) * 10).toFixed(1)}px)`;
+    })
   });
+
+  // big kinetic stage number + title
+  const bigState = {};
+  function bigStage(sel, i, show) {
+    const el = $(sel); if (!el) return;
+    const steps = $$(".step b", el.closest(".sticky"));
+    i = Math.min(i, steps.length - 1);
+    if (show !== undefined) el.classList.toggle("is-on", show);
+    if (bigState[sel] === i) return;
+    bigState[sel] = i;
+    const title = steps[i].textContent.replace(/^\d+\.\s*/, "");
+    el.classList.remove("swap"); void el.offsetWidth;
+    $(".n", el).textContent = String(i + 1).padStart(2, "0");
+    $(".t", el).textContent = title;
+    $(".of", el).textContent = "/ " + String(steps.length).padStart(2, "0");
+    el.classList.add("swap");
+  }
 
   function stepsUI(stepsSel, chipSel, extra) {
     const steps = $$(".step", $(stepsSel)), bars = steps.map(s => $(".bar i", s)), dots = $$(".dots i", $(stepsSel));
@@ -55,7 +84,7 @@
       const active = Math.min(cur, qs.length - 1);
       const pct = Math.round(qs.reduce((a, b) => a + b, 0) / qs.length * 100);
       const key = active + "|" + pct + "|" + qs.map(q => q.toFixed(3)).join();
-      extra && extra(p);
+      extra && extra(p, active);
       if (key === last) return;
       last = key;
       steps.forEach((s, i) => {
@@ -131,6 +160,45 @@
     };
   });
 
+  /* ---------- split headings into words for a staggered rise ---------- */
+  let wi = 0;
+  function splitWords(el) {
+    let n = 0;
+    const walk = (node, grad) => Array.from(node.childNodes).forEach(ch => {
+      if (ch.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        ch.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.append(" "); return; }
+          const w = document.createElement("span"), inner = document.createElement("span");
+          w.className = "w"; inner.className = "wi" + (grad ? " grad-text" : "");
+          inner.style.transitionDelay = (n++ * 70) + "ms";
+          inner.textContent = part; w.append(inner); frag.append(w);
+        });
+        ch.replaceWith(frag);
+      } else if (ch.nodeType === 1 && ch.tagName !== "BR") {
+        const g = ch.classList.contains("grad-text");
+        if (g) ch.classList.remove("grad-text");
+        walk(ch, grad || g);
+      }
+    });
+    walk(el, false);
+    wi += n;
+  }
+  $$(".h2, .hero-head h1").forEach(splitWords);
+
+  /* ---------- 3D tilt on cards ---------- */
+  if (matchMedia("(hover: hover)").matches) {
+    $$(".svc, .ccard, .how li").forEach(card => {
+      card.addEventListener("pointermove", e => {
+        const r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        card.style.transform = `perspective(900px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
+        card.style.setProperty("--mx", (x + .5) * 100 + "%"); card.style.setProperty("--my", (y + .5) * 100 + "%");
+      });
+      card.addEventListener("pointerleave", () => { card.style.transform = ""; });
+    });
+  }
+
   /* ---------- reveal on scroll + slider hint + counters ---------- */
   const fmt = (n, dec) => dec ? n.toFixed(dec).replace(".", ",") : String(Math.round(n));
   function countUp(el) {
@@ -145,7 +213,7 @@
       const c = e.target.matches("[data-compare]") ? e.target : $("[data-compare]", e.target);
       if (c && c._hint) setTimeout(c._hint, 350);
     }), { threshold: .18 });
-    $$(".reveal").forEach(el => io.observe(el));
+    $$(".reveal, .h2").forEach(el => io.observe(el));
     const nums = $$("#stats strong");
     nums.forEach(el => el.textContent = fmt(0, +el.dataset.dec || 0) + (el.dataset.suffix || ""));
     const so = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { so.disconnect(); nums.forEach(countUp); } }, { threshold: .4 });

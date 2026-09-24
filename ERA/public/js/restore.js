@@ -196,7 +196,7 @@
       const L = 34;
       for (let i = Math.max(0, Math.floor(k) - L); i <= k; i++) {
         const age = k - i;
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < 5; j++) {
           const h1 = hash(i, j), h2 = hash(i, j + 9), h3 = hash(i, j + 17);
           const p = pts[i];
           const x = p.x + (h1 - .5) * 90 * U + (h2 - .5) * 5 * U * age;
@@ -223,6 +223,21 @@
         }
       }
     },
+    cream(c, pts, k, U, eng) {
+      // wet sheen left behind the dauber, clipped to the item so it never shows in the air
+      const i1 = Math.floor(k), i0 = Math.max(0, i1 - 46);
+      if (i1 - i0 < 2) return;
+      eng.masked(c, 1, s => {
+        s.lineCap = s.lineJoin = "round";
+        [[30, .12], [14, .2]].forEach(([w, a]) => {
+          s.strokeStyle = `rgba(255,205,150,${a})`; s.lineWidth = w * U;
+          s.beginPath(); s.moveTo(pts[i0].x, pts[i0].y);
+          for (let i = i0 + 1; i <= i1; i++) s.lineTo(pts[i].x, pts[i].y);
+          s.stroke();
+        });
+      });
+      for (let i = i0; i <= i1; i += 3) if (hash(i, 7) > .65) sparkle(c, pts[i].x + (hash(i, 8) - .5) * 30 * U, pts[i].y + (hash(i, 9) - .5) * 16 * U, 6 * U, (1 - (i1 - i) / 46) * .6);
+    },
     sparkle(c, pts, k, U) {
       const L = 26;
       for (let i = Math.max(0, Math.floor(k) - L); i <= k; i++) {
@@ -241,12 +256,14 @@
 
   Restore.prototype.load = function (onEach) {
     const self = this;
-    return Promise.all(this.o.images.map(src => new Promise(res => {
+    const all = this.o.mask ? this.o.images.concat([this.o.mask]) : this.o.images;
+    return Promise.all(all.map(src => new Promise(res => {
       const im = new Image();
       im.onload = () => { onEach && onEach(); res(im); };
       im.onerror = () => { onEach && onEach(); res(null); };
       im.src = src;
     }))).then(imgs => {
+      if (self.o.mask) self.maskImg = imgs.pop();
       self.imgs = imgs;
       const base = imgs.find(Boolean);
       if (!base) return self;
@@ -272,11 +289,15 @@
       const sc = self.stamp.getContext("2d"), g = sc.createRadialGradient(32, 32, 0, 32, 32, 32);
       g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(.55, "rgba(255,255,255,.85)"); g.addColorStop(1, "rgba(255,255,255,0)");
       sc.fillStyle = g; sc.fillRect(0, 0, 64, 64);
-      // edge colours, for filling space outside the photo
-      const e = document.createElement("canvas"); e.width = 8; e.height = 8;
-      const ec = e.getContext("2d"); ec.drawImage(base, 0, 0, 8, 8);
-      const d = ec.getImageData(0, 0, 8, 8).data, avg = (row) => { let r = 0, gg = 0, b = 0; for (let x = 0; x < 8; x++) { const i = (row * 8 + x) * 4; r += d[i]; gg += d[i + 1]; b += d[i + 2]; } return `rgb(${r / 8 | 0},${gg / 8 | 0},${b / 8 | 0})`; };
-      self.edgeTop = o.edgeTop || avg(0); self.edgeBottom = o.edgeBottom || avg(7);
+      // edge colours for filling space outside the photo (given in options: reading pixels back
+      // would throw on file:// pages, where every image taints the canvas)
+      self.edgeTop = o.edgeTop || "#000"; self.edgeBottom = o.edgeBottom || self.edgeTop;
+      if (self.maskImg) {
+        self.sh = document.createElement("canvas");
+        self.sh.width = self.maskImg.naturalWidth; self.sh.height = self.maskImg.naturalHeight;
+        self.shc = self.sh.getContext("2d");
+      }
+      self.born = performance.now();
       self.ready = true;
       self.resize();
       return self;
@@ -310,10 +331,10 @@
   Restore.prototype.tick = function (now) {
     this.raf = 0;
     const gap = this.target - this.p;
-    this.p = Math.abs(gap) < .0004 ? this.target : this.p + gap * .14;
-    this.draw(this.p, now);
-    const idle = this.p >= 1 - this.o.holdEnd; // sparkles twinkle on their own in the final state
-    if (this.p !== this.target || (idle && this.visible)) this.kick();
+    this.p = Math.abs(gap) < .0004 ? this.target : this.p + gap * .12;
+    const busy = this.draw(this.p, now);
+    const idle = this.p >= 1 - this.o.holdEnd; // sparkles + sheen keep moving in the final state
+    if (this.p !== this.target || busy || (idle && this.visible)) this.kick();
   };
 
   Restore.prototype.stageQ = function (p) {
@@ -321,23 +342,74 @@
     return this.stages.map((s, i) => range(p, a + (b - a) * i / n, a + (b - a) * (i + 1) / n));
   };
 
+  Restore.prototype.toolPos = function (st, q) {
+    const pts = st.pts, fi = q * (pts.length - 1), i0 = Math.min(pts.length - 2, Math.floor(fi)), f = fi - i0;
+    const a = pts[i0], b = pts[i0 + 1];
+    return { x: lerp(a.x, b.x, f), y: lerp(a.y, b.y, f), fi, a, b };
+  };
+
+  // light band swept across the item only (clipped by the item mask), added with "lighter"
+  Restore.prototype.sheen = function (c, pos, alpha, width, ang) {
+    if (!this.maskImg || alpha <= 0) return;
+    const s = this.shc, w = this.sh.width, h = this.sh.height;
+    s.globalCompositeOperation = "source-over"; s.clearRect(0, 0, w, h);
+    s.save(); s.translate(w * pos, h / 2); s.rotate(ang || .5);
+    const bw = w * (width || .16), g = s.createLinearGradient(-bw, 0, bw, 0);
+    g.addColorStop(0, "rgba(255,240,220,0)"); g.addColorStop(.5, "rgba(255,240,220,1)"); g.addColorStop(1, "rgba(255,240,220,0)");
+    s.fillStyle = g; s.fillRect(-bw, -h * 2, bw * 2, h * 4); s.restore();
+    s.globalCompositeOperation = "destination-in"; s.drawImage(this.maskImg, 0, 0, w, h);
+    c.save(); c.globalCompositeOperation = "lighter"; c.globalAlpha = alpha; c.drawImage(this.sh, 0, 0, this.W, this.H); c.restore();
+  };
+
+  // draw with fn (in image coords) onto the scratch canvas, keep only what lies on the item, add with "lighter"
+  Restore.prototype.masked = function (c, alpha, fn) {
+    if (!this.maskImg) return;
+    const s = this.shc, w = this.sh.width, h = this.sh.height;
+    s.setTransform(1, 0, 0, 1, 0, 0); s.globalCompositeOperation = "source-over"; s.clearRect(0, 0, w, h);
+    s.save(); s.scale(w / this.W, h / this.H); fn(s); s.restore();
+    s.globalCompositeOperation = "destination-in"; s.drawImage(this.maskImg, 0, 0, w, h);
+    c.save(); c.globalCompositeOperation = "lighter"; c.globalAlpha = alpha; c.drawImage(this.sh, 0, 0, this.W, this.H); c.restore();
+  };
+
   Restore.prototype.draw = function (p, now) {
-    if (!this.ready || !this.cw) return;
-    const c = this.ctx, W = this.W, H = this.H, k = this.k;
+    if (!this.ready || !this.cw) return false;
+    const c = this.ctx, W = this.W, H = this.H, o = this.o, roi = this.roi, U = this.U;
     const qs = this.stageQ(p), n = qs.length;
     let cur = 0; while (cur < n && qs[cur] >= 1) cur++;
+    const active = cur < n && qs[cur] > 0;
+    let busy = false;
+
+    // stage completed → flash
+    if (this.lastCur !== undefined && cur > this.lastCur) { this.flashAt = now; if (o.onStage) o.onStage(cur); }
+    this.lastCur = cur;
+
+    // ---- camera: push in and follow the tool while working, pull back when done
+    const rcx = roi.x + roi.w / 2, rcy = roi.y + roi.h / 2;
+    let tz = 1, tx = rcx, ty = rcy, tp = null;
+    if (active) {
+      tp = this.toolPos(this.stages[cur], qs[cur]);
+      tz = o.zoom || 1.2; tx = lerp(rcx, tp.x, .42); ty = lerp(rcy, tp.y, .3);
+    }
+    const intro = clamp((now - this.born) / 1800, 0, 1), ie = 1 - Math.pow(1 - intro, 3);
+    tz += (1 - ie) * .12;
+    if (this.cz === undefined) { this.cz = tz; this.cx = tx; this.cy = ty; this.lt = now; }
+    const dt = clamp((now - this.lt) / 16.7, 0, 4); this.lt = now;
+    const e = 1 - Math.pow(1 - .06, dt);
+    this.cz += (tz - this.cz) * e; this.cx += (tx - this.cx) * e; this.cy += (ty - this.cy) * e;
+    if (Math.abs(tz - this.cz) > .001 || Math.abs(tx - this.cx) > .5 || Math.abs(ty - this.cy) > .5 || intro < 1) busy = true;
+    const K = this.k * this.cz, sfx = this.ox + rcx * this.k, sfy = this.oy + rcy * this.k;
+    const OX = sfx - this.cx * K, OY = sfy - this.cy * K;
 
     c.setTransform(1, 0, 0, 1, 0, 0);
     c.globalCompositeOperation = "source-over"; c.globalAlpha = 1;
-    // outside-the-photo fill: top colour above, bottom colour below
     c.fillStyle = this.edgeTop; c.fillRect(0, 0, this.cw, this.ch / 2 + 1);
     c.fillStyle = this.edgeBottom; c.fillRect(0, this.ch / 2, this.cw, this.ch / 2);
-    c.setTransform(k, 0, 0, k, this.ox, this.oy);
+    c.setTransform(K, 0, 0, K, OX, OY);
 
     const baseImg = this.imgs[cur] || this.imgs[0];
     if (baseImg) c.drawImage(baseImg, 0, 0, W, H);
 
-    if (cur < n && qs[cur] > 0 && this.imgs[cur + 1]) {
+    if (active && this.imgs[cur + 1]) {
       const st = this.stages[cur], q = qs[cur], m = this.mctx;
       m.clearRect(0, 0, this.mask.width, this.mask.height);
       const kk = q * (st.pts.length - 1), r = st.r / MS;
@@ -350,43 +422,70 @@
       c.drawImage(this.tmp, 0, 0);
     }
 
-    // feather the photo edges into the fill colour when the photo does not cover the canvas
-    const fe = H * .12;
-    if (this.oy > 0) { const g = c.createLinearGradient(0, 0, 0, fe); g.addColorStop(0, this.edgeTop); g.addColorStop(1, "rgba(0,0,0,0)"); c.fillStyle = g; c.fillRect(-W, 0, W * 3, fe); }
-    if (this.oy + H * k < this.ch) { const g = c.createLinearGradient(0, H - fe, 0, H); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, this.edgeBottom); c.fillStyle = g; c.fillRect(-W, H - fe, W * 3, fe); }
+    // feather photo edges into the fill colour
+    const fe = H * .14;
+    { const g = c.createLinearGradient(0, 0, 0, fe); g.addColorStop(0, this.edgeTop); g.addColorStop(1, "rgba(0,0,0,0)"); c.fillStyle = g; c.fillRect(-W, -H, W * 3, H + fe); }
+    { const g = c.createLinearGradient(0, H - fe, 0, H); g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, this.edgeBottom); c.fillStyle = g; c.fillRect(-W, H - fe, W * 3, H + fe); }
 
-    // particles + tool
-    const U = this.U;
-    if (cur < n && qs[cur] > 0) {
-      const st = this.stages[cur], q = qs[cur], pts = st.pts;
-      const fi = q * (pts.length - 1), i0 = Math.min(pts.length - 2, Math.floor(fi)), f = fi - i0;
-      const a = pts[i0], b = pts[i0 + 1];
-      let x = lerp(a.x, b.x, f), y = lerp(a.y, b.y, f);
-      if (st.fx && FX[st.fx]) FX[st.fx](c, pts, fi, U);
+    // ---- spotlight: darken around, warm glow at the tool
+    const lx = tp ? tp.x : rcx, ly = tp ? tp.y : rcy;
+    const spot = active ? clamp(Math.min(qs[cur] / .08, (1 - qs[cur]) / .08), 0, 1) : 0;
+    this.spot = this.spot === undefined ? spot : this.spot + (spot - this.spot) * e;
+    if (this.spot > .01) {
+      busy = busy || Math.abs(spot - this.spot) > .01;
+      const R = roi.w * .9, g = c.createRadialGradient(lx, ly, R * .15, lx, ly, R * 1.6);
+      g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, `rgba(0,0,0,${(o.dim || .45) * this.spot})`);
+      c.fillStyle = g; c.fillRect(-W, -H, W * 3, H * 3);
+      c.save(); c.globalCompositeOperation = "lighter";
+      const g2 = c.createRadialGradient(lx, ly, 0, lx, ly, roi.w * .32);
+      g2.addColorStop(0, `rgba(255,190,130,${.16 * this.spot})`); g2.addColorStop(1, "rgba(255,190,130,0)");
+      c.fillStyle = g2; c.fillRect(lx - roi.w, ly - roi.w, roi.w * 2, roi.w * 2); c.restore();
+    }
+
+    // ---- sheen: follows the polishing cloth, flashes when a stage completes, loops at the end
+    if (active && this.stages[cur].sheen) this.sheen(c, clamp((tp.x - roi.x) / roi.w, 0, 1) * .8 + .1, .22 * spot, .1);
+    if (this.flashAt) {
+      const f = (now - this.flashAt) / 1100;
+      if (f < 1) { this.sheen(c, -.2 + f * 1.4, .55 * Math.sin(Math.PI * f), .2); busy = true; }
+    }
+    const fin = range(p, 1 - o.holdEnd * .9, 1);
+    if (fin > 0) {
+      const loop = ((now / 1000) % 3.4) / 3.4;
+      this.sheen(c, -.3 + loop * 1.6, .38 * fin * Math.sin(Math.PI * clamp(loop * 1.25, 0, 1)), .18);
+    }
+
+    // ---- particles + tool
+    if (active) {
+      const st = this.stages[cur], q = qs[cur], pts = st.pts, fi = tp.fi;
+      let x = tp.x, y = tp.y;
+      if (st.fx && FX[st.fx]) FX[st.fx](c, pts, fi, U, this);
       const env = clamp(Math.min(q / .06, (1 - q) / .06), 0, 1);
       if (env > 0 && TOOLS[st.tool]) {
-        const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+        const dx = tp.b.x - tp.a.x, dy = tp.b.y - tp.a.y, len = Math.hypot(dx, dy) || 1;
         const ang = (dx / len) * -.1 + (dy / len) * .08 + Math.sin(fi * .8) * .05 + (st.tilt || 0);
         if (st.tool === "brush") x += Math.sin(fi * 1.6) * 14 * U;
         y -= (1 - env) * 160 * U;
         c.save(); c.globalAlpha = env; c.translate(x, y); c.rotate(ang);
-        const s = U * (st.size || 1) * this.o.tool; c.scale(s, s);
+        const s = U * (st.size || 1) * o.tool; c.scale(s, s);
         TOOLS[st.tool](c, fi * .1, st);
         c.restore();
       }
     }
 
-    // final: twinkling sparkles on the finished item
-    const fin = range(p, 1 - this.o.holdEnd * .9, 1);
-    if (fin > 0 && this.o.sparkles) {
+    // ---- final sparkles
+    if (fin > 0 && o.sparkles) {
       const tt = now / 1000;
-      this.o.sparkles.forEach((sp, i) => {
+      o.sparkles.forEach((sp, i) => {
         const tw = .5 + .5 * Math.sin(tt * 2.2 + i * 1.7);
-        sparkle(c, this.roi.x + sp[0] * this.roi.w, this.roi.y + sp[1] * this.roi.h, (10 + sp[2] * 10) * U * (.6 + .4 * tw), fin * tw);
+        sparkle(c, roi.x + sp[0] * roi.w, roi.y + sp[1] * roi.h, (10 + sp[2] * 12) * U * (.6 + .4 * tw), fin * tw);
       });
     }
+
+    // ---- intro: rise out of darkness
     c.setTransform(1, 0, 0, 1, 0, 0);
-    if (this.o.onDraw) this.o.onDraw(p, qs, cur);
+    if (intro < 1) { c.fillStyle = `rgba(0,0,0,${(1 - ie) * .92})`; c.fillRect(0, 0, this.cw, this.ch); }
+    if (o.onDraw) o.onDraw(p, qs, cur);
+    return busy;
   };
 
   window.Restore = Restore;

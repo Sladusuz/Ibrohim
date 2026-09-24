@@ -59,7 +59,7 @@
   function showLogin() {
     clearTimeout(pollT);
     $("#app").hidden = true; $("#login").hidden = false; closeDrawer();
-    setTimeout(() => $("#pw").focus(), 50);
+    setTimeout(() => ($("#user").value ? $("#pw") : $("#user")).focus(), 50);
   }
   function showApp() {
     $("#login").hidden = true; $("#app").hidden = false;
@@ -68,7 +68,7 @@
   $("#loginForm").addEventListener("submit", async e => {
     e.preventDefault();
     const btn = $("#loginBtn"); btn.disabled = true; $("#loginErr").textContent = "";
-    try { await api("/login", { method: "POST", body: JSON.stringify({ password: $("#pw").value }) }); $("#pw").value = ""; showApp(); }
+    try { await api("/login", { method: "POST", body: JSON.stringify({ username: $("#user").value, password: $("#pw").value }) }); $("#pw").value = ""; showApp(); }
     catch (ex) { $("#loginErr").textContent = ex.message; }
     finally { btn.disabled = false; }
   });

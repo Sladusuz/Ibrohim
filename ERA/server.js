@@ -6,8 +6,8 @@
  *
  * Environment variables (all optional):
  *   PORT                 port to listen on (default 3000)
- *   ADMIN_PASSWORD       admin panel password; if unset one is generated once and
- *                        saved to data/admin-password.txt
+ *   ADMIN_USER           admin panel login (default: eratashkent)
+ *   ADMIN_PASSWORD       admin panel password (default: era2026)
  *   DATA_DIR             where leads.json and uploaded photos live (default ./data)
  *   TRUST_PROXY=1        behind nginx / a hosting proxy: use X-Forwarded-For / -Proto
  *   TELEGRAM_BOT_TOKEN   + TELEGRAM_CHAT_ID: also send every new lead to Telegram
@@ -28,17 +28,12 @@ const TRUST_PROXY = process.env.TRUST_PROXY === "1";
 
 fs.mkdirSync(UPLOADS, { recursive: true });
 
-/* ---------------- admin password ---------------- */
-let ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-if (!ADMIN_PASSWORD) {
-  const pf = path.join(DATA, "admin-password.txt");
-  if (fs.existsSync(pf)) ADMIN_PASSWORD = fs.readFileSync(pf, "utf8").trim();
-  else {
-    ADMIN_PASSWORD = crypto.randomBytes(9).toString("base64url");
-    fs.writeFileSync(pf, ADMIN_PASSWORD + "\n", { mode: 0o600 });
-  }
-}
-const PASS_HASH = crypto.createHash("sha256").update(ADMIN_PASSWORD).digest();
+/* ---------------- admin login ---------------- */
+// Defaults requested by the owner; override on the server with ADMIN_USER / ADMIN_PASSWORD.
+const ADMIN_USER = process.env.ADMIN_USER || "eratashkent";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "era2026";
+const sha = (v) => crypto.createHash("sha256").update(String(v)).digest();
+const USER_HASH = sha(ADMIN_USER), PASS_HASH = sha(ADMIN_PASSWORD);
 
 /* ---------------- storage ---------------- */
 let db = { seq: 0, leads: [] };
@@ -201,8 +196,9 @@ async function admin(req, res, url) {
   if (route === "/login" && req.method === "POST") {
     if (limited("login:" + ipOf(req), 10, 15 * 60e3)) return send(res, 429, { ok: false, error: "Juda ko'p urinish. 15 daqiqadan so'ng urinib ko'ring" });
     const b = await readBody(req, 4096);
-    const given = crypto.createHash("sha256").update(String(b.password || "")).digest();
-    if (!crypto.timingSafeEqual(given, PASS_HASH)) return send(res, 401, { ok: false, error: "Parol noto'g'ri" });
+    const userOk = crypto.timingSafeEqual(sha(String(b.username || "").trim()), USER_HASH);
+    const passOk = crypto.timingSafeEqual(sha(b.password || ""), PASS_HASH);
+    if (!userOk || !passOk) return send(res, 401, { ok: false, error: "Login yoki parol noto'g'ri" });
     const token = crypto.randomBytes(32).toString("hex");
     sessions.set(token, Date.now() + SESSION_MS);
     return send(res, 200, { ok: true }, { "Set-Cookie": sessionCookie(req, token, SESSION_MS / 1000) });
@@ -290,5 +286,5 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`ERA sayti:      http://localhost:${PORT}`);
   console.log(`Admin panel:    http://localhost:${PORT}/admin`);
-  if (!process.env.ADMIN_PASSWORD) console.log(`Admin paroli:   ${ADMIN_PASSWORD}   (data/admin-password.txt)`);
+  if (!process.env.ADMIN_PASSWORD) console.log("Diqqat: standart admin paroli ishlatilmoqda — serverda ADMIN_PASSWORD ni o'rnating.");
 });
