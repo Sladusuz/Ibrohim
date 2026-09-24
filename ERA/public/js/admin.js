@@ -65,11 +65,13 @@
     $("#login").hidden = true; $("#app").hidden = false;
     load(true);
   }
+  const FILE_MSG = "Admin panel fayl sifatida ochilgan. Avval ERA papkasida \"node server.js\" ni ishga tushiring, so'ng brauzerda http://localhost:3000/admin manzilini oching.";
   $("#loginForm").addEventListener("submit", async e => {
     e.preventDefault();
+    if (location.protocol === "file:") { $("#loginErr").textContent = FILE_MSG; return; }
     const btn = $("#loginBtn"); btn.disabled = true; $("#loginErr").textContent = "";
     try { await api("/login", { method: "POST", body: JSON.stringify({ username: $("#user").value, password: $("#pw").value }) }); $("#pw").value = ""; showApp(); }
-    catch (ex) { $("#loginErr").textContent = ex.message; }
+    catch (ex) { $("#loginErr").textContent = /fetch|network|load/i.test(ex.message) ? "Server bilan aloqa yo'q. \"node server.js\" ishga tushirilganini tekshiring." : ex.message; }
     finally { btn.disabled = false; }
   });
   $("#logoutBtn").addEventListener("click", async () => { try { await api("/logout", { method: "POST" }); } catch (e) { /* ignore */ } showLogin(); });
@@ -180,5 +182,6 @@
   document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("#app").hidden) load(); });
 
   /* ---------------- boot ---------------- */
-  fetch("/api/admin/me", { credentials: "same-origin" }).then(r => r.ok ? showApp() : showLogin(), showLogin);
+  if (location.protocol === "file:") { showLogin(); $("#loginErr").textContent = FILE_MSG; }
+  else fetch("/api/admin/me", { credentials: "same-origin" }).then(r => r.ok ? showApp() : showLogin(), showLogin);
 })();

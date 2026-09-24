@@ -33,7 +33,8 @@ fs.mkdirSync(UPLOADS, { recursive: true });
 const ADMIN_USER = process.env.ADMIN_USER || "eratashkent";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "era2026";
 const sha = (v) => crypto.createHash("sha256").update(String(v)).digest();
-const USER_HASH = sha(ADMIN_USER), PASS_HASH = sha(ADMIN_PASSWORD);
+// login is case-insensitive; stray spaces (phone keyboards, autofill) are ignored on both fields
+const USER_HASH = sha(ADMIN_USER.trim().toLowerCase()), PASS_HASH = sha(ADMIN_PASSWORD.trim());
 
 /* ---------------- storage ---------------- */
 let db = { seq: 0, leads: [] };
@@ -196,8 +197,8 @@ async function admin(req, res, url) {
   if (route === "/login" && req.method === "POST") {
     if (limited("login:" + ipOf(req), 10, 15 * 60e3)) return send(res, 429, { ok: false, error: "Juda ko'p urinish. 15 daqiqadan so'ng urinib ko'ring" });
     const b = await readBody(req, 4096);
-    const userOk = crypto.timingSafeEqual(sha(String(b.username || "").trim()), USER_HASH);
-    const passOk = crypto.timingSafeEqual(sha(b.password || ""), PASS_HASH);
+    const userOk = crypto.timingSafeEqual(sha(String(b.username || "").trim().toLowerCase()), USER_HASH);
+    const passOk = crypto.timingSafeEqual(sha(String(b.password || "").trim()), PASS_HASH);
     if (!userOk || !passOk) return send(res, 401, { ok: false, error: "Login yoki parol noto'g'ri" });
     const token = crypto.randomBytes(32).toString("hex");
     sessions.set(token, Date.now() + SESSION_MS);
@@ -286,5 +287,6 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`ERA sayti:      http://localhost:${PORT}`);
   console.log(`Admin panel:    http://localhost:${PORT}/admin`);
-  if (!process.env.ADMIN_PASSWORD) console.log("Diqqat: standart admin paroli ishlatilmoqda — serverda ADMIN_PASSWORD ni o'rnating.");
+  console.log(`Admin login:    ${ADMIN_USER}`);
+  if (!process.env.ADMIN_PASSWORD) console.log(`Admin parol:    ${ADMIN_PASSWORD}   (standart — internetga chiqarganda ADMIN_PASSWORD bilan almashtiring)`);
 });
