@@ -1,0 +1,11 @@
+Namuna (demo) materiallar — o'zingizning studiya suratlaringiz bilan almashtiring.
+
+Rasmlar: Unsplash (https://unsplash.com/license — bepul, tijorat maqsadida ham)
+  poster.jpg / restore.mp4  <- photo-1533867617858-e7b97e060509 (video kompyuterda generatsiya qilingan: eski -> tiklangan)
+  service-0 / thumb-0       <- photo-1614252235316-8c857d38b5f4
+  service-1 / thumb-1       <- photo-1598532163257-ae3c6b2524b6
+  service-2 / thumb-2       <- photo-1551028719-00167b16eac5
+  service-3 / thumb-3       <- photo-1560343090-f0409e92791a
+  service-4 / thumb-4       <- photo-1520639888713-7851133b1ed0
+
+restore.mp4: 1280x720, 24fps, 144 kadr, ALL-INTRA (-g 1), faststart.

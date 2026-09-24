@@ -292,7 +292,7 @@ img.is-missing { visibility: hidden; }
     </div>
     <div class="hero-media">
       <video id="heroVideo" muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
-        poster="REPLACE_WITH_POSTER_IMAGE_URL_worn_leather_bag_before.jpg"></video>
+        poster="assets/poster.jpg"></video>
     </div>
     <div class="hero-scrollhint"><i></i>Pastga suring</div>
   </section>
@@ -300,28 +300,28 @@ img.is-missing { visibility: hidden; }
   <section class="layer services" id="servicesLayer">
     <!-- Poyabzalni tozalash / Shoe cleaning -->
     <div class="scene is-on" data-i="0">
-      <img class="bg" alt="" src="REPLACE_URL_0_BG">
-      <img class="item" alt="" src="REPLACE_URL_0_ITEM">
+      <img class="bg" alt="" src="assets/service-0.jpg">
+      <img class="item" alt="" src="assets/service-0.jpg">
     </div>
     <!-- Sumka restavratsiyasi / Bag restoration -->
     <div class="scene" data-i="1">
-      <img class="bg" alt="" src="REPLACE_URL_1_BG">
-      <img class="item" alt="" src="REPLACE_URL_1_ITEM">
+      <img class="bg" alt="" src="assets/service-1.jpg">
+      <img class="item" alt="" src="assets/service-1.jpg">
     </div>
     <!-- Charm kurtka parvarishi / Jacket care -->
     <div class="scene" data-i="2">
-      <img class="bg" alt="" src="REPLACE_URL_2_BG">
-      <img class="item" alt="" src="REPLACE_URL_2_ITEM">
+      <img class="bg" alt="" src="assets/service-2.jpg">
+      <img class="item" alt="" src="assets/service-2.jpg">
     </div>
     <!-- Rangini tiklash / Recoloring -->
     <div class="scene" data-i="3">
-      <img class="bg" alt="" src="REPLACE_URL_3_BG">
-      <img class="item" alt="" src="REPLACE_URL_3_ITEM">
+      <img class="bg" alt="" src="assets/service-3.jpg">
+      <img class="item" alt="" src="assets/service-3.jpg">
     </div>
     <!-- Ta'mirlash / Repair -->
     <div class="scene" data-i="4">
-      <img class="bg" alt="" src="REPLACE_URL_4_BG">
-      <img class="item" alt="" src="REPLACE_URL_4_ITEM">
+      <img class="bg" alt="" src="assets/service-4.jpg">
+      <img class="item" alt="" src="assets/service-4.jpg">
     </div>
 
     <div class="services-ui">
@@ -356,26 +356,26 @@ img.is-missing { visibility: hidden; }
 (() => {
   "use strict";
 
-  // ===== 7. VIDEO URL — replace with your own all-intra encoded restoration clip =====
-  const VIDEO_URL = "REPLACE_WITH_YOUR_RESTORATION_SCRUB_VIDEO_URL.mp4";
+  // ===== 7. VIDEO URL — all-intra encoded restoration clip (swap for your own footage) =====
+  const VIDEO_URL = "assets/restore.mp4";
 
   // ===== 9. DATA =====
   const SERVICES = [
     { label: "Poyabzalni tozalash", title: "Premium poyabzal parvarishi", more: "Poyabzal tozalash haqida ko'proq",
-      thumb: "REPLACE_URL_0_THUMB",
+      thumb: "assets/thumb-0.jpg",
       specs: [
         { k: "Muddat", v: "1–2 kun" },
         { k: "Xizmat turi", v: "Chuqur tozalash, oyoq kiyim shaklini tiklash, teri parvarishi" },
         { k: "Kafolat", tag: "6 OYGACHA KAFOLAT", gold: true }
       ] },
     { label: "Sumka restavratsiyasi", title: "Sumka restavratsiyasi", more: "Sumka restavratsiyasi haqida ko'proq",
-      thumb: "REPLACE_URL_1_THUMB",
+      thumb: "assets/thumb-1.jpg",
       specs: [
         { k: "Muddat", v: "2–4 kun" },
         { k: "Xizmat turi", v: "Charmni tozalash, tirnalgan joylarni bartaraf etish, fittinglarni tiklash" }
       ] },
     { label: "Charm kurtka parvarishi", title: "Charm kurtka va ustki kiyim", more: "Kurtka parvarishi haqida ko'proq",
-      thumb: "REPLACE_URL_2_THUMB",
+      thumb: "assets/thumb-2.jpg",
       colors: ["#1a1613", "#5c3a26", "#8a1f2b", "#2b2b2f"],
       specs: [
         { k: "Muddat", v: "3–5 kun" },
@@ -383,14 +383,14 @@ img.is-missing { visibility: hidden; }
         { k: "Kafolat", tag: "SIFAT KAFOLATI", gold: true }
       ] },
     { label: "Rangini tiklash", title: "Rang tiklash va bo'yash", more: "Rang tiklash haqida ko'proq",
-      thumb: "REPLACE_URL_3_THUMB",
+      thumb: "assets/thumb-3.jpg",
       specs: [
         { k: "Muddat", v: "2–3 kun" },
         { k: "Xizmat turi", v: "Original rangni tiklash yoki mijoz tanlovi bo'yicha qayta bo'yash" },
         { k: "Natija", v: "Yorug'lik va suvga chidamli qoplama" }
       ] },
     { label: "Ta'mirlash", title: "Ta'mirlash xizmatlari", more: "Ta'mirlash haqida ko'proq",
-      thumb: "REPLACE_URL_4_THUMB",
+      thumb: "assets/thumb-4.jpg",
       specs: [
         { k: "Muddat", v: "1–3 kun" },
         { k: "Xizmat turi", v: "Tikuv, taglik, zamok va boshqa fittinglarni almashtirish" },
