@@ -1,0 +1,9 @@
+{
+  "name": "era-shoemaker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ERA — poyabzal va charm buyumlarni tozalash va tiklash ustaxonasi sayti + admin panel",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
