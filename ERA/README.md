@@ -10,6 +10,10 @@ Poyabzal va charm buyumlarni tozalash/tiklash ustaxonasi uchun sayt:
 
 ## Ishga tushirish
 
+**Eng oson yo'l:** Windows'da `ishga-tushirish.bat`, Mac'da `ishga-tushirish-mac.command` faylini ikki marta bosing — sayt va admin panel brauzerda o'zi ochiladi. Ochilgan qora oynani yopmang.
+
+Terminal orqali:
+
 Faqat [Node.js](https://nodejs.org) 18+ kerak (qo'shimcha paket o'rnatish shart emas).
 
 ```bash
