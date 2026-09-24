@@ -11,7 +11,10 @@ window.ERA_CONFIG = {
   admin: { user: "eratashkent", pass: "era2026" },
   // Telegram bot (optional): create a bot with @BotFather, paste its token, and put the
   // chat id of the person or group that should receive leads (e.g. from @userinfobot).
-  telegram: { botToken: "", chatId: "" }
+  telegram: { botToken: "", chatId: "" },
+  // Netlify: site name used by the admin panel to read Netlify Forms submissions.
+  // Leave empty to use the address the admin panel is opened on (e.g. era-shoemaker.netlify.app).
+  netlify: { siteId: "" }
 };
 
 window.ERA_STORE = (function () {
@@ -52,7 +55,7 @@ window.ERA_STORE = (function () {
     if (!tg.botToken || !tg.chatId) return false;
     const base = "https://api.telegram.org/bot" + tg.botToken;
     const text = [
-      "🆕 Yangi zayavka № " + lead.id,
+      "🆕 Yangi zayavka" + (lead.id ? " № " + lead.id : ""),
       "👤 " + lead.name, "📞 " + lead.phone,
       "👞 " + lead.item + (lead.brand ? " — " + lead.brand : ""),
       lead.services.length ? "🧰 " + lead.services.join(", ") : "",

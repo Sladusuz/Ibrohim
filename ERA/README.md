@@ -8,6 +8,15 @@ Poyabzal va charm buyumlarni tozalash/tiklash ustaxonasi uchun sayt:
 - **Zayavka formasi** — buyum turi, xizmat, ism, telefon, filial, rasm (3 tagacha).
 - **Admin panel** (`/admin`) — barcha zayavkalar, holat (Yangi / Jarayonda / Bajarildi / Bekor), izoh, rasmlar, qidiruv, filial filtri, Excel (CSV) eksport, yangi zayavka kelganda bildirishnoma.
 
+## Netlify'ga joylash (server kerak emas)
+
+1. https://app.netlify.com/drop ga kiring va **`public`** papkasini (yoki `ERA-netlify` papkasini) sahifaga sudrab tashlang. `ERA` papkasini emas — `index.html` papkaning ichida birinchi turishi kerak.
+2. Netlify'da sayt ochilgach: **Site configuration → Forms → Enable form detection** ni yoqing, so'ng papkani **yana bir marta** sudrab tashlang (Deploys → drag & drop).
+3. Zayavkalar email'ga kelishi uchun: **Forms → Form notifications → Add notification → Email notification** → `eratashkent@gmail.com`.
+4. Admin panel: `https://SAYT-NOMI.netlify.app/admin` → login `eratashkent`, parol `era2026` → birinchi marta **Netlify token** so'raydi: Netlify → User settings → Applications → Personal access tokens → *New access token*. Token faqat shu brauzerda saqlanadi.
+
+Zayavkalar Netlify Forms'da saqlanadi (bepul tarifda oyiga 100 ta). Holat va izohlar admin ochilgan brauzerda saqlanadi.
+
 ## Serversiz (faqat frontend) rejim
 
 Sayt va admin panel **serversiz ham ishlaydi**: `public/index.html` ni oddiy ochsangiz yoki VS Code'da **Go Live** bosangiz bo'ldi.

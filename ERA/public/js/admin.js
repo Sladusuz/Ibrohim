@@ -53,7 +53,65 @@
     throw new Error("Topilmadi");
   }
 
+  // NETLIFY = static site on Netlify: leads come from Netlify Forms via the Netlify API.
+  // Statuses / notes are kept in this browser (Netlify submissions have no such fields).
+  let NETLIFY = false, nfMap = {};
+  const NF_TOKEN = "era-nf-token", NF_META = "era-nf-meta";
+  const nfToken = () => { try { return localStorage.getItem(NF_TOKEN) || ""; } catch (e) { return ""; } };
+  const nfSite = () => (ERA_CONFIG.netlify && ERA_CONFIG.netlify.siteId) || location.hostname;
+  const nfMeta = () => { try { return JSON.parse(localStorage.getItem(NF_META) || "{}"); } catch (e) { return {}; } };
+  async function nf(path, opt) {
+    const res = await fetch("https://api.netlify.com/api/v1" + path, Object.assign({}, opt, { headers: { Authorization: "Bearer " + nfToken() } }));
+    if (res.status === 401) { try { localStorage.removeItem(NF_TOKEN); } catch (e) { /* ignore */ } throw new Error("Netlify token noto'g'ri yoki muddati o'tgan"); }
+    if (res.status === 404) throw new Error("Netlify'da \"" + nfSite() + "\" sayti topilmadi");
+    if (!res.ok) throw new Error("Netlify xatosi: " + res.status);
+    return res.status === 204 ? {} : res.json();
+  }
+  const fileUrl = v => !v ? "" : typeof v === "string" ? v : (v.url || "");
+  async function netlifyApi(path, opt) {
+    const method = (opt && opt.method) || "GET", body = opt && opt.body ? JSON.parse(opt.body) : {};
+    if (path === "/login" || path === "/logout" || path === "/me") {
+      const out = localApi(path, opt);
+      if (path !== "/logout" && !nfToken()) { if (path === "/me") { showLogin(); throw new Error("auth"); } }
+      return out;
+    }
+    if (!localAuthed()) { showLogin(); throw new Error("auth"); }
+    if (path === "/leads") {
+      const subs = await nf("/sites/" + encodeURIComponent(nfSite()) + "/submissions?per_page=100");
+      const meta = nfMeta(); nfMap = {};
+      const leads = subs.filter(s => !s.form_name || s.form_name === "zayavka").map(s => {
+        const d = s.data || {}, m = meta[s.id] || {};
+        nfMap[s.number] = s.id;
+        return {
+          id: s.number, sid: s.id, createdAt: s.created_at, status: m.status || "new", note: m.note || "",
+          name: d.name || s.name || "—", phone: d.phone || "", item: d.item || "Boshqa", brand: d.brand || "",
+          services: String(d.services || "").split(",").map(x => x.trim()).filter(Boolean),
+          branch: d.branch || "", time: d.time || "", comment: d.comment || "",
+          photos: ["photo1", "photo2", "photo3"].map(k => fileUrl(d[k])).filter(Boolean)
+        };
+      });
+      const counts = { all: leads.length };
+      ["new", "progress", "done", "cancelled"].forEach(k => (counts[k] = leads.filter(l => l.status === k).length));
+      return { ok: true, leads, counts };
+    }
+    const m = /^\/leads\/(\d+)$/.exec(path), sid = m && nfMap[m[1]];
+    if (m && !sid) throw new Error("Topilmadi");
+    if (m && method === "PATCH") {
+      const meta = nfMeta(); meta[sid] = Object.assign(meta[sid] || {}, body.status !== undefined ? { status: body.status } : {}, body.note !== undefined ? { note: String(body.note).slice(0, 2000) } : {});
+      localStorage.setItem(NF_META, JSON.stringify(meta));
+      const l = leads.find(x => x.id === +m[1]);
+      return { ok: true, lead: Object.assign({}, l, meta[sid]) };
+    }
+    if (m && method === "DELETE") {
+      await nf("/submissions/" + sid, { method: "DELETE" });
+      const meta = nfMeta(); delete meta[sid]; localStorage.setItem(NF_META, JSON.stringify(meta));
+      return { ok: true };
+    }
+    throw new Error("Topilmadi");
+  }
+
   async function api(path, opt) {
+    if (NETLIFY) return netlifyApi(path, opt);
     if (LOCAL) return localApi(path, opt);
     const res = await fetch("/api/admin" + path, Object.assign({ credentials: "same-origin", headers: { "Content-Type": "application/json" } }, opt));
     if (res.status === 401 && path !== "/login") { showLogin(); throw new Error("auth"); }
@@ -101,8 +159,17 @@
   $("#loginForm").addEventListener("submit", async e => {
     e.preventDefault();
     const btn = $("#loginBtn"); btn.disabled = true; $("#loginErr").textContent = "";
-    try { await api("/login", { method: "POST", body: JSON.stringify({ username: $("#user").value, password: $("#pw").value }) }); $("#pw").value = ""; showApp(); }
-    catch (ex) { $("#loginErr").textContent = /fetch|network|load/i.test(ex.message) ? "Server bilan aloqa yo'q. \"node server.js\" ishga tushirilganini tekshiring." : ex.message; }
+    try {
+      if (NETLIFY) {
+        const tok = $("#nfTok").value.trim();
+        if (tok) { try { localStorage.setItem(NF_TOKEN, tok); } catch (e) { /* ignore */ } }
+        if (!nfToken()) { $("#tokRow").hidden = false; throw new Error("Netlify token kiriting (bir marta)"); }
+      }
+      await api("/login", { method: "POST", body: JSON.stringify({ username: $("#user").value, password: $("#pw").value }) });
+      if (NETLIFY) await nf("/sites/" + encodeURIComponent(nfSite())); // check token + site once
+      $("#pw").value = ""; $("#nfTok").value = ""; $("#tokRow").hidden = true; showApp();
+    }
+    catch (ex) { if (NETLIFY && !nfToken()) $("#tokRow").hidden = false; $("#loginErr").textContent = /fetch|network|load/i.test(ex.message) ? "Server bilan aloqa yo'q. \"node server.js\" ishga tushirilganini tekshiring." : ex.message; }
     finally { btn.disabled = false; }
   });
   $("#logoutBtn").addEventListener("click", async () => { try { await api("/logout", { method: "POST" }); } catch (e) { /* ignore */ } showLogin(); });
@@ -188,7 +255,7 @@
       .forEach(([k, v, wide]) => facts.append(h("div", { class: wide ? "wide" : "" }, h("dt", { text: k }), h("dd", { text: v }))));
     const ph = $("#dPhotos"); ph.textContent = "";
     $("#dPhotosWrap").hidden = !l.photos.length;
-    l.photos.forEach(f => { const src = /^data:image\//.test(f) ? f : "/api/admin/photo/" + encodeURIComponent(f); ph.append(h("a", { href: src, target: "_blank", rel: "noopener" }, h("img", { src, alt: "Mijoz yuborgan rasm", loading: "lazy" }))); });
+    l.photos.forEach(f => { const src = /^(data:image\/|https?:)/.test(f) ? f : "/api/admin/photo/" + encodeURIComponent(f); ph.append(h("a", { href: src, target: "_blank", rel: "noopener" }, h("img", { src, alt: "Mijoz yuborgan rasm", loading: "lazy" }))); });
     if (!keepNote || document.activeElement !== $("#dNote")) $("#dNote").value = l.note || "";
     $("#dNoteMsg").textContent = "";
   }
@@ -223,20 +290,21 @@
     a.download = "era-zayavkalar-" + new Date().toISOString().slice(0, 10) + ".csv";
     document.body.append(a); a.click(); a.remove();
   }
-  $("#csvBtn").addEventListener("click", e => { if (LOCAL) { e.preventDefault(); csvLocal(); } });
+  $("#csvBtn").addEventListener("click", e => { if (LOCAL || NETLIFY) { e.preventDefault(); csvLocal(); } });
   addEventListener("storage", e => { if (LOCAL && e.key === "era-leads" && !$("#app").hidden) load(); });
 
   async function detect() {
-    if (location.protocol === "file:") return true;
-    try { const r = await fetch("/api/admin/me", { credentials: "same-origin" }); await r.json(); return false; }
-    catch (e) { return true; } // no JSON API here: static page
+    if (location.protocol === "file:") return "local";
+    try { const r = await fetch("/api/admin/me", { credentials: "same-origin" }); await r.json(); return "server"; }
+    catch (e) { /* no JSON API here: static page */ }
+    return /^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) ? "local" : "netlify";
   }
-  detect().then(local => {
-    LOCAL = local;
-    if (LOCAL) {
-      const note = h("p", { class: "mode-note", text: "Brauzer rejimi: server ishlamayapti, zayavkalar shu brauzerda saqlanadi." });
-      $(".head > div").append(note);
-    }
+  detect().then(mode => {
+    LOCAL = mode === "local"; NETLIFY = mode === "netlify";
+    const txt = LOCAL ? "Brauzer rejimi: server ishlamayapti, zayavkalar shu brauzerda saqlanadi."
+      : NETLIFY ? "Netlify rejimi: zayavkalar Netlify Forms'dan olinadi." : "";
+    if (txt) $(".head > div").append(h("p", { class: "mode-note", text: txt }));
+    if (NETLIFY && !nfToken()) $("#tokRow").hidden = false;
     return api("/me").then(showApp, showLogin);
   });
 })();

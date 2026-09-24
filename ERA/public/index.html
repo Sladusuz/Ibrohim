@@ -363,6 +363,14 @@
   </section>
 </main>
 
+<!-- Netlify Forms: static copy of the lead form so Netlify detects its fields at deploy time.
+     The visible form above is submitted by js/site.js with the same field names. -->
+<form name="zayavka" data-netlify="true" netlify-honeypot="website" enctype="multipart/form-data" hidden>
+  <input name="item"><input name="services"><input name="name"><input name="phone"><input name="branch">
+  <input name="time"><input name="brand"><textarea name="comment"></textarea><input name="website">
+  <input type="file" name="photo1"><input type="file" name="photo2"><input type="file" name="photo3">
+</form>
+
 <footer class="foot">
   <div class="wrap">
     <span>© ERA · Toshkent · Poyabzal va charm buyumlar ustaxonasi</span>

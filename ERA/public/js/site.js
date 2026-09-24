@@ -327,7 +327,8 @@
     if (data.website) return; // honeypot
     btn.classList.add("is-loading"); btn.disabled = true;
     const done = id => {
-      $("#leadNum").textContent = "Zayavka № " + String(id).padStart(4, "0");
+      const n = $("#leadNum"); n.hidden = id == null;
+      if (id != null) n.textContent = "Zayavka № " + String(id).padStart(4, "0");
       card.classList.add("is-sent");
       card.scrollIntoView({ behavior: "smooth", block: "center" });
     };
@@ -344,7 +345,23 @@
         if (!res.ok || !out.ok) throw new Error(out.error || "Server xatosi");
         return done(out.id);
       }
-      // 2) frontend-only: keep in this browser (+ Telegram if configured)
+      // 2) Netlify Forms (static hosting on Netlify): Netlify stores the lead + photos
+      if (location.protocol.startsWith("http") && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname)) {
+        const fd = new FormData();
+        fd.append("form-name", "zayavka");
+        ["item", "name", "phone", "branch", "time", "brand", "comment"].forEach(k => fd.append(k, data[k] || ""));
+        fd.append("services", data.services.join(", "));
+        fd.append("website", "");
+        for (let i = 0; i < photos.length; i++) fd.append("photo" + (i + 1), await (await fetch(photos[i])).blob(), `rasm-${i + 1}.jpg`);
+        let nres = null;
+        try { nres = await fetch("/", { method: "POST", body: fd }); } catch (e) { nres = null; }
+        if (nres && nres.ok) {
+          const lead = { id: "", name: data.name, phone: data.phone, item: data.item, brand: data.brand, services: data.services, branch: data.branch, time: data.time, comment: data.comment, photos: [] };
+          ERA_STORE.telegram(lead).catch(() => {});
+          return done(null);
+        }
+      }
+      // 3) frontend-only: keep in this browser (+ Telegram if configured)
       const small = await Promise.all(photos.map(p => shrink(p, 900, .72)));
       const lead = ERA_STORE.add(Object.assign({}, data, { photos: small }));
       ERA_STORE.telegram(lead).catch(() => {});
