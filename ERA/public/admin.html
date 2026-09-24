@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>ERA Admin — Zayavkalar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="eraRing" x1="2" y1="2" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#e0355f"/><stop offset="1" stop-color="#b0308f"/></linearGradient>
+    <symbol id="logo" viewBox="0 0 26 26" fill="none"><circle cx="13" cy="13" r="10.5" stroke="url(#eraRing)" stroke-width="1.8"/><path d="M8 15.5c1.5-3 2-6 5-8" stroke="#f8f6f2" stroke-width="1.1" stroke-linecap="round" stroke-dasharray="1.5 2.4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+    <symbol id="i-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+    <symbol id="i-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2"/></symbol>
+    <symbol id="i-tg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4L3 11l6 2.5M21 4l-3 16-6-5.5M21 4L9 13.5v5.5l3-4.5"/></symbol>
+    <symbol id="i-cam" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0112 0v5l2 2H4zM10 21h4"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============ LOGIN ============ -->
+<section class="login" id="login" hidden>
+  <form class="login-card" id="loginForm">
+    <svg class="lg" width="44" height="44"><use href="#logo"/></svg>
+    <h1>ERA Admin</h1>
+    <p>Zayavkalarni boshqarish paneli</p>
+    <label class="fld"><span>Login</span><input type="text" id="user" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus></label>
+    <label class="fld"><span>Parol</span><input type="password" id="pw" autocomplete="current-password" required></label>
+    <button class="btn primary" type="submit" id="loginBtn">Kirish</button>
+    <div class="login-err" id="loginErr" role="alert"></div>
+  </form>
+</section>
+
+<!-- ============ APP ============ -->
+<div class="app" id="app" hidden>
+  <header class="top">
+    <a class="brand" href="/" target="_blank" rel="noopener"><svg width="26" height="26"><use href="#logo"/></svg><b>ERA</b><span>Admin</span></a>
+    <label class="search"><svg><use href="#i-search"/></svg><input type="search" id="q" placeholder="Ism, telefon, izoh bo'yicha qidirish…"></label>
+    <div class="top-actions">
+      <span class="live" id="live" title="Avtomatik yangilanadi"><i></i><span id="liveTxt">Jonli</span></span>
+      <button class="btn ghost icon-only" id="soundBtn" type="button" title="Yangi zayavka ovozi" aria-pressed="false"><svg><use href="#i-bell"/></svg></button>
+      <a class="btn ghost" href="/api/admin/export.csv" id="csvBtn"><svg><use href="#i-dl"/></svg><span>Excel (CSV)</span></a>
+      <button class="btn ghost icon-only" id="logoutBtn" type="button" title="Chiqish"><svg><use href="#i-out"/></svg></button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="head">
+      <div>
+        <h1>Zayavkalar</h1>
+        <p id="subline">Saytdan kelgan barcha murojaatlar</p>
+      </div>
+      <select id="branchF" class="sel" aria-label="Filial bo'yicha filtr">
+        <option value="">Barcha filiallar</option>
+        <option value="Mirzo Ulug'bek">Mirzo Ulug'bek</option>
+        <option value="Yunusobod">Yunusobod</option>
+      </select>
+    </div>
+
+    <div class="kpis" id="kpis">
+      <button class="kpi is-on" data-s="all"><small>Jami</small><b data-c="all">0</b></button>
+      <button class="kpi new" data-s="new"><small>Yangi</small><b data-c="new">0</b></button>
+      <button class="kpi progress" data-s="progress"><small>Jarayonda</small><b data-c="progress">0</b></button>
+      <button class="kpi done" data-s="done"><small>Bajarildi</small><b data-c="done">0</b></button>
+      <button class="kpi cancelled" data-s="cancelled"><small>Bekor qilingan</small><b data-c="cancelled">0</b></button>
+    </div>
+
+    <div class="table-wrap">
+      <table class="tbl">
+        <thead><tr><th>№</th><th>Sana</th><th>Mijoz</th><th>Buyum / xizmat</th><th>Filial</th><th>Rasm</th><th>Holat</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>
+        <b>Hozircha zayavka yo'q</b>
+        <p>Saytdagi forma orqali yuborilgan zayavkalar shu yerda paydo bo'ladi.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ============ DRAWER ============ -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Zayavka tafsilotlari">
+  <div class="dr-head">
+    <div><small id="dNum"></small><h2 id="dName"></h2></div>
+    <button class="btn ghost icon-only" id="dClose" type="button" aria-label="Yopish"><svg><use href="#i-x"/></svg></button>
+  </div>
+  <div class="dr-body">
+    <div class="contact-actions">
+      <a class="btn primary" id="dCall"><svg><use href="#i-phone"/></svg><span id="dPhone"></span></a>
+      <a class="btn ghost" id="dTg" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>Telegram</a>
+    </div>
+    <div class="dr-sec">
+      <small>Holat</small>
+      <div class="status-seg" id="dStatus">
+        <button data-s="new">Yangi</button><button data-s="progress">Jarayonda</button><button data-s="done">Bajarildi</button><button data-s="cancelled">Bekor</button>
+      </div>
+    </div>
+    <dl class="facts" id="dFacts"></dl>
+    <div class="dr-sec" id="dPhotosWrap"><small>Rasmlar</small><div class="photos" id="dPhotos"></div></div>
+    <div class="dr-sec">
+      <small>Admin izohi</small>
+      <textarea id="dNote" rows="4" placeholder="Masalan: narx kelishildi, 15-sentabrda olib keladi…"></textarea>
+      <div class="note-row"><span id="dNoteMsg"></span><button class="btn ghost" id="dNoteSave" type="button">Izohni saqlash</button></div>
+    </div>
+    <button class="btn danger" id="dDelete" type="button"><svg><use href="#i-trash"/></svg>Zayavkani o'chirish</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
