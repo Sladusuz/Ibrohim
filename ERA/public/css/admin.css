@@ -146,3 +146,4 @@ textarea:focus { border-color: rgba(224, 53, 95, .6); }
   .tbl td.who, .tbl td.what, .tbl td.when { grid-column: 1 / -1; }
   .tbl td.br, .tbl td.phc { grid-column: auto; }
 }
+.mode-note { display: inline-block; margin-top: 10px; padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #e8c07a; background: rgba(232, 163, 61, .12); }

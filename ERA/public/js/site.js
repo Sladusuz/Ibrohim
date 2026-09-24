@@ -232,17 +232,26 @@
   let photos = [];
 
   function fmtPhone(v) {
-    let d = v.replace(/\D/g, "");
-    if ("998".startsWith(d)) d = "998";
-    else if (!d.startsWith("998")) d = "998" + d;
+    let d;
+    const at = v.indexOf("+998");
+    if (at >= 0) d = "998" + (v.slice(0, at) + v.slice(at + 4)).replace(/\D/g, ""); // digits typed before/after the prefix
+    else {
+      d = v.replace(/\D/g, "");
+      if (!d.startsWith("998")) {
+        // "+9", "+99" = user is erasing the +998 prefix; anything else is the local number
+        if (v.trim().startsWith("+") && d.length < 3 && "998".startsWith(d)) d = "998";
+        else d = "998" + d;
+      }
+    }
     d = d.slice(0, 12);
     const p = [d.slice(0, 3), d.slice(3, 5), d.slice(5, 8), d.slice(8, 10), d.slice(10, 12)].filter(Boolean);
     return "+" + p.join(" ");
   }
+  const caretEnd = () => { const n = phone.value.length; try { phone.setSelectionRange(n, n); } catch (e) { /* type=tel supports it */ } };
   const phoneOk = () => phone.value.replace(/\D/g, "").length === 12;
-  phone.addEventListener("focus", () => { if (!phone.value) phone.value = "+998 "; });
+  phone.addEventListener("focus", () => { if (!phone.value) phone.value = "+998 "; setTimeout(caretEnd, 0); });
   phone.addEventListener("blur", () => { if (phone.value.replace(/\D/g, "") === "998") phone.value = ""; });
-  phone.addEventListener("input", () => { phone.value = fmtPhone(phone.value); $("#f-phone").classList.remove("err"); progress(); });
+  phone.addEventListener("input", () => { phone.value = fmtPhone(phone.value); caretEnd(); $("#f-phone").classList.remove("err"); progress(); });
   nameI.addEventListener("input", () => { $("#f-name").classList.remove("err"); progress(); });
 
   function progress() {
@@ -315,24 +324,51 @@
       photos,
       website: $("#website").value
     };
-    if (location.protocol === "file:") {
-      showErr("Sayt hozir fayl sifatida ochilgan. Zayavkalar admin panelga tushishi uchun saytni server orqali ishga tushiring (<b>node server.js</b>). Hozircha bog'lanish: " + PHONE_FALLBACK);
-      return;
-    }
+    if (data.website) return; // honeypot
     btn.classList.add("is-loading"); btn.disabled = true;
-    try {
-      const res = await fetch("api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
-      const out = await res.json().catch(() => ({}));
-      if (!res.ok || !out.ok) throw new Error(out.error || "Server xatosi");
-      $("#leadNum").textContent = "Zayavka № " + String(out.id).padStart(4, "0");
+    const done = id => {
+      $("#leadNum").textContent = "Zayavka № " + String(id).padStart(4, "0");
       card.classList.add("is-sent");
       card.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    try {
+      // 1) server.js, when the site is served by it
+      let res = null, out = null;
+      if (location.protocol !== "file:") {
+        try {
+          res = await fetch("api/leads", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+          out = await res.json();
+        } catch (e) { res = null; } // no server / static hosting / Go Live
+      }
+      if (res && out) {
+        if (!res.ok || !out.ok) throw new Error(out.error || "Server xatosi");
+        return done(out.id);
+      }
+      // 2) frontend-only: keep in this browser (+ Telegram if configured)
+      const small = await Promise.all(photos.map(p => shrink(p, 900, .72)));
+      const lead = ERA_STORE.add(Object.assign({}, data, { photos: small }));
+      ERA_STORE.telegram(lead).catch(() => {});
+      done(lead.id);
     } catch (ex) {
-      showErr((ex.message && ex.message !== "Failed to fetch" ? ex.message + ". " : "Internet aloqasini tekshiring. ") + "Yoki bizga to'g'ridan-to'g'ri yozing: " + PHONE_FALLBACK);
+      showErr((ex.message ? ex.message + ". " : "") + "Yoki bizga to'g'ridan-to'g'ri yozing: " + PHONE_FALLBACK);
     } finally {
       btn.classList.remove("is-loading"); btn.disabled = false;
     }
   });
+  // smaller copy of a photo for browser storage (localStorage holds only ~5 MB)
+  function shrink(src, max, q) {
+    return new Promise(res => {
+      const img = new Image();
+      img.onload = () => {
+        const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+        c.width = Math.round(img.naturalWidth * s); c.height = Math.round(img.naturalHeight * s);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        res(c.toDataURL("image/jpeg", q));
+      };
+      img.onerror = () => res(src);
+      img.src = src;
+    });
+  }
   $("#againBtn").addEventListener("click", () => {
     form.reset(); photos = []; renderThumbs(); progress();
     card.classList.remove("is-sent");

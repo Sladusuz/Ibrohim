@@ -8,7 +8,17 @@ Poyabzal va charm buyumlarni tozalash/tiklash ustaxonasi uchun sayt:
 - **Zayavka formasi** — buyum turi, xizmat, ism, telefon, filial, rasm (3 tagacha).
 - **Admin panel** (`/admin`) — barcha zayavkalar, holat (Yangi / Jarayonda / Bajarildi / Bekor), izoh, rasmlar, qidiruv, filial filtri, Excel (CSV) eksport, yangi zayavka kelganda bildirishnoma.
 
-## Ishga tushirish
+## Serversiz (faqat frontend) rejim
+
+Sayt va admin panel **serversiz ham ishlaydi**: `public/index.html` ni oddiy ochsangiz yoki VS Code'da **Go Live** bosangiz bo'ldi.
+
+- Zayavkalar shu brauzerning xotirasida saqlanadi, admin panel (`public/admin.html`) ularni o'sha brauzerda ko'rsatadi.
+- Admin login/parol: `public/js/store.js` faylida (`eratashkent` / `era2026`).
+- Boshqa odamlarning telefonidan kelgan zayavkalarni olish uchun `public/js/store.js` ga Telegram bot tokeni va chat id ni yozing — har bir zayavka rasmlari bilan Telegram'ga keladi. Yoki `node server.js` rejimidan foydalaning.
+
+⚠ Frontend rejimda parol sahifa kodida ko'rinadi va zayavkalar faqat bitta brauzerda turadi — bu sinov va kichik foydalanish uchun.
+
+## Ishga tushirish (server bilan)
 
 **Eng oson yo'l:** Windows'da `ishga-tushirish.bat` (birinchi marta Node.js ni o'zi yuklab oladi — hech narsa o'rnatish shart emas), Mac'da `ishga-tushirish-mac.command` faylini ikki marta bosing — sayt va admin panel brauzerda o'zi ochiladi. Ochilgan qora oynani yopmang.
 

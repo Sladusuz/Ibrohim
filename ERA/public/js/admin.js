@@ -21,7 +21,40 @@
   }
   const svg = id => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); const u = document.createElementNS("http://www.w3.org/2000/svg", "use"); u.setAttribute("href", "#" + id); s.append(u); return s; };
 
+  // LOCAL = no server.js behind this page (file://, Go Live, static hosting): use ERA_STORE
+  let LOCAL = false;
+  let memAuth = false;
+  const setAuth = v => { memAuth = v; try { v ? sessionStorage.setItem("era-admin", "1") : sessionStorage.removeItem("era-admin"); } catch (e) { /* storage blocked */ } };
+  const localAuthed = () => { try { return sessionStorage.getItem("era-admin") === "1"; } catch (e) { return memAuth; } };
+  function localApi(path, opt) {
+    const method = (opt && opt.method) || "GET", body = opt && opt.body ? JSON.parse(opt.body) : {};
+    const cfg = ERA_CONFIG.admin;
+    if (path === "/login") {
+      const ok = String(body.username || "").trim().toLowerCase() === cfg.user.trim().toLowerCase() && String(body.password || "").trim() === cfg.pass.trim();
+      if (!ok) throw new Error("Login yoki parol noto'g'ri");
+      setAuth(true); return { ok: true };
+    }
+    if (path === "/logout") { setAuth(false); return { ok: true }; }
+    if (!localAuthed()) { showLogin(); throw new Error("auth"); }
+    if (path === "/me") return { ok: true };
+    if (path === "/leads") {
+      const leads = ERA_STORE.read(), counts = { all: leads.length };
+      ["new", "progress", "done", "cancelled"].forEach(s => (counts[s] = leads.filter(l => l.status === s).length));
+      return { ok: true, leads, counts };
+    }
+    const m = /^\/leads\/(\d+)$/.exec(path);
+    if (m && method === "PATCH") {
+      const patch = {};
+      if (body.status !== undefined) patch.status = body.status;
+      if (body.note !== undefined) patch.note = String(body.note).slice(0, 2000);
+      return { ok: true, lead: ERA_STORE.update(+m[1], patch) };
+    }
+    if (m && method === "DELETE") { ERA_STORE.remove(+m[1]); return { ok: true }; }
+    throw new Error("Topilmadi");
+  }
+
   async function api(path, opt) {
+    if (LOCAL) return localApi(path, opt);
     const res = await fetch("/api/admin" + path, Object.assign({ credentials: "same-origin", headers: { "Content-Type": "application/json" } }, opt));
     if (res.status === 401 && path !== "/login") { showLogin(); throw new Error("auth"); }
     const out = await res.json().catch(() => ({}));
@@ -65,10 +98,8 @@
     $("#login").hidden = true; $("#app").hidden = false;
     load(true);
   }
-  const FILE_MSG = "Admin panel fayl sifatida ochilgan. Avval ERA papkasida \"node server.js\" ni ishga tushiring, so'ng brauzerda http://localhost:3000/admin manzilini oching.";
   $("#loginForm").addEventListener("submit", async e => {
     e.preventDefault();
-    if (location.protocol === "file:") { $("#loginErr").textContent = FILE_MSG; return; }
     const btn = $("#loginBtn"); btn.disabled = true; $("#loginErr").textContent = "";
     try { await api("/login", { method: "POST", body: JSON.stringify({ username: $("#user").value, password: $("#pw").value }) }); $("#pw").value = ""; showApp(); }
     catch (ex) { $("#loginErr").textContent = /fetch|network|load/i.test(ex.message) ? "Server bilan aloqa yo'q. \"node server.js\" ishga tushirilganini tekshiring." : ex.message; }
@@ -157,7 +188,7 @@
       .forEach(([k, v, wide]) => facts.append(h("div", { class: wide ? "wide" : "" }, h("dt", { text: k }), h("dd", { text: v }))));
     const ph = $("#dPhotos"); ph.textContent = "";
     $("#dPhotosWrap").hidden = !l.photos.length;
-    l.photos.forEach(f => { const src = "/api/admin/photo/" + encodeURIComponent(f); ph.append(h("a", { href: src, target: "_blank", rel: "noopener" }, h("img", { src, alt: "Mijoz yuborgan rasm", loading: "lazy" }))); });
+    l.photos.forEach(f => { const src = /^data:image\//.test(f) ? f : "/api/admin/photo/" + encodeURIComponent(f); ph.append(h("a", { href: src, target: "_blank", rel: "noopener" }, h("img", { src, alt: "Mijoz yuborgan rasm", loading: "lazy" }))); });
     if (!keepNote || document.activeElement !== $("#dNote")) $("#dNote").value = l.note || "";
     $("#dNoteMsg").textContent = "";
   }
@@ -182,6 +213,30 @@
   document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("#app").hidden) load(); });
 
   /* ---------------- boot ---------------- */
-  if (location.protocol === "file:") { showLogin(); $("#loginErr").textContent = FILE_MSG; }
-  else fetch("/api/admin/me", { credentials: "same-origin" }).then(r => r.ok ? showApp() : showLogin(), showLogin);
+  // CSV in browser mode is built here instead of by the server
+  function csvLocal() {
+    const cols = [["id", "№"], ["createdAt", "Sana"], ["status", "Holat"], ["name", "Ism"], ["phone", "Telefon"], ["item", "Buyum"], ["brand", "Brend"], ["services", "Xizmatlar"], ["branch", "Filial"], ["time", "Qulay vaqt"], ["comment", "Izoh"], ["note", "Admin izohi"]];
+    const cell = v => { let s = Array.isArray(v) ? v.join(", ") : String(v == null ? "" : v); if (/^[=+\-@]/.test(s)) s = "'" + s; return '"' + s.replace(/"/g, '""') + '"'; };
+    const csv = "\ufeff" + [cols.map(c => cell(c[1])).join(",")].concat(leads.map(l => cols.map(c => cell(c[0] === "status" ? STATUS[l.status] : l[c[0]])).join(","))).join("\r\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    a.download = "era-zayavkalar-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.append(a); a.click(); a.remove();
+  }
+  $("#csvBtn").addEventListener("click", e => { if (LOCAL) { e.preventDefault(); csvLocal(); } });
+  addEventListener("storage", e => { if (LOCAL && e.key === "era-leads" && !$("#app").hidden) load(); });
+
+  async function detect() {
+    if (location.protocol === "file:") return true;
+    try { const r = await fetch("/api/admin/me", { credentials: "same-origin" }); await r.json(); return false; }
+    catch (e) { return true; } // no JSON API here: static page
+  }
+  detect().then(local => {
+    LOCAL = local;
+    if (LOCAL) {
+      const note = h("p", { class: "mode-note", text: "Brauzer rejimi: server ishlamayapti, zayavkalar shu brauzerda saqlanadi." });
+      $(".head > div").append(note);
+    }
+    return api("/me").then(showApp, showLogin);
+  });
 })();
