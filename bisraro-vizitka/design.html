@@ -19,11 +19,11 @@
   --foil:linear-gradient(115deg,#8E6B24 0%,#E8CD82 26%,#FFF3C9 38%,#C9A24B 52%,#8E6B24 68%,#E8CD82 86%,#C9A24B 100%)}
 .t-ivory{
   /* 2. Oq fon & oltin */
-  --bg1:#FFFFFF;--bg2:#FCFAF6;--bg3:#F3ECE0;
-  --acc:#9C7A2E;--acc-t:#8E6B24;--text:#2A1A10;--muted:rgba(42,26,16,.64);
-  --line:rgba(156,122,46,.5);--chip:rgba(156,122,46,.12);--pat:#B8923F;--pat-op:.11;
-  --qb:#E8CD82;--tile:#FFFFFF;--qr-d:#2A1A10;--qr-i:#9C7A2E;--logo-edge:#FFFFFF;--shadow:rgba(90,60,20,.22);
-  --foil:linear-gradient(115deg,#6E511A 0%,#B8923F 28%,#D9B865 40%,#8E6B24 55%,#6E511A 70%,#B8923F 88%,#8E6B24 100%)}
+  --bg1:#FFFFFF;--bg2:#FEFCF8;--bg3:#F6F0E6;
+  --acc:#9C7A2E;--acc-t:#86651F;--text:#2A1A10;--muted:rgba(42,26,16,.66);
+  --line:rgba(156,122,46,.55);--chip:rgba(156,122,46,.11);--pat:#B8923F;--pat-op:.075;
+  --qb:#E8CD82;--tile:#FFFFFF;--qr-d:#2A1A10;--qr-i:#9C7A2E;--logo-edge:#FFFFFF;--shadow:rgba(110,80,30,.28);
+  --foil:linear-gradient(115deg,#6E511A 0%,#A8832F 24%,#C9A24B 38%,#8E6B24 54%,#6E511A 70%,#A8832F 86%,#8E6B24 100%)}
 .t-emerald{
   /* 3. Zumrad & oltin */
   --bg1:#145443;--bg2:#0B3328;--bg3:#051A14;
@@ -82,7 +82,7 @@
   --foil:linear-gradient(115deg,#7E3F31 0%,#C98470 28%,#E6A996 40%,#A35E4D 55%,#7E3F31 70%,#C98470 88%,#A35E4D 100%)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:#0b0704}
-body{font-family:Manrope,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:Manrope,sans-serif;font-kerning:normal;text-rendering:geometricPrecision;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 @page{size:94mm 54mm;margin:0}
 .sheet{position:relative;width:94mm;height:54mm;overflow:hidden;page-break-after:always;break-after:page}
 .sheet:last-child{page-break-after:auto;break-after:auto}
@@ -100,7 +100,7 @@ body{font-family:Manrope,sans-serif;-webkit-print-color-adjust:exact;print-color
 
 /* ---------- OLD TOMON ---------- */
 .front .logo{position:absolute;left:9mm;top:50%;width:28mm;height:28mm;margin-top:-14mm;border-radius:50%;box-shadow:0 1.5mm 4mm var(--shadow)}
-.front .logo svg{display:block;width:100%;height:100%}
+.front .logo img{display:block;width:100%;height:100%}
 .front .ring{position:absolute;left:6mm;top:50%;width:34mm;height:34mm;margin-top:-17mm}
 .front .ring text{font:700 2.05px Manrope;letter-spacing:.62px;fill:var(--acc-t)}
 .front .brand{position:absolute;left:44mm;right:7mm;top:14.2mm;text-align:left}
@@ -174,7 +174,7 @@ body{font-family:Manrope,sans-serif;-webkit-print-color-adjust:exact;print-color
     <defs><path id="rc" d="M17,17 m-15.4,0 a15.4,15.4 0 1,1 30.8,0 a15.4,15.4 0 1,1 -30.8,0"/></defs>
     <text><textPath href="#rc">BISRARO • PREMIUM CHOCOLATE • SINCE 2016 • TASHKENT •</textPath></text>
   </svg>
-  <div class="logo">%%LOGO%%</div>
+  <div class="logo"><img src="logo-bisraro.png" alt="BISRARO"></div>
   <div class="brand">
     <h1 class="foil">BISRARO</h1>
     <div class="rule"><i></i><b></b><i></i></div>

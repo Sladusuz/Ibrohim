@@ -20,7 +20,8 @@ va 600 dpi `bisraro-front.png` / `bisraro-back.png`:
 
 Boshqa fayllar:
 - `bisraro-5-variant.png`, `bisraro-5-variant-2.png` — 1–5 va 6–10 variantlar bir rasmda (tanlash uchun)
-- `bisraro-logo.svg` / `bisraro-logo.png` — logo (SVG vektor, shriftlar ichiga joylangan; PNG 3000×3000, shaffof fon)
+- `bisraro-logo.png` — asl logo, oq fondan tozalangan, aniq doira shaklida, shaffof fon (1200×1200). Vizitkalarda shu ishlatiladi
+- `bisraro-logo-vektor.svg` — logoning qayta chizilgan vektor nusxasi (asl logoga yaqin, lekin aynan o'zi emas)
 - `bisraro-qr.png`, `bisraro-qr-poster.pdf` — "SKANERLANG" ramkali alohida QR (120×150 mm)
 - `bisraro-qr-oddiy.svg` / `.png` — faqat QR kod
 
@@ -36,4 +37,4 @@ PW=$(npm root -g)/playwright node plain.js
 ```
 
 - Dizayn — `design.html`, ranglar — `design.html` dagi `.t-…` bloklari va `themes.json` / `themes2.json`
-- Logo — `logo-bisraro.svg`, havola — `make_qr.py` dagi `URL`
+- Logo — `logo-original.webp` (asl fayl) → `python3 prep_logo.py` → `logo-bisraro.png`; havola — `make_qr.py` dagi `URL`
