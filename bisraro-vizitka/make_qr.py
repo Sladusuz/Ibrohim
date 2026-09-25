@@ -20,14 +20,14 @@ def qr_svg(dark='#2A1A10', eye='#2A1A10', eyeInner='#8E6B24', bg=None, logo=True
             if M[r][c] and not in_eye(r, c) and not in_logo(r, c):
                 dots.append('M%.2f %.2fh.84v.84h-.84z' % (c + .08, r + .08) if False else
                             'M%.3f,%.3fa.43,.43 0 1,0 .86,0a.43,.43 0 1,0 -.86,0' % (c + .07, r + .5))
-    out.append('<path fill="%s" d="%s"/>' % (dark, ''.join(dots)))
+    out.append('<path class="qd" fill="%s" d="%s"/>' % (dark, ''.join(dots)))
     for er, ec in eyes:
         out.append('<path fill="%s" fill-rule="evenodd" d="M%d,%dh7v7h-7z M%d,%dh5v5h-5z" transform="" style=""/>' % (eye, ec, er, ec + 1, er + 1) if False else
-                   '<rect x="%.1f" y="%.1f" width="6" height="6" rx="1.9" fill="none" stroke="%s" stroke-width="1"/>' % (ec + .5, er + .5, eye))
-        out.append('<rect x="%d" y="%d" width="3" height="3" rx=".9" fill="%s"/>' % (ec + 2, er + 2, eyeInner))
+                   '<rect class="qe" x="%.1f" y="%.1f" width="6" height="6" rx="1.9" fill="none" stroke="%s" stroke-width="1"/>' % (ec + .5, er + .5, eye))
+        out.append('<rect class="qi" x="%d" y="%d" width="3" height="3" rx=".9" fill="%s"/>' % (ec + 2, er + 2, eyeInner))
     if logo:
-        out.append('<circle cx="%.2f" cy="%.2f" r="%.2f" fill="%s" stroke="%s" stroke-width=".35"/>' % (c0, c0, lr, dark, eyeInner))
-        out.append('<text x="%.2f" y="%.2f" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="600" font-size="%.2f" fill="#E8CD82">B</text>' % (c0, c0 + lr * .42, lr * 1.25))
+        out.append('<circle class="ql" cx="%.2f" cy="%.2f" r="%.2f" fill="%s" stroke="%s" stroke-width=".35"/>' % (c0, c0, lr, dark, eyeInner))
+        out.append('<text x="%.2f" y="%.2f" text-anchor="middle" font-family="Fraunces,Georgia,serif" font-weight="600" font-size="%.2f" fill="#E8CD82" class="qb">B</text>' % (c0, c0 + lr * .42, lr * 1.25))
     out.append('</g></svg>')
     return '\n'.join(out)
 

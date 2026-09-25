@@ -1,0 +1,7 @@
+[
+  {"id": "cocoa",    "dir": "1-shokolad-oltin",    "name": "Shokolad & oltin"},
+  {"id": "ivory",    "dir": "2-oq-oltin",          "name": "Oq fon & oltin"},
+  {"id": "emerald",  "dir": "3-zumrad-oltin",      "name": "Zumrad & oltin"},
+  {"id": "burgundy", "dir": "4-bordo-rose-gold",   "name": "Bordo & rose gold"},
+  {"id": "midnight", "dir": "5-tungi-kok-shampan", "name": "Tungi ko'k & shampan"}
+]

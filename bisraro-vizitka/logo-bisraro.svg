@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" class="bis-logo">
+  <!-- BISRARO logotipi (vektor). Shriftlar: Cinzel, Manrope, Great Vibes -->
+  <defs>
+    <linearGradient id="lgRing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7A5A1E"/><stop offset=".18" stop-color="#F3DB97"/><stop offset=".34" stop-color="#B8893A"/>
+      <stop offset=".5" stop-color="#FFF1C2"/><stop offset=".68" stop-color="#9C7428"/><stop offset=".84" stop-color="#EACB7C"/><stop offset="1" stop-color="#7A5A1E"/>
+    </linearGradient>
+    <linearGradient id="lgRing2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8E6B24"/><stop offset=".3" stop-color="#F6E3A6"/><stop offset=".55" stop-color="#A67C2E"/><stop offset=".8" stop-color="#F0D48A"/><stop offset="1" stop-color="#8E6B24"/>
+    </linearGradient>
+    <radialGradient id="lgCream" cx=".45" cy=".4" r=".7">
+      <stop offset="0" stop-color="#FDFAF3"/><stop offset=".7" stop-color="#F6EFE2"/><stop offset="1" stop-color="#EDE2CE"/>
+    </radialGradient>
+    <linearGradient id="lgText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4A2A17"/><stop offset=".55" stop-color="#2E170B"/><stop offset="1" stop-color="#1E0E06"/>
+    </linearGradient>
+    <linearGradient id="lgGoldTxt" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8E6B24"/><stop offset=".35" stop-color="#C79A3F"/><stop offset=".6" stop-color="#9C7428"/><stop offset="1" stop-color="#B88A35"/>
+    </linearGradient>
+    <linearGradient id="lgLeaf" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#1E3F1C"/><stop offset=".5" stop-color="#3F6B2C"/><stop offset="1" stop-color="#6E8F3C"/>
+    </linearGradient>
+    <linearGradient id="lgRule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#C9A24B" stop-opacity="0"/><stop offset="1" stop-color="#B08A3A"/>
+    </linearGradient>
+  </defs>
+  <circle cx="500" cy="500" r="494" fill="url(#lgRing)"/>
+  <circle cx="500" cy="500" r="462" fill="#6E511A"/>
+  <circle cx="500" cy="500" r="458" fill="url(#lgRing2)"/>
+  <circle cx="500" cy="500" r="440" fill="url(#lgCream)"/>
+
+  <text x="500" y="515" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" fill="url(#lgText)" textLength="800" lengthAdjust="spacingAndGlyphs">
+    <tspan font-size="236">B</tspan><tspan font-size="180">ISRAR</tspan><tspan font-size="236">O</tspan>
+  </text>
+  <!-- O harfi ichidagi barg -->
+  <g transform="translate(838 392) rotate(40)">
+    <path d="M0,-92 C44,-50 46,42 0,92 C-46,42 -44,-50 0,-92 Z" fill="url(#lgLeaf)" stroke="#FBF6EC" stroke-width="8"/>
+    <path d="M0,-76 C5,-22 4,30 0,84" fill="none" stroke="#A9C27A" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+    <path d="M1,-34 L22,-52 M2,-4 L26,-24 M2,26 L24,6 M-1,-19 L-22,-37 M-2,11 L-24,-9 M-2,41 L-20,24" stroke="#A9C27A" stroke-width="2" opacity=".5" stroke-linecap="round"/>
+  </g>
+
+  <text x="500" y="590" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="600" font-size="54" letter-spacing="10" fill="#24130A">HEALTHY FOOD</text>
+  <rect x="128" y="621" width="116" height="2.5" fill="url(#lgRule)"/>
+  <rect x="756" y="621" width="116" height="2.5" fill="url(#lgRule)" transform="rotate(180 814 622.25)"/>
+  <text x="500" y="640" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="48" letter-spacing="9" fill="url(#lgGoldTxt)">PRODUCTION</text>
+  <text x="500" y="684" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="31" letter-spacing="7" fill="#1F4A33">UZBEKISTAN</text>
+  <text x="505" y="770" text-anchor="middle" font-family="'Great Vibes', cursive" font-size="76" fill="url(#lgGoldTxt)">Goodness in Every Bite</text>
+</svg>

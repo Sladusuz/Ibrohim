@@ -8,8 +8,43 @@
    Muhim matn va QR chetdan kamida 5 mm ichkarida (xavfsiz zona). */
 @font-face{font-family:Fraunces;src:url(fonts/fraunces.woff2) format('woff2');font-weight:100 900}
 @font-face{font-family:Manrope;src:url(fonts/manrope.woff2) format('woff2');font-weight:200 800}
-:root{--ink:#1A120B;--cocoa:#3E2418;--gold:#C9A24B;--gold-l:#E8CD82;--gold-d:#8E6B24;--cream:#F5E9DA;--milk:#FFF8F0;
+@font-face{font-family:Cinzel;src:url(fonts/cinzel.woff2) format('woff2');font-weight:400 900}
+@font-face{font-family:'Great Vibes';src:url(fonts/greatvibes.woff2) format('woff2')}
+:root,.t-cocoa{
+  /* 1. Shokolad & oltin */
+  --bg1:#4A2B1C;--bg2:#2A1A10;--bg3:#150D07;
+  --acc:#C9A24B;--acc-t:#E8CD82;--text:#F5E9DA;--muted:rgba(245,233,218,.66);
+  --line:rgba(232,205,130,.45);--chip:rgba(232,205,130,.14);--pat:#E8CD82;--pat-op:.09;
+  --tile:#FFF8F0;--qr-d:#2A1A10;--qr-i:#8E6B24;--logo-edge:#2A1A10;--shadow:rgba(0,0,0,.6);
   --foil:linear-gradient(115deg,#8E6B24 0%,#E8CD82 26%,#FFF3C9 38%,#C9A24B 52%,#8E6B24 68%,#E8CD82 86%,#C9A24B 100%)}
+.t-ivory{
+  /* 2. Oq fon & oltin */
+  --bg1:#FFFFFF;--bg2:#FCFAF6;--bg3:#F3ECE0;
+  --acc:#9C7A2E;--acc-t:#8E6B24;--text:#2A1A10;--muted:rgba(42,26,16,.64);
+  --line:rgba(156,122,46,.5);--chip:rgba(156,122,46,.12);--pat:#B8923F;--pat-op:.11;
+  --qb:#E8CD82;--tile:#FFFFFF;--qr-d:#2A1A10;--qr-i:#9C7A2E;--logo-edge:#FFFFFF;--shadow:rgba(90,60,20,.22);
+  --foil:linear-gradient(115deg,#6E511A 0%,#B8923F 28%,#D9B865 40%,#8E6B24 55%,#6E511A 70%,#B8923F 88%,#8E6B24 100%)}
+.t-emerald{
+  /* 3. Zumrad & oltin */
+  --bg1:#145443;--bg2:#0B3328;--bg3:#051A14;
+  --acc:#C9A24B;--acc-t:#E8CD82;--text:#EFF3EC;--muted:rgba(239,243,236,.66);
+  --line:rgba(232,205,130,.45);--chip:rgba(232,205,130,.14);--pat:#E8CD82;--pat-op:.08;
+  --tile:#FBF8F0;--qr-d:#0B2A21;--qr-i:#8E6B24;--logo-edge:#0B3328;--shadow:rgba(0,0,0,.55);
+  --foil:linear-gradient(115deg,#8E6B24 0%,#E8CD82 26%,#FFF3C9 38%,#C9A24B 52%,#8E6B24 68%,#E8CD82 86%,#C9A24B 100%)}
+.t-burgundy{
+  /* 4. Bordo & rose gold */
+  --bg1:#6E1A2E;--bg2:#420E1B;--bg3:#1F060C;
+  --acc:#D19A8A;--acc-t:#F0C9B8;--text:#FBEDE8;--muted:rgba(251,237,232,.68);
+  --line:rgba(240,201,184,.45);--chip:rgba(240,201,184,.14);--pat:#F0C9B8;--pat-op:.08;
+  --qb:#F0C9B8;--tile:#FFF8F5;--qr-d:#3A0C18;--qr-i:#A8645A;--logo-edge:#420E1B;--shadow:rgba(0,0,0,.55);
+  --foil:linear-gradient(115deg,#8C4E47 0%,#E7B3A2 26%,#FFE6DA 38%,#C98B7B 52%,#8C4E47 68%,#E7B3A2 86%,#C98B7B 100%)}
+.t-midnight{
+  /* 5. Tungi ko'k & shampan */
+  --bg1:#1F3456;--bg2:#101E36;--bg3:#060C19;
+  --acc:#CDB57E;--acc-t:#EBDDB5;--text:#EEF1F6;--muted:rgba(238,241,246,.64);
+  --line:rgba(235,221,181,.42);--chip:rgba(235,221,181,.13);--pat:#EBDDB5;--pat-op:.07;
+  --qb:#EBDDB5;--tile:#FBF9F4;--qr-d:#0E1B31;--qr-i:#9A8250;--logo-edge:#101E36;--shadow:rgba(0,0,0,.6);
+  --foil:linear-gradient(115deg,#8A7444 0%,#E6D6A8 26%,#FFF7E0 38%,#C9B27A 52%,#8A7444 68%,#E6D6A8 86%,#C9B27A 100%)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:#0b0704}
 body{font-family:Manrope,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -19,63 +54,62 @@ body{font-family:Manrope,sans-serif;-webkit-print-color-adjust:exact;print-color
 .foil{background:var(--foil);-webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.25em;margin-bottom:-.25em}
 
 /* umumiy fon */
-.dark{background:radial-gradient(90mm 60mm at 18% 40%,#4A2B1C 0%,#2A1A10 45%,#150D07 100%)}
-.pattern{position:absolute;inset:0;opacity:.09}
-.frame{position:absolute;inset:4.2mm;border:.18mm solid rgba(232,205,130,.45);border-radius:2.4mm}
-.frame::before,.frame::after{content:"";position:absolute;width:3mm;height:3mm;border:.35mm solid var(--gold-l)}
+.dark{background:radial-gradient(90mm 60mm at 18% 40%,var(--bg1) 0%,var(--bg2) 45%,var(--bg3) 100%)}
+.pattern{position:absolute;inset:0;opacity:var(--pat-op)}
+#girih *{stroke:var(--pat)}
+.qb{fill:var(--qb,#E8CD82)}.qd,.qi{fill:var(--qr-d)}.qi{fill:var(--qr-i)}.qe{stroke:var(--qr-d)}.ql{fill:var(--qr-d);stroke:var(--qr-i)}
+.frame{position:absolute;inset:4.2mm;border:.18mm solid var(--line);border-radius:2.4mm}
+.frame::before,.frame::after{content:"";position:absolute;width:3mm;height:3mm;border:.35mm solid var(--acc-t)}
 .frame::before{left:-.9mm;top:-.9mm;border-right:0;border-bottom:0}
 .frame::after{right:-.9mm;bottom:-.9mm;border-left:0;border-top:0}
 
 /* ---------- OLD TOMON ---------- */
-.front .logo{position:absolute;left:9.5mm;top:50%;width:27mm;height:27mm;margin-top:-13.5mm;border-radius:50%;
-  background:var(--milk);box-shadow:0 0 0 .5mm #2A1A10,0 0 0 .85mm var(--gold),0 1.5mm 4mm rgba(0,0,0,.6);overflow:hidden}
-.front .logo img{width:100%;height:100%;object-fit:cover;transform:scale(1.05)}
+.front .logo{position:absolute;left:9mm;top:50%;width:28mm;height:28mm;margin-top:-14mm;border-radius:50%;box-shadow:0 1.5mm 4mm var(--shadow)}
+.front .logo svg{display:block;width:100%;height:100%}
 .front .ring{position:absolute;left:6mm;top:50%;width:34mm;height:34mm;margin-top:-17mm}
-.front .ring text{font:700 2.05px Manrope;letter-spacing:.62px;fill:var(--gold-l)}
+.front .ring text{font:700 2.05px Manrope;letter-spacing:.62px;fill:var(--acc-t)}
 .front .brand{position:absolute;left:44mm;right:7mm;top:14.2mm;text-align:left}
 .front h1{font-family:Fraunces,serif;font-weight:600;font-size:7.6mm;letter-spacing:.07em;line-height:1;white-space:nowrap}
 .front .rule{display:flex;align-items:center;gap:1.4mm;margin:2.6mm 0 2.3mm;width:38mm}
-.front .rule i{display:block;flex:1 1 0;height:0;border-top:.3mm solid var(--gold);-webkit-mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.15));mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.15))}
+.front .rule i{display:block;flex:1 1 0;height:0;border-top:.3mm solid var(--acc);-webkit-mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.15));mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.15))}
 .front .rule i:first-child{-webkit-mask-image:linear-gradient(270deg,#000,rgba(0,0,0,.15));mask-image:linear-gradient(270deg,#000,rgba(0,0,0,.15))}
 .front .rule b{flex:none;width:1.5mm;height:1.5mm;transform:rotate(45deg);background:var(--foil)}
-.front .sub{font-weight:800;font-size:2.35mm;letter-spacing:.42em;color:var(--gold-l)}
-.front .meta{margin-top:1.6mm;font-weight:500;font-size:2.05mm;letter-spacing:.12em;color:rgba(245,233,218,.62)}
-.front .medal{position:absolute;right:8.2mm;bottom:7.3mm;font-size:1.65mm;font-weight:700;letter-spacing:.18em;color:rgba(232,205,130,.75)}
+.front .sub{font-weight:800;font-size:2.35mm;letter-spacing:.42em;color:var(--acc-t)}
+.front .meta{margin-top:1.6mm;font-weight:500;font-size:2.05mm;letter-spacing:.12em;color:var(--muted)}
+.front .medal{position:absolute;right:8.2mm;bottom:7.3mm;font-size:1.65mm;font-weight:700;letter-spacing:.18em;color:var(--acc-t);opacity:.8}
 
 /* ---------- ORQA TOMON ---------- */
 .back .qrbox{position:absolute;left:8mm;top:50%;width:34mm;height:34mm;margin-top:-17mm}
-.back .tile{position:absolute;inset:2.4mm;border-radius:2.2mm;background:var(--milk);box-shadow:0 1.2mm 3mm rgba(0,0,0,.55);padding:1.2mm}
+.back .tile{position:absolute;inset:2.4mm;border-radius:2.2mm;background:var(--tile);box-shadow:0 0 0 .15mm var(--line),0 1.2mm 3mm var(--shadow);padding:1.2mm}
 .back .tile svg{display:block;width:100%;height:100%}
 .back .corners{position:absolute;inset:0}
-.back .corners i{position:absolute;width:6mm;height:6mm;border:.55mm solid var(--gold-l);border-radius:.6mm}
+.back .corners i{position:absolute;width:6mm;height:6mm;border:.55mm solid var(--acc-t);border-radius:.6mm}
 .back .corners i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0;border-top-left-radius:2.6mm}
 .back .corners i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-top-right-radius:2.6mm}
 .back .corners i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-bottom-left-radius:2.6mm}
 .back .corners i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-bottom-right-radius:2.6mm}
-.back .laser{position:absolute;left:1.6mm;right:1.6mm;top:44%;height:.45mm;border-radius:1mm;
-  background:linear-gradient(90deg,transparent,var(--gold-l) 20%,#FFF3C9 50%,var(--gold-l) 80%,transparent);box-shadow:0 0 1.6mm .4mm rgba(232,205,130,.75);opacity:.9}
 .back .info{position:absolute;left:47mm;right:7.5mm;top:9.6mm}
-.back .kicker{display:flex;align-items:center;gap:1.3mm;font-weight:800;font-size:1.75mm;letter-spacing:.3em;color:var(--gold)}
+.back .kicker{display:flex;align-items:center;gap:1.3mm;font-weight:800;font-size:1.75mm;letter-spacing:.3em;color:var(--acc)}
 .back .kicker svg{width:3.1mm;height:3.1mm}
 .back h2{margin-top:1.3mm;font-family:Fraunces,serif;font-weight:600;font-size:6.4mm;line-height:.95;letter-spacing:.02em}
-.back .hint{margin-top:1.5mm;font-size:1.95mm;line-height:1.35;color:rgba(245,233,218,.72);font-weight:500}
+.back .hint{margin-top:1.5mm;font-size:1.95mm;line-height:1.35;color:var(--muted);font-weight:500}
 .back ul{list-style:none;margin-top:3.1mm;display:grid;gap:1.25mm}
-.back li{display:flex;align-items:center;gap:1.6mm;font-size:2.2mm;font-weight:700;color:var(--cream);letter-spacing:.02em;white-space:nowrap}
-.back li span{display:grid;place-items:center;flex:none;width:3.5mm;height:3.5mm;border-radius:50%;background:rgba(232,205,130,.14);color:var(--gold-l)}
+.back li{display:flex;align-items:center;gap:1.6mm;font-size:2.2mm;font-weight:700;color:var(--text);letter-spacing:.02em;white-space:nowrap}
+.back li span{display:grid;place-items:center;flex:none;width:3.5mm;height:3.5mm;border-radius:50%;background:var(--chip);color:var(--acc-t)}
 .back li svg{width:2.1mm;height:2.1mm}
-.back .arrow{position:absolute;left:39.2mm;top:12.2mm;width:9mm;height:9mm;color:var(--gold-l)}
+.back .arrow{position:absolute;left:39.2mm;top:12.2mm;width:9mm;height:9mm;color:var(--acc-t)}
 
 /* ---------- ALOHIDA QR (kvadrat) ---------- */
 .qrsheet{width:120mm;height:150mm;position:relative;overflow:hidden}
-.qrsheet .card{position:absolute;left:12mm;right:12mm;top:12mm;bottom:12mm;border-radius:8mm;background:var(--milk);
-  box-shadow:0 0 0 1.2mm var(--gold),0 0 0 2.2mm #2A1A10}
+.qrsheet .card{position:absolute;left:12mm;right:12mm;top:12mm;bottom:12mm;border-radius:8mm;background:var(--tile);
+  box-shadow:0 0 0 1.2mm var(--acc),0 0 0 2.2mm var(--bg2)}
 .qrsheet .qr{position:absolute;left:12mm;right:12mm;top:12mm;aspect-ratio:1}
 .qrsheet .qr svg{width:100%;height:100%;display:block}
 .qrsheet .lbl{position:absolute;left:0;right:0;bottom:9mm;text-align:center}
-.qrsheet .pill{display:inline-flex;align-items:center;gap:3mm;padding:3.2mm 7mm;border-radius:20mm;background:#2A1A10;color:var(--gold-l);
+.qrsheet .pill{display:inline-flex;align-items:center;gap:3mm;padding:3.2mm 7mm;border-radius:20mm;background:var(--qr-d);color:var(--acc-t);
   font-weight:800;font-size:6mm;letter-spacing:.24em}
 .qrsheet .pill svg{width:7mm;height:7mm}
-.qrsheet .url{margin-top:2.8mm;font-size:3.6mm;font-weight:700;letter-spacing:.08em;color:#6B3F2A}
+.qrsheet .url{margin-top:2.8mm;font-size:3.6mm;font-weight:700;letter-spacing:.08em;color:var(--qr-i)}
 </style>
 </head>
 <body>
@@ -105,7 +139,7 @@ body{font-family:Manrope,sans-serif;-webkit-print-color-adjust:exact;print-color
     <defs><path id="rc" d="M17,17 m-15.4,0 a15.4,15.4 0 1,1 30.8,0 a15.4,15.4 0 1,1 -30.8,0"/></defs>
     <text><textPath href="#rc">BISRARO • PREMIUM CHOCOLATE • SINCE 2016 • TASHKENT •</textPath></text>
   </svg>
-  <div class="logo"><img src="logo.webp" alt=""></div>
+  <div class="logo">%%LOGO%%</div>
   <div class="brand">
     <h1 class="foil">BISRARO</h1>
     <div class="rule"><i></i><b></b><i></i></div>
@@ -151,8 +185,10 @@ body{font-family:Manrope,sans-serif;-webkit-print-color-adjust:exact;print-color
 </section>
 
 <script>
-/* ?view=front | back | qr — faqat bitta qismni ko'rsatadi (render uchun) */
-var v = new URLSearchParams(location.search).get('view');
+/* ?view=front | back | qr — faqat bitta qismni ko'rsatadi (render uchun)
+   ?theme=cocoa | ivory | emerald | burgundy | midnight — rang varianti */
+var q = new URLSearchParams(location.search), v = q.get('view');
+document.body.className = 't-' + (q.get('theme') || 'cocoa');
 if (v) document.querySelectorAll('[data-view]').forEach(function(s){ if (s.dataset.view !== v) s.remove(); });
 </script>
 </body>
