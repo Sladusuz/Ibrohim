@@ -4,7 +4,7 @@
 const fs = require('fs');
 const { chromium } = require(process.env.PW);
 const url = 'file://' + process.cwd() + '/index.html';
-const themes = JSON.parse(fs.readFileSync('themes.json', 'utf8'));
+const themes = [].concat(...['themes.json', 'themes2.json'].map(f => JSON.parse(fs.readFileSync(f, 'utf8'))));
 (async () => {
   const b = await chromium.launch();
   const dsf = 600 / 96;

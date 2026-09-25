@@ -1,0 +1,7 @@
+[
+  {"id": "terracotta", "dir": "6-terrakota-mis",        "name": "Terrakota & mis"},
+  {"id": "amethyst",   "dir": "7-binafsha-oltin",       "name": "Binafsha & oltin"},
+  {"id": "turquoise",  "dir": "8-firuza-oltin",         "name": "Samarqand firuzasi & oltin"},
+  {"id": "graphite",   "dir": "9-grafit-kumush",        "name": "Grafit & kumush"},
+  {"id": "blush",      "dir": "10-och-pushti-rose-gold","name": "Och pushti & rose gold"}
+]
