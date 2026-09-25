@@ -4,8 +4,8 @@ QR kod `http://bisraro.uz/contacts` ga olib boradi (xatoga chidamlilik darajasi 
 
 ## `out/` papkasi
 
-10 ta rang varianti — har birida `bisraro-vizitka-print.pdf` (bosmaxona uchun: 2 bet, 94×54 mm = 90×50 mm + 2 mm bleed)
-va 600 dpi `bisraro-front.png` / `bisraro-back.png`:
+10 ta rang varianti — har birida uch tilda bosmaxona fayli `bisraro-vizitka-uz.pdf` / `-ru.pdf` / `-en.pdf`
+(2 bet, 94×54 mm = 90×50 mm + 2 mm bleed) va 600 dpi `bisraro-front.png`, `bisraro-back-uz/ru/en.png`:
 
 1. `1-shokolad-oltin/` — to'q shokolad va oltin
 2. `2-oq-oltin/` — oq fon va oltin
@@ -36,5 +36,5 @@ python3 make_pdf.py
 PW=$(npm root -g)/playwright node plain.js
 ```
 
-- Dizayn — `design.html`, ranglar — `design.html` dagi `.t-…` bloklari va `themes.json` / `themes2.json`
+- Dizayn — `design.html` (orqa tomon matni — `TXT` obyekti, `?lang=uz|ru|en`), ranglar — `design.html` dagi `.t-…` bloklari va `themes.json` / `themes2.json`
 - Logo — `logo-original.webp` (asl fayl) → `python3 prep_logo.py` → `logo-bisraro.png`; havola — `make_qr.py` dagi `URL`

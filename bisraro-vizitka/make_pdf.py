@@ -15,7 +15,8 @@ def pdf(name, pages, w, h):
 
 for t in THEMES:
     base = 'out/%s/' % t['dir']
-    pdf(base + 'bisraro-vizitka-print.pdf', [base + 'bisraro-front.png', base + 'bisraro-back.png'], 94, 54)
+    for l in ('uz', 'ru', 'en'):
+        pdf(base + 'bisraro-vizitka-%s.pdf' % l, [base + 'bisraro-front.png', base + 'bisraro-back-%s.png' % l], 94, 54)
 pdf('out/bisraro-qr-poster.pdf', ['out/bisraro-qr.png'], 120, 150)
 
 # Umumiy ko'rinish: 5 variant, har qatorda old va orqa tomon (qirqish chizig'i bo'yicha)
@@ -32,7 +33,7 @@ for themes, name, first in SETS:
     for i, t in enumerate(themes):
         dr.text((pad, y + 12), '%d. %s' % (i + 1 + first, t['name']), fill='#2A1A10', font=font)
         y += label_h
-        for j, side in enumerate(['front', 'back']):
+        for j, side in enumerate(['front', 'back-uz']):
             im = Image.open('out/%s/bisraro-%s.png' % (t['dir'], side)).convert('RGB')
             bw, bh = im.size; bx, by = round(bw * 2 / 94), round(bh * 2 / 54)  # 2 mm bleed'ni qirqish
             im = im.crop((bx, by, bw - bx, bh - by)).resize((card_w, card_h), Image.LANCZOS)

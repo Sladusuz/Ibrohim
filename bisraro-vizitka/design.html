@@ -8,6 +8,7 @@
    Muhim matn va QR chetdan kamida 5 mm ichkarida (xavfsiz zona). */
 @font-face{font-family:Fraunces;src:url(fonts/fraunces.woff2) format('woff2');font-weight:100 900}
 @font-face{font-family:Manrope;src:url(fonts/manrope.woff2) format('woff2');font-weight:200 800}
+@font-face{font-family:Manrope;src:url(fonts/manrope-cyrillic.woff2) format('woff2');font-weight:200 800;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:Cinzel;src:url(fonts/cinzel.woff2) format('woff2');font-weight:400 900}
 @font-face{font-family:'Great Vibes';src:url(fonts/greatvibes.woff2) format('woff2')}
 :root,.t-cocoa{
@@ -123,16 +124,17 @@ body{font-family:Manrope,sans-serif;font-kerning:normal;text-rendering:geometric
 .back .corners i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0;border-top-right-radius:2.6mm}
 .back .corners i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0;border-bottom-left-radius:2.6mm}
 .back .corners i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0;border-bottom-right-radius:2.6mm}
-.back .info{position:absolute;left:47mm;right:7.5mm;top:9.6mm}
-.back .kicker{display:flex;align-items:center;gap:1.3mm;font-weight:800;font-size:1.75mm;letter-spacing:.3em;color:var(--acc)}
-.back .kicker svg{width:3.1mm;height:3.1mm}
-.back h2{margin-top:1.3mm;font-family:Fraunces,serif;font-weight:600;font-size:6.4mm;line-height:.95;letter-spacing:.02em}
-.back .hint{margin-top:1.5mm;font-size:1.95mm;line-height:1.35;color:var(--muted);font-weight:500}
-.back ul{list-style:none;margin-top:3.1mm;display:grid;gap:1.25mm}
-.back li{display:flex;align-items:center;gap:1.6mm;font-size:2.2mm;font-weight:700;color:var(--text);letter-spacing:.02em;white-space:nowrap}
-.back li span{display:grid;place-items:center;flex:none;width:3.5mm;height:3.5mm;border-radius:50%;background:var(--chip);color:var(--acc-t)}
-.back li svg{width:2.1mm;height:2.1mm}
-.back .arrow{position:absolute;left:39.2mm;top:12.2mm;width:9mm;height:9mm;color:var(--acc-t)}
+.back .info{position:absolute;left:47.5mm;right:7mm;top:9mm;bottom:9mm;display:flex;flex-direction:column;justify-content:center}
+.back .kicker{display:flex;align-items:center;gap:1.4mm;font-weight:800;font-size:2.1mm;letter-spacing:.34em;color:var(--acc)}
+.back .kicker svg{width:3.6mm;height:3.6mm}
+.back .hint{white-space:nowrap;margin-top:2.2mm;font-size:2.25mm;line-height:1.4;color:var(--muted);font-weight:500}
+.back .sep{display:flex;align-items:center;gap:1.2mm;margin:3mm 0 3mm;width:30mm}
+.back .sep i{flex:1 1 0;height:0;border-top:.25mm solid var(--acc);-webkit-mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.1));mask-image:linear-gradient(90deg,#000,rgba(0,0,0,.1))}
+.back .sep b{flex:none;width:1.2mm;height:1.2mm;transform:rotate(45deg);background:var(--foil)}
+.back ul{list-style:none;display:grid;gap:1.6mm}
+.back li{display:flex;align-items:center;gap:1.8mm;font-size:2.45mm;font-weight:700;color:var(--text);letter-spacing:.02em;white-space:nowrap}
+.back li span{display:grid;place-items:center;flex:none;width:3.9mm;height:3.9mm;border-radius:50%;background:var(--chip);color:var(--acc-t)}
+.back li svg{width:2.3mm;height:2.3mm}
 
 /* ---------- ALOHIDA QR (kvadrat) ---------- */
 .qrsheet{width:120mm;height:150mm;position:relative;overflow:hidden}
@@ -192,13 +194,10 @@ body{font-family:Manrope,sans-serif;font-kerning:normal;text-rendering:geometric
     <div class="tile">%%QR%%</div>
     <div class="corners"><i></i><i></i><i></i><i></i></div>
   </div>
-  <svg class="arrow" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M36 6c-8 1-20 6-24 22" stroke-dasharray="2.5 3"/><path d="M6.5 22.5L11.5 29l6-4.8"/>
-  </svg>
   <div class="info">
-    <div class="kicker"><svg><use href="#i-scan"/></svg>SCAN ME</div>
-    <h2 class="foil">Skanerlang</h2>
-    <p class="hint">Kamerani QR kodga qarating —<br>barcha kontaktlarimiz bir joyda</p>
+    <div class="kicker"><svg><use href="#i-scan"/></svg><span data-t="kicker">SKANER QILING</span></div>
+    <p class="hint" data-t="hint">Kamerani QR kodga qarating —<br>barcha kontaktlarimiz bir joyda</p>
+    <div class="sep"><i></i><b></b></div>
     <ul>
       <li><span><svg><use href="#i-phone"/></svg></span>+998 97 777 44 40</li>
       <li><span><svg><use href="#i-ig"/></svg></span>@bisraro.uz</li>
@@ -224,6 +223,21 @@ body{font-family:Manrope,sans-serif;font-kerning:normal;text-rendering:geometric
    ?theme=cocoa | ivory | emerald | burgundy | midnight — rang varianti */
 var q = new URLSearchParams(location.search), v = q.get('view');
 document.body.className = 't-' + (q.get('theme') || 'cocoa');
+/* Orqa tomon matni: ?lang=uz | ru | en */
+var TXT = {
+  uz: { kicker: 'SKANER QILING', hint: 'Kamerani QR kodga qarating —<br>barcha kontaktlarimiz bir joyda' },
+  ru: { kicker: 'СКАНИРУЙТЕ', hint: 'Наведите камеру на QR-код —<br>все наши контакты в одном месте' },
+  en: { kicker: 'SCAN ME', hint: 'Point your camera at the QR code —<br>all our contacts in one place' }
+};
+var L = TXT[q.get('lang')] ? q.get('lang') : 'uz';
+document.documentElement.lang = L;
+document.querySelectorAll('[data-t]').forEach(function(el){ el.innerHTML = TXT[L][el.dataset.t]; });
+/* Uzun matn ustunga sig'masa shrift kichrayadi */
+document.fonts.ready.then(function(){
+  var info = document.querySelector('.back .info'), h = document.querySelector('.back .hint'), fs = 2.25;
+  if (!info || !h) return;
+  while (h.scrollWidth > info.clientWidth && fs > 1.7) { fs -= .05; h.style.fontSize = fs + 'mm'; }
+});
 if (v) document.querySelectorAll('[data-view]').forEach(function(s){ if (s.dataset.view !== v) s.remove(); });
 </script>
 </body>
