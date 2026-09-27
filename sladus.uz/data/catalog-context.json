@@ -1,0 +1,469 @@
+{
+ "company": {
+  "name": "Sladus Leading",
+  "legal": "OOO «SLADUS PRODUCE»",
+  "founded": 2010,
+  "address": {
+   "uz": "Toshkent sh., Yangihayot tumani, Sputnik-17 mavzesi, 52A-uy, 100102",
+   "ru": "г. Ташкент, Янгихаётский район, массив Спутник-17, дом 52А, 100102",
+   "en": "Sputnik-17, 52A, Yangihayot district, Tashkent 100102, Uzbekistan"
+  },
+  "phoneExport": "+998 97 464 44 40",
+  "phoneLocal": [
+   "+998 99 811 44 40",
+   "+998 99 880 99 90"
+  ],
+  "email": "info@sladus.uz",
+  "hours": {
+   "uz": "Dush–Jum, 9:00 — 18:00",
+   "ru": "Пн–Пт, 9:00 — 18:00",
+   "en": "Mon–Fri, 9:00 — 18:00"
+  }
+ },
+ "categories": [
+  {
+   "id": "draje",
+   "name": {
+    "uz": "Draje",
+    "ru": "Драже",
+    "en": "Dragee"
+   },
+   "tagline": {
+    "uz": "Yaltiroq qobiqli mayda shirinliklar",
+    "ru": "Маленькие сладости в глянцевой глазури",
+    "en": "Small sweets in a glossy shell"
+   }
+  },
+  {
+   "id": "nachinka",
+   "name": {
+    "uz": "Ichlikli konfetlar",
+    "ru": "Конфеты с начинкой",
+    "en": "Filled sweets"
+   },
+   "tagline": {
+    "uz": "Shokolad va nozik ichlik uyg‘unligi",
+    "ru": "Нежное сочетание шоколада и начинки",
+    "en": "Chocolate meets a soft centre"
+   }
+  },
+  {
+   "id": "dekor",
+   "name": {
+    "uz": "Dekorativ sepmalar",
+    "ru": "Декоративные посыпки",
+    "en": "Decorative toppings"
+   },
+   "tagline": {
+    "uz": "Tort va desertlar uchun bezak",
+    "ru": "Украшение для тортов и десертов",
+    "en": "Finishing touch for cakes and desserts"
+   }
+  },
+  {
+   "id": "zavtrak",
+   "name": {
+    "uz": "Tayyor nonushtalar",
+    "ru": "Готовые завтраки",
+    "en": "Breakfast cereals"
+   },
+   "tagline": {
+    "uz": "Kunni tez va to‘yimli boshlash",
+    "ru": "Быстрое и питательное начало дня",
+    "en": "A quick, filling start to the day"
+   }
+  }
+ ],
+ "products": [
+  {
+   "id": "sl",
+   "code": "2.32",
+   "name": "SLADUS SL",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan makkajo‘xori-bug‘doy mahsuloti",
+    "ru": "Глазированные кукурузно-пшеничные изделия",
+    "en": "Glazed corn and wheat pieces"
+   },
+   "net": "2 kg",
+   "kcal": 625
+  },
+  {
+   "id": "dare",
+   "code": "2.47",
+   "name": "SLADUS DARE",
+   "cat": "draje",
+   "descr": {
+    "uz": "Kakao kukuni bilan qoplangan glazurlangan yeryong‘oq",
+    "ru": "Глазированный арахис, покрытый какао порошком",
+    "en": "Glazed peanut dusted with cocoa powder"
+   },
+   "net": "2 kg",
+   "kcal": 497
+  },
+  {
+   "id": "nati",
+   "code": "2.19",
+   "name": "SLADUS NATI",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan yeryong‘oq",
+    "ru": "Глазированный арахис",
+    "en": "Glazed peanut"
+   },
+   "net": "2 kg",
+   "kcal": 588
+  },
+  {
+   "id": "takti",
+   "code": "2.35",
+   "name": "SLADUS TAKTI",
+   "cat": "draje",
+   "descr": {
+    "uz": "Yaltiroq qobiqdagi glazurlangan xlopyalar",
+    "ru": "Глазированные хлопья в глянцевой оболочке",
+    "en": "Glazed flakes in a glossy shell"
+   },
+   "net": "2 kg",
+   "kcal": 500
+  },
+  {
+   "id": "park",
+   "code": "2.31",
+   "name": "SLADUS PARK",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan makkajo‘xori-bug‘doy mahsuloti",
+    "ru": "Глазированные кукурузно-пшеничные изделия",
+    "en": "Glazed corn and wheat pieces"
+   },
+   "net": "2 kg",
+   "kcal": 546
+  },
+  {
+   "id": "dark",
+   "code": "2.26",
+   "name": "SLADUS DARK",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan makkajo‘xori-bug‘doy mahsuloti",
+    "ru": "Глазированные кукурузно-пшеничные изделия",
+    "en": "Glazed corn and wheat pieces"
+   },
+   "net": "2 kg",
+   "kcal": 497
+  },
+  {
+   "id": "madi",
+   "code": "2.36",
+   "name": "SLADUS MADI",
+   "cat": "draje",
+   "descr": {
+    "uz": "Maydalangan yeryong‘oqli konfetlar",
+    "ru": "Конфеты с дробленым арахисом",
+    "en": "Sweets with crushed peanut"
+   },
+   "net": "2 kg",
+   "kcal": 521
+  },
+  {
+   "id": "grashok",
+   "code": "2.44",
+   "name": "SLADUS GRASHOK",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan makkajo‘xori-bug‘doy mahsuloti",
+    "ru": "Глазированные кукурузно-пшеничные изделия",
+    "en": "Glazed corn and wheat pieces"
+   },
+   "net": "2,1 kg",
+   "kcal": 491
+  },
+  {
+   "id": "milk-grash",
+   "code": "2.48",
+   "name": "SLADUS MILK GRASH",
+   "cat": "draje",
+   "descr": {
+    "uz": "Grashok kroshkali sutli draje",
+    "ru": "Молочное драже с крошкой грашок",
+    "en": "Milk dragee with grashok crumb"
+   },
+   "net": "2 kg",
+   "kcal": 497
+  },
+  {
+   "id": "anosh",
+   "code": "2.33",
+   "name": "SLADUS ANOSH",
+   "cat": "draje",
+   "descr": {
+    "uz": "Yaltiroq qobiqdagi glazurlangan xlopyalar",
+    "ru": "Глазированные хлопья в глянцевой оболочке",
+    "en": "Glazed flakes in a glossy shell"
+   },
+   "net": "2 kg",
+   "kcal": 508
+  },
+  {
+   "id": "light",
+   "code": "2.18",
+   "name": "SLADUS LIGHT",
+   "cat": "draje",
+   "descr": {
+    "uz": "Rangli yaltiroq qobiqdagi glazurlangan yeryong‘oq",
+    "ru": "Глазированный арахис в цветной глянцевой оболочке",
+    "en": "Glazed peanut in a coloured glossy shell"
+   },
+   "net": "2 kg",
+   "kcal": 601
+  },
+  {
+   "id": "akmev",
+   "code": "2.39",
+   "name": "SLADUS AKMEV",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan makkajo‘xori-bug‘doy mahsuloti",
+    "ru": "Глазированные кукурузно-пшеничные изделия",
+    "en": "Glazed corn and wheat pieces"
+   },
+   "net": "2 kg",
+   "kcal": 508
+  },
+  {
+   "id": "kokosweet",
+   "code": "2.02",
+   "name": "KOKOSWEET",
+   "cat": "draje",
+   "descr": {
+    "uz": "Kokos qirindisidagi glazurlangan yeryong‘oq",
+    "ru": "Глазированный арахис в кокосовой стружке",
+    "en": "Glazed peanut in coconut flakes"
+   },
+   "net": "2 kg",
+   "kcal": 604
+  },
+  {
+   "id": "aknuts",
+   "code": "2.38",
+   "name": "SLADUS AKNUTS",
+   "cat": "draje",
+   "descr": {
+    "uz": "Maydalangan yeryong‘oqli konfetlar",
+    "ru": "Конфеты с дробленым арахисом",
+    "en": "Sweets with crushed peanut"
+   },
+   "net": "2 kg",
+   "kcal": 647
+  },
+  {
+   "id": "jes",
+   "code": "2.46",
+   "name": "SLADUS JES",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan xlopyalar",
+    "ru": "Глазированные хлопья",
+    "en": "Glazed flakes"
+   },
+   "net": "2 kg",
+   "kcal": 521
+  },
+  {
+   "id": "sweet-light",
+   "code": "2.04",
+   "name": "SWEET LIGHT",
+   "cat": "draje",
+   "descr": {
+    "uz": "Rangli yaltiroq qobiqdagi glazurlangan yeryong‘oq",
+    "ru": "Глазированный арахис в цветной глянцевой оболочке",
+    "en": "Glazed peanut in a coloured glossy shell"
+   },
+   "net": "2 kg",
+   "kcal": 601
+  },
+  {
+   "id": "akshok",
+   "code": "2.40",
+   "name": "SLADUS AKSHOK",
+   "cat": "draje",
+   "descr": {
+    "uz": "Glazurlangan yeryong‘oq",
+    "ru": "Глазированный арахис",
+    "en": "Glazed peanut"
+   },
+   "net": "2 kg",
+   "kcal": 647
+  },
+  {
+   "id": "duo",
+   "code": "1.19",
+   "name": "SLADUS DUO",
+   "cat": "nachinka",
+   "descr": {
+    "uz": "Kakao ta’mli ichlikli konfetlar",
+    "ru": "Конфеты с начинкой со вкусом какао",
+    "en": "Filled sweets with cocoa flavour"
+   },
+   "net": "2 kg",
+   "kcal": 553
+  },
+  {
+   "id": "pinda",
+   "code": "2.19",
+   "name": "SLADUS PINDA",
+   "cat": "draje",
+   "descr": {
+    "uz": "Draje konfetlar",
+    "ru": "Конфеты драже",
+    "en": "Dragee sweets"
+   },
+   "net": "1 kg",
+   "kcal": 540
+  },
+  {
+   "id": "piona",
+   "code": "2.20",
+   "name": "SLADUS PIONA",
+   "cat": "draje",
+   "descr": {
+    "uz": "Draje konfetlar",
+    "ru": "Конфеты драже",
+    "en": "Dragee sweets"
+   },
+   "net": "1 kg",
+   "kcal": 540
+  },
+  {
+   "id": "lactic",
+   "code": "1.14",
+   "name": "SLADUS LACTIC",
+   "cat": "nachinka",
+   "descr": {
+    "uz": "Sut ta’mli ichlikli konfetlar",
+    "ru": "Конфеты с начинкой молочного вкуса",
+    "en": "Filled sweets with a milk centre"
+   },
+   "net": "2 kg",
+   "kcal": 638
+  },
+  {
+   "id": "solfa",
+   "code": "1.25",
+   "name": "SLADUS SOLFA",
+   "cat": "nachinka",
+   "descr": {
+    "uz": "Kakao ta’mli ichlikli konfetlar",
+    "ru": "Конфеты с начинкой со вкусом какао",
+    "en": "Filled sweets with cocoa flavour"
+   },
+   "net": "2 kg",
+   "kcal": 635
+  },
+  {
+   "id": "gold",
+   "code": "1.01",
+   "name": "SLADUS GOLD",
+   "cat": "nachinka",
+   "descr": {
+    "uz": "Kakao ta’mli ichlikli konfetlar",
+    "ru": "Конфеты с начинкой со вкусом какао",
+    "en": "Filled sweets with cocoa flavour"
+   },
+   "net": "2 kg",
+   "kcal": 584
+  },
+  {
+   "id": "rosse",
+   "code": "1.30",
+   "name": "SLADUS ROSSE",
+   "cat": "nachinka",
+   "descr": {
+    "uz": "Yaltiroq qobiqdagi glazurlangan yeryong‘oq",
+    "ru": "Глазированный арахис в глянцевой оболочке",
+    "en": "Glazed peanut in a glossy shell"
+   },
+   "net": "2 kg",
+   "kcal": 586
+  },
+  {
+   "id": "coffetto",
+   "code": "1.26",
+   "name": "SLADUS COFFETTO",
+   "cat": "nachinka",
+   "descr": {
+    "uz": "Kakao ta’mli ichlikli konfetlar",
+    "ru": "Конфеты с начинкой со вкусом какао",
+    "en": "Filled sweets with cocoa flavour"
+   },
+   "net": "2 kg",
+   "kcal": 647
+  },
+  {
+   "id": "escuro",
+   "code": "1.19",
+   "name": "SLADUS ESCURO",
+   "cat": "nachinka",
+   "descr": {
+    "uz": "Kakao ta’mli ichlikli konfetlar",
+    "ru": "Конфеты с начинкой со вкусом какао",
+    "en": "Filled sweets with cocoa flavour"
+   },
+   "net": "2 kg",
+   "kcal": 553
+  },
+  {
+   "id": "stick-light",
+   "code": "5.08",
+   "name": "SLADUS STICK LIGHT",
+   "cat": "dekor",
+   "descr": {
+    "uz": "Dekorativ qandolat sepmasi, rangli vermishel",
+    "ru": "Декоративная кондитерская посыпка, цветная вермишель",
+    "en": "Decorative topping, coloured vermicelli"
+   },
+   "net": "1/4 kg",
+   "kcal": 415
+  },
+  {
+   "id": "top-drops",
+   "code": "5.02",
+   "name": "SLADUS TOP DROPS LIGHT",
+   "cat": "dekor",
+   "descr": {
+    "uz": "Dekorativ qandolat sepmasi, rangli sharchalar",
+    "ru": "Декоративная кондитерская посыпка, цветные шарики",
+    "en": "Decorative topping, coloured beads"
+   },
+   "net": "1/4 kg",
+   "kcal": 508
+  },
+  {
+   "id": "stick",
+   "code": "5.07",
+   "name": "SLADUS STICK",
+   "cat": "dekor",
+   "descr": {
+    "uz": "Dekorativ qandolat sepmasi, vermishel",
+    "ru": "Декоративная кондитерская посыпка, вермишель",
+    "en": "Decorative topping, vermicelli"
+   },
+   "net": "1/4 kg",
+   "kcal": 434
+  },
+  {
+   "id": "hrust",
+   "code": "4.13",
+   "name": "SLADUS HRUST",
+   "cat": "zavtrak",
+   "descr": {
+    "uz": "Kakaoli glazursiz makkajo‘xori mahsuloti",
+    "ru": "Неглазированные кукурузные изделия с какао",
+    "en": "Unglazed corn pieces with cocoa"
+   },
+   "net": "2,5 kg",
+   "kcal": 378
+  }
+ ]
+}

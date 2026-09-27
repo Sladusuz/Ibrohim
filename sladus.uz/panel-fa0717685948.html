@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boshqaruv — Sladus</title>
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#120C0B">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/app.css">
+<link rel="stylesheet" href="assets/css/panel.css">
+</head>
+<body class="pbody">
+
+<div class="auth" id="auth" hidden>
+  <form class="auth__card" id="authForm" novalidate>
+    <img src="logo.svg" alt="Sladus">
+    <h1>Boshqaruv paneli</h1>
+    <p>Faqat administratorlar uchun.</p>
+    <div class="note note--bad" id="authErr"></div>
+    <div class="fld"><label for="em">Email</label><input type="email" id="em" autocomplete="username" required></div>
+    <div class="fld"><label for="pw">Parol</label><input type="password" id="pw" autocomplete="current-password" required></div>
+    <button class="btn btn--fill btn--wide" type="submit">Kirish</button>
+    <p class="auth__hint">Bu sahifa saytning hech qayerida ko‘rsatilmagan va qidiruv tizimlaridan yopilgan.</p>
+  </form>
+</div>
+
+<div class="shell" id="shell" hidden>
+  <aside class="rail">
+    <div class="rail__top"><img src="logo.svg" alt=""><b>Sladus</b></div>
+    <nav id="rail">
+      <button type="button" data-v="dash" aria-current="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="9" rx="1.6"/><rect x="14" y="3" width="7" height="5" rx="1.6"/><rect x="14" y="12" width="7" height="9" rx="1.6"/><rect x="3" y="16" width="7" height="5" rx="1.6"/></svg><span>Boshqaruv</span>
+      </button>
+      <button type="button" data-v="items">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/></svg><span>Mahsulotlar</span>
+      </button>
+      <button type="button" data-v="cats">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.6 13.4l-7.2 7.2a2 2 0 01-2.8 0l-7.2-7.2A2 2 0 013 12V5a2 2 0 012-2h7a2 2 0 011.4.6l7.2 7.2a2 2 0 010 2.6z"/></svg><span>Yo‘nalishlar</span>
+      </button>
+      <button type="button" data-v="msgs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M3 7l9 6 9-6"/></svg><span>So‘rovlar</span><em id="unread" hidden></em>
+      </button>
+      <button type="button" data-v="set">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M4 12H2m20 0h-2M12 4V2m0 20v-2M6.4 6.4L5 5m14 14l-1.4-1.4M17.6 6.4L19 5M5 19l1.4-1.4"/></svg><span>Sozlamalar</span>
+      </button>
+    </nav>
+    <div class="rail__end">
+      <div class="rail__who" id="who"></div>
+      <a href="index.html" target="_blank" rel="noopener">Saytni ochish ↗</a>
+      <a href="#" id="out">Chiqish</a>
+    </div>
+  </aside>
+
+  <main class="board">
+
+    <section class="pane-view on" id="v-dash">
+      <div class="bar"><div><h1>Boshqaruv</h1><p>Katalog holati bir qarashda.</p></div>
+        <div class="bar__act"><button class="btn btn--fill btn--sm" id="quick">+ Mahsulot qo‘shish</button></div></div>
+      <div class="kpis" id="kpis"></div>
+      <div class="box"><div class="box__h"><h2>Yo‘nalishlar bo‘yicha</h2></div><div class="box__b" id="split"></div></div>
+      <div class="box"><div class="box__h"><h2>Oxirgi so‘rovlar</h2></div><div class="box__b" id="recent"></div></div>
+    </section>
+
+    <section class="pane-view" id="v-items">
+      <div class="bar"><div><h1>Mahsulotlar</h1><p id="icount"></p></div>
+        <div class="bar__act"><button class="btn btn--fill btn--sm" id="add">+ Yangi mahsulot</button></div></div>
+      <div class="box">
+        <div class="box__h">
+          <div class="srch" style="max-width:330px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+            <input type="search" id="q" placeholder="Nomi yoki artikul">
+          </div>
+          <select class="sel" id="cf"></select>
+        </div>
+        <div class="tw"><table class="tbl">
+          <thead><tr><th style="width:74px">Rasm</th><th>Nomi</th><th>Yo‘nalish</th><th>Netto</th><th>kcal</th><th>Holat</th><th style="text-align:right">Amallar</th></tr></thead>
+          <tbody id="rows"><tr><td colspan="7"><div class="skel"></div></td></tr></tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <section class="pane-view" id="v-cats">
+      <div class="bar"><div><h1>Yo‘nalishlar</h1><p>Katalog bo‘limlari va ularning rangi.</p></div>
+        <div class="bar__act"><button class="btn btn--fill btn--sm" id="addc">+ Yangi yo‘nalish</button></div></div>
+      <div class="box"><div class="tw"><table class="tbl">
+        <thead><tr><th style="width:74px">Rasm</th><th>Nomi</th><th>ID</th><th>Rang</th><th>Mahsulot</th><th style="text-align:right">Amallar</th></tr></thead>
+        <tbody id="crows"></tbody></table></div></div>
+    </section>
+
+    <section class="pane-view" id="v-msgs">
+      <div class="bar"><div><h1>So‘rovlar</h1><p id="mcount"></p></div>
+        <div class="bar__act">
+          <button class="btn btn--line btn--sm" id="csv">CSV yuklab olish</button>
+          <button class="btn btn--line btn--sm" id="allread">Hammasini o‘qilgan qilish</button>
+        </div></div>
+      <div id="mlist"></div>
+    </section>
+
+    <section class="pane-view" id="v-set">
+      <div class="bar"><div><h1>Sozlamalar</h1><p>Parol, zaxira nusxa va xavfsizlik.</p></div></div>
+
+      <div class="box"><div class="box__h"><h2>Parolni almashtirish</h2></div>
+        <div class="box__b"><form id="pwf" style="max-width:430px">
+          <div class="fld"><label for="pwn">Yangi parol</label><input type="password" id="pwn" autocomplete="new-password"><span class="hint">Kamida 10 belgi, raqam va katta harf bo‘lsin.</span></div>
+          <button class="btn btn--fill" type="submit">Saqlash</button>
+        </form></div></div>
+
+      <div class="box"><div class="box__h"><h2>Zaxira nusxa</h2></div>
+        <div class="box__b">
+          <p class="hint" style="margin-bottom:1rem">Butun katalogni JSON faylga saqlang yoki oldingi nusxani qaytaring.</p>
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+            <button class="btn btn--line btn--sm" id="exp">Eksport (JSON)</button>
+            <label class="btn btn--line btn--sm" for="imp">Import (JSON)</label>
+            <input type="file" id="imp" accept="application/json" hidden>
+          </div>
+        </div></div>
+
+      <div class="box"><div class="box__h"><h2>Xavfsizlik</h2></div>
+        <div class="box__b"><div class="warn">
+          <h3>Bu sahifaning manzilini sir saqlang</h3>
+          <p>Panelga saytning hech bir joyidan havola qo‘yilmagan. Manzilni faqat o‘zingiz biladigan joyda saqlang. Agar manzil boshqalarga ma’lum bo‘lsa — fayl nomini o‘zgartiring va Supabase’da parolni almashtiring.</p>
+          <p style="margin:0">Joriy manzil: <b id="curl"></b></p>
+        </div></div></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="mdl" id="pm" role="dialog" aria-modal="true" aria-labelledby="pmT">
+  <div class="mdl__box"><div class="mdl__h"><h2 id="pmT">Yangi mahsulot</h2>
+    <button class="ib" type="button" data-x aria-label="Yopish"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <form id="pf"><div class="mdl__b" id="pfb"></div>
+      <div class="mdl__f"><button class="btn btn--line btn--sm" type="button" data-x>Bekor qilish</button>
+        <button class="btn btn--fill btn--sm" type="submit">Saqlash</button></div></form></div>
+</div>
+
+<div class="mdl" id="cm" role="dialog" aria-modal="true" aria-labelledby="cmT">
+  <div class="mdl__box" style="max-width:660px"><div class="mdl__h"><h2 id="cmT">Yangi yo‘nalish</h2>
+    <button class="ib" type="button" data-x aria-label="Yopish"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+    <form id="cf2"><div class="mdl__b" id="cfb"></div>
+      <div class="mdl__f"><button class="btn btn--line btn--sm" type="button" data-x>Bekor qilish</button>
+        <button class="btn btn--fill btn--sm" type="submit">Saqlash</button></div></form></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="assets/js/panel.js"></script>
+</body>
+</html>
