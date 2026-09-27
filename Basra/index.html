@@ -38,10 +38,12 @@
 
   <header class="hero" data-reveal>
 
-    <span class="kicker" data-reveal>
-      <span class="kicker-dot"></span>
-      Toshkent&nbsp;·&nbsp;2023 yildan buyon
-    </span>
+    <div class="lang-switch" data-reveal role="tablist" aria-label="Til / Язык / Language">
+      <span class="lang-thumb" id="langThumb"></span>
+      <button class="lang-btn active" data-lang="uz" type="button">UZ</button>
+      <button class="lang-btn" data-lang="ru" type="button">RU</button>
+      <button class="lang-btn" data-lang="en" type="button">EN</button>
+    </div>
 
     <div class="avatar-wrap">
       <span class="avatar-orbit"></span>
@@ -52,39 +54,21 @@
     </div>
 
     <h1 class="brand" id="brandTitle">Basra</h1>
-    <p class="brand-sub">Ta'lim&nbsp;Markazi</p>
+    <p class="brand-sub" data-i18n="brandSub">Ta'lim&nbsp;Markazi</p>
 
     <p class="typed-line">
       <span id="typedText"></span><span class="caret">|</span>
     </p>
 
-    <p class="tagline">
+    <p class="tagline" data-i18n="tagline">
       Farzandingiz kelajagi uchun mustahkam poydevor — tajribali ustozlar bilan
       Arab va Ingliz tillarini qiziqarli metodikada o'rganing.
     </p>
 
-    <div class="stats" data-reveal>
-      <div class="stat">
-        <span class="s-ico">🎓</span>
-        <span class="num-wrap"><span class="num" data-count="1000">0</span><span class="plus">+</span></span>
-        <span class="label">o'quvchilar</span>
-      </div>
-      <div class="stat">
-        <span class="s-ico">🧭</span>
-        <span class="num-wrap"><span class="num" data-count="5">0</span></span>
-        <span class="label">yo'nalish</span>
-      </div>
-      <div class="stat">
-        <span class="s-ico">👩‍🏫</span>
-        <span class="num-wrap"><span class="num" data-count="6">0</span><span class="plus">+</span></span>
-        <span class="label">o'qituvchi</span>
-      </div>
-    </div>
-
     <div class="chip-row" data-reveal>
       <span class="chip">🕐 9:00 – 20:00</span>
-      <span class="chip">📅 Har kuni</span>
-      <span class="chip">📍 Toshkent</span>
+      <span class="chip">📅 <span data-i18n="chipDaily">Har kuni</span></span>
+      <span class="chip">📍 <span data-i18n="chipCity">Toshkent</span></span>
     </div>
   </header>
 
@@ -95,7 +79,7 @@
     <a class="link-btn" data-reveal href="tel:+998958331100" data-magnetic>
       <span class="ico"><span class="ico-emoji">📞</span></span>
       <span class="txt">
-        <span class="t">Qo'ng'iroq qilish</span>
+        <span class="t" data-i18n="linkCallT">Qo'ng'iroq qilish</span>
         <span class="s">95 833 11-00</span>
       </span>
       <span class="chev">→</span>
@@ -104,7 +88,7 @@
     <a class="link-btn" data-reveal href="https://t.me/basra_edu" target="_blank" rel="noopener" data-magnetic>
       <span class="ico"><span class="ico-emoji">💬</span></span>
       <span class="txt">
-        <span class="t">Telegram kanali</span>
+        <span class="t" data-i18n="linkTelegramT">Telegram kanali</span>
         <span class="s">t.me/basra_edu</span>
       </span>
       <span class="chev">→</span>
@@ -123,7 +107,7 @@
       <span class="ico"><span class="ico-emoji">▶️</span></span>
       <span class="txt">
         <span class="t">YouTube</span>
-        <span class="s">Darslar va natijalar</span>
+        <span class="s" data-i18n="linkYoutubeS">Darslar va natijalar</span>
       </span>
       <span class="chev">→</span>
     </a>
@@ -131,7 +115,7 @@
     <a class="link-btn" data-reveal href="#manzil" data-magnetic>
       <span class="ico"><span class="ico-emoji">📍</span></span>
       <span class="txt">
-        <span class="t">Manzil</span>
+        <span class="t" data-i18n="linkLocationT">Manzil</span>
         <span class="s">Lutfiy 4-berk ko'chasi, 2-uy</span>
       </span>
       <span class="chev">↓</span>
@@ -142,32 +126,32 @@
   <div class="divider" data-reveal><span class="d-line"></span><span class="d-ico">✦</span><span class="d-line"></span></div>
 
   <section class="courses" data-reveal>
-    <h2 class="section-title">Yo'nalishlarimiz</h2>
+    <h2 class="section-title" data-i18n="coursesTitle">Yo'nalishlarimiz</h2>
     <div class="course-grid">
       <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🕌</span>
-        <span class="c-t">Arab tili</span>
-        <span class="c-s">Nutq, yozuv va grammatika</span>
+        <span class="c-t" data-i18n="courseArabT">Arab tili</span>
+        <span class="c-s" data-i18n="courseArabS">Nutq, yozuv va grammatika</span>
       </div>
       <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🧸</span>
         <span class="c-t">Arab Kids</span>
-        <span class="c-s">Kichkintoylar uchun</span>
+        <span class="c-s" data-i18n="courseArabKidsS">Kichkintoylar uchun</span>
       </div>
       <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🌍</span>
-        <span class="c-t">Ingliz tili</span>
-        <span class="c-s">Zamonaviy metodika</span>
+        <span class="c-t" data-i18n="courseEngT">Ingliz tili</span>
+        <span class="c-s" data-i18n="courseEngS">Zamonaviy metodika</span>
       </div>
       <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🎈</span>
         <span class="c-t">English Kids</span>
-        <span class="c-s">O'yin orqali til o'rganish</span>
+        <span class="c-s" data-i18n="courseEngKidsS">O'yin orqali til o'rganish</span>
       </div>
       <div class="course-card wide" data-reveal data-tilt>
         <span class="c-ico">🏫</span>
-        <span class="c-t">Maktabga tayyorlov</span>
-        <span class="c-s">Bilim va ko'nikmalar asosi</span>
+        <span class="c-t" data-i18n="coursePrepT">Maktabga tayyorlov</span>
+        <span class="c-s" data-i18n="coursePrepS">Bilim va ko'nikmalar asosi</span>
       </div>
     </div>
   </section>
@@ -175,7 +159,7 @@
   <div class="divider" data-reveal><span class="d-line"></span><span class="d-ico">📍</span><span class="d-line"></span></div>
 
   <section class="location" id="manzil" data-reveal>
-    <h2 class="section-title">Manzilimiz</h2>
+    <h2 class="section-title" data-i18n="locationTitle">Manzilimiz</h2>
     <div class="map-card">
       <div class="map-frame">
         <iframe
@@ -189,9 +173,9 @@
       <div class="map-info">
         <div>
           <span class="mi-t">Lutfiy 4-berk ko'chasi, 2-uy</span>
-          <span class="mi-s">Mo'ljal: Hasan qori masjidi ro'parasi</span>
+          <span class="mi-s" data-i18n="mapLandmark">Mo'ljal: Hasan qori masjidi ro'parasi</span>
         </div>
-        <a class="map-cta" href="https://www.google.com/maps/search/?api=1&query=41.2963109713115,69.19948807587383" target="_blank" rel="noopener">
+        <a class="map-cta" href="https://www.google.com/maps/search/?api=1&query=41.2963109713115,69.19948807587383" target="_blank" rel="noopener" data-i18n="mapCta">
           Yo'nalish olish →
         </a>
       </div>
@@ -201,8 +185,8 @@
   <footer class="footer" data-reveal>
     <span class="foot-line"></span>
     <img class="foot-logo" src="assets/img/logo.jpg" alt="Basra logo" />
-    <p class="foot-brand">Basra Ta'lim Markazi</p>
-    <p>© <span id="year"></span> · Barcha huquqlar himoyalangan</p>
+    <p class="foot-brand" data-i18n="footBrand">Basra Ta'lim Markazi</p>
+    <p>© <span id="year"></span> · <span data-i18n="footRights">Barcha huquqlar himoyalangan</span></p>
   </footer>
 
 </main>

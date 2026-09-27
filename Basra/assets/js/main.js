@@ -167,47 +167,148 @@
   );
   revealEls.forEach((el) => io.observe(el));
 
-  /* ---------- animated count-up stats ---------- */
-  const counters = document.querySelectorAll(".num[data-count]");
-  const countIO = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const target = parseInt(el.dataset.count, 10) || 0;
-        const duration = 1200;
-        const start = performance.now();
-        const ease = (t) => 1 - Math.pow(1 - t, 3);
-        function tick(now) {
-          const p = Math.min((now - start) / duration, 1);
-          el.textContent = Math.round(ease(p) * target).toLocaleString("uz-UZ");
-          if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-        countIO.unobserve(el);
-      });
+  /* ---------- i18n: uz / ru / en ---------- */
+  const I18N = {
+    uz: {
+      brandSub: "Ta'lim Markazi",
+      tagline: "Farzandingiz kelajagi uchun mustahkam poydevor — tajribali ustozlar bilan Arab va Ingliz tillarini qiziqarli metodikada o'rganing.",
+      chipDaily: "Har kuni",
+      chipCity: "Toshkent",
+      linkCallT: "Qo'ng'iroq qilish",
+      linkTelegramT: "Telegram kanali",
+      linkYoutubeS: "Darslar va natijalar",
+      linkLocationT: "Manzil",
+      coursesTitle: "Yo'nalishlarimiz",
+      courseArabT: "Arab tili",
+      courseArabS: "Nutq, yozuv va grammatika",
+      courseArabKidsS: "Kichkintoylar uchun",
+      courseEngT: "Ingliz tili",
+      courseEngS: "Zamonaviy metodika",
+      courseEngKidsS: "O'yin orqali til o'rganish",
+      coursePrepT: "Maktabga tayyorlov",
+      coursePrepS: "Bilim va ko'nikmalar asosi",
+      locationTitle: "Manzilimiz",
+      mapLandmark: "Mo'ljal: Hasan qori masjidi ro'parasi",
+      mapCta: "Yo'nalish olish →",
+      footBrand: "Basra Ta'lim Markazi",
+      footRights: "Barcha huquqlar himoyalangan",
+      typed: ["Arab tili", "Arab Kids", "Ingliz tili", "English Kids", "Maktabga tayyorlov"],
     },
-    { threshold: 0.4 }
-  );
-  counters.forEach((el) => countIO.observe(el));
+    ru: {
+      brandSub: "Учебный центр",
+      tagline: "Прочный фундамент для будущего вашего ребёнка — изучайте арабский и английский языки с опытными преподавателями по увлекательной методике.",
+      chipDaily: "Ежедневно",
+      chipCity: "Ташкент",
+      linkCallT: "Позвонить",
+      linkTelegramT: "Telegram-канал",
+      linkYoutubeS: "Уроки и результаты",
+      linkLocationT: "Адрес",
+      coursesTitle: "Наши направления",
+      courseArabT: "Арабский язык",
+      courseArabS: "Речь, письмо и грамматика",
+      courseArabKidsS: "Для малышей",
+      courseEngT: "Английский язык",
+      courseEngS: "Современная методика",
+      courseEngKidsS: "Изучение языка через игру",
+      coursePrepT: "Подготовка к школе",
+      coursePrepS: "Основа знаний и навыков",
+      locationTitle: "Наш адрес",
+      mapLandmark: "Ориентир: напротив мечети Хасан кори",
+      mapCta: "Проложить маршрут →",
+      footBrand: "Basra — Учебный центр",
+      footRights: "Все права защищены",
+      typed: ["Арабский язык", "Arab Kids", "Английский язык", "English Kids", "Подготовка к школе"],
+    },
+    en: {
+      brandSub: "Education Center",
+      tagline: "A strong foundation for your child's future — learn Arabic and English with experienced teachers through an engaging methodology.",
+      chipDaily: "Daily",
+      chipCity: "Tashkent",
+      linkCallT: "Call us",
+      linkTelegramT: "Telegram channel",
+      linkYoutubeS: "Lessons & results",
+      linkLocationT: "Location",
+      coursesTitle: "Our Programs",
+      courseArabT: "Arabic",
+      courseArabS: "Speaking, writing & grammar",
+      courseArabKidsS: "For little ones",
+      courseEngT: "English",
+      courseEngS: "Modern methodology",
+      courseEngKidsS: "Learning through play",
+      coursePrepT: "School Preparation",
+      coursePrepS: "Foundation of knowledge & skills",
+      locationTitle: "Our Location",
+      mapLandmark: "Landmark: opposite Hasan qori mosque",
+      mapCta: "Get directions →",
+      footBrand: "Basra Education Center",
+      footRights: "All rights reserved",
+      typed: ["Arabic", "Arab Kids", "English", "English Kids", "School Prep"],
+    },
+  };
 
-  /* ---------- typewriter tagline ---------- */
+  let currentLang = "uz";
+  try { currentLang = localStorage.getItem("basra_lang") || "uz"; } catch (e) { /* private mode */ }
+  if (!I18N[currentLang]) currentLang = "uz";
+
+  const langButtons = document.querySelectorAll(".lang-btn");
+  const langThumb = document.getElementById("langThumb");
+  const i18nEls = document.querySelectorAll("[data-i18n]");
+
+  function paintLang(lang) {
+    const dict = I18N[lang];
+    i18nEls.forEach((el) => {
+      const key = el.dataset.i18n;
+      if (dict[key] != null) el.textContent = dict[key];
+    });
+    document.documentElement.lang = lang;
+    langButtons.forEach((btn, i) => {
+      const active = btn.dataset.lang === lang;
+      btn.classList.toggle("active", active);
+      if (active && langThumb) langThumb.style.transform = `translateX(${i * 54}px)`;
+    });
+  }
+
+  function setLang(lang, { fade = true } = {}) {
+    if (!I18N[lang] || lang === currentLang) { paintLang(lang); return; }
+    currentLang = lang;
+    try { localStorage.setItem("basra_lang", lang); } catch (e) { /* private mode */ }
+    if (fade && !reduceMotion) {
+      document.body.classList.add("content-fading");
+      setTimeout(() => {
+        paintLang(lang);
+        resetTyped();
+        document.body.classList.remove("content-fading");
+      }, 190);
+    } else {
+      paintLang(lang);
+      resetTyped();
+    }
+  }
+
+  langButtons.forEach((btn) => {
+    btn.addEventListener("click", () => setLang(btn.dataset.lang));
+  });
+
+  paintLang(currentLang);
+
+  /* ---------- typewriter tagline (language-aware) ---------- */
   const typedTarget = document.getElementById("typedText");
+  let typedPhraseIdx = 0, typedCharIdx = 0, typedDeleting = false;
+  function resetTyped() { typedPhraseIdx = 0; typedCharIdx = 0; typedDeleting = false; if (typedTarget) typedTarget.textContent = ""; }
   if (typedTarget) {
-    const phrases = ["Arab tili", "Arab Kids", "Ingliz tili", "English Kids", "Maktabga tayyorlov"];
-    let phraseIdx = 0, charIdx = 0, deleting = false;
     function step() {
-      const current = phrases[phraseIdx];
-      if (!deleting) {
-        charIdx++;
-        typedTarget.textContent = current.slice(0, charIdx);
-        if (charIdx === current.length) { deleting = true; setTimeout(step, 1300); return; }
+      const phrases = I18N[currentLang].typed;
+      const current = phrases[typedPhraseIdx % phrases.length];
+      if (!typedDeleting) {
+        typedCharIdx++;
+        typedTarget.textContent = current.slice(0, typedCharIdx);
+        if (typedCharIdx === current.length) { typedDeleting = true; setTimeout(step, 1300); return; }
       } else {
-        charIdx--;
-        typedTarget.textContent = current.slice(0, charIdx);
-        if (charIdx === 0) { deleting = false; phraseIdx = (phraseIdx + 1) % phrases.length; }
+        typedCharIdx--;
+        typedTarget.textContent = current.slice(0, typedCharIdx);
+        if (typedCharIdx === 0) { typedDeleting = false; typedPhraseIdx = (typedPhraseIdx + 1) % phrases.length; }
       }
-      setTimeout(step, deleting ? 35 : 65);
+      setTimeout(step, typedDeleting ? 35 : 65);
     }
     step();
   }
