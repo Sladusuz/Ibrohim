@@ -1,0 +1,22 @@
+# Make bisraro.uz/contacts work whether or not the ".html" is typed
+RewriteEngine On
+RewriteRule ^contacts/?$ contacts.html [L]
+
+# Force HTTPS (uncomment the two lines below ONLY after a valid SSL
+# certificate is active for this domain — otherwise this will make the
+# site unreachable instead of just showing "Not secure").
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Never allow the admin panel's data folder to be served directly
+<IfModule mod_authz_core.c>
+  <FilesMatch "\.(json|db)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+  <FilesMatch "\.(json|db)$">
+    Order allow,deny
+    Deny from all
+  </FilesMatch>
+</IfModule>

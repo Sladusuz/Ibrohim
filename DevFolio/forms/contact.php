@@ -1,41 +1,83 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+declare(strict_types=1);
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+/**
+ * Contact form handler.
+ *
+ * Rebuilt from scratch: the previous version depended on a paid
+ * "PHP Email Form" library that was never included in this project, so
+ * every single submission used to fail with a fatal
+ * "Unable to load the PHP Email Form Library!" error. This version has
+ * no external dependency — it saves every message to the admin panel
+ * first (so nothing is ever lost), then best-effort emails a copy.
+ */
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+header('Content-Type: text/plain; charset=utf-8');
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+require __DIR__ . '/../storage/storage.php';
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
+function contact_fail(string $message): void
+{
+    http_response_code(400);
+    echo $message;
+    exit;
+}
 
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+    contact_fail('Invalid request method.');
+}
 
-  echo $contact->send();
-?>
+// Honeypot field (hidden from real visitors via CSS in index.html).
+// Bots that fill every input will trip this; pretend success so they
+// don't retry, but don't store anything.
+if (trim((string) ($_POST['website'] ?? '')) !== '') {
+    echo 'OK';
+    exit;
+}
+
+$name    = trim((string) ($_POST['name'] ?? ''));
+$email   = trim((string) ($_POST['email'] ?? ''));
+$subject = trim((string) ($_POST['subject'] ?? ''));
+$message = trim((string) ($_POST['message'] ?? ''));
+
+if ($name === '' || $email === '' || $subject === '' || $message === '') {
+    contact_fail('Пожалуйста, заполните все поля формы.');
+}
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    contact_fail('Пожалуйста, укажите корректный email адрес.');
+}
+
+if (mb_strlen($name) > 150 || mb_strlen($subject) > 200 || mb_strlen($message) > 5000) {
+    contact_fail('Слишком длинное значение одного из полей.');
+}
+
+// Defence in depth against mail header injection, even though
+// FILTER_VALIDATE_EMAIL already rejects embedded newlines.
+$subject = str_replace(["\r", "\n"], ' ', $subject);
+$name    = str_replace(["\r", "\n"], ' ', $name);
+
+try {
+    contact_storage_add([
+        'name'    => $name,
+        'email'   => $email,
+        'subject' => $subject,
+        'message' => $message,
+        'ip'      => $_SERVER['REMOTE_ADDR'] ?? '',
+    ]);
+} catch (Throwable $e) {
+    error_log('[contact form] storage failure: ' . $e->getMessage());
+    contact_fail('Не удалось сохранить сообщение. Попробуйте позже.');
+}
+
+// Best-effort email notification. The message is already saved and
+// visible in the admin panel regardless of whether mail() succeeds, so
+// a missing/broken mail server on the host can no longer break the
+// "your message has been sent" confirmation shown to the visitor.
+$receivingEmailAddress = 'chempme@gmail.com';
+$emailBody = "Имя: {$name}\nEmail: {$email}\nТема: {$subject}\n\n{$message}\n";
+$headers = "From: no-reply@" . preg_replace('/[^a-zA-Z0-9.\-]/', '', $_SERVER['HTTP_HOST'] ?? 'localhost') . "\r\n"
+    . "Reply-To: {$email}\r\n";
+@mail($receivingEmailAddress, '[IMPRO] ' . $subject, $emailBody, $headers);
+
+echo 'OK';
