@@ -1,0 +1,141 @@
+/* Extra animation layer on top of the base DevFolio theme */
+
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  z-index: 9999;
+  background: linear-gradient(90deg, #eeff00, #00ff85, #ffcf00);
+  transition: width 0.1s ease-out;
+}
+
+/* Floating hero logo */
+.hero-logo-float {
+  animation: heroFloat 6s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-14px); }
+}
+
+/* Animated glow behind hero heading */
+.hero.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(0, 255, 133, 0.18), transparent 60%);
+  animation: heroGlow 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes heroGlow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+/* Service icons pulse on hover */
+.service-item .icon {
+  transition: transform 0.35s ease, color 0.35s ease;
+}
+
+.service-item:hover .icon {
+  animation: iconPulse 0.7s ease;
+  color: #00ff85;
+}
+
+@keyframes iconPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.25) rotate(-6deg); }
+  100% { transform: scale(1); }
+}
+
+/* Portfolio card tilt/lift on hover */
+.portfolio-item {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  will-change: transform;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+}
+
+.portfolio-item img {
+  transition: transform 0.6s ease;
+}
+
+.portfolio-item:hover img {
+  transform: scale(1.06);
+}
+
+/* About photo subtle float + border glow */
+.about-photo {
+  animation: aboutFloat 7s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+@keyframes aboutFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Stats numbers pop-in */
+.stats-item .purecounter {
+  display: inline-block;
+  animation: statPop 0.6s ease both;
+}
+
+@keyframes statPop {
+  0% { transform: scale(0.6); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Section title underline sweep */
+.section-title h2::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 3px;
+  margin: 10px auto 0;
+  background: linear-gradient(90deg, #eeff00, #00ff85);
+  animation: underlineSweep 1.2s ease forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes underlineSweep {
+  to { width: 70px; }
+}
+
+/* Buttons: gentle magnetic hover */
+form .php-email-form button[type="submit"] {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+form .php-email-form button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 255, 133, 0.35);
+}
+
+/* Testimonial avatar breathing ring */
+.testimonial-img {
+  animation: ringPulse 3s ease-in-out infinite;
+}
+
+@keyframes ringPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 255, 133, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(0, 255, 133, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo-float,
+  .hero.section::before,
+  .about-photo,
+  .testimonial-img,
+  .stats-item .purecounter,
+  .section-title h2::after {
+    animation: none !important;
+  }
+}
