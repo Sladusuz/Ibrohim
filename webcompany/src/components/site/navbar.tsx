@@ -1,31 +1,42 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations, useLocale } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, Globe } from "lucide-react";
 import { Logo } from "@/components/site/logo";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const LINKS = [
-  { href: "/", label: "Bosh sahifa" },
-  { href: "/xizmatlar", label: "Xizmatlar" },
-  { href: "/portfolio", label: "Portfolio" },
-  { href: "/biz-haqimizda", label: "Biz haqimizda" },
-  { href: "/aloqa", label: "Aloqa" },
-];
+const LOCALE_LABELS: Record<string, string> = {
+  uz: "UZ",
+  ru: "RU",
+  en: "EN",
+};
 
 export function Navbar() {
+  const t = useTranslations("nav");
+  const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const pathname = usePathname();
+
+  const LINKS = [
+    { href: "/", label: t("home") },
+    { href: "/xizmatlar", label: t("services") },
+    { href: "/portfolio", label: t("portfolio") },
+    { href: "/biz-haqimizda", label: t("about") },
+    { href: "/aloqa", label: t("contact") },
+  ];
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- closes the mobile overlay on route change, a client-only side effect
     setOpen(false);
+    setLangOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -75,9 +86,47 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-2 lg:flex">
+          <div className="relative">
+            <button
+              onClick={() => setLangOpen((v) => !v)}
+              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3.5 py-2 text-sm font-semibold text-white/70 hover:text-white"
+              data-cursor-hover
+            >
+              <Globe className="h-4 w-4" />
+              {LOCALE_LABELS[locale]}
+            </button>
+            <AnimatePresence>
+              {langOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 top-full mt-2 overflow-hidden rounded-2xl border border-white/10 bg-ink-950/95 backdrop-blur-xl"
+                >
+                  {routing.locales.map((loc) => (
+                    <Link
+                      key={loc}
+                      href={pathname}
+                      locale={loc}
+                      className={cn(
+                        "block px-5 py-2.5 text-sm font-medium whitespace-nowrap",
+                        loc === locale
+                          ? "bg-white/10 text-white"
+                          : "text-white/60 hover:bg-white/5 hover:text-white"
+                      )}
+                    >
+                      {LOCALE_LABELS[loc]}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <Button href="/aloqa" variant="secondary" size="sm">
-            Loyihani boshlash
+            {t("cta")}
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Button>
         </div>
@@ -110,8 +159,27 @@ export function Navbar() {
                   {link.label}
                 </Link>
               ))}
+
+              <div className="mt-2 flex items-center gap-2 px-4">
+                {routing.locales.map((loc) => (
+                  <Link
+                    key={loc}
+                    href={pathname}
+                    locale={loc}
+                    className={cn(
+                      "rounded-full border px-3.5 py-1.5 text-xs font-semibold",
+                      loc === locale
+                        ? "border-brand-400 bg-brand-500/10 text-brand-300"
+                        : "border-white/10 text-white/50"
+                    )}
+                  >
+                    {LOCALE_LABELS[loc]}
+                  </Link>
+                ))}
+              </div>
+
               <Button href="/aloqa" variant="secondary" size="md" className="mt-2 w-full">
-                Loyihani boshlash
+                {t("cta")}
               </Button>
             </Container>
           </motion.div>

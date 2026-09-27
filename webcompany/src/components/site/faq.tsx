@@ -1,49 +1,29 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Reveal } from "@/components/ui/reveal";
 
-const FAQS = [
-  {
-    q: "Loyiha odatda qancha vaqt oladi?",
-    a: "Loyiha murakkabligiga qarab farq qiladi. Oddiy korporativ sayt 2-4 hafta, murakkab veb-ilova yoki marketpleys 3-6 oy davom etishi mumkin. Aniq muddatni tahlil bosqichida belgilaymiz.",
-  },
-  {
-    q: "Narxlash qanday amalga oshiriladi?",
-    a: "Har bir loyiha uchun individual narx taklifi tayyorlaymiz — funksionallik, dizayn murakkabligi va integratsiyalarga qarab. Bepul konsultatsiyada aniq smeta va muddat bilan taniqtiramiz.",
-  },
-  {
-    q: "Loyihadan keyin texnik yordam bormi?",
-    a: "Ha. Barcha loyihalarga kamida 3 oylik bepul texnik xizmat ko'rsatish kiritilgan, undan keyin esa moslashuvchan qo'llab-quvvatlash paketlarini taklif qilamiz.",
-  },
-  {
-    q: "Mavjud saytimni yangilashingiz mumkinmi?",
-    a: "Albatta. Mavjud kodni tahlil qilib, uni qayta qurish yoki yangi zamonaviy texnologiyalarga ko'chirish bo'yicha tavsiyalar beramiz.",
-  },
-  {
-    q: "Qaysi to'lov tizimlarini integratsiya qila olasiz?",
-    a: "Click, Payme, Uzcard, Humo kabi mahalliy tizimlar, shuningdek Stripe va PayPal kabi xalqaro to'lov tizimlari bilan ishlaymiz.",
-  },
-];
-
 export function FAQ() {
+  const t = useTranslations("faq");
+  const faqs = t.raw("items") as { q: string; a: string }[];
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section className="bg-white py-24 sm:py-32">
       <Container>
         <SectionHeading
-          eyebrow="Savol-javob"
-          title="Ko'p beriladigan savollar"
-          description="Agar javobini topolmagan savolingiz bo'lsa, biz bilan bemalol bog'laning."
+          eyebrow={t("eyebrow")}
+          title={t("title")}
+          description={t("description")}
         />
 
         <div className="mx-auto mt-14 max-w-3xl divide-y divide-slate-200 border-y border-slate-200">
-          {FAQS.map((faq, i) => {
+          {faqs.map((faq, i) => {
             const isOpen = open === i;
             return (
               <Reveal key={faq.q} delay={i * 0.05}>

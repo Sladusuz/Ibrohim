@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { Container } from "@/components/ui/container";
@@ -12,11 +13,21 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 export function Hero({
   tagline,
-  stats,
+  statValues,
 }: {
   tagline: string;
-  stats: { label: string; value: string }[];
+  statValues: { projects: string; clients: string; experts: string; years: string };
 }) {
+  const t = useTranslations("hero");
+  const tStats = useTranslations("stats");
+
+  const stats = [
+    { key: "projects", label: tStats("projects"), value: statValues.projects },
+    { key: "clients", label: tStats("clients"), value: statValues.clients },
+    { key: "experts", label: tStats("experts"), value: statValues.experts },
+    { key: "years", label: tStats("years"), value: statValues.years },
+  ];
+
   const sectionRef = useRef<HTMLDivElement>(null);
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
@@ -63,7 +74,7 @@ export function Hero({
             className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-brand-300 backdrop-blur"
           >
             <Sparkles className="h-3.5 w-3.5" />
-            O&apos;zbekistondagi yetakchi IT-kompaniya
+            {t("eyebrow")}
           </motion.div>
 
           <h1 className="font-display mt-8 text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl lg:leading-[1.05]">
@@ -77,9 +88,7 @@ export function Hero({
             transition={{ duration: 0.7, delay: 0.45, ease: EASE }}
             className="mt-6 max-w-2xl text-lg leading-relaxed text-white/60 sm:text-xl"
           >
-            Veb-saytlar, mobil ilovalar va raqamli mahsulotlarni g&apos;oyadan
-            ishga tushirishgacha — zamonaviy texnologiyalar va professional
-            jamoa bilan quramiz.
+            {t("description")}
           </motion.p>
 
           <motion.div
@@ -89,11 +98,11 @@ export function Hero({
             className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
           >
             <Button href="/aloqa" variant="secondary" size="lg">
-              Loyihani boshlash
+              {t("ctaPrimary")}
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Button>
             <Button href="/portfolio" variant="outline-light" size="lg">
-              Ishlarimizni ko&apos;rish
+              {t("ctaSecondary")}
             </Button>
           </motion.div>
         </div>
@@ -105,7 +114,7 @@ export function Hero({
           className="mx-auto mt-20 grid max-w-4xl grid-cols-2 gap-6 rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur sm:grid-cols-4"
         >
           {stats.map((stat) => (
-            <div key={stat.label} className="text-center">
+            <div key={stat.key} className="text-center">
               <div className="font-display text-3xl font-extrabold text-white sm:text-4xl">
                 <CountUp value={stat.value} suffix="+" />
               </div>

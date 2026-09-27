@@ -6,12 +6,22 @@ import { slugify } from "@/lib/utils";
 
 type Params = Promise<{ id: string }>;
 
+const optionalStr = z.string().optional().or(z.literal(""));
+
 const schema = z.object({
   title: z.string().min(2),
   slug: z.string().optional(),
   category: z.string().min(2),
   summary: z.string().min(5),
   description: z.string().min(5),
+  titleRu: optionalStr,
+  categoryRu: optionalStr,
+  summaryRu: optionalStr,
+  descriptionRu: optionalStr,
+  titleEn: optionalStr,
+  categoryEn: optionalStr,
+  summaryEn: optionalStr,
+  descriptionEn: optionalStr,
   client: z.string().optional().or(z.literal("")),
   year: z.string().optional().or(z.literal("")),
   duration: z.string().optional().or(z.literal("")),
@@ -56,6 +66,14 @@ export async function PATCH(request: Request, { params }: { params: Params }) {
       category: data.category,
       summary: data.summary,
       description: data.description,
+      titleRu: data.titleRu || null,
+      categoryRu: data.categoryRu || null,
+      summaryRu: data.summaryRu || null,
+      descriptionRu: data.descriptionRu || null,
+      titleEn: data.titleEn || null,
+      categoryEn: data.categoryEn || null,
+      summaryEn: data.summaryEn || null,
+      descriptionEn: data.descriptionEn || null,
       client: data.client || null,
       year: data.year || null,
       duration: data.duration || null,

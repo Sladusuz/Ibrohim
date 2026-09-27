@@ -1,32 +1,26 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { ArrowLeft, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
+import { localize } from "@/lib/localize";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { Reveal } from "@/components/ui/reveal";
 import { getIcon } from "@/components/site/icon-map";
 import { CTA } from "@/components/site/cta";
 
-type Params = Promise<{ slug: string }>;
+type Params = Promise<{ locale: string; slug: string }>;
 
-const BENEFITS = [
-  "Belgilangan muddatda yetkazib berish",
-  "Shaffof narxlash va hisobot",
-  "Loyihadan keyin texnik yordam",
-  "Zamonaviy va xavfsiz texnologiyalar",
-];
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Params;
-}): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug, locale } = await params;
   const service = await prisma.service.findUnique({ where: { slug } });
   if (!service) return {};
-  return { title: service.title, description: service.summary };
+  return {
+    title: localize(service, "title", locale),
+    description: localize(service, "summary", locale),
+  };
 }
 
 export async function generateStaticParams() {
@@ -35,9 +29,12 @@ export async function generateStaticParams() {
 }
 
 export default async function ServiceDetailPage({ params }: { params: Params }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const service = await prisma.service.findUnique({ where: { slug } });
   if (!service) notFound();
+
+  const t = await getTranslations("serviceDetail");
+  const benefits = t.raw("benefits") as string[];
 
   // getIcon returns a stable reference from a static icon map, not a new component.
   const Icon = getIcon(service.icon);
@@ -46,6 +43,10 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
     orderBy: { order: "asc" },
     take: 4,
   });
+
+  const title = localize(service, "title", locale);
+  const summary = localize(service, "summary", locale);
+  const description = localize(service, "description", locale);
 
   return (
     <>
@@ -58,7 +59,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
               className="inline-flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
-              Xizmatlarga qaytish
+              {t("back")}
             </Link>
           </Reveal>
           <Reveal delay={0.06}>
@@ -67,9 +68,9 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
               <Icon className="h-8 w-8" />
             </div>
             <h1 className="font-display mt-6 max-w-2xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              {service.title}
+              {title}
             </h1>
-            <p className="mt-5 max-w-xl text-lg text-white/60">{service.summary}</p>
+            <p className="mt-5 max-w-xl text-lg text-white/60">{summary}</p>
           </Reveal>
         </Container>
       </section>
@@ -80,7 +81,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
             <Reveal>
               <div className="prose-none">
                 <p className="text-base leading-relaxed text-slate-600 whitespace-pre-line">
-                  {service.description}
+                  {description}
                 </p>
               </div>
             </Reveal>
@@ -88,10 +89,10 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
             <Reveal delay={0.1}>
               <div className="h-fit rounded-3xl border border-slate-200 bg-slate-50 p-6">
                 <h3 className="font-display text-sm font-bold uppercase tracking-wide text-slate-500">
-                  Nima uchun bizni tanlaysiz?
+                  {t("whyUsTitle")}
                 </h3>
                 <ul className="mt-5 space-y-3">
-                  {BENEFITS.map((b) => (
+                  {benefits.map((b) => (
                     <li key={b} className="flex items-start gap-2.5 text-sm text-ink-800">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-500" />
                       {b}
@@ -99,7 +100,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
                   ))}
                 </ul>
                 <Button href="/aloqa" variant="primary" size="md" className="mt-6 w-full">
-                  Buyurtma berish
+                  {t("orderCta")}
                   <ArrowUpRight className="h-4 w-4" />
                 </Button>
               </div>
@@ -109,7 +110,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
           {otherServices.length > 0 && (
             <div className="mt-20 border-t border-slate-200 pt-12">
               <h2 className="font-display text-xl font-bold text-ink-900">
-                Boshqa xizmatlarimiz
+                {t("otherServicesTitle")}
               </h2>
               <div className="mt-6 flex flex-wrap gap-3">
                 {otherServices.map((s) => (
@@ -118,7 +119,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
                     href={`/xizmatlar/${s.slug}`}
                     className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:border-brand-300 hover:text-brand-600"
                   >
-                    {s.title}
+                    {localize(s, "title", locale)}
                   </Link>
                 ))}
               </div>

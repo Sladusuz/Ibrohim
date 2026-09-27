@@ -2,9 +2,16 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Save, AlertCircle } from "lucide-react";
+import { Loader2, Save, AlertCircle, Languages } from "lucide-react";
 import { ICON_MAP, getIcon } from "@/components/site/icon-map";
+import { LanguageTabs, fieldName } from "@/components/admin/language-tabs";
 import type { Service } from "@prisma/client";
+
+function getField(service: Service | undefined, base: string, locale: "uz" | "ru" | "en") {
+  if (!service) return "";
+  const key = fieldName(base, locale) as keyof Service;
+  return locale === "uz" ? (service[key] as string) : ((service[key] as string | null) ?? "");
+}
 
 export function ServiceForm({ service }: { service?: Service }) {
   const router = useRouter();
@@ -18,11 +25,19 @@ export function ServiceForm({ service }: { service?: Service }) {
     setLoading(true);
 
     const data = new FormData(e.currentTarget);
+    const str = (key: string) => (data.get(key) as string)?.trim() || "";
+
     const payload = {
-      title: data.get("title") as string,
-      slug: data.get("slug") as string,
-      summary: data.get("summary") as string,
-      description: data.get("description") as string,
+      title: str("title"),
+      slug: str("slug"),
+      summary: str("summary"),
+      description: str("description"),
+      titleRu: str("titleRu"),
+      summaryRu: str("summaryRu"),
+      descriptionRu: str("descriptionRu"),
+      titleEn: str("titleEn"),
+      summaryEn: str("summaryEn"),
+      descriptionEn: str("descriptionEn"),
       icon,
       order: Number(data.get("order")) || 0,
     };
@@ -72,34 +87,48 @@ export function ServiceForm({ service }: { service?: Service }) {
         </div>
       </div>
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Xizmat nomi" required>
-          <input required name="title" defaultValue={service?.title} className="input" />
-        </Field>
-        <Field label="Slug (URL)" hint="Bo'sh qoldirsangiz avtomatik yaratiladi">
-          <input name="slug" defaultValue={service?.slug} className="input" />
-        </Field>
+      <Field label="Slug (URL)" hint="Bo'sh qoldirsangiz avtomatik yaratiladi">
+        <input name="slug" defaultValue={service?.slug} className="input" />
+      </Field>
+
+      <div>
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink-900">
+          <Languages className="h-4 w-4 text-brand-500" />
+          Xizmat matnlari (3 tilda)
+        </div>
+        <LanguageTabs>
+          {(locale) => (
+            <>
+              <Field label="Xizmat nomi" required={locale === "uz"}>
+                <input
+                  required={locale === "uz"}
+                  name={fieldName("title", locale)}
+                  defaultValue={getField(service, "title", locale)}
+                  className="input"
+                />
+              </Field>
+              <Field label="Qisqacha tavsif" required={locale === "uz"}>
+                <textarea
+                  required={locale === "uz"}
+                  name={fieldName("summary", locale)}
+                  rows={2}
+                  defaultValue={getField(service, "summary", locale)}
+                  className="input resize-none"
+                />
+              </Field>
+              <Field label="To'liq tavsif" required={locale === "uz"}>
+                <textarea
+                  required={locale === "uz"}
+                  name={fieldName("description", locale)}
+                  rows={6}
+                  defaultValue={getField(service, "description", locale)}
+                  className="input resize-none"
+                />
+              </Field>
+            </>
+          )}
+        </LanguageTabs>
       </div>
-
-      <Field label="Qisqacha tavsif" required>
-        <textarea
-          required
-          name="summary"
-          rows={2}
-          defaultValue={service?.summary}
-          className="input resize-none"
-        />
-      </Field>
-
-      <Field label="To'liq tavsif" required>
-        <textarea
-          required
-          name="description"
-          rows={6}
-          defaultValue={service?.description}
-          className="input resize-none"
-        />
-      </Field>
 
       <Field label="Tartib raqami">
         <input type="number" name="order" defaultValue={service?.order ?? 0} className="input max-w-[160px]" />

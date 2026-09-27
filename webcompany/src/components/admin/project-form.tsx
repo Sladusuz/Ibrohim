@@ -2,10 +2,17 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Save, AlertCircle } from "lucide-react";
+import { Loader2, Save, AlertCircle, Languages } from "lucide-react";
 import { ImageUploader } from "@/components/admin/image-uploader";
+import { LanguageTabs, fieldName } from "@/components/admin/language-tabs";
 import { safeJsonParse } from "@/lib/utils";
 import type { Project } from "@prisma/client";
+
+function getField(project: Project | undefined, base: string, locale: "uz" | "ru" | "en") {
+  if (!project) return "";
+  const key = fieldName(base, locale) as keyof Project;
+  return locale === "uz" ? (project[key] as string) : ((project[key] as string | null) ?? "");
+}
 
 export function ProjectForm({ project }: { project?: Project }) {
   const router = useRouter();
@@ -27,19 +34,28 @@ export function ProjectForm({ project }: { project?: Project }) {
 
     setLoading(true);
     const data = new FormData(e.currentTarget);
+    const str = (key: string) => (data.get(key) as string)?.trim() || "";
 
     const payload = {
-      title: data.get("title") as string,
-      slug: data.get("slug") as string,
-      category: data.get("category") as string,
-      summary: data.get("summary") as string,
-      description: data.get("description") as string,
-      client: data.get("client") as string,
-      year: data.get("year") as string,
-      duration: data.get("duration") as string,
-      link: data.get("link") as string,
+      title: str("title"),
+      slug: str("slug"),
+      category: str("category"),
+      summary: str("summary"),
+      description: str("description"),
+      titleRu: str("titleRu"),
+      categoryRu: str("categoryRu"),
+      summaryRu: str("summaryRu"),
+      descriptionRu: str("descriptionRu"),
+      titleEn: str("titleEn"),
+      categoryEn: str("categoryEn"),
+      summaryEn: str("summaryEn"),
+      descriptionEn: str("descriptionEn"),
+      client: str("client"),
+      year: str("year"),
+      duration: str("duration"),
+      link: str("link"),
       cover,
-      stack: (data.get("stack") as string)
+      stack: str("stack")
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean),
@@ -71,31 +87,73 @@ export function ProjectForm({ project }: { project?: Project }) {
     <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
       <ImageUploader value={cover} onChange={setCover} label="Muqova rasmi" />
 
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Loyiha nomi" required>
-          <input required name="title" defaultValue={project?.title} className="input" />
-        </Field>
-        <Field label="Slug (URL)" hint="Bo'sh qoldirsangiz avtomatik yaratiladi">
-          <input name="slug" defaultValue={project?.slug} className="input" placeholder="mening-loyiham" />
-        </Field>
+      <Field label="Slug (URL)" hint="Bo'sh qoldirsangiz avtomatik yaratiladi">
+        <input name="slug" defaultValue={project?.slug} className="input" placeholder="mening-loyiham" />
+      </Field>
+
+      <div>
+        <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-ink-900">
+          <Languages className="h-4 w-4 text-brand-500" />
+          Loyiha matnlari (3 tilda)
+        </div>
+        <LanguageTabs>
+          {(locale) => (
+            <>
+              <div className="grid gap-5 sm:grid-cols-2">
+                <Field label="Loyiha nomi" required={locale === "uz"}>
+                  <input
+                    required={locale === "uz"}
+                    name={fieldName("title", locale)}
+                    defaultValue={getField(project, "title", locale)}
+                    className="input"
+                  />
+                </Field>
+                <Field label="Kategoriya" required={locale === "uz"} hint={locale !== "uz" ? "Masalan: Fintech" : undefined}>
+                  <input
+                    required={locale === "uz"}
+                    name={fieldName("category", locale)}
+                    defaultValue={getField(project, "category", locale)}
+                    className="input"
+                    placeholder="Fintech"
+                  />
+                </Field>
+              </div>
+              <Field label="Qisqacha tavsif" required={locale === "uz"}>
+                <textarea
+                  required={locale === "uz"}
+                  name={fieldName("summary", locale)}
+                  rows={2}
+                  defaultValue={getField(project, "summary", locale)}
+                  className="input resize-none"
+                />
+              </Field>
+              <Field label="To'liq tavsif" required={locale === "uz"}>
+                <textarea
+                  required={locale === "uz"}
+                  name={fieldName("description", locale)}
+                  rows={6}
+                  defaultValue={getField(project, "description", locale)}
+                  className="input resize-none"
+                />
+              </Field>
+            </>
+          )}
+        </LanguageTabs>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-3">
-        <Field label="Kategoriya" required>
-          <input required name="category" defaultValue={project?.category} className="input" placeholder="Fintech" />
-        </Field>
         <Field label="Mijoz">
           <input name="client" defaultValue={project?.client ?? ""} className="input" />
         </Field>
         <Field label="Yil">
           <input name="year" defaultValue={project?.year ?? ""} className="input" placeholder="2025" />
         </Field>
-      </div>
-
-      <div className="grid gap-5 sm:grid-cols-3">
         <Field label="Davomiyligi">
           <input name="duration" defaultValue={project?.duration ?? ""} className="input" placeholder="6 oy" />
         </Field>
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2">
         <Field label="Loyiha havolasi">
           <input name="link" defaultValue={project?.link ?? ""} className="input" placeholder="https://" />
         </Field>
@@ -103,26 +161,6 @@ export function ProjectForm({ project }: { project?: Project }) {
           <input type="number" name="order" defaultValue={project?.order ?? 0} className="input" />
         </Field>
       </div>
-
-      <Field label="Qisqacha tavsif" required>
-        <textarea
-          required
-          name="summary"
-          rows={2}
-          defaultValue={project?.summary}
-          className="input resize-none"
-        />
-      </Field>
-
-      <Field label="To'liq tavsif" required>
-        <textarea
-          required
-          name="description"
-          rows={6}
-          defaultValue={project?.description}
-          className="input resize-none"
-        />
-      </Field>
 
       <Field label="Texnologiyalar" hint="Vergul bilan ajrating: Next.js, PostgreSQL, AWS">
         <input name="stack" defaultValue={stackDefault} className="input" />

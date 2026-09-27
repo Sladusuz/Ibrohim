@@ -1,29 +1,27 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { ArrowLeft, ArrowUpRight, Calendar, Clock, User } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { safeJsonParse } from "@/lib/utils";
+import { localize } from "@/lib/localize";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { Reveal } from "@/components/ui/reveal";
 import { ProjectCard } from "@/components/site/project-card";
 import { CTA } from "@/components/site/cta";
 
-type Params = Promise<{ slug: string }>;
+type Params = Promise<{ locale: string; slug: string }>;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Params;
-}): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { slug, locale } = await params;
   const project = await prisma.project.findUnique({ where: { slug } });
   if (!project) return {};
   return {
-    title: project.title,
-    description: project.summary,
+    title: localize(project, "title", locale),
+    description: localize(project, "summary", locale),
   };
 }
 
@@ -33,12 +31,18 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectDetailPage({ params }: { params: Params }) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const project = await prisma.project.findUnique({ where: { slug } });
   if (!project) notFound();
 
+  const t = await getTranslations("projectDetail");
   const stack = safeJsonParse<string[]>(project.stack, []);
   const gallery = safeJsonParse<string[]>(project.gallery, [project.cover]);
+
+  const title = localize(project, "title", locale);
+  const category = localize(project, "category", locale);
+  const summary = localize(project, "summary", locale);
+  const description = localize(project, "description", locale);
 
   const related = await prisma.project.findMany({
     where: { category: project.category, NOT: { id: project.id } },
@@ -56,7 +60,7 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
               className="inline-flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white"
             >
               <ArrowLeft className="h-4 w-4" />
-              Portfolioga qaytish
+              {t("back")}
             </Link>
           </Reveal>
 
@@ -64,21 +68,19 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
             <Reveal delay={0.05}>
               <div>
                 <span className="inline-flex rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide text-brand-300">
-                  {project.category}
+                  {category}
                 </span>
                 <h1 className="font-display mt-5 max-w-2xl text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-                  {project.title}
+                  {title}
                 </h1>
-                <p className="mt-4 max-w-xl text-lg text-white/60">
-                  {project.summary}
-                </p>
+                <p className="mt-4 max-w-xl text-lg text-white/60">{summary}</p>
               </div>
             </Reveal>
 
             {project.link && (
               <Reveal delay={0.1}>
                 <Button href={project.link} variant="secondary" size="lg">
-                  Loyihani ko&apos;rish
+                  {t("viewProject")}
                   <ArrowUpRight className="h-4 w-4" />
                 </Button>
               </Reveal>
@@ -91,22 +93,20 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
         <Container>
           <Reveal>
             <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-slate-200 shadow-2xl">
-              <Image src={gallery[0]} alt={project.title} fill className="object-cover" priority />
+              <Image src={gallery[0]} alt={title} fill className="object-cover" priority />
             </div>
           </Reveal>
 
           <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_320px]">
             <Reveal>
               <div>
-                <h2 className="font-display text-2xl font-bold text-ink-900">
-                  Loyiha haqida
-                </h2>
+                <h2 className="font-display text-2xl font-bold text-ink-900">{t("about")}</h2>
                 <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-slate-600">
-                  {project.description}
+                  {description}
                 </p>
 
                 <h3 className="font-display mt-10 text-lg font-bold text-ink-900">
-                  Texnologiyalar
+                  {t("technologies")}
                 </h3>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {stack.map((tech) => (
@@ -124,17 +124,17 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
             <Reveal delay={0.1}>
               <div className="h-fit rounded-3xl border border-slate-200 bg-slate-50 p-6">
                 <h3 className="font-display text-sm font-bold uppercase tracking-wide text-slate-500">
-                  Loyiha tafsilotlari
+                  {t("detailsTitle")}
                 </h3>
                 <ul className="mt-5 space-y-4 text-sm">
                   {project.client && (
-                    <DetailRow icon={User} label="Mijoz" value={project.client} />
+                    <DetailRow icon={User} label={t("client")} value={project.client} />
                   )}
                   {project.year && (
-                    <DetailRow icon={Calendar} label="Yil" value={project.year} />
+                    <DetailRow icon={Calendar} label={t("year")} value={project.year} />
                   )}
                   {project.duration && (
-                    <DetailRow icon={Clock} label="Davomiyligi" value={project.duration} />
+                    <DetailRow icon={Clock} label={t("duration")} value={project.duration} />
                   )}
                 </ul>
               </div>
@@ -146,12 +146,10 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
       {related.length > 0 && (
         <section className="bg-slate-50 py-20">
           <Container>
-            <h2 className="font-display text-2xl font-bold text-ink-900">
-              O&apos;xshash loyihalar
-            </h2>
+            <h2 className="font-display text-2xl font-bold text-ink-900">{t("related")}</h2>
             <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((p) => (
-                <ProjectCard key={p.id} project={p} />
+                <ProjectCard key={p.id} project={p} locale={locale} />
               ))}
             </div>
           </Container>

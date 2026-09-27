@@ -1,19 +1,30 @@
 import { ArrowRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import type { Locale } from "next-intl";
 import { Container } from "@/components/ui/container";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { StaggerGroup, StaggerItem } from "@/components/ui/reveal";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { getIcon } from "@/components/site/icon-map";
+import { localize } from "@/lib/localize";
 import type { Service } from "@prisma/client";
 
-export function ServicesGrid({ services }: { services: Service[] }) {
+export async function ServicesGrid({
+  services,
+  locale,
+}: {
+  services: Service[];
+  locale: Locale;
+}) {
+  const t = await getTranslations("services");
+
   return (
     <section className="relative bg-white py-24 sm:py-32">
       <Container>
         <SectionHeading
-          eyebrow="Xizmatlar"
-          title="Biznesingiz uchun to'liq raqamli yechimlar"
-          description="G'oyadan tortib ishga tushirish va rivojlantirishgacha — barcha bosqichlarda professional yordam."
+          eyebrow={t("eyebrow")}
+          title={t("title")}
+          description={t("description")}
         />
 
         <StaggerGroup className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -26,13 +37,13 @@ export function ServicesGrid({ services }: { services: Service[] }) {
                     <Icon className="h-6 w-6" />
                   </div>
                   <h3 className="font-display mt-6 text-xl font-bold text-ink-900">
-                    {service.title}
+                    {localize(service, "title", locale)}
                   </h3>
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-500">
-                    {service.summary}
+                    {localize(service, "summary", locale)}
                   </p>
                   <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
-                    Batafsil
+                    {t("cardCta")}
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </span>
                 </SpotlightCard>

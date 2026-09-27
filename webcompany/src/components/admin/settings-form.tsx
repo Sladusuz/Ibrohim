@@ -2,27 +2,23 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Save, CheckCircle2, AlertCircle } from "lucide-react";
+import { Loader2, Save, CheckCircle2, AlertCircle, Languages } from "lucide-react";
+import { LanguageTabs, fieldName } from "@/components/admin/language-tabs";
 import type { SettingsMap } from "@/lib/settings";
 
-const SECTIONS: {
+const SIMPLE_SECTIONS: {
   title: string;
-  fields: { key: keyof SettingsMap; label: string; type?: string }[];
+  fields: { key: keyof SettingsMap; label: string }[];
 }[] = [
   {
     title: "Umumiy ma'lumot",
-    fields: [
-      { key: "site_name", label: "Sayt nomi" },
-      { key: "site_tagline", label: "Shior (tagline)" },
-      { key: "site_description", label: "Sayt tavsifi", type: "textarea" },
-    ],
+    fields: [{ key: "site_name", label: "Sayt nomi" }],
   },
   {
     title: "Aloqa ma'lumotlari",
     fields: [
       { key: "contact_email", label: "Email" },
       { key: "contact_phone", label: "Telefon raqami" },
-      { key: "contact_address", label: "Manzil" },
     ],
   },
   {
@@ -43,6 +39,12 @@ const SECTIONS: {
       { key: "stat_years", label: "Yillik tajriba" },
     ],
   },
+];
+
+const TRANSLATABLE_FIELDS: { key: string; label: string; type?: "textarea" }[] = [
+  { key: "site_tagline", label: "Shior (tagline)" },
+  { key: "site_description", label: "Sayt tavsifi", type: "textarea" },
+  { key: "contact_address", label: "Manzil" },
 ];
 
 export function SettingsForm({ settings }: { settings: SettingsMap }) {
@@ -79,26 +81,45 @@ export function SettingsForm({ settings }: { settings: SettingsMap }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {SECTIONS.map((section) => (
+      <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+        <div className="mb-5 flex items-center gap-2 text-lg font-bold text-ink-900">
+          <Languages className="h-5 w-5 text-brand-500" />
+          Tarjima qilinadigan matnlar (3 tilda)
+        </div>
+        <LanguageTabs>
+          {(locale) => (
+            <>
+              {TRANSLATABLE_FIELDS.map((field) => {
+                const name = locale === "uz" ? field.key : fieldName(field.key, locale);
+                return (
+                  <label key={name} className="flex flex-col gap-2">
+                    <span className="text-sm font-medium text-ink-900">{field.label}</span>
+                    {field.type === "textarea" ? (
+                      <textarea
+                        name={name}
+                        defaultValue={settings[name] ?? ""}
+                        rows={3}
+                        className="input resize-none"
+                      />
+                    ) : (
+                      <input name={name} defaultValue={settings[name] ?? ""} className="input" />
+                    )}
+                  </label>
+                );
+              })}
+            </>
+          )}
+        </LanguageTabs>
+      </div>
+
+      {SIMPLE_SECTIONS.map((section) => (
         <div key={section.title} className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
           <h2 className="font-display text-lg font-bold text-ink-900">{section.title}</h2>
           <div className="mt-5 grid gap-5 sm:grid-cols-2">
             {section.fields.map((field) => (
-              <label
-                key={field.key}
-                className={field.type === "textarea" ? "flex flex-col gap-2 sm:col-span-2" : "flex flex-col gap-2"}
-              >
+              <label key={field.key} className="flex flex-col gap-2">
                 <span className="text-sm font-medium text-ink-900">{field.label}</span>
-                {field.type === "textarea" ? (
-                  <textarea
-                    name={field.key}
-                    defaultValue={settings[field.key]}
-                    rows={3}
-                    className="input resize-none"
-                  />
-                ) : (
-                  <input name={field.key} defaultValue={settings[field.key]} className="input" />
-                )}
+                <input name={field.key} defaultValue={settings[field.key]} className="input" />
               </label>
             ))}
           </div>

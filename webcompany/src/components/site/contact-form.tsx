@@ -1,28 +1,15 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useTranslations } from "next-intl";
 import { Loader2, CheckCircle2, AlertCircle, Send } from "lucide-react";
 import { ButtonEl } from "@/components/ui/button";
 
-const SERVICES = [
-  "Veb-sayt yaratish",
-  "Mobil ilova",
-  "UI/UX dizayn",
-  "E-commerce",
-  "Backend / Bulut",
-  "Sun'iy intellekt",
-  "Boshqa",
-];
-
-const BUDGETS = [
-  "$1,000 — $5,000",
-  "$5,000 — $15,000",
-  "$15,000 — $50,000",
-  "$50,000+",
-  "Hali aniq emas",
-];
-
 export function ContactForm() {
+  const t = useTranslations("contactForm");
+  const services = t.raw("services") as string[];
+  const budgets = t.raw("budgets") as string[];
+
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle"
   );
@@ -46,14 +33,14 @@ export function ContactForm() {
 
       if (!res.ok) {
         const json = await res.json().catch(() => ({}));
-        throw new Error(json.error || "Xatolik yuz berdi.");
+        throw new Error(json.error || t("genericError"));
       }
 
       setStatus("success");
       form.reset();
     } catch (err) {
       setStatus("error");
-      setErrorMsg(err instanceof Error ? err.message : "Xatolik yuz berdi.");
+      setErrorMsg(err instanceof Error ? err.message : t("genericError"));
     }
   }
 
@@ -62,17 +49,14 @@ export function ContactForm() {
       <div className="flex flex-col items-center justify-center rounded-3xl border border-emerald-200 bg-emerald-50 px-8 py-16 text-center">
         <CheckCircle2 className="h-14 w-14 text-emerald-500" />
         <h3 className="font-display mt-5 text-2xl font-bold text-ink-900">
-          Rahmat! Xabaringiz qabul qilindi
+          {t("successTitle")}
         </h3>
-        <p className="mt-2 max-w-sm text-slate-500">
-          Jamoamiz tez orada siz bilan bog&apos;lanadi. Odatda 24 soat ichida javob
-          beramiz.
-        </p>
+        <p className="mt-2 max-w-sm text-slate-500">{t("successDescription")}</p>
         <button
           onClick={() => setStatus("idle")}
           className="mt-6 text-sm font-semibold text-brand-600 hover:underline"
         >
-          Yana xabar yuborish
+          {t("sendAnother")}
         </button>
       </div>
     );
@@ -90,36 +74,36 @@ export function ContactForm() {
       />
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Ismingiz" required>
+        <Field label={t("name")} required>
           <input
             required
             name="name"
             type="text"
-            placeholder="Alisher Navoiy"
+            placeholder={t("namePlaceholder")}
             className="input"
           />
         </Field>
-        <Field label="Email" required>
+        <Field label={t("email")} required>
           <input
             required
             name="email"
             type="email"
-            placeholder="siz@company.uz"
+            placeholder={t("emailPlaceholder")}
             className="input"
           />
         </Field>
       </div>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Telefon raqami">
-          <input name="phone" type="tel" placeholder="+998 90 123 45 67" className="input" />
+        <Field label={t("phone")}>
+          <input name="phone" type="tel" placeholder={t("phonePlaceholder")} className="input" />
         </Field>
-        <Field label="Kerakli xizmat">
+        <Field label={t("service")}>
           <select name="service" defaultValue="" className="input">
             <option value="" disabled>
-              Xizmatni tanlang
+              {t("servicePlaceholder")}
             </option>
-            {SERVICES.map((s) => (
+            {services.map((s) => (
               <option key={s} value={s}>
                 {s}
               </option>
@@ -128,12 +112,12 @@ export function ContactForm() {
         </Field>
       </div>
 
-      <Field label="Taxminiy byudjet">
+      <Field label={t("budget")}>
         <select name="budget" defaultValue="" className="input">
           <option value="" disabled>
-            Byudjetni tanlang
+            {t("budgetPlaceholder")}
           </option>
-          {BUDGETS.map((b) => (
+          {budgets.map((b) => (
             <option key={b} value={b}>
               {b}
             </option>
@@ -141,12 +125,12 @@ export function ContactForm() {
         </select>
       </Field>
 
-      <Field label="Loyihangiz haqida" required>
+      <Field label={t("message")} required>
         <textarea
           required
           name="message"
           rows={5}
-          placeholder="Loyihangiz haqida qisqacha ma'lumot bering..."
+          placeholder={t("messagePlaceholder")}
           className="input resize-none"
         />
       </Field>
@@ -168,11 +152,11 @@ export function ContactForm() {
         {status === "loading" ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Yuborilmoqda...
+            {t("submitting")}
           </>
         ) : (
           <>
-            Xabarni yuborish
+            {t("submit")}
             <Send className="h-4 w-4" />
           </>
         )}

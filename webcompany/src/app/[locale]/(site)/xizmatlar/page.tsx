@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
+import { localize } from "@/lib/localize";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/site/page-hero";
 import { StaggerGroup, StaggerItem } from "@/components/ui/reveal";
@@ -8,21 +10,26 @@ import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { getIcon } from "@/components/site/icon-map";
 import { CTA } from "@/components/site/cta";
 
-export const metadata: Metadata = {
-  title: "Xizmatlar",
-  description: "WebCompany.uz taqdim etadigan IT xizmatlari to'liq ro'yxati.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("servicesPage");
+  return { title: t("eyebrow"), description: t("description") };
+}
 
-export default async function ServicesPage() {
-  const services = await prisma.service.findMany({ orderBy: { order: "asc" } });
+export default async function ServicesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const [t, tServices, services] = await Promise.all([
+    getTranslations("servicesPage"),
+    getTranslations("services"),
+    prisma.service.findMany({ orderBy: { order: "asc" } }),
+  ]);
 
   return (
     <>
-      <PageHero
-        eyebrow="Xizmatlar"
-        title="To'liq raqamli yechimlar"
-        description="Strategiyadan tortib ishga tushirish va rivojlantirishgacha — barcha bosqichlarda yoningizdamiz."
-      />
+      <PageHero eyebrow={t("eyebrow")} title={t("title")} description={t("description")} />
 
       <section className="bg-white py-20 sm:py-24">
         <Container>
@@ -38,13 +45,13 @@ export default async function ServicesPage() {
                       </div>
                       <div>
                         <h3 className="font-display text-xl font-bold text-ink-900">
-                          {service.title}
+                          {localize(service, "title", locale)}
                         </h3>
                         <p className="mt-2 text-sm leading-relaxed text-slate-500">
-                          {service.summary}
+                          {localize(service, "summary", locale)}
                         </p>
                         <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
-                          Batafsil
+                          {tServices("cardCta")}
                           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                         </span>
                       </div>

@@ -1,5 +1,6 @@
+import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
-import { getSettings } from "@/lib/settings";
+import { getSettings, getLocalizedSetting } from "@/lib/settings";
 import { Hero } from "@/components/site/hero";
 import { ServicesGrid } from "@/components/site/services-grid";
 import { Process } from "@/components/site/process";
@@ -10,7 +11,20 @@ import { FAQ } from "@/components/site/faq";
 import { CTA } from "@/components/site/cta";
 import { ContactSection } from "@/components/site/contact-section";
 
-export default async function HomePage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+  const tagline = await getLocalizedSetting(settings, "site_tagline");
+  const description = await getLocalizedSetting(settings, "site_description");
+  return { title: tagline, description };
+}
+
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
   const [settings, services, projects, testimonials] = await Promise.all([
     getSettings(),
     prisma.service.findMany({ orderBy: { order: "asc" }, take: 6 }),
@@ -22,21 +36,24 @@ export default async function HomePage() {
     prisma.testimonial.findMany({ orderBy: { order: "asc" } }),
   ]);
 
-  const stats = [
-    { label: "Bajarilgan loyihalar", value: settings.stat_projects },
-    { label: "Mamnun mijozlar", value: settings.stat_clients },
-    { label: "Mutaxassislar", value: settings.stat_experts },
-    { label: "Yillik tajriba", value: settings.stat_years },
-  ];
+  const tagline = await getLocalizedSetting(settings, "site_tagline");
 
   return (
     <>
-      <Hero tagline={settings.site_tagline} stats={stats} />
+      <Hero
+        tagline={tagline}
+        statValues={{
+          projects: settings.stat_projects,
+          clients: settings.stat_clients,
+          experts: settings.stat_experts,
+          years: settings.stat_years,
+        }}
+      />
       <TechMarquee />
-      <ServicesGrid services={services} />
+      <ServicesGrid services={services} locale={locale} />
       <Process />
-      <PortfolioGrid projects={projects} />
-      <Testimonials testimonials={testimonials} />
+      <PortfolioGrid projects={projects} locale={locale} />
+      <Testimonials testimonials={testimonials} locale={locale} />
       <FAQ />
       <CTA />
       <ContactSection settings={settings} />

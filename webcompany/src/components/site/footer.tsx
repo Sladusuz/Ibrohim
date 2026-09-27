@@ -1,33 +1,38 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { TelegramIcon, InstagramIcon, LinkedInIcon, GitHubIcon } from "@/components/site/social-icons";
 import { Logo } from "@/components/site/logo";
 import { Container } from "@/components/ui/container";
-import { getSettings } from "@/lib/settings";
-
-const columns = [
-  {
-    title: "Kompaniya",
-    links: [
-      { href: "/biz-haqimizda", label: "Biz haqimizda" },
-      { href: "/portfolio", label: "Portfolio" },
-      { href: "/xizmatlar", label: "Xizmatlar" },
-      { href: "/aloqa", label: "Aloqa" },
-    ],
-  },
-  {
-    title: "Xizmatlar",
-    links: [
-      { href: "/xizmatlar/veb-sayt-yaratish", label: "Veb-sayt yaratish" },
-      { href: "/xizmatlar/mobil-ilovalar", label: "Mobil ilovalar" },
-      { href: "/xizmatlar/ui-ux-dizayn", label: "UI/UX dizayn" },
-      { href: "/xizmatlar/sun-iy-intellekt", label: "AI integratsiya" },
-    ],
-  },
-];
+import { getSettings, getLocalizedSetting } from "@/lib/settings";
 
 export async function Footer() {
-  const settings = await getSettings();
+  const [settings, t] = await Promise.all([getSettings(), getTranslations("footer")]);
+  const tNav = await getTranslations("nav");
+
+  const description = await getLocalizedSetting(settings, "site_description");
+  const address = await getLocalizedSetting(settings, "contact_address");
+
+  const columns = [
+    {
+      title: t("company"),
+      links: [
+        { href: "/biz-haqimizda", label: tNav("about") },
+        { href: "/portfolio", label: tNav("portfolio") },
+        { href: "/xizmatlar", label: tNav("services") },
+        { href: "/aloqa", label: tNav("contact") },
+      ],
+    },
+    {
+      title: tNav("services"),
+      links: [
+        { href: "/xizmatlar/veb-sayt-yaratish", label: t("service1") },
+        { href: "/xizmatlar/mobil-ilovalar", label: t("service2") },
+        { href: "/xizmatlar/ui-ux-dizayn", label: t("service3") },
+        { href: "/xizmatlar/sun-iy-intellekt", label: t("service4") },
+      ],
+    },
+  ];
 
   return (
     <footer className="relative overflow-hidden bg-ink-950 text-white">
@@ -38,9 +43,7 @@ export async function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_0.8fr_0.8fr_1fr]">
           <div className="max-w-sm">
             <Logo variant="light" />
-            <p className="mt-5 text-sm leading-relaxed text-white/50">
-              {settings.site_description}
-            </p>
+            <p className="mt-5 text-sm leading-relaxed text-white/50">{description}</p>
             <div className="mt-6 flex items-center gap-3">
               {settings.social_telegram && (
                 <SocialIcon href={settings.social_telegram} label="Telegram">
@@ -87,7 +90,7 @@ export async function Footer() {
 
           <div>
             <h4 className="font-display text-sm font-bold uppercase tracking-wider text-white/80">
-              Aloqa
+              {tNav("contact")}
             </h4>
             <ul className="mt-4 space-y-3 text-sm text-white/50">
               <li className="flex items-start gap-2.5">
@@ -104,7 +107,7 @@ export async function Footer() {
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-brand-400" />
-                <span>{settings.contact_address}</span>
+                <span>{address}</span>
               </li>
             </ul>
           </div>
@@ -112,11 +115,11 @@ export async function Footer() {
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-xs text-white/40 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} {settings.site_name}. Barcha huquqlar himoyalangan.
+            © {new Date().getFullYear()} {settings.site_name}. {t("rights")}
           </p>
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-            Barcha tizimlar ishlamoqda
+            {t("systemsOk")}
           </div>
         </div>
       </Container>

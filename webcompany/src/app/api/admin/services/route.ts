@@ -4,11 +4,19 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/require-admin";
 import { slugify } from "@/lib/utils";
 
+const optionalStr = z.string().optional().or(z.literal(""));
+
 const schema = z.object({
   title: z.string().min(2),
   slug: z.string().optional(),
   summary: z.string().min(5),
   description: z.string().min(5),
+  titleRu: optionalStr,
+  summaryRu: optionalStr,
+  descriptionRu: optionalStr,
+  titleEn: optionalStr,
+  summaryEn: optionalStr,
+  descriptionEn: optionalStr,
   icon: z.string().min(1),
   order: z.number().default(0),
 });
@@ -51,6 +59,12 @@ export async function POST(request: Request) {
       slug,
       summary: data.summary,
       description: data.description,
+      titleRu: data.titleRu || null,
+      summaryRu: data.summaryRu || null,
+      descriptionRu: data.descriptionRu || null,
+      titleEn: data.titleEn || null,
+      summaryEn: data.summaryEn || null,
+      descriptionEn: data.descriptionEn || null,
       icon: data.icon,
       order: data.order,
     },

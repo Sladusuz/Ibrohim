@@ -1,0 +1,231 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "about": "About us",
+    "contact": "Contact",
+    "cta": "Start a project"
+  },
+  "hero": {
+    "eyebrow": "Uzbekistan's leading IT company",
+    "description": "We build websites, mobile apps and digital products from idea to launch — with modern technology and a professional team.",
+    "ctaPrimary": "Start a project",
+    "ctaSecondary": "See our work"
+  },
+  "stats": {
+    "projects": "Projects delivered",
+    "clients": "Happy clients",
+    "experts": "Specialists",
+    "years": "Years of experience"
+  },
+  "techMarquee": {
+    "title": "Technologies we use"
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "Complete digital solutions for your business",
+    "description": "Professional support at every stage, from idea to launch and growth.",
+    "cardCta": "Learn more"
+  },
+  "process": {
+    "eyebrow": "Our process",
+    "title": "A transparent, efficient way of working",
+    "description": "We follow the same high quality standards on every project.",
+    "steps": [
+      {
+        "title": "Research & analysis",
+        "description": "We dig into your business goals, audience and market to shape a clear technical brief."
+      },
+      {
+        "title": "UI/UX design",
+        "description": "We craft modern, intuitive interface prototypes that put user experience first."
+      },
+      {
+        "title": "Development",
+        "description": "We write solid, fast code with quality control, following an agile methodology."
+      },
+      {
+        "title": "Launch",
+        "description": "We ship the product and provide ongoing monitoring and technical support."
+      }
+    ]
+  },
+  "portfolioHome": {
+    "eyebrow": "Portfolio",
+    "title": "Our latest work",
+    "description": "Products we've built for clients across a range of industries.",
+    "viewAll": "View all"
+  },
+  "portfolioPage": {
+    "eyebrow": "Portfolio",
+    "title": "Products we've built",
+    "description": "From fintech to edtech platforms — our projects span many industries.",
+    "filterAll": "All",
+    "empty": "There are no projects in this category yet."
+  },
+  "projectDetail": {
+    "back": "Back to portfolio",
+    "viewProject": "View project",
+    "about": "About the project",
+    "technologies": "Technologies",
+    "detailsTitle": "Project details",
+    "client": "Client",
+    "year": "Year",
+    "duration": "Duration",
+    "related": "Related projects"
+  },
+  "testimonials": {
+    "eyebrow": "Client feedback",
+    "title": "What our clients say about us"
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Frequently asked questions",
+    "description": "Can't find the answer you're looking for? Feel free to reach out to us.",
+    "items": [
+      {
+        "q": "How long does a project usually take?",
+        "a": "It depends on the project's complexity. A simple corporate site takes 2-4 weeks, while a complex web app or marketplace can take 3-6 months. We define the exact timeline during the analysis stage."
+      },
+      {
+        "q": "How is pricing determined?",
+        "a": "We prepare an individual quote for every project, based on functionality, design complexity and integrations. During a free consultation we'll give you an exact estimate and timeline."
+      },
+      {
+        "q": "Is there technical support after launch?",
+        "a": "Yes. Every project includes at least 3 months of free technical support, after which we offer flexible ongoing support packages."
+      },
+      {
+        "q": "Can you upgrade my existing website?",
+        "a": "Absolutely. We'll review your existing code and recommend whether to refactor it or migrate it to modern technology."
+      },
+      {
+        "q": "Which payment systems can you integrate?",
+        "a": "We work with local systems like Click, Payme, Uzcard and Humo, as well as international ones like Stripe and PayPal."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Let's bring your project to life together",
+    "description": "Get a free consultation and we'll find the best digital solution for your business.",
+    "primary": "Free consultation",
+    "secondary": "View portfolio"
+  },
+  "contactPage": {
+    "eyebrow": "Contact",
+    "title": "Let's discuss your project",
+    "description": "Have a question or want to start a project? Get in touch with us."
+  },
+  "contact": {
+    "eyebrow": "Contact",
+    "title": "Let's talk about your project",
+    "description": "Fill out the form — our team will get back to you within 24 hours.",
+    "infoTitle": "Contact information",
+    "infoDescription": "Have a question? Feel free to reach us through any of the channels below.",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "hours": "Working hours",
+    "hoursValue": "Mon – Fri: 9:00 AM – 6:00 PM"
+  },
+  "contactForm": {
+    "name": "Your name",
+    "namePlaceholder": "John Smith",
+    "email": "Email",
+    "emailPlaceholder": "you@company.com",
+    "phone": "Phone number",
+    "phonePlaceholder": "+998 90 123 45 67",
+    "service": "Service you need",
+    "servicePlaceholder": "Select a service",
+    "services": [
+      "Website development",
+      "Mobile app",
+      "UI/UX design",
+      "E-commerce",
+      "Backend / Cloud",
+      "Artificial intelligence",
+      "Other"
+    ],
+    "budget": "Estimated budget",
+    "budgetPlaceholder": "Select a budget",
+    "budgets": [
+      "$1,000 — $5,000",
+      "$5,000 — $15,000",
+      "$15,000 — $50,000",
+      "$50,000+",
+      "Not sure yet"
+    ],
+    "message": "About your project",
+    "messagePlaceholder": "Tell us briefly about your project...",
+    "submit": "Send message",
+    "submitting": "Sending...",
+    "successTitle": "Thanks! Your message has been received",
+    "successDescription": "Our team will reach out to you soon. We typically respond within 24 hours.",
+    "sendAnother": "Send another message",
+    "genericError": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "company": "Company",
+    "service1": "Website development",
+    "service2": "Mobile apps",
+    "service3": "UI/UX design",
+    "service4": "AI integration",
+    "rights": "All rights reserved.",
+    "systemsOk": "All systems operational"
+  },
+  "about": {
+    "eyebrow": "About us",
+    "titleSuffix": "turning ideas into digital products",
+    "description": "Since 2018 we've been building high-quality software for Uzbekistan and international markets.",
+    "storyLabel": "Our story",
+    "storyTitle": "From a small team to a leading IT company",
+    "storyParagraph1": "{siteName} started out as a small team of a few developers. Today we're a team of {experts}+ specialists who've served {clients}+ clients and successfully delivered {projects}+ projects.",
+    "storyParagraph2": "Our mission is to contribute to the digital transformation of Uzbek businesses through technology and to build products that meet international standards.",
+    "valuesEyebrow": "Our values",
+    "valuesTitle": "What sets us apart",
+    "values": [
+      {
+        "title": "Results-driven",
+        "description": "On every project, we build solutions that serve our client's business goals."
+      },
+      {
+        "title": "Transparency",
+        "description": "We work with open communication and clear reporting at every stage of the project."
+      },
+      {
+        "title": "Long-term partnership",
+        "description": "We build trust-based, long-term relationships with our clients."
+      },
+      {
+        "title": "High quality",
+        "description": "We ensure quality through coding standards, testing and code review."
+      }
+    ],
+    "teamEyebrow": "Team",
+    "teamTitle": "The specialists behind your project",
+    "team": [
+      { "name": "Ibrohim Abdulboqiyev", "role": "Founder & CEO" },
+      { "name": "Dilnoza Yusupova", "role": "Lead Designer" },
+      { "name": "Aziz Karimov", "role": "CTO" },
+      { "name": "Madina Tosheva", "role": "Project Manager" }
+    ]
+  },
+  "servicesPage": {
+    "eyebrow": "Services",
+    "title": "Complete digital solutions",
+    "description": "From strategy to launch and growth — we're with you at every stage."
+  },
+  "serviceDetail": {
+    "back": "Back to services",
+    "whyUsTitle": "Why choose us?",
+    "benefits": [
+      "Delivery on the agreed timeline",
+      "Transparent pricing and reporting",
+      "Technical support after launch",
+      "Modern, secure technology"
+    ],
+    "orderCta": "Order this service",
+    "otherServicesTitle": "Our other services"
+  }
+}

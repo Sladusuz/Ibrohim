@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 const TECHS_ROW_1 = [
   "Next.js",
   "React",
@@ -16,14 +18,15 @@ const TECHS_ROW_2 = [
   "Kubernetes",
 ];
 
-export function TechMarquee() {
+export async function TechMarquee() {
+  const t = await getTranslations("techMarquee");
   const row1 = [...TECHS_ROW_1, ...TECHS_ROW_1];
   const row2 = [...TECHS_ROW_2, ...TECHS_ROW_2];
 
   return (
     <section className="border-y border-slate-200 bg-white py-10">
       <div className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
-        Biz ishlatadigan texnologiyalar
+        {t("title")}
       </div>
       <div className="relative space-y-3 overflow-hidden">
         <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-24 bg-gradient-to-r from-white to-transparent" />

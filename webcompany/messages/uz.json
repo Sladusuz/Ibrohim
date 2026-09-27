@@ -1,0 +1,231 @@
+{
+  "nav": {
+    "home": "Bosh sahifa",
+    "services": "Xizmatlar",
+    "portfolio": "Portfolio",
+    "about": "Biz haqimizda",
+    "contact": "Aloqa",
+    "cta": "Loyihani boshlash"
+  },
+  "hero": {
+    "eyebrow": "O'zbekistondagi yetakchi IT-kompaniya",
+    "description": "Veb-saytlar, mobil ilovalar va raqamli mahsulotlarni g'oyadan ishga tushirishgacha — zamonaviy texnologiyalar va professional jamoa bilan quramiz.",
+    "ctaPrimary": "Loyihani boshlash",
+    "ctaSecondary": "Ishlarimizni ko'rish"
+  },
+  "stats": {
+    "projects": "Bajarilgan loyihalar",
+    "clients": "Mamnun mijozlar",
+    "experts": "Mutaxassislar",
+    "years": "Yillik tajriba"
+  },
+  "techMarquee": {
+    "title": "Biz ishlatadigan texnologiyalar"
+  },
+  "services": {
+    "eyebrow": "Xizmatlar",
+    "title": "Biznesingiz uchun to'liq raqamli yechimlar",
+    "description": "G'oyadan tortib ishga tushirish va rivojlantirishgacha — barcha bosqichlarda professional yordam.",
+    "cardCta": "Batafsil"
+  },
+  "process": {
+    "eyebrow": "Ish jarayoni",
+    "title": "Shaffof va samarali ish jarayoni",
+    "description": "Har bir loyihada bir xil yuqori sifat standartlariga amal qilamiz.",
+    "steps": [
+      {
+        "title": "Tadqiqot va tahlil",
+        "description": "Biznesingiz maqsadlari, auditoriyasi va bozorni chuqur o'rganamiz, aniq texnik topshiriq shakllantiramiz."
+      },
+      {
+        "title": "UI/UX dizayn",
+        "description": "Foydalanuvchi tajribasini birinchi o'ringa qo'yib, zamonaviy va intuitiv interfeys prototiplarini yaratamiz."
+      },
+      {
+        "title": "Dasturlash",
+        "description": "Chaqqon (Agile) metodologiya asosida, sifat nazorati bilan mustahkam va tez kodni yozamiz."
+      },
+      {
+        "title": "Ishga tushirish",
+        "description": "Mahsulotni joylashtirib, monitoring va texnik qo'llab-quvvatlashni doimiy ravishda ta'minlaymiz."
+      }
+    ]
+  },
+  "portfolioHome": {
+    "eyebrow": "Portfolio",
+    "title": "Bizning so'nggi ishlarimiz",
+    "description": "Turli sohalardagi mijozlarimiz uchun yaratgan mahsulotlarimiz.",
+    "viewAll": "Barchasini ko'rish"
+  },
+  "portfolioPage": {
+    "eyebrow": "Portfolio",
+    "title": "Biz yaratgan mahsulotlar",
+    "description": "Fintech'dan tortib ta'lim platformalarigacha — turli sohalarda amalga oshirilgan loyihalarimiz.",
+    "filterAll": "Barchasi",
+    "empty": "Ushbu kategoriyada hozircha loyihalar yo'q."
+  },
+  "projectDetail": {
+    "back": "Portfolioga qaytish",
+    "viewProject": "Loyihani ko'rish",
+    "about": "Loyiha haqida",
+    "technologies": "Texnologiyalar",
+    "detailsTitle": "Loyiha tafsilotlari",
+    "client": "Mijoz",
+    "year": "Yil",
+    "duration": "Davomiyligi",
+    "related": "O'xshash loyihalar"
+  },
+  "testimonials": {
+    "eyebrow": "Mijozlar fikri",
+    "title": "Mijozlarimiz biz haqimizda nima deyishadi"
+  },
+  "faq": {
+    "eyebrow": "Savol-javob",
+    "title": "Ko'p beriladigan savollar",
+    "description": "Agar javobini topolmagan savolingiz bo'lsa, biz bilan bemalol bog'laning.",
+    "items": [
+      {
+        "q": "Loyiha odatda qancha vaqt oladi?",
+        "a": "Loyiha murakkabligiga qarab farq qiladi. Oddiy korporativ sayt 2-4 hafta, murakkab veb-ilova yoki marketpleys 3-6 oy davom etishi mumkin. Aniq muddatni tahlil bosqichida belgilaymiz."
+      },
+      {
+        "q": "Narxlash qanday amalga oshiriladi?",
+        "a": "Har bir loyiha uchun individual narx taklifi tayyorlaymiz — funksionallik, dizayn murakkabligi va integratsiyalarga qarab. Bepul konsultatsiyada aniq smeta va muddat bilan taniqtiramiz."
+      },
+      {
+        "q": "Loyihadan keyin texnik yordam bormi?",
+        "a": "Ha. Barcha loyihalarga kamida 3 oylik bepul texnik xizmat ko'rsatish kiritilgan, undan keyin esa moslashuvchan qo'llab-quvvatlash paketlarini taklif qilamiz."
+      },
+      {
+        "q": "Mavjud saytimni yangilashingiz mumkinmi?",
+        "a": "Albatta. Mavjud kodni tahlil qilib, uni qayta qurish yoki yangi zamonaviy texnologiyalarga ko'chirish bo'yicha tavsiyalar beramiz."
+      },
+      {
+        "q": "Qaysi to'lov tizimlarini integratsiya qila olasiz?",
+        "a": "Click, Payme, Uzcard, Humo kabi mahalliy tizimlar, shuningdek Stripe va PayPal kabi xalqaro to'lov tizimlari bilan ishlaymiz."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Loyihangizni birga hayotga tatbiq etaylik",
+    "description": "Bepul konsultatsiya oling va biznesingiz uchun eng yaxshi raqamli yechimni topamiz.",
+    "primary": "Bepul konsultatsiya",
+    "secondary": "Portfolioni ko'rish"
+  },
+  "contactPage": {
+    "eyebrow": "Aloqa",
+    "title": "Keling, loyihangizni muhokama qilaylik",
+    "description": "Savolingiz bo'lsa yoki loyiha boshlamoqchi bo'lsangiz, biz bilan bog'laning."
+  },
+  "contact": {
+    "eyebrow": "Aloqa",
+    "title": "Loyihangiz haqida gaplashaylik",
+    "description": "Formani to'ldiring — jamoamiz 24 soat ichida siz bilan bog'lanadi.",
+    "infoTitle": "Aloqa ma'lumotlari",
+    "infoDescription": "Savollaringiz bormi? Quyidagi kanallar orqali biz bilan bog'lanishingiz mumkin.",
+    "email": "Email",
+    "phone": "Telefon",
+    "address": "Manzil",
+    "hours": "Ish vaqti",
+    "hoursValue": "Dush – Juma: 09:00 – 18:00"
+  },
+  "contactForm": {
+    "name": "Ismingiz",
+    "namePlaceholder": "Alisher Navoiy",
+    "email": "Email",
+    "emailPlaceholder": "siz@company.uz",
+    "phone": "Telefon raqami",
+    "phonePlaceholder": "+998 90 123 45 67",
+    "service": "Kerakli xizmat",
+    "servicePlaceholder": "Xizmatni tanlang",
+    "services": [
+      "Veb-sayt yaratish",
+      "Mobil ilova",
+      "UI/UX dizayn",
+      "E-commerce",
+      "Backend / Bulut",
+      "Sun'iy intellekt",
+      "Boshqa"
+    ],
+    "budget": "Taxminiy byudjet",
+    "budgetPlaceholder": "Byudjetni tanlang",
+    "budgets": [
+      "$1,000 — $5,000",
+      "$5,000 — $15,000",
+      "$15,000 — $50,000",
+      "$50,000+",
+      "Hali aniq emas"
+    ],
+    "message": "Loyihangiz haqida",
+    "messagePlaceholder": "Loyihangiz haqida qisqacha ma'lumot bering...",
+    "submit": "Xabarni yuborish",
+    "submitting": "Yuborilmoqda...",
+    "successTitle": "Rahmat! Xabaringiz qabul qilindi",
+    "successDescription": "Jamoamiz tez orada siz bilan bog'lanadi. Odatda 24 soat ichida javob beramiz.",
+    "sendAnother": "Yana xabar yuborish",
+    "genericError": "Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring."
+  },
+  "footer": {
+    "company": "Kompaniya",
+    "service1": "Veb-sayt yaratish",
+    "service2": "Mobil ilovalar",
+    "service3": "UI/UX dizayn",
+    "service4": "AI integratsiya",
+    "rights": "Barcha huquqlar himoyalangan.",
+    "systemsOk": "Barcha tizimlar ishlamoqda"
+  },
+  "about": {
+    "eyebrow": "Biz haqimizda",
+    "titleSuffix": "g'oyalarni raqamli mahsulotlarga aylantiramiz",
+    "description": "2018-yildan buyon O'zbekiston va xalqaro bozor uchun yuqori sifatli dasturiy ta'minot yaratamiz.",
+    "storyLabel": "Bizning hikoyamiz",
+    "storyTitle": "Kichik jamoadan yetakchi IT-kompaniyagacha",
+    "storyParagraph1": "{siteName} bir nechta dasturchidan tashkil topgan kichik jamoa sifatida faoliyatini boshlagan edi. Bugungi kunda biz {experts}+ mutaxassisdan iborat jamoa bo'lib, {clients}+ mijozga xizmat ko'rsatib, {projects}+ loyihani muvaffaqiyatli yakunladik.",
+    "storyParagraph2": "Bizning maqsadimiz — texnologiya yordamida O'zbekiston biznesining raqamli transformatsiyasiga hissa qo'shish va xalqaro standartlarga mos mahsulotlar yaratish.",
+    "valuesEyebrow": "Qadriyatlarimiz",
+    "valuesTitle": "Bizni boshqalardan ajratib turadigan narsa",
+    "values": [
+      {
+        "title": "Natijaga yo'naltirilganlik",
+        "description": "Har bir loyihada mijozning biznes maqsadlariga xizmat qiluvchi yechimlar yaratamiz."
+      },
+      {
+        "title": "Shaffoflik",
+        "description": "Loyihaning har bir bosqichida ochiq muloqot va aniq hisobotlar bilan ishlaymiz."
+      },
+      {
+        "title": "Uzoq muddatli hamkorlik",
+        "description": "Mijozlarimiz bilan ishonchga asoslangan, uzoq muddatli munosabatlar quramiz."
+      },
+      {
+        "title": "Yuqori sifat",
+        "description": "Kodlash standartlari, testlash va kod review orqali sifatni ta'minlaymiz."
+      }
+    ],
+    "teamEyebrow": "Jamoa",
+    "teamTitle": "Loyihangiz ortidagi mutaxassislar",
+    "team": [
+      { "name": "Ibrohim Abdulboqiyev", "role": "Asoschisi va CEO" },
+      { "name": "Dilnoza Yusupova", "role": "Bosh dizayner" },
+      { "name": "Aziz Karimov", "role": "Texnik direktor" },
+      { "name": "Madina Tosheva", "role": "Loyiha menejeri" }
+    ]
+  },
+  "servicesPage": {
+    "eyebrow": "Xizmatlar",
+    "title": "To'liq raqamli yechimlar",
+    "description": "Strategiyadan tortib ishga tushirish va rivojlantirishgacha — barcha bosqichlarda yoningizdamiz."
+  },
+  "serviceDetail": {
+    "back": "Xizmatlarga qaytish",
+    "whyUsTitle": "Nima uchun bizni tanlaysiz?",
+    "benefits": [
+      "Belgilangan muddatda yetkazib berish",
+      "Shaffof narxlash va hisobot",
+      "Loyihadan keyin texnik yordam",
+      "Zamonaviy va xavfsiz texnologiyalar"
+    ],
+    "orderCta": "Buyurtma berish",
+    "otherServicesTitle": "Boshqa xizmatlarimiz"
+  }
+}
