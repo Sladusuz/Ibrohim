@@ -1,8 +1,12 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
 const header = document.getElementById("header");
+const progressBar = document.getElementById("progressBar");
 window.addEventListener("scroll", () => {
   header.classList.toggle("scrolled", window.scrollY > 12);
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+  progressBar.style.width = `${progress}%`;
 });
 
 const burger = document.getElementById("burger");
