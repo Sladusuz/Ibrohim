@@ -16,17 +16,9 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  if (!ready) {
-    document.body.innerHTML = '<div class="auth"><div class="auth__card">' +
-      '<h1>config.js to‘ldirilmagan</h1>' +
-      '<p>Supabase → Project Settings → API bo‘limidan <b>Project URL</b> va <b>anon public</b> kalitini nusxalab, ' +
-      '<code>config.js</code> fayliga qo‘ying. Keyin bu sahifani yangilang.</p></div></div>';
-    return;
-  }
-
-  var sb = window.supabase.createClient(C.url, C.key, {
+  var sb = ready ? window.supabase.createClient(C.url, C.key, {
     auth: { persistSession: true, autoRefreshToken: true }
-  });
+  }) : null;
 
   var P = [], K = [], M = [];
   var COLORS = [
@@ -52,13 +44,9 @@
   };
 
   /* ---------- kirish ---------- */
-  sb.auth.getSession().then(function (r) {
-    if (r.data.session) enter(r.data.session);
-    else $('#auth').hidden = false;
-  });
-
   $('#authForm').addEventListener('submit', function (ev) {
     ev.preventDefault();
+    if (!ready) return;
     var err = $('#authErr'), btn = $('button[type=submit]', ev.target);
     err.classList.remove('on');
     btn.disabled = true;
@@ -78,6 +66,7 @@
 
   $('#out').addEventListener('click', function (ev) {
     ev.preventDefault();
+    if (!ready) return;
     sb.auth.signOut().then(function () { location.reload(); });
   });
 
@@ -86,6 +75,22 @@
     $('#who').textContent = session.user.email;
     $('#curl').textContent = location.pathname.replace(/^\//, '');
     reload();
+    initTexts();
+  }
+
+  /* Supabase sozlanmagan bo'lsa — faqat «Matnlar» bo'limi ishlaydi,
+     boshqa bo'limlar (Mahsulotlar, Yo'nalishlar, So'rovlar) Supabase talab qiladi. */
+  function enterLocalMode() {
+    $('#shell').hidden = false;
+    $('#who').textContent = 'Mahalliy rejim';
+    $('#curl').textContent = location.pathname.replace(/^\//, '');
+    $$('#rail button').forEach(function (b) {
+      var active = b.dataset.v === 'texts';
+      b.setAttribute('aria-current', String(active));
+      if (!active) { b.disabled = true; b.title = 'Bu bo‘lim uchun Supabase ulanishi kerak (config.js)'; }
+    });
+    $$('.pane-view').forEach(function (v) { v.classList.toggle('on', v.id === 'v-texts'); });
+    initTexts();
   }
 
   function reload() {
@@ -549,6 +554,223 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
   }
 
+  /* ---------- matnlar ---------- */
+  var TEXT_GROUPS = [
+    { title: 'Bosh sahifa — sarlavha (Hero)', keys: ['hero.badge', 'hero.badgetxt', 'hero.kicker', 'hero.title', 'hero.t1', 'hero.t2', 'hero.lead', 'hero.lead2', 'hero.cta1', 'hero.cta2', 'hero.scroll'] },
+    { title: 'Statistika raqamlari', keys: ['stat.years', 'stat.sku', 'stat.countries', 'stat.regions'] },
+    { title: 'Mahsulot yo‘nalishlari (bosh sahifa)', keys: ['range.title', 'range.lead', 'cat.title', 'cat.lead', 'cat.count', 'cat.view'] },
+    { title: 'Ko‘p so‘raladigan mahsulotlar', keys: ['feat.title', 'feat.lead', 'feat.all'] },
+    { title: 'Nega Sladus', keys: ['why.title', 'why.q.t', 'why.q.d', 'why.i.t', 'why.i.d', 'why.p.t', 'why.p.d', 'why.pr.t', 'why.pr.d'] },
+    { title: 'Eksport xaritasi', keys: ['export.title', 'export.lead', 'export.cta'] },
+    { title: 'Yutuqlar (sarlavha)', keys: ['awards.title', 'awards.lead'] },
+    { title: 'Hamkorlik taklifi', keys: ['cta.title', 'cta.lead', 'cta.btn'] },
+    { title: 'Narx so‘rash formasi', keys: ['form.title', 'form.lead', 'form.name', 'form.company', 'form.phone', 'form.email', 'form.country', 'form.interest', 'form.message', 'form.send', 'form.sending', 'form.ok', 'form.err', 'form.required', 'form.emailbad', 'form.phonebad'] },
+    { title: 'Katalog sahifasi', keys: ['cat.h1', 'cat.search', 'cat.all', 'cat.sort', 'cat.sort.az', 'cat.sort.za', 'cat.sort.kcal', 'cat.sort.kcald', 'cat.found', 'cat.empty.t', 'cat.empty.d', 'cat.reset', 'cat.details'] },
+    { title: 'Mahsulot kartasi', keys: ['p.back', 'p.composition', 'p.nutrition', 'p.protein', 'p.fat', 'p.carbs', 'p.kcal', 'p.supply', 'p.packtype', 'p.size', 'p.volume', 'p.net', 'p.pcs', 'p.tnved', 'p.code', 'p.storage', 'p.storagev', 'p.order', 'p.related'] },
+    { title: 'Kompaniya haqida (matn)', keys: ['about.h1', 'about.story', 'about.p1', 'about.p2', 'about.valtitle', 'about.tl'] },
+    { title: 'Aloqa (yorliqlar)', keys: ['contact.h1', 'contact.addr', 'contact.callexp', 'contact.calllocal', 'contact.email', 'contact.hours', 'contact.map'] },
+    { title: 'Yordam va FAQ', keys: ['support.h1', 'support.lead', 'support.dl.title', 'support.dl.desc', 'support.dl.btn', 'support.faq.title', 'support.faq.q1', 'support.faq.a1', 'support.faq.q2', 'support.faq.a2', 'support.faq.q3', 'support.faq.a3', 'support.faq.q4', 'support.faq.a4', 'support.faq.q5', 'support.faq.a5', 'support.chat.title', 'support.chat.sub', 'support.chat.placeholder', 'support.chat.greeting', 'support.chat.disclaimer', 'support.chat.error'] },
+    { title: 'Pastki qism (footer)', keys: ['footer.about', 'footer.nav', 'footer.cats', 'footer.contacts', 'footer.rights', 'footer.admin'] },
+    { title: 'Navigatsiya va umumiy', keys: ['nav.home', 'nav.about', 'nav.catalog', 'nav.export', 'nav.contact', 'nav.quote', 'nav.support', 'ticker.pre', 'lang.name', 'a11y.menu', 'a11y.lang', 'top'] }
+  ];
+
+  var textsInited = false, countriesDraft = [], awardsDraft = [];
+
+  function i18nField(key) {
+    var uid = 'i_' + key.replace(/[^a-z0-9]/gi, '_');
+    var sample = String((window.I18N.uz && window.I18N.uz[key]) || '');
+    var area = sample.length > 46 || /<br|\n/.test(sample);
+    function tag(l) {
+      var v = (window.I18N[l] && window.I18N[l][key]) || '';
+      return area
+        ? '<textarea data-ikey="' + esc(key) + '" data-ilang="' + l + '" rows="3">' + esc(v) + '</textarea>'
+        : '<input data-ikey="' + esc(key) + '" data-ilang="' + l + '" value="' + esc(v) + '">';
+    }
+    return '<div class="fld"><label><code>' + esc(key) + '</code></label>' +
+      '<div class="tabs" data-tabs="' + uid + '">' +
+        '<button type="button" data-t="uz" aria-selected="true">O‘zbekcha</button>' +
+        '<button type="button" data-t="ru" aria-selected="false">Русский</button>' +
+        '<button type="button" data-t="en" aria-selected="false">English</button></div>' +
+      '<div class="pane on" data-p="' + uid + '-uz">' + tag('uz') + '</div>' +
+      '<div class="pane" data-p="' + uid + '-ru">' + tag('ru') + '</div>' +
+      '<div class="pane" data-p="' + uid + '-en">' + tag('en') + '</div></div>';
+  }
+
+  function renderTextGroups() {
+    $('#txtGroups').innerHTML = TEXT_GROUPS.map(function (g) {
+      return '<details class="box" style="margin-bottom:1.2rem"><summary class="box__h"><h2>' + esc(g.title) + '</h2></summary>' +
+        '<div class="box__b">' + g.keys.map(i18nField).join('') + '</div></details>';
+    }).join('');
+    wireTabs($('#txtGroups'));
+  }
+
+  function renderCompany() {
+    var c = window.BRAND.company || {};
+    function f(label, key, val) {
+      return '<div class="fld"><label>' + esc(label) + '</label><input data-co="' + key + '" value="' + esc(val == null ? '' : val) + '"></div>';
+    }
+    function ml3(label, key, obj) {
+      obj = obj || {};
+      var uid = 'co_' + key;
+      return '<div class="fld"><label>' + esc(label) + '</label>' +
+        '<div class="tabs" data-tabs="' + uid + '">' +
+          '<button type="button" data-t="uz" aria-selected="true">O‘zbekcha</button>' +
+          '<button type="button" data-t="ru" aria-selected="false">Русский</button>' +
+          '<button type="button" data-t="en" aria-selected="false">English</button></div>' +
+        '<div class="pane on" data-p="' + uid + '-uz"><input data-co="' + key + '" data-lang="uz" value="' + esc(obj.uz || '') + '"></div>' +
+        '<div class="pane" data-p="' + uid + '-ru"><input data-co="' + key + '" data-lang="ru" value="' + esc(obj.ru || '') + '"></div>' +
+        '<div class="pane" data-p="' + uid + '-en"><input data-co="' + key + '" data-lang="en" value="' + esc(obj.en || '') + '"></div></div>';
+    }
+    $('#txtCompany').innerHTML =
+      '<div class="g2">' + f('Kompaniya nomi', 'name', c.name) + f('Yuridik nomi', 'legal', c.legal) + '</div>' +
+      '<div class="g2">' + f('Tashkil topgan yil', 'founded', c.founded) + f('Email', 'email', c.email) + '</div>' +
+      '<div class="g2">' + f('Eksport telefoni', 'phoneExport', c.phoneExport) +
+        '<div class="fld"><label>Ichki bozor telefonlari (har birini alohida qatorga)</label>' +
+        '<textarea data-co="phoneLocal" rows="2">' + esc((c.phoneLocal || []).join('\n')) + '</textarea></div></div>' +
+      ml3('Manzil', 'address', c.address) + ml3('Ish vaqti', 'hours', c.hours);
+    wireTabs($('#txtCompany'));
+  }
+
+  function syncCountriesFromDOM() {
+    $$('#txtCountries [data-crow]').forEach(function (row) {
+      var i = Number(row.dataset.crow), c = countriesDraft[i];
+      if (!c) return;
+      ['code', 'uz', 'ru', 'en'].forEach(function (f) {
+        var el = row.querySelector('[data-cf="' + f + '"]');
+        if (el) c[f] = el.value;
+      });
+    });
+  }
+  function paintCountries() {
+    $('#txtCountries').innerHTML = countriesDraft.length ? countriesDraft.map(function (c, i) {
+      return '<div class="g2" data-crow="' + i + '" style="grid-template-columns:70px 1fr 1fr 1fr 34px;align-items:end;margin-bottom:.6rem">' +
+        '<div class="fld"><label>Kod</label><input data-cf="code" value="' + esc(c.code || '') + '" maxlength="3"></div>' +
+        '<div class="fld"><label>O‘zbekcha</label><input data-cf="uz" value="' + esc(c.uz || '') + '"></div>' +
+        '<div class="fld"><label>Русский</label><input data-cf="ru" value="' + esc(c.ru || '') + '"></div>' +
+        '<div class="fld"><label>English</label><input data-cf="en" value="' + esc(c.en || '') + '"></div>' +
+        '<button class="ib ib--x" type="button" data-crm="' + i + '" title="O‘chirish" aria-label="O‘chirish">×</button></div>';
+    }).join('') : '<p class="hint">Davlat qo‘shilmagan.</p>';
+    $$('#txtCountries [data-crm]').forEach(function (b) {
+      b.onclick = function () { syncCountriesFromDOM(); countriesDraft.splice(Number(b.dataset.crm), 1); paintCountries(); };
+    });
+  }
+  $('#ctryAdd').addEventListener('click', function () {
+    syncCountriesFromDOM();
+    countriesDraft.push({ code: '', uz: '', ru: '', en: '' });
+    paintCountries();
+  });
+
+  function syncAwardsFromDOM() {
+    $$('#txtAwards [data-arow]').forEach(function (row) {
+      var i = Number(row.dataset.arow), a = awardsDraft[i];
+      if (!a) return;
+      a.img = row.querySelector('[data-af="img"]').value;
+      a.title = row.querySelector('[data-af="title"]').value;
+      a.year = row.querySelector('[data-af="year"]').value;
+      a.text = a.text || {};
+      ['uz', 'ru', 'en'].forEach(function (l) {
+        var el = row.querySelector('[data-af="text_' + l + '"]');
+        if (el) a.text[l] = el.value;
+      });
+    });
+  }
+  function paintAwards() {
+    $('#txtAwards').innerHTML = awardsDraft.length ? awardsDraft.map(function (a, i) {
+      var t = a.text || {};
+      return '<div class="grp" data-arow="' + i + '" style="border:1px solid var(--hair);border-radius:var(--r-m);padding:1rem;margin-bottom:.9rem">' +
+        '<div class="g3">' +
+          '<div class="fld"><label>Rasm manzili</label><input data-af="img" value="' + esc(a.img || '') + '"></div>' +
+          '<div class="fld"><label>Nomi</label><input data-af="title" value="' + esc(a.title || '') + '"></div>' +
+          '<div class="fld"><label>Yil</label><input data-af="year" value="' + esc(a.year || '') + '"></div></div>' +
+        '<div class="fld"><label>Tavsif</label>' +
+          '<div class="tabs" data-tabs="aw' + i + '">' +
+            '<button type="button" data-t="uz" aria-selected="true">O‘zbekcha</button>' +
+            '<button type="button" data-t="ru" aria-selected="false">Русский</button>' +
+            '<button type="button" data-t="en" aria-selected="false">English</button></div>' +
+          '<div class="pane on" data-p="aw' + i + '-uz"><textarea data-af="text_uz" rows="2">' + esc(t.uz || '') + '</textarea></div>' +
+          '<div class="pane" data-p="aw' + i + '-ru"><textarea data-af="text_ru" rows="2">' + esc(t.ru || '') + '</textarea></div>' +
+          '<div class="pane" data-p="aw' + i + '-en"><textarea data-af="text_en" rows="2">' + esc(t.en || '') + '</textarea></div></div>' +
+        '<button class="btn btn--line btn--sm" type="button" data-arm="' + i + '" style="margin-top:.6rem">O‘chirish</button></div>';
+    }).join('') : '<p class="hint">Mukofot qo‘shilmagan.</p>';
+    wireTabs($('#txtAwards'));
+    $$('#txtAwards [data-arm]').forEach(function (b) {
+      b.onclick = function () { syncAwardsFromDOM(); awardsDraft.splice(Number(b.dataset.arm), 1); paintAwards(); };
+    });
+  }
+  $('#awardAdd').addEventListener('click', function () {
+    syncAwardsFromDOM();
+    awardsDraft.push({ img: '', title: '', year: '', text: { uz: '', ru: '', en: '' } });
+    paintAwards();
+  });
+
+  function initTexts() {
+    if (textsInited) return;
+    textsInited = true;
+    $('#txtMode').textContent = ready
+      ? 'O‘zgarish «Saqlash» bilan shu brauzerda darhol qo‘llanadi. Barcha tashrif buyuruvchilarga ko‘rsatish uchun pastdagi «Saytga qo‘llash» bo‘limidan fayllarni yuklab, hosting’ga joylashtiring.'
+      : 'Supabase ulanmagani uchun Mahsulotlar / Yo‘nalishlar / So‘rovlar bo‘limlari yopiq — faqat Matnlar ishlaydi. O‘zgarish «Saqlash» bilan shu brauzerda darhol ko‘rinadi; barchaga ko‘rsatish uchun pastdagi «Saytga qo‘llash» bo‘limidan fayllarni yuklab, hosting’ga joylashtiring.';
+    renderCompany();
+    renderTextGroups();
+    countriesDraft = JSON.parse(JSON.stringify(window.BRAND.countries || []));
+    awardsDraft = JSON.parse(JSON.stringify(window.BRAND.awards || []));
+    paintCountries();
+    paintAwards();
+  }
+
+  function collectI18n() {
+    var out = { uz: {}, ru: {}, en: {} };
+    $$('#txtGroups [data-ikey]').forEach(function (el) { out[el.dataset.ilang][el.dataset.ikey] = el.value; });
+    return out;
+  }
+  function collectCompany() {
+    var out = {};
+    $$('#txtCompany [data-co]').forEach(function (el) {
+      var k = el.dataset.co;
+      if (el.dataset.lang) { out[k] = out[k] || {}; out[k][el.dataset.lang] = el.value; }
+      else if (k === 'phoneLocal') out[k] = el.value.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+      else out[k] = el.value;
+    });
+    return out;
+  }
+
+  $('#txtSave').addEventListener('click', function () {
+    syncCountriesFromDOM();
+    syncAwardsFromDOM();
+    var payload = { i18n: collectI18n(), brand: { company: collectCompany(), countries: countriesDraft, awards: awardsDraft } };
+    try {
+      localStorage.setItem('sladus_texts_v1', JSON.stringify(payload));
+      Object.assign(window.BRAND.company, payload.brand.company);
+      window.BRAND.countries = payload.brand.countries;
+      window.BRAND.awards = payload.brand.awards;
+      ['uz', 'ru', 'en'].forEach(function (l) { Object.assign(window.I18N[l], payload.i18n[l]); });
+      toast('Saqlandi — saytni shu brauzerda ochib tekshiring');
+    } catch (e) { toast('Saqlab bo‘lmadi: ' + e.message, true); }
+  });
+
+  $('#txtReset').addEventListener('click', function () {
+    if (!confirm('Barcha saqlangan matn o‘zgarishlari o‘chirilib, standart holatga qaytariladimi?')) return;
+    try { localStorage.removeItem('sladus_texts_v1'); } catch (e) { /* xotira yo'q */ }
+    location.reload();
+  });
+
+  $('#dlI18n').addEventListener('click', function () {
+    syncCountriesFromDOM(); syncAwardsFromDOM();
+    var data = collectI18n();
+    ['uz', 'ru', 'en'].forEach(function (l) { data[l] = Object.assign({}, window.I18N[l], data[l]); });
+    var body = '/* Sladus — interfeys tarjimalari (uz / ru / en) */\n\nconst I18N = ' +
+      JSON.stringify(data, null, 2) + ';\n\nif (typeof window !== \'undefined\') window.I18N = I18N;\n';
+    dl(new Blob([body], { type: 'text/javascript;charset=utf-8' }), 'i18n.js');
+  });
+
+  $('#dlBrand').addEventListener('click', function () {
+    syncCountriesFromDOM(); syncAwardsFromDOM();
+    var b = JSON.parse(JSON.stringify(window.BRAND));
+    Object.assign(b.company, collectCompany());
+    b.countries = countriesDraft;
+    b.awards = awardsDraft;
+    dl(new Blob(['window.BRAND=' + JSON.stringify(b, null, 1) + ';\n'], { type: 'text/javascript;charset=utf-8' }), 'brand.js');
+  });
+
   /* ---------- modal ---------- */
   function open(m) { m.classList.add('on'); document.body.style.overflow = 'hidden'; }
   function close(m) { m.classList.remove('on'); document.body.style.overflow = ''; }
@@ -564,4 +786,14 @@
       if (form) form.requestSubmit();
     }
   });
+
+  /* ---------- ishga tushirish ---------- */
+  if (ready) {
+    sb.auth.getSession().then(function (r) {
+      if (r.data.session) enter(r.data.session);
+      else $('#auth').hidden = false;
+    }).catch(function () { $('#auth').hidden = false; });
+  } else {
+    enterLocalMode();
+  }
 })();

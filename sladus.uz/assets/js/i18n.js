@@ -486,3 +486,17 @@ const I18N = {
 };
 
 if (typeof window !== 'undefined') window.I18N = I18N;
+
+/* Boshqaruv panelidagi «Matnlar» bo'limida saqlangan tahrirlar bo'lsa,
+   ularni standart matnlar ustiga qo'llaymiz (shu brauzerda ko'rinishi uchun). */
+(function () {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return;
+    var raw = window.localStorage.getItem('sladus_texts_v1');
+    if (!raw) return;
+    var ov = (JSON.parse(raw) || {}).i18n || {};
+    ['uz', 'ru', 'en'].forEach(function (l) {
+      if (ov[l]) for (var k in ov[l]) if (ov[l][k]) I18N[l][k] = ov[l][k];
+    });
+  } catch (e) { /* saqlangan matnlar buzilgan — standart matnlar ishlatiladi */ }
+})();
