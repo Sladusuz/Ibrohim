@@ -1,0 +1,63 @@
+<svg width="1200" height="825" viewBox="0 0 1200 825" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="825" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#060D18" />
+      <stop offset="1" stop-color="#0A2A4D" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(900 180) rotate(90) scale(500 700)">
+      <stop offset="0" stop-color="#16BEDD" stop-opacity="0.55" />
+      <stop offset="1" stop-color="#16BEDD" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="stroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16BEDD" />
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="825" fill="url(#bg)" />
+  <rect width="1200" height="825" fill="url(#glow)" />
+  <g opacity="0.08" stroke="#ffffff" stroke-width="1">
+    <line x1="0" y1="0" x2="0" y2="825" />
+    <line x1="110" y1="0" x2="110" y2="825" />
+    <line x1="220" y1="0" x2="220" y2="825" />
+    <line x1="330" y1="0" x2="330" y2="825" />
+    <line x1="440" y1="0" x2="440" y2="825" />
+    <line x1="550" y1="0" x2="550" y2="825" />
+    <line x1="660" y1="0" x2="660" y2="825" />
+    <line x1="770" y1="0" x2="770" y2="825" />
+    <line x1="880" y1="0" x2="880" y2="825" />
+    <line x1="990" y1="0" x2="990" y2="825" />
+    <line x1="1100" y1="0" x2="1100" y2="825" />
+    <line x1="0" y1="0" x2="1200" y2="0" />
+    <line x1="0" y1="110" x2="1200" y2="110" />
+    <line x1="0" y1="220" x2="1200" y2="220" />
+    <line x1="0" y1="330" x2="1200" y2="330" />
+    <line x1="0" y1="440" x2="1200" y2="440" />
+    <line x1="0" y1="550" x2="1200" y2="550" />
+    <line x1="0" y1="660" x2="1200" y2="660" />
+    <line x1="0" y1="770" x2="1200" y2="770" />
+  </g>
+
+  <g transform="translate(160,150)">
+    <rect x="0" y="0" width="880" height="520" rx="20" fill="rgba(255,255,255,0.04)" stroke="url(#stroke)" stroke-width="1.5" />
+    <rect x="0" y="0" width="880" height="52" rx="20" fill="rgba(255,255,255,0.05)" />
+    <rect x="0" y="30" width="880" height="22" fill="rgba(255,255,255,0.05)" />
+    <circle cx="28" cy="26" r="6" fill="#F87171" opacity="0.8" />
+    <circle cx="50" cy="26" r="6" fill="#FBBF24" opacity="0.8" />
+    <circle cx="72" cy="26" r="6" fill="#34D399" opacity="0.8" />
+
+    <rect x="32" y="90" width="380" height="26" rx="6" fill="rgba(255,255,255,0.16)" />
+    <rect x="32" y="132" width="280" height="14" rx="4" fill="rgba(255,255,255,0.08)" />
+
+    <rect x="32" y="180" width="255" height="150" rx="14" fill="rgba(255,255,255,0.05)" stroke="#16BEDD" stroke-opacity="0.35" />
+    <rect x="305" y="180" width="255" height="150" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" />
+    <rect x="578" y="180" width="270" height="150" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.12)" />
+
+    <rect x="32" y="350" width="816" height="130" rx="14" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.1)" />
+    <circle cx="90" cy="415" r="26" fill="#16BEDD" opacity="0.75" />
+    <rect x="140" y="398" width="220" height="14" rx="4" fill="rgba(255,255,255,0.18)" />
+    <rect x="140" y="420" width="160" height="10" rx="4" fill="rgba(255,255,255,0.08)" />
+    <rect x="700" y="400" width="120" height="36" rx="18" fill="#16BEDD" opacity="0.9" />
+  </g>
+
+  <text x="600" y="770" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="22" fill="#ffffff" opacity="0.35" letter-spacing="2">PAYTAXTBANK</text>
+</svg>
