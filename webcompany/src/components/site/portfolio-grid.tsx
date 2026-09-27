@@ -15,7 +15,7 @@ export async function PortfolioGrid({
   projects: Project[];
   locale: Locale;
 }) {
-  const t = await getTranslations("portfolioHome");
+  const t = await getTranslations({ locale, namespace: "portfolioHome" });
 
   return (
     <section className="relative bg-slate-50 py-24 sm:py-32">

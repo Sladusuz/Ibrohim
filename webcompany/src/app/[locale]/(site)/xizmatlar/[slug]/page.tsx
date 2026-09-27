@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft, ArrowUpRight, CheckCircle2 } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { localize } from "@/lib/localize";
+import { routing } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -15,6 +16,7 @@ type Params = Promise<{ locale: string; slug: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug, locale } = await params;
+  setRequestLocale(locale);
   const service = await prisma.service.findUnique({ where: { slug } });
   if (!service) return {};
   return {
@@ -25,11 +27,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export async function generateStaticParams() {
   const services = await prisma.service.findMany({ select: { slug: true } });
-  return services.map((s) => ({ slug: s.slug }));
+  return routing.locales.flatMap((locale) =>
+    services.map((s) => ({ locale, slug: s.slug }))
+  );
 }
 
 export default async function ServiceDetailPage({ params }: { params: Params }) {
   const { slug, locale } = await params;
+  setRequestLocale(locale);
   const service = await prisma.service.findUnique({ where: { slug } });
   if (!service) notFound();
 
@@ -128,7 +133,7 @@ export default async function ServiceDetailPage({ params }: { params: Params }) 
         </Container>
       </section>
 
-      <CTA />
+      <CTA locale={locale} />
     </>
   );
 }

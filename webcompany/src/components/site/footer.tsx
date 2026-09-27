@@ -6,12 +6,15 @@ import { Logo } from "@/components/site/logo";
 import { Container } from "@/components/ui/container";
 import { getSettings, getLocalizedSetting } from "@/lib/settings";
 
-export async function Footer() {
-  const [settings, t] = await Promise.all([getSettings(), getTranslations("footer")]);
-  const tNav = await getTranslations("nav");
+export async function Footer({ locale }: { locale: string }) {
+  const [settings, t, tNav] = await Promise.all([
+    getSettings(),
+    getTranslations({ locale, namespace: "footer" }),
+    getTranslations({ locale, namespace: "nav" }),
+  ]);
 
-  const description = await getLocalizedSetting(settings, "site_description");
-  const address = await getLocalizedSetting(settings, "contact_address");
+  const description = getLocalizedSetting(settings, "site_description", locale);
+  const address = getLocalizedSetting(settings, "contact_address", locale);
 
   const columns = [
     {

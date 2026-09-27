@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Target, Eye, HeartHandshake, Award } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getSettings } from "@/lib/settings";
 import { Container } from "@/components/ui/container";
 import { PageHero } from "@/components/site/page-hero";
@@ -11,12 +11,19 @@ import { CTA } from "@/components/site/cta";
 
 const VALUE_ICONS = [Target, Eye, HeartHandshake, Award];
 
-export async function generateMetadata(): Promise<Metadata> {
+type Params = Promise<{ locale: string }>;
+
+export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("about");
   return { title: t("eyebrow"), description: t("description") };
 }
 
-export default async function AboutPage() {
+export default async function AboutPage({ params }: { params: Params }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   const [settings, t, tStats] = await Promise.all([
     getSettings(),
     getTranslations("about"),
@@ -70,7 +77,7 @@ export default async function AboutPage() {
         </Container>
       </section>
 
-      <TechMarquee />
+      <TechMarquee locale={locale} />
 
       <section className="bg-slate-50 py-20 sm:py-24">
         <Container>
@@ -119,7 +126,7 @@ export default async function AboutPage() {
         </Container>
       </section>
 
-      <CTA />
+      <CTA locale={locale} />
     </>
   );
 }

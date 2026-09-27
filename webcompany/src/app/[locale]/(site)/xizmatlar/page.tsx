@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { localize } from "@/lib/localize";
 import { Container } from "@/components/ui/container";
@@ -10,7 +10,13 @@ import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { getIcon } from "@/components/site/icon-map";
 import { CTA } from "@/components/site/cta";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const t = await getTranslations("servicesPage");
   return { title: t("eyebrow"), description: t("description") };
 }
@@ -21,6 +27,7 @@ export default async function ServicesPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const [t, tServices, services] = await Promise.all([
     getTranslations("servicesPage"),
     getTranslations("services"),
@@ -64,7 +71,7 @@ export default async function ServicesPage({
         </Container>
       </section>
 
-      <CTA />
+      <CTA locale={locale} />
     </>
   );
 }

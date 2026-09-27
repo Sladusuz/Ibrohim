@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowLeft, ArrowUpRight, Calendar, Clock, User } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { safeJsonParse } from "@/lib/utils";
 import { localize } from "@/lib/localize";
+import { routing } from "@/i18n/routing";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
@@ -17,6 +18,7 @@ type Params = Promise<{ locale: string; slug: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug, locale } = await params;
+  setRequestLocale(locale);
   const project = await prisma.project.findUnique({ where: { slug } });
   if (!project) return {};
   return {
@@ -27,11 +29,14 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export async function generateStaticParams() {
   const projects = await prisma.project.findMany({ select: { slug: true } });
-  return projects.map((p) => ({ slug: p.slug }));
+  return routing.locales.flatMap((locale) =>
+    projects.map((p) => ({ locale, slug: p.slug }))
+  );
 }
 
 export default async function ProjectDetailPage({ params }: { params: Params }) {
   const { slug, locale } = await params;
+  setRequestLocale(locale);
   const project = await prisma.project.findUnique({ where: { slug } });
   if (!project) notFound();
 
@@ -156,7 +161,7 @@ export default async function ProjectDetailPage({ params }: { params: Params }) 
         </section>
       )}
 
-      <CTA />
+      <CTA locale={locale} />
     </>
   );
 }

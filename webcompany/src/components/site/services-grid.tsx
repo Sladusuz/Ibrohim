@@ -16,7 +16,7 @@ export async function ServicesGrid({
   services: Service[];
   locale: Locale;
 }) {
-  const t = await getTranslations("services");
+  const t = await getTranslations({ locale, namespace: "services" });
 
   return (
     <section className="relative bg-white py-24 sm:py-32">

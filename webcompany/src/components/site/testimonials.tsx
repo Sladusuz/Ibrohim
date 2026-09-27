@@ -15,7 +15,7 @@ export async function Testimonials({
   locale: Locale;
 }) {
   if (testimonials.length === 0) return null;
-  const t = await getTranslations("testimonials");
+  const t = await getTranslations({ locale, namespace: "testimonials" });
 
   return (
     <section className="relative bg-white py-24 sm:py-32">

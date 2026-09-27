@@ -4,8 +4,8 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 
-export async function CTA() {
-  const t = await getTranslations("cta");
+export async function CTA({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "cta" });
 
   return (
     <section className="relative overflow-hidden bg-ink-950 py-24 sm:py-28">

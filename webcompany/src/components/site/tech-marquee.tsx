@@ -18,8 +18,8 @@ const TECHS_ROW_2 = [
   "Kubernetes",
 ];
 
-export async function TechMarquee() {
-  const t = await getTranslations("techMarquee");
+export async function TechMarquee({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "techMarquee" });
   const row1 = [...TECHS_ROW_1, ...TECHS_ROW_1];
   const row2 = [...TECHS_ROW_2, ...TECHS_ROW_2];
 

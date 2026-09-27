@@ -6,8 +6,8 @@ import { Reveal } from "@/components/ui/reveal";
 
 const ICONS = [Search, PenTool, Code, Rocket];
 
-export async function Process() {
-  const t = await getTranslations("process");
+export async function Process({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: "process" });
   const steps = t.raw("steps") as { title: string; description: string }[];
 
   return (

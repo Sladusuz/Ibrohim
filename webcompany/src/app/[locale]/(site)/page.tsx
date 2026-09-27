@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { setRequestLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { getSettings, getLocalizedSetting } from "@/lib/settings";
 import { Hero } from "@/components/site/hero";
@@ -11,10 +12,16 @@ import { FAQ } from "@/components/site/faq";
 import { CTA } from "@/components/site/cta";
 import { ContactSection } from "@/components/site/contact-section";
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const settings = await getSettings();
-  const tagline = await getLocalizedSetting(settings, "site_tagline");
-  const description = await getLocalizedSetting(settings, "site_description");
+  const tagline = getLocalizedSetting(settings, "site_tagline", locale);
+  const description = getLocalizedSetting(settings, "site_description", locale);
   return { title: tagline, description };
 }
 
@@ -24,6 +31,7 @@ export default async function HomePage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
 
   const [settings, services, projects, testimonials] = await Promise.all([
     getSettings(),
@@ -36,7 +44,7 @@ export default async function HomePage({
     prisma.testimonial.findMany({ orderBy: { order: "asc" } }),
   ]);
 
-  const tagline = await getLocalizedSetting(settings, "site_tagline");
+  const tagline = getLocalizedSetting(settings, "site_tagline", locale);
 
   return (
     <>
@@ -49,14 +57,14 @@ export default async function HomePage({
           years: settings.stat_years,
         }}
       />
-      <TechMarquee />
+      <TechMarquee locale={locale} />
       <ServicesGrid services={services} locale={locale} />
-      <Process />
+      <Process locale={locale} />
       <PortfolioGrid projects={projects} locale={locale} />
       <Testimonials testimonials={testimonials} locale={locale} />
       <FAQ />
-      <CTA />
-      <ContactSection settings={settings} />
+      <CTA locale={locale} />
+      <ContactSection settings={settings} locale={locale} />
     </>
   );
 }

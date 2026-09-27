@@ -1,4 +1,3 @@
-import { getLocale } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 
 export const DEFAULT_SETTINGS = {
@@ -39,11 +38,10 @@ export async function getSettings(): Promise<SettingsMap> {
 }
 
 /**
- * Reads a base setting key, resolved to the current request locale
+ * Reads a base setting key, resolved to the given locale
  * (`<key>_ru` / `<key>_en`), falling back to the base (Uzbek) value.
  */
-export async function getLocalizedSetting(settings: SettingsMap, baseKey: string) {
-  const locale = await getLocale();
+export function getLocalizedSetting(settings: SettingsMap, baseKey: string, locale: string) {
   if (locale === "uz") return settings[baseKey];
   const localizedKey = `${baseKey}_${locale}`;
   return settings[localizedKey] || settings[baseKey];

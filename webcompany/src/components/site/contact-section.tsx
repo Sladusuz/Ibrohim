@@ -6,9 +6,15 @@ import { Reveal } from "@/components/ui/reveal";
 import { ContactForm } from "@/components/site/contact-form";
 import { getLocalizedSetting, type SettingsMap } from "@/lib/settings";
 
-export async function ContactSection({ settings }: { settings: SettingsMap }) {
-  const t = await getTranslations("contact");
-  const address = await getLocalizedSetting(settings, "contact_address");
+export async function ContactSection({
+  settings,
+  locale,
+}: {
+  settings: SettingsMap;
+  locale: string;
+}) {
+  const t = await getTranslations({ locale, namespace: "contact" });
+  const address = getLocalizedSetting(settings, "contact_address", locale);
 
   return (
     <section className="relative bg-slate-50 py-24 sm:py-32">
