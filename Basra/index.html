@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Basra Ta'lim Markazi</title>
 <meta name="description" content="Basra Ta'lim Markazi — Arab tili, Arab Kids, Ingliz tili, English Kids va maktabga tayyorlov kurslari. Barcha ijtimoiy tarmoqlar va manzil bir sahifada." />
-<meta name="theme-color" content="#0a2a23" />
+<meta name="theme-color" content="#050f0c" />
 <link rel="icon" type="image/jpeg" href="assets/img/logo.jpg" />
 <link rel="apple-touch-icon" href="assets/img/logo.jpg" />
 
@@ -15,18 +15,21 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
 
 <div class="bg-layer" aria-hidden="true">
+  <div class="aurora"></div>
   <div class="blob blob-a"></div>
   <div class="blob blob-b"></div>
   <div class="blob blob-c"></div>
+  <canvas id="constellation"></canvas>
   <div class="grain"></div>
   <div class="particles" id="particles"></div>
+  <div class="vignette"></div>
 </div>
 
 <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
@@ -34,15 +37,22 @@
 <main class="page">
 
   <header class="hero" data-reveal>
+
+    <span class="kicker" data-reveal>
+      <span class="kicker-dot"></span>
+      Toshkent&nbsp;·&nbsp;2023 yildan buyon
+    </span>
+
     <div class="avatar-wrap">
-      <span class="avatar-ring ring-1"></span>
-      <span class="avatar-ring ring-2"></span>
+      <span class="avatar-orbit"></span>
+      <span class="avatar-ring-gold"></span>
       <span class="avatar-glow"></span>
       <img class="avatar" src="assets/img/logo.jpg" alt="Basra Ta'lim Markazi logotipi" />
       <span class="badge-check" title="Rasmiy sahifa">✓</span>
     </div>
 
-    <h1 class="brand">Basra <span>Ta'lim Markazi</span></h1>
+    <h1 class="brand" id="brandTitle">Basra</h1>
+    <p class="brand-sub">Ta'lim&nbsp;Markazi</p>
 
     <p class="typed-line">
       <span id="typedText"></span><span class="caret">|</span>
@@ -54,11 +64,6 @@
     </p>
 
     <div class="stats" data-reveal>
-      <div class="stat">
-        <span class="s-ico">🎬</span>
-        <span class="num-wrap"><span class="num" data-count="147">0</span></span>
-        <span class="label">dars&nbsp;/&nbsp;video</span>
-      </div>
       <div class="stat">
         <span class="s-ico">🎓</span>
         <span class="num-wrap"><span class="num" data-count="1000">0</span><span class="plus">+</span></span>
@@ -83,10 +88,12 @@
     </div>
   </header>
 
+  <div class="divider" data-reveal><span class="d-line"></span><span class="d-ico">🪶</span><span class="d-line"></span></div>
+
   <section class="links" aria-label="Aloqa havolalari">
 
-    <a class="link-btn" data-reveal href="tel:+998958331100">
-      <span class="ico">📞</span>
+    <a class="link-btn" data-reveal href="tel:+998958331100" data-magnetic>
+      <span class="ico"><span class="ico-emoji">📞</span></span>
       <span class="txt">
         <span class="t">Qo'ng'iroq qilish</span>
         <span class="s">95 833 11-00</span>
@@ -94,8 +101,8 @@
       <span class="chev">→</span>
     </a>
 
-    <a class="link-btn" data-reveal href="https://t.me/basra_edu" target="_blank" rel="noopener">
-      <span class="ico">💬</span>
+    <a class="link-btn" data-reveal href="https://t.me/basra_edu" target="_blank" rel="noopener" data-magnetic>
+      <span class="ico"><span class="ico-emoji">💬</span></span>
       <span class="txt">
         <span class="t">Telegram kanali</span>
         <span class="s">t.me/basra_edu</span>
@@ -103,8 +110,8 @@
       <span class="chev">→</span>
     </a>
 
-    <a class="link-btn" data-reveal href="https://instagram.com/basra_edu" target="_blank" rel="noopener">
-      <span class="ico">📸</span>
+    <a class="link-btn" data-reveal href="https://instagram.com/basra_edu" target="_blank" rel="noopener" data-magnetic>
+      <span class="ico"><span class="ico-emoji">📸</span></span>
       <span class="txt">
         <span class="t">Instagram</span>
         <span class="s">@basra_edu</span>
@@ -112,8 +119,8 @@
       <span class="chev">→</span>
     </a>
 
-    <a class="link-btn" data-reveal href="https://youtube.com/@ibrohim_sobirov" target="_blank" rel="noopener">
-      <span class="ico">▶️</span>
+    <a class="link-btn" data-reveal href="https://youtube.com/@ibrohim_sobirov" target="_blank" rel="noopener" data-magnetic>
+      <span class="ico"><span class="ico-emoji">▶️</span></span>
       <span class="txt">
         <span class="t">YouTube</span>
         <span class="s">Darslar va natijalar</span>
@@ -121,8 +128,8 @@
       <span class="chev">→</span>
     </a>
 
-    <a class="link-btn" data-reveal href="#manzil">
-      <span class="ico">📍</span>
+    <a class="link-btn" data-reveal href="#manzil" data-magnetic>
+      <span class="ico"><span class="ico-emoji">📍</span></span>
       <span class="txt">
         <span class="t">Manzil</span>
         <span class="s">Lutfiy 4-berk ko'chasi, 2-uy</span>
@@ -132,30 +139,32 @@
 
   </section>
 
+  <div class="divider" data-reveal><span class="d-line"></span><span class="d-ico">✦</span><span class="d-line"></span></div>
+
   <section class="courses" data-reveal>
     <h2 class="section-title">Yo'nalishlarimiz</h2>
     <div class="course-grid">
-      <div class="course-card" data-reveal>
+      <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🕌</span>
         <span class="c-t">Arab tili</span>
         <span class="c-s">Nutq, yozuv va grammatika</span>
       </div>
-      <div class="course-card" data-reveal>
+      <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🧸</span>
         <span class="c-t">Arab Kids</span>
         <span class="c-s">Kichkintoylar uchun</span>
       </div>
-      <div class="course-card" data-reveal>
+      <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🌍</span>
         <span class="c-t">Ingliz tili</span>
         <span class="c-s">Zamonaviy metodika</span>
       </div>
-      <div class="course-card" data-reveal>
+      <div class="course-card" data-reveal data-tilt>
         <span class="c-ico">🎈</span>
         <span class="c-t">English Kids</span>
         <span class="c-s">O'yin orqali til o'rganish</span>
       </div>
-      <div class="course-card wide" data-reveal>
+      <div class="course-card wide" data-reveal data-tilt>
         <span class="c-ico">🏫</span>
         <span class="c-t">Maktabga tayyorlov</span>
         <span class="c-s">Bilim va ko'nikmalar asosi</span>
@@ -163,15 +172,20 @@
     </div>
   </section>
 
+  <div class="divider" data-reveal><span class="d-line"></span><span class="d-ico">📍</span><span class="d-line"></span></div>
+
   <section class="location" id="manzil" data-reveal>
     <h2 class="section-title">Manzilimiz</h2>
     <div class="map-card">
-      <iframe
-        title="Basra Ta'lim Markazi manzili"
-        src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d2997.576943058083!2d69.19948807587383!3d41.2963109713115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNDHCsDE3JzQ2LjciTiA2OcKwMTInMDcuNCJF!5e0!3m2!1sen!2s!4v1790539257599!5m2!1sen!2s"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-      </iframe>
+      <div class="map-frame">
+        <iframe
+          title="Basra Ta'lim Markazi manzili"
+          src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d2997.576943058083!2d69.19948807587383!3d41.2963109713115!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNDHCsDE3JzQ2LjciTiA2OcKwMTInMDcuNCJF!5e0!3m2!1sen!2s!4v1790539257599!5m2!1sen!2s"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <span class="map-pulse"></span>
+      </div>
       <div class="map-info">
         <div>
           <span class="mi-t">Lutfiy 4-berk ko'chasi, 2-uy</span>
@@ -185,9 +199,10 @@
   </section>
 
   <footer class="footer" data-reveal>
+    <span class="foot-line"></span>
     <img class="foot-logo" src="assets/img/logo.jpg" alt="Basra logo" />
-    <p>© <span id="year"></span> Basra Ta'lim Markazi</p>
-    <p class="foot-sub">Barcha huquqlar himoyalangan</p>
+    <p class="foot-brand">Basra Ta'lim Markazi</p>
+    <p>© <span id="year"></span> · Barcha huquqlar himoyalangan</p>
   </footer>
 
 </main>
