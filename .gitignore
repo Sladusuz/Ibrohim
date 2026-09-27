@@ -1,4 +1,2 @@
-node_modules/
-.env
-data/admin.json
-data/.session-secret
+.DS_Store
+Thumbs.db

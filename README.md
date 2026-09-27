@@ -1,58 +1,73 @@
 # IMPRO — Portfolio Website
 
-Animatsiyali portfolio sayt + admin panel. Kontent (impro loyihasidagi haqiqiy
-ma'lumotlar — https://improuz-seven.vercel.app/) `data/content.json` faylida
-saqlanadi va admin panel orqali brauzerdan tahrirlanadi (kod yozmasdan).
+To'liq statik (server yo'q, Node yo'q, React yo'q — faqat HTML/CSS/JavaScript)
+animatsiyali portfolio sayt + brauzerda ishlaydigan admin panel. Kontent
+(https://improuz-seven.vercel.app/ — haqiqiy IMPRO loyihasidan olingan
+ma'lumotlar) `assets/js/data.js` faylida oddiy JavaScript obyekti sifatida
+saqlanadi.
 
-## Texnologiyalar
+## Qanday ochish
 
-- **Frontend:** DevFolio (BootstrapMade) shabloni asosida — Bootstrap 5, AOS
-  scroll-animatsiyalari, Typed.js, Swiper, GLightbox, Isotope, PureCounter,
-  ustiga qo'shilgan qo'shimcha CSS/JS animatsiyalar (`assets/css/animations.css`,
-  `assets/js/enhance.js`): scroll-progress bar, hero logotipning suzib
-  yurishi, portfolio kartalarining sichqoncha bo'yicha egilishi va h.k.
-- **Backend:** Node.js + Express, EJS shablonlashtirish (sahifa har so'rovda
-  `data/content.json`dan render qilinadi).
-- **Admin panel:** `/admin` — login qilib, saytning barcha bo'limlarini
-  (Hero, Men haqimda, Xizmatlar, Statistika, Portfolio, Sharhlar, Aloqa,
-  Footer) tahrirlash, rasm yuklash va parolni almashtirish mumkin.
+Hech qanday o'rnatish, `npm install` yoki server kerak emas:
 
-## Ishga tushirish
+- **Eng oddiy usul:** `index.html` faylini shunchaki ikki marta bosib, brauzerda oching.
+- **Yoki:** loyihani istalgan statik hostingga (Netlify, Vercel — static mode,
+  GitHub Pages, oddiy hosting/cPanel) papkani bo'lgancha yuklab qo'ying.
 
-```bash
-npm install
-cp .env.example .env   # kerak bo'lsa ADMIN_USERNAME / ADMIN_PASSWORD ni o'zgartiring
-npm start
-```
-
-Sayt: http://localhost:3000
-Admin panel: http://localhost:3000/admin
-
-Standart admin login/parol (`.env.example`dagi qiymatlar): `admin` / `impro2024`.
-Birinchi marta ishga tushganda shu ma'lumotlar bilan `data/admin.json` avtomatik
-yaratiladi (parol hash qilib saqlanadi). **Ishga tushirgach admin paneldagi
-"Parol" bo'limidan darhol parolni almashtiring.**
+Admin panel: `admin/index.html` (yoki saytdan `admin/` papkaga o'tish).
+Standart parol: `impro2024`.
 
 ## Loyiha tuzilishi
 
 ```
-server.js            Express server
-routes/auth.js        Login/logout
-routes/admin.js        Kontentni o'qish/yozish, rasm yuklash, parol almashtirish
-middleware/auth.js      Sessiya tekshiruvi
-utils/auth.js          Parol hash (scrypt) va sessiya token (HMAC)
-utils/content.js       content.json bilan ishlash
-views/index.ejs         Frontend sahifa shabloni
-data/content.json       Saytning barcha matn/rasm/link kontenti
-public/assets/          CSS, JS, rasm va vendor kutubxonalar
-public/admin/           Admin panel (login + dashboard, vanilla JS)
+index.html              Asosiy sahifa (statik HTML)
+assets/
+  css/main.css            Asosiy shablon uslubi (DevFolio)
+  css/animations.css       Qo'shimcha animatsiyalar (scroll-progress, hover effektlar va h.k.)
+  js/data.js                Saytning barcha matni/rasm-yo'llari/linklari (JS obyekt)
+  js/render.js               data.js'ni sahifaga joylashtiradi (server shart emas)
+  js/main.js                 Shablonning asosiy skripti (AOS, Isotope, Swiper, Typed.js ...)
+  js/enhance.js               Qo'shimcha animatsiya effektlari
+  img/, vendor/                Rasmlar va kutubxonalar (Bootstrap, AOS va h.k.)
+admin/
+  index.html              Admin panel (login + boshqaruv paneli)
+  admin.js                 Admin panel mantiqi (to'liq client-side)
+  admin.css                 Admin panel uslubi
 ```
 
-## Production'ga chiqarish
+## Admin panel qanday ishlaydi (muhim!)
 
-- `NODE_ENV=production` qiling — session cookie faqat HTTPS orqali yuboriladi.
-- `data/` papkasini (ayniqsa `content.json`, `admin.json`) va
-  `public/assets/img/uploads/` papkasini har doim saqlanadigan diskda saqlang
-  (masalan Render/Railway/VPS + persistent volume). Vercel kabi serverless
-  muhitlarda fayl yozish vaqtinchalik bo'lgani uchun Node server VPS yoki
-  shunga o'xshash doimiy muhitda ishga tushirilishi tavsiya etiladi.
+Sayt **to'liq statik** bo'lgani uchun (hech qanday backend/server yo'q), admin
+paneldagi tahrirlar avval faqat **shu brauzer xotirasida (localStorage)**
+qoralama sifatida saqlanadi — boshqa qurilma yoki tashrif buyuruvchilarga
+avtomatik ko'rinmaydi.
+
+O'zgarishlarni haqiqatan ham nashr qilish (hammaga ko'rinishi) uchun:
+
+1. Admin panelning **"Nashr qilish"** bo'limiga o'ting.
+2. **"data.js yuklab olish"** tugmasini bosing — yangilangan kontent bilan
+   `data.js` fayli kompyuteringizga yuklanadi.
+3. Shu faylni loyihadagi `assets/js/data.js` o'rniga qo'ying.
+4. Saytni qayta yuklang / qayta deploy qiling (masalan Netlify'ga papkani
+   qayta tashlang).
+
+Tahrirlash paytida **"Saytni ko'rish (qoralama bilan)"** havolasi orqali
+o'zgarishlarni nashr qilishdan oldin, xuddi shu brauzerda, jonli ko'rib
+chiqishingiz mumkin.
+
+### Rasm qo'shish
+
+Admin paneldagi rasm maydonlariga fayl tanlaganingizda, rasm avtomatik
+ravishda matn ko'rinishiga (base64) o'giriladi va to'g'ridan-to'g'ri
+`data.js` ichida saqlanadi — alohida rasm fayllarini serverga yuklashning
+hojati yo'q. Katta hajmdagi rasmlarni oldindan siqib olish tavsiya etiladi.
+
+### Xavfsizlik haqida eslatma
+
+Admin panel paroli faqat qulaylik uchun — sahifa manba kodida ko'rinadi va
+haqiqiy xavfsizlikni ta'minlamaydi (chunki server yo'q, tekshiruvni ham
+faqat brauzer tomonida bajarish mumkin). Agar chinakam himoyalangan,
+serverga ulangan admin panel kerak bo'lsa, aytib qo'ying — Node.js/Express
+asosidagi versiyasi ham qilib berilgan (parol hash qilinadi, sessiya
+tokeni bilan himoyalangan), lekin u ishlashi uchun serverni ishga tushirish
+(`npm install && npm start`) kerak bo'ladi.

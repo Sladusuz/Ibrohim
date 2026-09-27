@@ -130,6 +130,40 @@ button:active { transform: scale(0.97); }
   margin-top: 14px;
 }
 
+.note {
+  color: var(--muted);
+  font-size: 0.78rem;
+  margin-top: 18px;
+  line-height: 1.5;
+}
+
+.note code {
+  background: var(--panel-2);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.publish-bar {
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 24px;
+}
+
+.publish-bar p {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.publish-bar .row-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .toast {
   position: fixed;
   bottom: 24px;

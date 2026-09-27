@@ -1,8 +1,14 @@
-{
+/*
+ * Saytning barcha matni, rasm yo'llari va linklari shu yerda.
+ * Admin panelda "Nashr qilish" tugmasi bosilganda aynan shu ko'rinishdagi
+ * fayl qayta yuklab olinadi — uni shu joyga qo'yib qayta deploy qilsangiz,
+ * o'zgarishlar barcha tashrif buyuruvchilar uchun ko'rinadi.
+ */
+window.SITE_CONTENT = {
   "site": {
     "name": "IMPRO_UZ",
-    "logo": "/assets/img/logo.png",
-    "favicon": "/assets/img/logo1.jpg"
+    "logo": "assets/img/logo.png",
+    "favicon": "assets/img/logo1.jpg"
   },
   "nav": [
     { "label": "Home", "href": "#hero" },
@@ -16,7 +22,7 @@
     "typed": ["Качество", "Надёжность", "Современность", "Веб-сайты"]
   },
   "about": {
-    "photo": "/assets/img/ibrohim.jpg",
+    "photo": "assets/img/ibrohim.jpg",
     "name": "Abdulboqiyev Ibrohim",
     "profile": "разработчик полного цикла",
     "email": "chempme@gmail.com",
@@ -57,15 +63,15 @@
     "title": "Портфель",
     "subtitle": "Некоторые из проектов, над которыми мы работали",
     "items": [
-      { "image": "/assets/img/portfolio/Sladus.png", "title": "Sladus", "link": "https://www.sladus.uz/" },
-      { "image": "/assets/img/logo.png", "title": "IMPRO COMPANY", "link": "" },
-      { "image": "/assets/img/portfolio/159.png", "title": "159-school", "link": "https://159-school.netlify.app/" }
+      { "image": "assets/img/portfolio/Sladus.png", "title": "Sladus", "link": "https://www.sladus.uz/" },
+      { "image": "assets/img/logo.png", "title": "IMPRO COMPANY", "link": "" },
+      { "image": "assets/img/portfolio/159.png", "title": "159-school", "link": "https://159-school.netlify.app/" }
     ]
   },
   "testimonials": [
-    { "name": "Sladus Leading", "image": "/assets/img/portfolio/Sladus.png", "stars": 5, "text": "Очень довольны работой! Сайт получился современным, быстрым и удобным. Команда учла все наши пожелания. Спасибо за профессионализм!" },
-    { "name": "Sara Wilsson", "image": "/assets/img/testimonials/testimonials-2.jpg", "stars": 5, "text": "Мы искали надёжную команду для создания сайта — и нашли именно вас. Всё было сделано в срок и на высоком уровне. Рекомендуем всем!" },
-    { "name": "Jena Karlis", "image": "/assets/img/testimonials/testimonials-3.jpg", "stars": 5, "text": "Отличный сервис! Сайт адаптирован под мобильные устройства, дизайн — на высоте. Обратная связь всегда быстрая и понятная." }
+    { "name": "Sladus Leading", "image": "assets/img/portfolio/Sladus.png", "stars": 5, "text": "Очень довольны работой! Сайт получился современным, быстрым и удобным. Команда учла все наши пожелания. Спасибо за профессионализм!" },
+    { "name": "Sara Wilsson", "image": "assets/img/testimonials/testimonials-2.jpg", "stars": 5, "text": "Мы искали надёжную команду для создания сайта — и нашли именно вас. Всё было сделано в срок и на высоком уровне. Рекомендуем всем!" },
+    { "name": "Jena Karlis", "image": "assets/img/testimonials/testimonials-3.jpg", "stars": 5, "text": "Отличный сервис! Сайт адаптирован под мобильные устройства, дизайн — на высоте. Обратная связь всегда быстрая и понятная." }
   ],
   "contact": {
     "address": "A108 Adam Street, New York, NY 535022",
@@ -80,4 +86,4 @@
       "facebook": ""
     }
   }
-}
+};
