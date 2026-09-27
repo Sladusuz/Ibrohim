@@ -147,9 +147,12 @@
     <section class="pane-view" id="v-set">
       <div class="bar"><div><h1>Sozlamalar</h1><p>Parol, zaxira nusxa va xavfsizlik.</p></div></div>
 
+      <div class="note note--bad" id="defPassWarn" style="margin-bottom:1.2rem"></div>
+
       <div class="box"><div class="box__h"><h2>Parolni almashtirish</h2></div>
         <div class="box__b"><form id="pwf" style="max-width:430px">
-          <div class="fld"><label for="pwn">Yangi parol</label><input type="password" id="pwn" autocomplete="new-password"><span class="hint">Kamida 10 belgi, raqam va katta harf bo‘lsin.</span></div>
+          <div class="fld" id="pwuWrap" hidden><label for="pwu">Login</label><input type="text" id="pwu" autocomplete="username"></div>
+          <div class="fld"><label for="pwn">Yangi parol</label><input type="password" id="pwn" autocomplete="new-password" placeholder="Bo‘sh qoldirsangiz o‘zgarmaydi"><span class="hint">Kamida 10 belgi, raqam va harf birga bo‘lsin.</span></div>
           <button class="btn btn--fill" type="submit">Saqlash</button>
         </form></div></div>
 

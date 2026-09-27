@@ -43,12 +43,57 @@
       .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   };
 
+  /* ---------- mahalliy kirish (Supabase ulanmagan holat uchun) ----------
+     admin-56a7e0dcc2af.html bilan bir xil standart login/parol. */
+  var DEFAULT_USER = 'Ibrohim', DEFAULT_PASS = 'ibrohim123';
+  var LS_USER = 'sladus_panel_user', LS_PASS = 'sladus_panel_pass';
+  var LS_FAILS = 'sladus_panel_fails', LS_LOCK_UNTIL = 'sladus_panel_lock_until';
+  var SESSION_KEY = 'sladus_panel_session';
+  function currentUser() { return localStorage.getItem(LS_USER) || DEFAULT_USER; }
+  function currentPass() { return localStorage.getItem(LS_PASS) || DEFAULT_PASS; }
+  function usingDefaultPass() { return !localStorage.getItem(LS_PASS); }
+  function getFails() { return parseInt(localStorage.getItem(LS_FAILS) || '0', 10) || 0; }
+  function setFails(n) { localStorage.setItem(LS_FAILS, String(n)); }
+  function lockUntil() { return parseInt(localStorage.getItem(LS_LOCK_UNTIL) || '0', 10) || 0; }
+  function isLocked() { return Date.now() < lockUntil(); }
+  function lockRemainingSec() { return Math.max(0, Math.ceil((lockUntil() - Date.now()) / 1000)); }
+  function registerFail() {
+    var n = getFails() + 1;
+    if (n >= 5) { localStorage.setItem(LS_LOCK_UNTIL, String(Date.now() + 60000)); setFails(0); }
+    else setFails(n);
+  }
+  function tryLocalLogin(u, p) {
+    if (u === currentUser() && p === currentPass()) { setFails(0); return true; }
+    registerFail();
+    return false;
+  }
+  function isLocalLoggedIn() { try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch (e) { return false; } }
+  function localLogin() { try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) { /* xotira yo'q */ } }
+  function localLogout() { try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* xotira yo'q */ } }
+
   /* ---------- kirish ---------- */
   $('#authForm').addEventListener('submit', function (ev) {
     ev.preventDefault();
-    if (!ready) return;
     var err = $('#authErr'), btn = $('button[type=submit]', ev.target);
     err.classList.remove('on');
+
+    if (!ready) {
+      if (isLocked()) {
+        err.textContent = 'Ko‘p noto‘g‘ri urinish. ' + lockRemainingSec() + ' soniyadan keyin qayta urining.';
+        err.classList.add('on');
+        return;
+      }
+      if (tryLocalLogin($('#em').value.trim(), $('#pw').value)) {
+        localLogin();
+        $('#auth').hidden = true;
+        enterLocalMode();
+      } else {
+        err.textContent = 'Login yoki parol noto‘g‘ri.';
+        err.classList.add('on');
+      }
+      return;
+    }
+
     btn.disabled = true;
     sb.auth.signInWithPassword({ email: $('#em').value.trim(), password: $('#pw').value })
       .then(function (r) {
@@ -66,7 +111,7 @@
 
   $('#out').addEventListener('click', function (ev) {
     ev.preventDefault();
-    if (!ready) return;
+    if (!ready) { localLogout(); location.reload(); return; }
     sb.auth.signOut().then(function () { location.reload(); });
   });
 
@@ -78,19 +123,34 @@
     initTexts();
   }
 
-  /* Supabase sozlanmagan bo'lsa — faqat «Matnlar» bo'limi ishlaydi,
+  /* Supabase sozlanmagan bo'lsa — login admin-56a7e0dcc2af.html bilan bir xil
+     (mahalliy, shu brauzerda). Faqat «Matnlar» va «Sozlamalar» ishlaydi,
      boshqa bo'limlar (Mahsulotlar, Yo'nalishlar, So'rovlar) Supabase talab qiladi. */
   function enterLocalMode() {
     $('#shell').hidden = false;
-    $('#who').textContent = 'Mahalliy rejim';
+    $('#who').textContent = currentUser() + ' (mahalliy)';
     $('#curl').textContent = location.pathname.replace(/^\//, '');
     $$('#rail button').forEach(function (b) {
-      var active = b.dataset.v === 'texts';
+      var active = b.dataset.v === 'texts', allowed = active || b.dataset.v === 'set';
       b.setAttribute('aria-current', String(active));
-      if (!active) { b.disabled = true; b.title = 'Bu bo‘lim uchun Supabase ulanishi kerak (config.js)'; }
+      if (!allowed) { b.disabled = true; b.title = 'Bu bo‘lim uchun Supabase ulanishi kerak (config.js)'; }
     });
     $$('.pane-view').forEach(function (v) { v.classList.toggle('on', v.id === 'v-texts'); });
     initTexts();
+    renderLocalSecurityNotice();
+  }
+
+  function renderLocalSecurityNotice() {
+    var w = $('#defPassWarn');
+    if (usingDefaultPass()) {
+      w.textContent = '⚠ Standart parol hali o‘zgartirilmagan (login: ' + DEFAULT_USER + ', parol: ' + DEFAULT_PASS +
+        '). Buni pastdagi «Parolni almashtirish» orqali albatta o‘zgartiring.';
+      w.classList.add('on');
+    } else {
+      w.classList.remove('on'); w.textContent = '';
+    }
+    $('#pwuWrap').hidden = false;
+    $('#pwu').value = currentUser();
   }
 
   function reload() {
@@ -511,6 +571,23 @@
   $('#pwf').addEventListener('submit', function (ev) {
     ev.preventDefault();
     var v = $('#pwn').value;
+
+    if (!ready) {
+      var u = $('#pwu').value.trim();
+      if (!u) return toast('Login bo‘sh bo‘lmasin', true);
+      if (v) {
+        if (v.length < 10 || !/[0-9]/.test(v) || !/[A-Za-zА-Яа-я]/.test(v)) {
+          return toast('Parol kamida 10 belgi bo‘lsin va harf bilan raqamni birga o‘z ichiga olsin', true);
+        }
+        localStorage.setItem(LS_PASS, v);
+      }
+      localStorage.setItem(LS_USER, u);
+      $('#who').textContent = u + ' (mahalliy)';
+      ev.target.reset(); renderLocalSecurityNotice();
+      toast('Kirish ma’lumotlari yangilandi');
+      return;
+    }
+
     if (v.length < 10) return toast('Kamida 10 belgi bo‘lsin', true);
     if (!/[0-9]/.test(v) || !/[A-ZА-Я]/.test(v)) return toast('Raqam va katta harf qo‘shing', true);
     sb.auth.updateUser({ password: v }).then(function (r) {
@@ -794,6 +871,9 @@
       else $('#auth').hidden = false;
     }).catch(function () { $('#auth').hidden = false; });
   } else {
-    enterLocalMode();
+    $('label[for="em"]').textContent = 'Login';
+    $('#em').type = 'text';
+    if (isLocalLoggedIn()) enterLocalMode();
+    else $('#auth').hidden = false;
   }
 })();
