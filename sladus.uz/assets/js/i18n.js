@@ -3,14 +3,14 @@
 const I18N = {
   uz: {
     'hero.badge': 'Yangi',
-    'hero.badgetxt': '2026 assortimenti yangilandi',
+    'hero.badgetxt': '2026-yilgi assortiment yangilandi',
     'hero.t1': 'Har bir donada',
     'hero.t2': 'aniq retsept',
-    'hero.lead2': 'Toshkentdagi fabrikamiz 2010-yildan beri draje, ichlikli konfet, dekorativ sepma va nonushta mahsulotlarini ishlab chiqaradi. Har bir pozitsiya uchun tarkib, ozuqaviy qiymat, quti hajmi va TN VED kodi tayyor.',
+    'hero.lead2': 'Toshkentdagi fabrikamiz 2010-yildan beri draje, ichlikli konfet, dekorativ sepma va nonushta mahsulotlarini ishlab chiqaradi. Har bir mahsulot uchun tarkib, ozuqaviy qiymat, quti hajmi va TN VED kodi tayyor.',
     'range.title': 'To‘rt yo‘nalish',
     'range.lead': 'Har bir yo‘nalish o‘z liniyasida, bir xil retseptura va bir xil nazorat bilan ishlab chiqariladi.',
     'ticker.pre': 'Eksport',
-    'lang.name': "O'zbekcha",
+    'lang.name': 'O‘zbekcha',
     'nav.home': 'Bosh sahifa',
     'nav.about': 'Kompaniya',
     'nav.catalog': 'Katalog',
@@ -27,7 +27,7 @@ const I18N = {
     'hero.scroll': 'Pastga',
 
     'stat.years': 'yillik ishlab chiqarish tajribasi',
-    'stat.sku': 'turdagi mahsulot assortimenti',
+    'stat.sku': 'turdagi mahsulot',
     'stat.countries': 'davlatga eksport',
     'stat.regions': 'hududda savdo tarmog‘i',
 
@@ -37,7 +37,7 @@ const I18N = {
     'cat.view': 'Yo‘nalishni ochish',
 
     'feat.title': 'Ko‘p so‘raladigan mahsulotlar',
-    'feat.lead': 'Eksport buyurtmalarida eng ko‘p takrorlanadigan pozitsiyalar.',
+    'feat.lead': 'Eksport buyurtmalarida eng ko‘p takrorlanadigan mahsulotlar.',
     'feat.all': 'Butun katalog',
 
     'why.title': 'Nega Sladus',
@@ -104,18 +104,18 @@ const I18N = {
     'p.size': 'Quti o‘lchami, sm',
     'p.volume': 'Quti hajmi',
     'p.net': 'Netto vazni',
-    'p.pcs': '1 kg dagi dona',
+    'p.pcs': '1 kg dagi dona soni',
     'p.tnved': 'TN VED kodi',
     'p.code': 'Artikul',
-    'p.storage': 'Saqlash sharti',
-    'p.storagev': 'Haroratda saqlansin: {t} dan yuqori bo‘lmagan, nisbiy namlik {rh} dan ortiq emas',
+    'p.storage': 'Saqlash sharoiti',
+    'p.storagev': '{t} dan yuqori bo‘lmagan haroratda, nisbiy namlik {rh} dan oshmagan holda saqlansin',
     'p.order': 'Shu mahsulotga narx so‘rash',
     'p.related': 'Shu yo‘nalishdagi boshqa mahsulotlar',
 
     'about.h1': 'Kompaniya haqida',
     'about.story': 'Bizning tariximiz',
     'about.p1': 'Bizning kompaniyamiz 2010-yilda tashkil etilgan. Asosiy faoliyat — «Sladus Leading» brendi ostida 50 dan ortiq turdagi qandolat mahsulotlari ishlab chiqarish. Mahsulotlarimiz nafis ta’mi va yorqin, o‘ziga xos qadog‘i bilan ajralib turadi.',
-    'about.p2': '«Sladus Produce» qandolat fabrikasi. Iste’molchilar, jumladan, qo‘shni davlatlardagi mijozlar ishonchini qisqa vaqt ichida qozondik.',
+    'about.p2': '«Sladus Produce» qandolat fabrikasi qisqa vaqt ichida iste’molchilar, jumladan qo‘shni davlatlardagi mijozlar ishonchini qozondi.',
     'about.valtitle': 'Ish tamoyillarimiz',
     'about.tl': 'Muhim bosqichlar',
 
@@ -140,8 +140,8 @@ const I18N = {
     'support.faq.q3': 'Qaysi davlatlarga eksport qilasizlar?',
     'support.faq.a3': 'Mahsulotlarimiz 17 dan ortiq davlatga — jumladan Rossiya, Qozog‘iston, Xitoy, BAA va Yevropaga yetkaziladi. To‘liq ro‘yxat «Kompaniya» sahifasida.',
     'support.faq.q4': 'Mahsulotlarning yaroqlilik muddati qancha?',
-    'support.faq.a4': 'Ko‘pchilik mahsulotlar uchun yaroqlilik muddati 9 oy. Har bir pozitsiya bo‘yicha aniq muddat katalogda ko‘rsatilgan.',
-    'support.faq.q5': 'Namuna (sample) olish mumkinmi?',
+    'support.faq.a4': 'Ko‘pchilik mahsulotlar uchun yaroqlilik muddati 9 oy. Har bir mahsulot bo‘yicha aniq muddat katalogda ko‘rsatilgan.',
+    'support.faq.q5': 'Namuna olish mumkinmi?',
     'support.faq.a5': 'Ha, eksport bo‘limi bilan bog‘lanib namunalar so‘rashingiz mumkin.',
     'support.chat.title': 'Sladus Yordamchi',
     'support.chat.sub': 'Mahsulotlar va katalog bo‘yicha savol bering',
@@ -276,7 +276,7 @@ const I18N = {
     'about.h1': 'О компании',
     'about.story': 'Наша история',
     'about.p1': 'Наша компания основана в 2010 году. Основная деятельность – производство более 50 видов кондитерских изделий под маркой «Sladus Leading». Наша продукция отличается изысканным вкусом и яркой оригинальной упаковкой.',
-    'about.p2': 'Кондитерская фабрика «Sladus Produce». Завоевать доверие потребителей, в том числе ближнего зарубежья, нам удалось за довольно короткий период.',
+    'about.p2': 'Кондитерская фабрика «Sladus Produce» завоевала доверие потребителей, в том числе в странах ближнего зарубежья, за довольно короткий период.',
     'about.valtitle': 'Принципы работы',
     'about.tl': 'Ключевые этапы',
 
@@ -437,7 +437,7 @@ const I18N = {
     'about.h1': 'About the company',
     'about.story': 'Our story',
     'about.p1': 'Our company was founded in 2010. Its core business is producing more than 50 types of confectionery under the “Sladus Leading” brand. Our products stand out for their refined taste and bright, distinctive packaging.',
-    'about.p2': 'Sladus Produce confectionery factory. We earned the trust of consumers, including in neighbouring countries, over a fairly short period.',
+    'about.p2': 'Sladus Produce confectionery factory earned the trust of consumers, including in neighbouring countries, over a fairly short period.',
     'about.valtitle': 'How we work',
     'about.tl': 'Key milestones',
 
