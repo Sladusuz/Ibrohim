@@ -108,6 +108,52 @@ footer{margin-top:26px;text-align:center;font-size:12.5px;color:var(--muted)}
 .rv.in{opacity:1;transform:none}
 .btn.rv.in{transition:opacity .7s ease,transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s}
 
+
+/* ===== PREMIUM LAYER ===== */
+@property --ang{syntax:"<angle>";inherits:false;initial-value:0deg}
+body::after{content:"";position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.spot{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(420px circle at var(--mx,50%) var(--my,30%),rgba(90,120,255,.16),transparent 65%)}
+.floor{position:fixed;left:-50%;right:-50%;bottom:-10vh;height:55vh;z-index:0;pointer-events:none;
+  background:linear-gradient(rgba(90,120,255,.18) 1px,transparent 1px) 0 0/100% 46px,linear-gradient(90deg,rgba(90,120,255,.18) 1px,transparent 1px) 0 0/60px 100%;
+  transform:perspective(400px) rotateX(62deg);mask-image:linear-gradient(transparent,#000 70%);opacity:.5;animation:grid 3s linear infinite}
+@keyframes grid{to{background-position:0 46px,0 0}}
+/* preloader */
+#pre{position:fixed;inset:0;z-index:99;background:#000;display:grid;place-items:center;transition:opacity .8s .2s,visibility .8s .2s}
+#pre.off{opacity:0;visibility:hidden}
+#pre .pl{width:150px;text-align:center}
+#pre .bar{height:2px;margin-top:18px;background:rgba(255,255,255,.12);overflow:hidden;border-radius:2px}
+#pre .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),#fff);animation:load 1.5s ease forwards}
+@keyframes load{to{width:100%}}
+/* headlight beam */
+.beam{position:absolute;left:50%;top:50%;width:320px;height:120px;margin:-60px 0 0 -160px;pointer-events:none;z-index:2;
+  background:linear-gradient(90deg,transparent,rgba(160,190,255,.55),transparent);filter:blur(18px);mix-blend-mode:screen;
+  transform:translateX(-260px) skewX(-25deg);animation:beam 4.5s 1.8s ease-in-out infinite;opacity:0}
+@keyframes beam{0%{transform:translateX(-260px) skewX(-25deg);opacity:0}15%{opacity:.9}60%{opacity:.9}100%{transform:translateX(260px) skewX(-25deg);opacity:0}}
+.logo-wrap{animation:float 6s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+h1{background:linear-gradient(100deg,#fff 20%,#b8c4ff 45%,#fff 60%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+h1 em{background:linear-gradient(90deg,var(--a),#9fb2ff,var(--a));background-size:200% 100%;-webkit-background-clip:text;background-clip:text}
+/* premium buttons: rotating gradient border */
+.btn{background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border-color:transparent;box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 10px 30px -18px #000}
+.btn::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.2px;pointer-events:none;
+  background:conic-gradient(from var(--ang),rgba(255,255,255,.14),var(--h),rgba(255,255,255,.14) 40%,rgba(255,255,255,.14));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  opacity:.55;animation:rot 6s linear infinite;transition:opacity .3s}
+.btn:hover::after,.btn.main::after{opacity:1}
+@keyframes rot{to{--ang:360deg}}
+.btn.main{border-color:transparent}
+.btn.main::after{animation-duration:3s}
+.stat{position:relative;overflow:hidden}
+.stat b{font-size:34px}
+.stat::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0,rgba(90,120,255,.25),transparent 70%)}
+.label{display:flex;align-items:center;gap:12px}
+.label::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.rv{filter:blur(8px)}.rv.in{filter:none}
+.badge{position:relative;overflow:hidden}
+.badge::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.2),transparent);animation:bsw 3.5s ease-in-out infinite}
+@keyframes bsw{60%,100%{left:130%}}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .rv{opacity:1;transform:none}
@@ -115,12 +161,13 @@ footer{margin-top:26px;text-align:center;font-size:12.5px;color:var(--muted)}
 </style>
 </head>
 <body>
-<canvas id="fx"></canvas>
+<div id="pre"><div class="pl"><svg viewBox="0 0 200 110" width="150"><path d="M22 96c14-3 40-16 70-24 20-5 42-6 60-2 14 3 28 10 34 16-6 0-12 1-20 2-30 4-60 8-90 4-16-2-38-2-54 4z" fill="none" stroke="#4d63ff" stroke-width="3" stroke-linecap="round" stroke-dasharray="420" stroke-dashoffset="420"><animate attributeName="stroke-dashoffset" to="0" dur="1.3s" fill="freeze"/></path></svg><div class="bar"><i></i></div></div></div>
+<canvas id="fx"></canvas><div class="spot"></div><div class="floor"></div>
 <div class="glow g1"></div><div class="glow g2"></div>
 
 <main>
   <header class="hero">
-    <div class="logo-wrap rv">
+    <div class="logo-wrap rv"><i class="beam"></i>
       <div class="logo">
         <svg viewBox="0 0 200 200" width="100%" height="100%" aria-label="AvtoLux">
           <rect width="200" height="200" fill="#000"/>
@@ -240,6 +287,10 @@ function counters(){
   })();
 })();
 
+/* preloader, spotlight */
+addEventListener('load',()=>setTimeout(()=>document.getElementById('pre').classList.add('off'),1500));
+setTimeout(()=>document.getElementById('pre').classList.add('off'),3500);
+addEventListener('pointermove',e=>{const r=document.documentElement.style;r.setProperty('--mx',e.clientX+'px');r.setProperty('--my',e.clientY+'px')});
 /* ripple + magnetic tilt */
 list.addEventListener('pointerdown',e=>{
   const b=e.target.closest('.btn');if(!b)return;
