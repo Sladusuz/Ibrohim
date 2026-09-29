@@ -3,6 +3,20 @@
    Supabase bilan ishlaydi. Yozish faqat tizimga kirgan
    administratorga ruxsat etilgan (RLS + admins jadvali).
    ============================================================ */
+
+/* Kutilmagan xatolik chiqsa ham sahifa "sababsiz" jim qolib ketmasin —
+   xatoni ekranda ko'rinadigan qilib chiqaramiz. */
+window.addEventListener('error', function (e) {
+  try {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99999;background:#c7362e;' +
+      'color:#fff;padding:.8rem 1rem;font:13px/1.4 system-ui,sans-serif;white-space:pre-wrap';
+    d.textContent = 'Sahifada xatolik yuz berdi: ' + (e.message || 'noma’lum xato') +
+      (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
+    document.body.appendChild(d);
+  } catch (e2) { /* bu yerda ham xato bo'lsa endi ilojsiz */ }
+});
+
 (function () {
   'use strict';
 
@@ -16,9 +30,25 @@
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  var sb = ready ? window.supabase.createClient(C.url, C.key, {
-    auth: { persistSession: true, autoRefreshToken: true }
-  }) : null;
+  /* Supabase kutubxonasi CDN'dan olinadi — faqat Supabase haqiqatan ham
+     sozlangan bo'lsa (ready=true), va ishga tushirishni internetga bog'lab
+     qo'ymaslik uchun sahifa yuklangandan KEYIN, mahalliy kirish (login)
+     ishlashini kutmasdan alohida yuklanadi. */
+  var sb = null, sdkPromise = null;
+  function loadSupabaseSdk() {
+    if (sdkPromise) return sdkPromise;
+    sdkPromise = new Promise(function (resolve, reject) {
+      if (window.supabase) return resolve();
+      var s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+      s.onload = function () { resolve(); };
+      s.onerror = function () { reject(new Error('Supabase kutubxonasi yuklanmadi (internetni tekshiring)')); };
+      document.head.appendChild(s);
+    }).then(function () {
+      sb = window.supabase.createClient(C.url, C.key, { auth: { persistSession: true, autoRefreshToken: true } });
+    });
+    return sdkPromise;
+  }
 
   var P = [], K = [], M = [];
   var COLORS = [
@@ -95,24 +125,30 @@
     }
 
     btn.disabled = true;
-    sb.auth.signInWithPassword({ email: $('#em').value.trim(), password: $('#pw').value })
-      .then(function (r) {
-        btn.disabled = false;
-        if (r.error) {
-          err.textContent = r.error.message === 'Invalid login credentials'
-            ? 'Email yoki parol noto‘g‘ri.' : r.error.message;
-          err.classList.add('on');
-          return;
-        }
-        $('#auth').hidden = true;
-        enter(r.data.session);
-      });
+    loadSupabaseSdk().then(function () {
+      return sb.auth.signInWithPassword({ email: $('#em').value.trim(), password: $('#pw').value });
+    }).then(function (r) {
+      btn.disabled = false;
+      if (r.error) {
+        err.textContent = r.error.message === 'Invalid login credentials'
+          ? 'Email yoki parol noto‘g‘ri.' : r.error.message;
+        err.classList.add('on');
+        return;
+      }
+      $('#auth').hidden = true;
+      enter(r.data.session);
+    }).catch(function (e) {
+      btn.disabled = false;
+      err.textContent = e.message;
+      err.classList.add('on');
+    });
   });
 
   $('#out').addEventListener('click', function (ev) {
     ev.preventDefault();
     if (!ready) { localLogout(); location.reload(); return; }
-    sb.auth.signOut().then(function () { location.reload(); });
+    if (sb) sb.auth.signOut().then(function () { location.reload(); });
+    else location.reload();
   });
 
   function enter(session) {
@@ -864,12 +900,22 @@
     }
   });
 
-  /* ---------- ishga tushirish ---------- */
+  /* ---------- ishga tushirish ----------
+     Mahalliy kirish (login formasi, «Matnlar» bo'limi) hech qachon
+     tashqi Supabase kutubxonasi yuklanishini kutib turmaydi — internet
+     sekin yoki yo'q bo'lsa ham darhol ishlaydi. */
   if (ready) {
-    sb.auth.getSession().then(function (r) {
+    loadSupabaseSdk().then(function () {
+      return sb.auth.getSession();
+    }).then(function (r) {
       if (r.data.session) enter(r.data.session);
       else $('#auth').hidden = false;
-    }).catch(function () { $('#auth').hidden = false; });
+    }).catch(function (e) {
+      $('#auth').hidden = false;
+      var err = $('#authErr');
+      err.textContent = e.message || 'Ulanishda xatolik.';
+      err.classList.add('on');
+    });
   } else {
     $('label[for="em"]').textContent = 'Login';
     $('#em').type = 'text';
