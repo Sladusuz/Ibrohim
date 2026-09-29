@@ -8,7 +8,39 @@
 <title>Sladus — Admin panel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap"></noscript>
+<script>
+/* Diagnostika: agar fayllardan biri yuklanmasa yoki asosiy skript ishga
+   to'liq tushmasa, sababini ekranda ko'rsatib beradi ("hech narsa
+   bo'lmaydi" holatining o'rniga). Boshqa hech nimaga ta'sir qilmaydi. */
+(function () {
+  function showBanner(msg) {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:999999;background:#c7362e;' +
+      'color:#fff;padding:.85rem 1.1rem;font:13px/1.5 system-ui,sans-serif;white-space:pre-wrap';
+    d.textContent = msg;
+    if (document.body) document.body.appendChild(d);
+    else document.addEventListener('DOMContentLoaded', function () { document.body.appendChild(d); });
+  }
+  window.addEventListener('error', function (e) {
+    if (e.target && e.target !== window && e.target.tagName) {
+      var src = e.target.src || e.target.href || String(e.target.tagName);
+      showBanner('Fayl yuklanmadi: ' + src.split('/').pop() +
+        '. Zip arxivni TO‘LIQ (assets papkasi bilan birga, ichidagi tuzilishini o‘zgartirmasdan) qayta oching.');
+    } else {
+      showBanner('Sahifada xatolik: ' + (e.message || 'noma’lum') +
+        (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : ''));
+    }
+  }, true);
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (window.__SLADUS_ADMIN_BOOTED__) return;
+      showBanner('Sahifa to‘liq ishga tusholmadi. Zip arxivni TO‘LIQ (assets papkasi bilan birga) qayta oching va shu HTML faylni o‘sha papkaning ICHIDAN oching.');
+    }, 2500);
+  });
+})();
+</script>
 <style>
 /* ============================================================
    Sladus Admin — Sladus sayt dizayn tizimiga mos panel
@@ -334,6 +366,10 @@ legend{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spaci
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         Yo'nalishlar
       </button>
+      <button data-tab="texts">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
+        Matnlar
+      </button>
       <button data-tab="msgs" style="position:relative">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
         So'rovlar
@@ -370,7 +406,9 @@ legend{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spaci
 <div class="toast-wrap" id="toastWrap"></div>
 
 <script src="config.js"></script>
+<script src="assets/js/brand.js"></script>
 <script src="assets/js/seed.js"></script>
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/store.js"></script>
 <script>
 (function(){
@@ -559,6 +597,7 @@ var TAB_META = {
   dash:     { title: 'Boshqaruv', sub: 'Umumiy holat' },
   products: { title: 'Mahsulotlar', sub: "Qo'shish, tahrirlash, o'chirish" },
   cats:     { title: "Yo'nalishlar", sub: 'Katalog bo\'limlari' },
+  texts:    { title: 'Matnlar', sub: "Sayt matnlari, kompaniya ma'lumotlari" },
   msgs:     { title: "So'rovlar", sub: "Contact formadan kelgan arizalar" },
   settings: { title: 'Sozlamalar', sub: 'Parol, zaxira nusxa' }
 };
@@ -1250,6 +1289,256 @@ function wireCategoryForm(root){
 }
 
 /* ============================================================
+   6b. Matnlar (sayt matnlari, kompaniya ma'lumotlari, eksport
+   davlatlari, mukofotlar) — i18n.js / brand.js standart matnlari
+   ustiga localStorage'dagi 'sladus_texts_v1' orqali qo'llanadi
+   (shu override'ni assets/js/i18n.js va assets/js/brand.js
+   o'zlari ham sahifa ochilganda o'qib qo'llaydi).
+   ============================================================ */
+var TEXT_GROUPS = [
+  { title: 'Bosh sahifa — sarlavha (Hero)', keys: ['hero.badge', 'hero.badgetxt', 'hero.kicker', 'hero.title', 'hero.t1', 'hero.t2', 'hero.lead', 'hero.lead2', 'hero.cta1', 'hero.cta2', 'hero.scroll'] },
+  { title: 'Statistika raqamlari', keys: ['stat.years', 'stat.sku', 'stat.countries', 'stat.regions'] },
+  { title: 'Mahsulot yo\'nalishlari (bosh sahifa)', keys: ['range.title', 'range.lead', 'cat.title', 'cat.lead', 'cat.count', 'cat.view'] },
+  { title: 'Ko\'p so\'raladigan mahsulotlar', keys: ['feat.title', 'feat.lead', 'feat.all'] },
+  { title: 'Nega Sladus', keys: ['why.title', 'why.q.t', 'why.q.d', 'why.i.t', 'why.i.d', 'why.p.t', 'why.p.d', 'why.pr.t', 'why.pr.d'] },
+  { title: 'Eksport xaritasi', keys: ['export.title', 'export.lead', 'export.cta'] },
+  { title: 'Yutuqlar (sarlavha)', keys: ['awards.title', 'awards.lead'] },
+  { title: 'Hamkorlik taklifi', keys: ['cta.title', 'cta.lead', 'cta.btn'] },
+  { title: 'Narx so\'rash formasi', keys: ['form.title', 'form.lead', 'form.name', 'form.company', 'form.phone', 'form.email', 'form.country', 'form.interest', 'form.message', 'form.send', 'form.sending', 'form.ok', 'form.err', 'form.required', 'form.emailbad', 'form.phonebad'] },
+  { title: 'Katalog sahifasi', keys: ['cat.h1', 'cat.search', 'cat.all', 'cat.sort', 'cat.sort.az', 'cat.sort.za', 'cat.sort.kcal', 'cat.sort.kcald', 'cat.found', 'cat.empty.t', 'cat.empty.d', 'cat.reset', 'cat.details'] },
+  { title: 'Mahsulot kartasi', keys: ['p.back', 'p.composition', 'p.nutrition', 'p.protein', 'p.fat', 'p.carbs', 'p.kcal', 'p.supply', 'p.packtype', 'p.size', 'p.volume', 'p.net', 'p.pcs', 'p.tnved', 'p.code', 'p.storage', 'p.storagev', 'p.order', 'p.related'] },
+  { title: 'Kompaniya haqida (matn)', keys: ['about.h1', 'about.story', 'about.p1', 'about.p2', 'about.valtitle', 'about.tl'] },
+  { title: 'Aloqa (yorliqlar)', keys: ['contact.h1', 'contact.addr', 'contact.callexp', 'contact.calllocal', 'contact.email', 'contact.hours', 'contact.map'] },
+  { title: 'Yordam va FAQ', keys: ['support.h1', 'support.lead', 'support.dl.title', 'support.dl.desc', 'support.dl.btn', 'support.faq.title', 'support.faq.q1', 'support.faq.a1', 'support.faq.q2', 'support.faq.a2', 'support.faq.q3', 'support.faq.a3', 'support.faq.q4', 'support.faq.a4', 'support.faq.q5', 'support.faq.a5', 'support.chat.title', 'support.chat.sub', 'support.chat.placeholder', 'support.chat.greeting', 'support.chat.disclaimer', 'support.chat.error'] },
+  { title: 'Pastki qism (footer)', keys: ['footer.about', 'footer.nav', 'footer.cats', 'footer.contacts', 'footer.rights', 'footer.admin'] },
+  { title: 'Navigatsiya va umumiy', keys: ['nav.home', 'nav.about', 'nav.catalog', 'nav.export', 'nav.contact', 'nav.quote', 'nav.support', 'ticker.pre', 'lang.name', 'a11y.menu', 'a11y.lang', 'top'] }
+];
+
+var countriesDraft = [], awardsDraft = [];
+
+function txtField(key){
+  var I = window.I18N || { uz: {}, ru: {}, en: {} };
+  var sample = String((I.uz && I.uz[key]) || '');
+  var area = sample.length > 46 || /<br|\n/.test(sample);
+  var uid = 'txt_' + key.replace(/[^a-z0-9]/gi, '_');
+  function tag(l){
+    var v = (I[l] && I[l][key]) || '';
+    return area
+      ? '<textarea data-ikey="'+esc(key)+'" data-ilang="'+l+'" rows="3">'+esc(v)+'</textarea>'
+      : '<input type="text" data-ikey="'+esc(key)+'" data-ilang="'+l+'" value="'+esc(v)+'">';
+  }
+  return '<div class="f"><label><code style="font-size:.78em">'+esc(key)+'</code></label>'+
+    langTabsHtml(uid)+
+    ['uz','ru','en'].map(function(l){
+      return '<div class="lang-pane '+(l==='uz'?'active':'')+'" data-lang-pane="'+uid+'" data-lang="'+l+'">'+tag(l)+'</div>';
+    }).join('')+
+  '</div>';
+}
+
+function renderTextGroupsHtml(){
+  return TEXT_GROUPS.map(function(g){
+    return '<details class="panel-box"><summary style="cursor:pointer;font-family:var(--display);font-weight:600;font-size:1rem">'+esc(g.title)+'</summary>'+
+      '<div style="margin-top:1rem">'+g.keys.map(txtField).join('')+'</div></details>';
+  }).join('');
+}
+
+function companyFieldsHtml(){
+  var c = (window.BRAND && window.BRAND.company) || {};
+  function f(label, key, val){
+    return '<div class="f"><label>'+esc(label)+'</label><input type="text" data-co="'+key+'" value="'+esc(val==null?'':val)+'"></div>';
+  }
+  function ml3(label, key, obj){
+    obj = obj || {};
+    var uid = 'co_' + key;
+    return '<div class="f"><label>'+esc(label)+'</label>'+
+      langTabsHtml(uid)+
+      ['uz','ru','en'].map(function(l){
+        return '<div class="lang-pane '+(l==='uz'?'active':'')+'" data-lang-pane="'+uid+'" data-lang="'+l+'"><input type="text" data-co="'+key+'" data-lang="'+l+'" value="'+esc(obj[l]||'')+'"></div>';
+      }).join('')+
+    '</div>';
+  }
+  return (
+    '<div class="frow">'+f('Kompaniya nomi', 'name', c.name)+f('Yuridik nomi', 'legal', c.legal)+'</div>'+
+    '<div class="frow">'+f('Tashkil topgan yil', 'founded', c.founded)+f('Email', 'email', c.email)+'</div>'+
+    '<div class="frow">'+f('Eksport telefoni', 'phoneExport', c.phoneExport)+
+      '<div class="f"><label>Ichki bozor telefonlari (har birini alohida qatorga)</label><textarea data-co="phoneLocal" rows="2">'+esc((c.phoneLocal||[]).join('\n'))+'</textarea></div></div>'+
+    ml3('Manzil', 'address', c.address)+ml3('Ish vaqti', 'hours', c.hours)
+  );
+}
+
+function renderTexts(){
+  var isLive = window.Store && window.Store.isLive && window.Store.isLive();
+  return (
+    '<div class="notice"><b>Qanday ishlaydi</b>"Saqlash" tugmasi bosilgach o\'zgarish shu brauzerda darhol ko\'rinadi. '+
+      (isLive ? 'Supabase ulangani uchun bu ma\'lumot barcha qurilmalarda ko\'rinadi.'
+              : 'Supabase ulanmagani uchun bu faqat shu brauzerda saqlanadi — barcha tashrif buyuruvchilarga ko\'rsatish uchun pastdagi "Fayllarni yuklab olish" orqali i18n.js va brand.js fayllarini yuklab, hosting\'dagi eski fayllar ustiga joylashtiring.')+
+    '</div>'+
+    '<div class="panel-box"><h3>Kompaniya ma\'lumotlari</h3>'+companyFieldsHtml()+'</div>'+
+    renderTextGroupsHtml()+
+    '<div class="panel-box"><h3>Eksport davlatlari</h3><div id="txtCountries"></div>'+
+      '<button class="btn btn-ghost" id="ctryAdd" type="button" style="margin-top:.6rem">+ Davlat qo\'shish</button></div>'+
+    '<div class="panel-box"><h3>Yutuqlar va mukofotlar</h3><div id="txtAwards"></div>'+
+      '<button class="btn btn-ghost" id="awardAdd" type="button" style="margin-top:.6rem">+ Mukofot qo\'shish</button></div>'+
+    '<div class="panel-box">'+
+      '<h3>Saqlash</h3><p class="d">O\'zgarishlarni tasdiqlang.</p>'+
+      '<button class="btn btn-primary" id="txtSave">Saqlash</button> '+
+      '<button class="btn btn-ghost" id="txtReset">Standartga qaytarish</button>'+
+    '</div>'+
+    '<div class="panel-box">'+
+      '<h3>Fayllarni yuklab olish</h3><p class="d">Bu ikki faylni hosting\'dagi (Netlify/Vercel) <code>assets/js/i18n.js</code> va <code>assets/js/brand.js</code> ustiga joylashtirsangiz, o\'zgarish barcha tashrif buyuruvchilarga ko\'rinadi.</p>'+
+      '<button class="btn btn-ghost" id="dlI18n">i18n.js yuklab olish</button> '+
+      '<button class="btn btn-ghost" id="dlBrand">brand.js yuklab olish</button>'+
+    '</div>'
+  );
+}
+
+function syncCountriesFromDOM(){
+  document.querySelectorAll('#txtCountries [data-crow]').forEach(function(row){
+    var i = Number(row.dataset.crow), c = countriesDraft[i];
+    if (!c) return;
+    ['code','uz','ru','en'].forEach(function(f){
+      var el = row.querySelector('[data-cf="'+f+'"]');
+      if (el) c[f] = el.value;
+    });
+  });
+}
+function paintCountries(){
+  var wrap = document.getElementById('txtCountries');
+  if (!wrap) return;
+  wrap.innerHTML = countriesDraft.length ? countriesDraft.map(function(c, i){
+    return '<div class="frow" data-crow="'+i+'" style="grid-template-columns:64px 1fr 1fr 1fr 34px;align-items:end;margin-bottom:.5rem">'+
+      '<div class="f"><label>Kod</label><input type="text" data-cf="code" value="'+esc(c.code||'')+'" maxlength="3"></div>'+
+      '<div class="f"><label>O‘zbekcha</label><input type="text" data-cf="uz" value="'+esc(c.uz||'')+'"></div>'+
+      '<div class="f"><label>Русский</label><input type="text" data-cf="ru" value="'+esc(c.ru||'')+'"></div>'+
+      '<div class="f"><label>English</label><input type="text" data-cf="en" value="'+esc(c.en||'')+'"></div>'+
+      '<button class="icon-btn" type="button" data-crm="'+i+'" title="O‘chirish">&times;</button></div>';
+  }).join('') : '<p class="d">Davlat qo‘shilmagan.</p>';
+  wrap.querySelectorAll('[data-crm]').forEach(function(b){
+    b.addEventListener('click', function(){ syncCountriesFromDOM(); countriesDraft.splice(Number(b.dataset.crm), 1); paintCountries(); });
+  });
+}
+
+function syncAwardsFromDOM(){
+  document.querySelectorAll('#txtAwards [data-arow]').forEach(function(row){
+    var i = Number(row.dataset.arow), a = awardsDraft[i];
+    if (!a) return;
+    a.img = row.querySelector('[data-af="img"]').value;
+    a.title = row.querySelector('[data-af="title"]').value;
+    a.year = row.querySelector('[data-af="year"]').value;
+    a.text = a.text || {};
+    ['uz','ru','en'].forEach(function(l){
+      var el = row.querySelector('[data-af="text_'+l+'"]');
+      if (el) a.text[l] = el.value;
+    });
+  });
+}
+function paintAwards(){
+  var wrap = document.getElementById('txtAwards');
+  if (!wrap) return;
+  wrap.innerHTML = awardsDraft.length ? awardsDraft.map(function(a, i){
+    var t = a.text || {}, uid = 'aw' + i;
+    return '<div data-arow="'+i+'" style="border:1px solid var(--hair);border-radius:var(--r-m);padding:1rem;margin-bottom:.8rem">'+
+      '<div class="frow"><div class="f"><label>Rasm manzili</label><input type="text" data-af="img" value="'+esc(a.img||'')+'"></div>'+
+      '<div class="f"><label>Nomi</label><input type="text" data-af="title" value="'+esc(a.title||'')+'"></div></div>'+
+      '<div class="f"><label>Yil</label><input type="text" data-af="year" value="'+esc(a.year||'')+'" style="max-width:160px"></div>'+
+      '<div class="f"><label>Tavsif</label>'+langTabsHtml(uid)+
+        ['uz','ru','en'].map(function(l){
+          return '<div class="lang-pane '+(l==='uz'?'active':'')+'" data-lang-pane="'+uid+'" data-lang="'+l+'"><textarea data-af="text_'+l+'" rows="2">'+esc(t[l]||'')+'</textarea></div>';
+        }).join('')+
+      '</div>'+
+      '<button class="btn btn-ghost" type="button" data-arm="'+i+'" style="margin-top:.4rem">O‘chirish</button></div>';
+  }).join('') : '<p class="d">Mukofot qo‘shilmagan.</p>';
+  wireLangTabs(wrap);
+  wrap.querySelectorAll('[data-arm]').forEach(function(b){
+    b.addEventListener('click', function(){ syncAwardsFromDOM(); awardsDraft.splice(Number(b.dataset.arm), 1); paintAwards(); });
+  });
+}
+
+function collectTxtI18n(){
+  var out = { uz: {}, ru: {}, en: {} };
+  document.querySelectorAll('#content [data-ikey]').forEach(function(el){ out[el.dataset.ilang][el.dataset.ikey] = el.value; });
+  return out;
+}
+function collectTxtCompany(){
+  var out = {};
+  document.querySelectorAll('#content [data-co]').forEach(function(el){
+    var k = el.dataset.co;
+    if (el.dataset.lang) { out[k] = out[k] || {}; out[k][el.dataset.lang] = el.value; }
+    else if (k === 'phoneLocal') out[k] = el.value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean);
+    else out[k] = el.value;
+  });
+  return out;
+}
+
+function wireTexts(){
+  var content = document.getElementById('content');
+  wireLangTabs(content);
+
+  countriesDraft = JSON.parse(JSON.stringify((window.BRAND && window.BRAND.countries) || []));
+  awardsDraft = JSON.parse(JSON.stringify((window.BRAND && window.BRAND.awards) || []));
+  paintCountries();
+  paintAwards();
+
+  document.getElementById('ctryAdd').addEventListener('click', function(){
+    syncCountriesFromDOM();
+    countriesDraft.push({ code: '', uz: '', ru: '', en: '' });
+    paintCountries();
+  });
+  document.getElementById('awardAdd').addEventListener('click', function(){
+    syncAwardsFromDOM();
+    awardsDraft.push({ img: '', title: '', year: '', text: { uz: '', ru: '', en: '' } });
+    paintAwards();
+  });
+
+  document.getElementById('txtSave').addEventListener('click', function(){
+    syncCountriesFromDOM();
+    syncAwardsFromDOM();
+    var payload = { i18n: collectTxtI18n(), brand: { company: collectTxtCompany(), countries: countriesDraft, awards: awardsDraft } };
+    try {
+      localStorage.setItem('sladus_texts_v1', JSON.stringify(payload));
+      if (window.BRAND) {
+        Object.assign(window.BRAND.company, payload.brand.company);
+        window.BRAND.countries = payload.brand.countries;
+        window.BRAND.awards = payload.brand.awards;
+      }
+      if (window.I18N) ['uz','ru','en'].forEach(function(l){ Object.assign(window.I18N[l], payload.i18n[l]); });
+      toast('Saqlandi — saytni shu brauzerda ochib tekshiring.');
+    } catch (e) { toast('Saqlab bo\'lmadi: ' + e.message, 'err'); }
+  });
+
+  document.getElementById('txtReset').addEventListener('click', function(){
+    confirmDialog('Standartga qaytarish', 'Barcha saqlangan matn o\'zgarishlari o\'chirilib, standart holatga qaytariladi.', function(){
+      try { localStorage.removeItem('sladus_texts_v1'); } catch (e) {}
+      location.reload();
+    });
+  });
+
+  document.getElementById('dlI18n').addEventListener('click', function(){
+    syncCountriesFromDOM(); syncAwardsFromDOM();
+    var data = collectTxtI18n();
+    ['uz','ru','en'].forEach(function(l){ data[l] = Object.assign({}, (window.I18N && window.I18N[l]) || {}, data[l]); });
+    var body = '/* Sladus — interfeys tarjimalari (uz / ru / en) */\n\nconst I18N = ' +
+      JSON.stringify(data, null, 2) + ';\n\nif (typeof window !== \'undefined\') window.I18N = I18N;\n';
+    var blob = new Blob([body], { type: 'text/javascript;charset=utf-8' });
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = 'i18n.js'; document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('dlBrand').addEventListener('click', function(){
+    syncCountriesFromDOM(); syncAwardsFromDOM();
+    var b = JSON.parse(JSON.stringify(window.BRAND || {}));
+    b.company = Object.assign(b.company || {}, collectTxtCompany());
+    b.countries = countriesDraft;
+    b.awards = awardsDraft;
+    var blob = new Blob(['window.BRAND=' + JSON.stringify(b, null, 1) + ';\n'], { type: 'text/javascript;charset=utf-8' });
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = 'brand.js'; document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+}
+
+/* ============================================================
    7. Sozlamalar
    ============================================================ */
 function renderSettings(){
@@ -1462,6 +1751,7 @@ function render(){
   if (currentTab === 'dash') { c.innerHTML = renderDash(); }
   else if (currentTab === 'products') { c.innerHTML = renderProducts(); wireProducts(); }
   else if (currentTab === 'cats') { c.innerHTML = renderCats(); wireCats(); }
+  else if (currentTab === 'texts') { c.innerHTML = renderTexts(); wireTexts(); }
   else if (currentTab === 'msgs') { c.innerHTML = renderMsgs(); wireMsgs(); }
   else if (currentTab === 'settings') { c.innerHTML = renderSettings(); wireSettings(); }
 }
@@ -1479,6 +1769,8 @@ function boot(){
   updateMsgBadge();
   setTab('dash');
 }
+
+window.__SLADUS_ADMIN_BOOTED__ = true;
 
 })();
 </script>
