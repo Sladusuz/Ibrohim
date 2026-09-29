@@ -151,15 +151,6 @@ footer b{display:block;font-size:15px;color:var(--tx);margin-bottom:4px}
 
 <main>
   <header class="hero">
-    <div class="logo" id="logo"><svg viewBox="0 0 120 120" role="img" aria-label="VIP Travel logo">
-      <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset="1" stop-color="#d49a2a"/></linearGradient>
-      <radialGradient id="lb" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#1b2a63"/><stop offset="1" stop-color="#070b22"/></radialGradient></defs>
-      <circle cx="60" cy="60" r="57" fill="url(#lb)" stroke="url(#lg)" stroke-width="3"/>
-      <g fill="none" stroke="#e8edff" stroke-width="1.6" opacity=".9"><circle cx="60" cy="47" r="25"/><ellipse cx="60" cy="47" rx="11" ry="25"/><path d="M35 47h50M39 36h42M39 58h42"/></g>
-      <g class="orbit"><ellipse cx="60" cy="47" rx="42" ry="13" fill="none" stroke="url(#lg)" stroke-width="2" transform="rotate(-18 60 47)"/></g>
-      <path d="M92 38l-9 1.500-3 3 5-.5-4 5 3 1 4-5 .5 5 3-3z" fill="url(#lg)" transform="rotate(-20 86 42)"/>
-      <text x="60" y="99" text-anchor="middle" font-family="system-ui,Arial" font-weight="800" font-size="12" letter-spacing="1" fill="#f5f6fb">VIP TRAVEL</text>
-    </svg></div>
     <div class="globe-wrap"><canvas id="globe"></canvas></div>
     <h1><span>VIP</span> <em>Travel</em></h1>
     <div class="meta"><div class="badge" id="badge"></div><div class="handle" id="handle"></div></div>
@@ -240,7 +231,7 @@ const ic=(n,c="")=>`<svg class="i ${c}" viewBox="0 0 24 24" aria-hidden="true">$
 const chip=n=>`<span class="chip">${ic(n)}</span>`;
 const go=`<span class="go">${ic("out")}</span>`;
 
-if(CONFIG.logo)$("#logo").innerHTML=`<img src="${CONFIG.logo}" alt="${CONFIG.brand}">`;
+if(CONFIG.logo&&$("#logo"))$("#logo").innerHTML=`<img src="${CONFIG.logo}" alt="${CONFIG.brand}">`;
 document.title=CONFIG.brand+" — Turlar | Toshkent";
 $("#badge").innerHTML=ic("check")+"Official";
 $("#handle").textContent="@"+CONFIG.instagram;
