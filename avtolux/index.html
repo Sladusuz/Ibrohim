@@ -139,11 +139,6 @@ footer{margin-top:26px;text-align:center;font-size:12.5px;color:var(--muted)}
     <p class="typing rv" id="typing"></p>
   </header>
 
-  <section class="stats rv" id="stats">
-    <div class="stat"><b data-n="733" data-s="K+">0</b><small>Obunachi</small></div>
-    <div class="stat"><b data-n="918" data-s="+">0</b><small>Nashr</small></div>
-    <div class="stat"><b data-n="24" data-s="/7">0</b><small>Aloqa</small></div>
-  </section>
 
   <nav class="list" id="links"></nav>
 
@@ -184,7 +179,7 @@ const map = q => "https://www.google.com/maps/search/?api=1&query="+encodeURICom
 const items = [
   {label:"Asosiy"},
   {t:"Telegram kanalimiz", s:"@avtolux_uzb_original — yangi avtolar", u:CONFIG.telegramChannel, i:'tg', h:'#29b6ff', main:1},
-  {t:"Instagram — 733K", s:"@avtolux_uzb", u:CONFIG.instagram, i:'ig', h:'#e1306c'},
+  {t:"Instagram", s:"@avtolux_uzb", u:CONFIG.instagram, i:'ig', h:'#e1306c'},
   {label:"Qo'ng'iroq qilish"},
   ...CONFIG.phones.map(p=>({t:p, s:"Bosing va qo'ng'iroq qiling", u:"tel:"+clean(p), i:'ph', h:'#2be37a'})),
   {t:"Email", s:CONFIG.email, u:"mailto:"+CONFIG.email, i:'mail', h:'#ff9f1c'},
