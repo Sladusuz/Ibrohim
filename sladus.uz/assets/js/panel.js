@@ -4,18 +4,11 @@
    administratorga ruxsat etilgan (RLS + admins jadvali).
    ============================================================ */
 
-/* Kutilmagan xatolik chiqsa ham sahifa "sababsiz" jim qolib ketmasin —
-   xatoni ekranda ko'rinadigan qilib chiqaramiz. */
-window.addEventListener('error', function (e) {
-  try {
-    var d = document.createElement('div');
-    d.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99999;background:#c7362e;' +
-      'color:#fff;padding:.8rem 1rem;font:13px/1.4 system-ui,sans-serif;white-space:pre-wrap';
-    d.textContent = 'Sahifada xatolik yuz berdi: ' + (e.message || 'noma’lum xato') +
-      (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : '');
-    document.body.appendChild(d);
-  } catch (e2) { /* bu yerda ham xato bo'lsa endi ilojsiz */ }
-});
+/* panel.js muvaffaqiyatli yuklanganini bildiradigan belgi — buni
+   pastdagi diagnostika skripti (panel-fa0717685948.html ichida)
+   tekshirib, agar bu fayl umuman yuklanmagan bo'lsa ham sababini
+   ko'rsatadi. */
+window.__SLADUS_PANEL_JS_LOADED__ = true;
 
 (function () {
   'use strict';
@@ -74,22 +67,28 @@ window.addEventListener('error', function (e) {
   };
 
   /* ---------- mahalliy kirish (Supabase ulanmagan holat uchun) ----------
-     admin-56a7e0dcc2af.html bilan bir xil standart login/parol. */
+     admin-56a7e0dcc2af.html bilan bir xil standart login/parol.
+     localStorage/sessionStorage ba'zi brauzerlarda (masalan, faylni
+     to'g'ridan-to'g'ri ochganda ba'zi sozlamalarda) bloklangan bo'lishi
+     mumkin — shu sababli har bir chaqiruv try/catch bilan himoyalangan,
+     bloklangan taqdirda ham standart login/parol bilan kirish ishlayveradi. */
+  function lsGet(k, def) { try { var v = localStorage.getItem(k); return v == null ? def : v; } catch (e) { return def; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* xotira yo'q yoki bloklangan */ } }
   var DEFAULT_USER = 'Ibrohim', DEFAULT_PASS = 'ibrohim123';
   var LS_USER = 'sladus_panel_user', LS_PASS = 'sladus_panel_pass';
   var LS_FAILS = 'sladus_panel_fails', LS_LOCK_UNTIL = 'sladus_panel_lock_until';
   var SESSION_KEY = 'sladus_panel_session';
-  function currentUser() { return localStorage.getItem(LS_USER) || DEFAULT_USER; }
-  function currentPass() { return localStorage.getItem(LS_PASS) || DEFAULT_PASS; }
-  function usingDefaultPass() { return !localStorage.getItem(LS_PASS); }
-  function getFails() { return parseInt(localStorage.getItem(LS_FAILS) || '0', 10) || 0; }
-  function setFails(n) { localStorage.setItem(LS_FAILS, String(n)); }
-  function lockUntil() { return parseInt(localStorage.getItem(LS_LOCK_UNTIL) || '0', 10) || 0; }
+  function currentUser() { return lsGet(LS_USER, DEFAULT_USER); }
+  function currentPass() { return lsGet(LS_PASS, DEFAULT_PASS); }
+  function usingDefaultPass() { return lsGet(LS_PASS, null) == null; }
+  function getFails() { return parseInt(lsGet(LS_FAILS, '0'), 10) || 0; }
+  function setFails(n) { lsSet(LS_FAILS, String(n)); }
+  function lockUntil() { return parseInt(lsGet(LS_LOCK_UNTIL, '0'), 10) || 0; }
   function isLocked() { return Date.now() < lockUntil(); }
   function lockRemainingSec() { return Math.max(0, Math.ceil((lockUntil() - Date.now()) / 1000)); }
   function registerFail() {
     var n = getFails() + 1;
-    if (n >= 5) { localStorage.setItem(LS_LOCK_UNTIL, String(Date.now() + 60000)); setFails(0); }
+    if (n >= 5) { lsSet(LS_LOCK_UNTIL, String(Date.now() + 60000)); setFails(0); }
     else setFails(n);
   }
   function tryLocalLogin(u, p) {
@@ -107,20 +106,26 @@ window.addEventListener('error', function (e) {
     var err = $('#authErr'), btn = $('button[type=submit]', ev.target);
     err.classList.remove('on');
 
-    if (!ready) {
-      if (isLocked()) {
-        err.textContent = 'Ko‘p noto‘g‘ri urinish. ' + lockRemainingSec() + ' soniyadan keyin qayta urining.';
-        err.classList.add('on');
+    try {
+      if (!ready) {
+        if (isLocked()) {
+          err.textContent = 'Ko‘p noto‘g‘ri urinish. ' + lockRemainingSec() + ' soniyadan keyin qayta urining.';
+          err.classList.add('on');
+          return;
+        }
+        if (tryLocalLogin($('#em').value.trim(), $('#pw').value)) {
+          localLogin();
+          $('#auth').hidden = true;
+          enterLocalMode();
+        } else {
+          err.textContent = 'Login yoki parol noto‘g‘ri.';
+          err.classList.add('on');
+        }
         return;
       }
-      if (tryLocalLogin($('#em').value.trim(), $('#pw').value)) {
-        localLogin();
-        $('#auth').hidden = true;
-        enterLocalMode();
-      } else {
-        err.textContent = 'Login yoki parol noto‘g‘ri.';
-        err.classList.add('on');
-      }
+    } catch (e2) {
+      err.textContent = 'Xatolik: ' + e2.message;
+      err.classList.add('on');
       return;
     }
 
@@ -156,7 +161,7 @@ window.addEventListener('error', function (e) {
     $('#who').textContent = session.user.email;
     $('#curl').textContent = location.pathname.replace(/^\//, '');
     reload();
-    initTexts();
+    try { initTexts(); } catch (e) { toast('Matnlar bo‘limi yuklanmadi: ' + e.message, true); }
   }
 
   /* Supabase sozlanmagan bo'lsa — login admin-56a7e0dcc2af.html bilan bir xil
@@ -172,8 +177,8 @@ window.addEventListener('error', function (e) {
       if (!allowed) { b.disabled = true; b.title = 'Bu bo‘lim uchun Supabase ulanishi kerak (config.js)'; }
     });
     $$('.pane-view').forEach(function (v) { v.classList.toggle('on', v.id === 'v-texts'); });
-    initTexts();
-    renderLocalSecurityNotice();
+    try { initTexts(); } catch (e) { toast('Matnlar bo‘limi yuklanmadi: ' + e.message, true); }
+    try { renderLocalSecurityNotice(); } catch (e) { /* Sozlamalar ko'rinishiga ta'sir qilmaydi */ }
   }
 
   function renderLocalSecurityNotice() {
@@ -922,4 +927,6 @@ window.addEventListener('error', function (e) {
     if (isLocalLoggedIn()) enterLocalMode();
     else $('#auth').hidden = false;
   }
+
+  window.__SLADUS_PANEL_JS_BOOTED__ = true;
 })();

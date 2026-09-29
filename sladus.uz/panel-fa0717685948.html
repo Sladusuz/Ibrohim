@@ -4,6 +4,40 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Boshqaruv — Sladus</title>
+<script>
+/* Diagnostika: agar fayllardan biri yuklanmasa yoki panel.js ishga
+   to'liq tushmasa, sababini ekranda ko'rsatib beradi (bo'sh, "hech
+   narsa bo'lmaydi" holatining o'rniga). Boshqa hech nimaga ta'sir
+   qilmaydi. */
+(function () {
+  function showBanner(msg) {
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:999999;background:#c7362e;' +
+      'color:#fff;padding:.85rem 1.1rem;font:13px/1.5 system-ui,sans-serif;white-space:pre-wrap';
+    d.textContent = msg;
+    if (document.body) document.body.appendChild(d);
+    else document.addEventListener('DOMContentLoaded', function () { document.body.appendChild(d); });
+  }
+  window.addEventListener('error', function (e) {
+    if (e.target && e.target !== window && e.target.tagName) {
+      var src = e.target.src || e.target.href || String(e.target.tagName);
+      showBanner('Fayl yuklanmadi: ' + src.split('/').pop() +
+        '. Zip arxivni TO‘LIQ (assets papkasi bilan birga, ichidagi tuzilishini o‘zgartirmasdan) qayta oching.');
+    } else {
+      showBanner('Sahifada xatolik: ' + (e.message || 'noma’lum') +
+        (e.filename ? ' (' + e.filename.split('/').pop() + ':' + e.lineno + ')' : ''));
+    }
+  }, true);
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (window.__SLADUS_PANEL_JS_BOOTED__) return;
+      showBanner(window.__SLADUS_PANEL_JS_LOADED__
+        ? 'assets/js/panel.js yuklandi, lekin ishga to‘liq tusholmadi — sahifani qayta yangilab ko‘ring.'
+        : 'assets/js/panel.js yuklanmadi. Zip arxivni TO‘LIQ (assets papkasi bilan birga) qayta oching va shu HTML faylni o‘sha papkaning ICHIDAN oching.');
+    }, 2500);
+  });
+})();
+</script>
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#120C0B">
