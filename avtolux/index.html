@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AVTOLUX UZB — Original avto mahsulotlar</title>
+<meta name="description" content="AVTOLUX UZB — original avto mahsulotlar. Telegram kanal, telefon, buyurtma.">
+<meta name="theme-color" content="#07070b">
+<style>
+:root{
+  --bg:#07070b; --card:rgba(255,255,255,.055); --line:rgba(255,255,255,.12);
+  --text:#f5f5f7; --muted:#a3a3b2; --a:#3d5afe; --b:#7f9bff; --c:#ff3d4e;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  overflow-x:hidden;display:flex;justify-content:center;
+}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.glow{position:fixed;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.28;z-index:0;pointer-events:none;animation:drift 18s ease-in-out infinite alternate}
+.g1{background:var(--a);top:-25vmax;left:-20vmax}
+.g2{background:var(--c);bottom:-30vmax;right:-25vmax;animation-delay:-9s;opacity:.2}
+@keyframes drift{to{transform:translate(8vmax,6vmax) scale(1.15)}}
+
+main{position:relative;z-index:1;width:100%;max-width:520px;padding:44px 18px calc(40px + env(safe-area-inset-bottom))}
+
+/* header */
+.hero{text-align:center;margin-bottom:26px}
+.logo-wrap{position:relative;width:132px;height:132px;margin:0 auto 20px}
+.logo-wrap::before{
+  content:"";position:absolute;inset:-6px;border-radius:50%;
+  background:conic-gradient(from 0deg,var(--a),var(--b),var(--c),var(--a));
+  animation:spin 4s linear infinite;filter:blur(1px)
+}
+.logo-wrap::after{content:"";position:absolute;inset:-22px;border-radius:50%;border:1px solid var(--line);animation:pulse 2.6s ease-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%{transform:scale(.85);opacity:.9}100%{transform:scale(1.25);opacity:0}}
+.logo{
+  position:relative;z-index:1;width:100%;height:100%;border-radius:50%;
+  background:radial-gradient(circle at 30% 25%,#23232f,#0b0b10);
+  display:grid;place-items:center;border:4px solid var(--bg);overflow:hidden
+}
+.logo img{width:100%;height:100%;object-fit:cover;display:block}
+.carline{stroke-dasharray:420;stroke-dashoffset:420;animation:draw 2.4s .4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.logo span{font-weight:900;font-size:40px;letter-spacing:-2px;background:linear-gradient(135deg,var(--b),var(--a));-webkit-background-clip:text;background-clip:text;color:transparent}
+h1{font-size:clamp(30px,9vw,42px);font-weight:900;letter-spacing:-1px;line-height:1.05}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--a),var(--b),var(--a));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 3s linear infinite}
+@keyframes shine{to{background-position:-200% 0}}
+.badge{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:7px 14px;border:1px solid var(--line);border-radius:99px;background:var(--card);backdrop-filter:blur(10px);font-size:13px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:#2be37a;box-shadow:0 0 0 0 #2be37a;animation:ping 1.8s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 9px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.typing{margin-top:14px;min-height:24px;color:var(--muted);font-size:15px}
+.typing::after{content:"|";margin-left:2px;color:var(--b);animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 22px}
+.stat{padding:14px 6px;text-align:center;border:1px solid var(--line);border-radius:18px;background:var(--card);backdrop-filter:blur(10px)}
+.stat b{display:block;font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff,var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat small{font-size:11.5px;color:var(--muted)}
+
+/* buttons */
+.list{display:flex;flex-direction:column;gap:12px}
+.label{margin:18px 4px 2px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.btn{
+  --h:var(--a);
+  position:relative;display:flex;align-items:center;gap:14px;padding:16px 18px;
+  border-radius:20px;border:1px solid var(--line);background:var(--card);
+  backdrop-filter:blur(12px);color:var(--text);text-decoration:none;overflow:hidden;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s;
+  will-change:transform;transform-style:preserve-3d;
+}
+.btn::before{ /* sweeping light */
+  content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:skewX(-20deg);transition:left .7s;
+}
+.btn:hover::before{left:130%}
+.btn:hover{border-color:var(--h);box-shadow:0 10px 40px -10px var(--h)}
+.btn:active{transform:scale(.97)}
+.ico{flex:none;width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--h),color-mix(in srgb,var(--h) 45%,#000));box-shadow:0 6px 18px -6px var(--h)}
+.ico svg{width:24px;height:24px;fill:#fff}
+.txt{flex:1;min-width:0}
+.txt b{display:block;font-size:16.5px;font-weight:700}
+.txt small{display:block;margin-top:2px;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.arrow{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);transition:transform .3s,background .3s}
+.arrow svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.4}
+.btn:hover .arrow{transform:translateX(4px) rotate(-45deg);background:var(--h)}
+.btn.main{padding:20px 18px;background:linear-gradient(135deg,rgba(61,90,254,.32),rgba(127,155,255,.14));border-color:rgba(110,140,255,.55);animation:glowbtn 2.4s ease-in-out infinite}
+.btn.main .txt b{font-size:18.5px}
+@keyframes glowbtn{50%{box-shadow:0 0 34px -4px rgba(80,110,255,.6)}}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:rip .6s linear;pointer-events:none}
+@keyframes rip{to{transform:scale(4);opacity:0}}
+
+/* marquee */
+.marq{margin:28px -18px 0;overflow:hidden;border-block:1px solid var(--line);padding:11px 0;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marq div{display:flex;gap:34px;width:max-content;animation:mq 22s linear infinite;font-weight:800;font-size:15px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+.marq span::after{content:"✦";margin-left:34px;color:var(--a)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+footer{margin-top:26px;text-align:center;font-size:12.5px;color:var(--muted)}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(26px) scale(.98);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.rv.in{opacity:1;transform:none}
+.btn.rv.in{transition:opacity .7s ease,transform .25s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .25s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<canvas id="fx"></canvas>
+<div class="glow g1"></div><div class="glow g2"></div>
+
+<main>
+  <header class="hero">
+    <div class="logo-wrap rv">
+      <div class="logo">
+        <svg viewBox="0 0 200 200" width="100%" height="100%" aria-label="AvtoLux">
+          <rect width="200" height="200" fill="#000"/>
+          <path d="M22 96c14-3 40-16 70-24 20-5 42-6 60-2 14 3 28 10 34 16-6 0-12 1-20 2-30 4-60 8-90 4-16-2-38-2-54 4z" fill="none" stroke="#4d63ff" stroke-width="3" stroke-linecap="round" class="carline"/>
+          <circle cx="62" cy="98" r="13" fill="none" stroke="#4d63ff" stroke-width="2.5"/>
+          <circle cx="150" cy="96" r="13" fill="none" stroke="#4d63ff" stroke-width="2.5"/>
+          <path d="M22 96l-4 8" stroke="#ff3d4e" stroke-width="3" stroke-linecap="round"/>
+          <text x="100" y="146" text-anchor="middle" font-family="system-ui,Arial" font-size="30" font-weight="500" fill="#fff"><tspan fill="#4d63ff">A</tspan>vto<tspan fill="#4d63ff">L</tspan>ux</text>
+        </svg>
+        <!-- Rasmiy logo fayli bo'lsa: <img src="logo.jpg" alt="AvtoLux"> -->
+      </div>
+    </div>
+    <h1 class="rv">AVTOLUX <em>UZB</em></h1>
+    <p class="rv" style="margin-top:8px;font-size:13px;letter-spacing:.18em;color:var(--muted)">AVTOLUX | AUTOLUX | INOMARKA | PREMIUM AVTO</p>
+    <div class="badge rv"><i class="dot"></i> Tasdiqlangan · 24/7 onlayn</div>
+    <p class="typing rv" id="typing"></p>
+  </header>
+
+  <section class="stats rv" id="stats">
+    <div class="stat"><b data-n="733" data-s="K+">0</b><small>Obunachi</small></div>
+    <div class="stat"><b data-n="918" data-s="+">0</b><small>Nashr</small></div>
+    <div class="stat"><b data-n="24" data-s="/7">0</b><small>Aloqa</small></div>
+  </section>
+
+  <nav class="list" id="links"></nav>
+
+  <div class="marq rv"><div id="mq"></div></div>
+  <footer class="rv">© <span id="y"></span> AVTOLUX UZB · Barcha huquqlar himoyalangan</footer>
+</main>
+
+<script>
+/* ============================================================
+   SOZLAMALAR — raqam va havolalarni shu yerda almashtiring
+   ============================================================ */
+const CONFIG = {
+  telegramChannel: "https://t.me/avtolux_uzb_original",
+  instagram: "https://www.instagram.com/avtolux_uzb/",
+  phones: ["+998 99 238 70 77","+998 95 349 70 77","+998 99 258 70 77","+998 95 983 70 77"],
+  addresses: [
+    {n:"Uch tepa tumani, Kichik halqa yo'li 36", q:"Uch tepa tumani kichik halqa yo'li 36 Tashkent"},
+    {n:"Sergeli — Index filial", q:"Sergeli index Tashkent"}
+  ],
+  phrases: ["Moshina sotib olamiz — 24/7","Sotib beramiz · Nasiya savdo bor","Reklama xizmati mavjud","Inomarka va Premium avto"]
+};
+
+const I = {
+  tg:'<path d="M9.4 15.6l-.4 4.1c.6 0 .8-.3 1.2-.6l2.8-2.7 5.8 4.3c1.1.6 1.8.3 2.1-1l3.7-17.4c.4-1.6-.6-2.2-1.6-1.8L1.5 9.3C-.1 9.9-.1 10.8 1.2 11.2l5.6 1.7L19.8 4.7c.6-.4 1.2-.2.7.2z"/>',
+  ph:'<path d="M6.6 10.8a15 15 0 006.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.100.4 2.300.6 3.600.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 013 4c0-.6.4-1 1-1h3.500c.6 0 1 .4 1 1 0 1.300.2 2.500.6 3.600.1.300 0 .700-.2 1z"/>',
+  wa:'<path d="M12 2a10 10 0 00-8.600 15L2 22l5.200-1.400A10 10 0 1012 2zm5.200 14.100c-.2.600-1.300 1.200-1.800 1.200-.5.100-1 .200-3.300-.7-2.800-1.200-4.600-4-4.700-4.200-.100-.200-1.100-1.500-1.100-2.800s.7-2 .9-2.300c.3-.3.600-.3.800-.3h.6c.2 0 .4 0 .6.500l.9 2.100c.100.200.100.400 0 .500l-.4.600-.4.400c-.1.200-.3.300-.1.600.2.300.8 1.300 1.700 2.100 1.200 1 2.100 1.300 2.400 1.500.3.100.5.100.7-.1l1-1.200c.2-.3.400-.2.600-.1l2 .9c.3.100.5.200.5.300.100.100.100.700-.100 1.300z"/>',
+  ig:'<path d="M12 7a5 5 0 100 10 5 5 0 000-10zm0 8.200A3.200 3.200 0 1112 8.800a3.200 3.200 0 010 6.400zM17.300 5.500a1.200 1.200 0 100 2.400 1.200 1.200 0 000-2.400zM7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 1.800A3.200 3.200 0 003.800 7v10A3.200 3.200 0 007 20.200h10a3.200 3.200 0 003.200-3.200V7A3.200 3.200 0 0017 3.800z"/>',
+  web:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.900 9h-3a15 15 0 00-1.300-5.200A8 8 0 0118.900 11zM12 4c.800 1 1.900 3.100 2.200 7H9.800C10.100 7.100 11.200 5 12 4zM4.100 13h3a15 15 0 001.300 5.200A8 8 0 014.100 13zm3-2h-3a8 8 0 014.300-5.200A15 15 0 007.100 11zM12 20c-.8-1-1.900-3.100-2.200-7h4.400c-.3 3.900-1.400 6-2.200 7zm3.600-1.800A15 15 0 0016.900 13h3a8 8 0 01-4.300 5.200z"/>',
+  pin:'<path d="M12 2a7 7 0 00-7 7c0 5.200 7 13 7 13s7-7.800 7-13a7 7 0 00-7-7zm0 9.500A2.500 2.500 0 1112 6.500a2.500 2.500 0 010 5z"/>',
+  cart:'<path d="M7 18a2 2 0 100 4 2 2 0 000-4zM1 2v2h2l3.600 7.600-1.400 2.400A2 2 0 007 17h12v-2H7.400l1.100-2h7.500a2 2 0 001.700-1l3.600-6.500A1 1 0 0020.400 4H5.200l-.9-2H1zm16 16a2 2 0 100 4 2 2 0 000-4z"/>'
+};
+const arrow='<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+const clean = p => p.replace(/[^\d+]/g,'');
+
+const map = q => "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
+const items = [
+  {label:"Asosiy"},
+  {t:"Telegram kanalimiz", s:"@avtolux_uzb_original — yangi avtolar", u:CONFIG.telegramChannel, i:'tg', h:'#29b6ff', main:1},
+  {t:"Instagram — 733K", s:"@avtolux_uzb", u:CONFIG.instagram, i:'ig', h:'#e1306c'},
+  {label:"Qo'ng'iroq qilish"},
+  ...CONFIG.phones.map(p=>({t:p, s:"Bosing va qo'ng'iroq qiling", u:"tel:"+clean(p), i:'ph', h:'#2be37a'})),
+  {label:"Filiallar"},
+  ...CONFIG.addresses.map(a=>({t:a.n, s:"Tashkent · Xaritada ochish", u:map(a.q), i:'pin', h:'#ff3d4e'}))
+];
+
+const list = document.getElementById('links');
+let pendingLabel = null, shown = 0;
+items.forEach((it,idx)=>{
+  if(it.label){ pendingLabel = it.label; return; }
+  if(!it.u) return;                       // bo'sh havolalar ko'rsatilmaydi
+  if(pendingLabel){ const l=document.createElement('div'); l.className='label rv'; l.textContent=pendingLabel; list.appendChild(l); pendingLabel=null; }
+  const a=document.createElement('a');
+  a.className='btn rv'+(it.main?' main':'');
+  a.href=it.u; a.style.setProperty('--h',it.h);
+  if(!it.u.startsWith('tel:')){a.target='_blank';a.rel='noopener'}
+  a.innerHTML=`<span class="ico"><svg viewBox="0 0 24 24">${I[it.i]}</svg></span><span class="txt"><b>${it.t}</b><small>${it.s}</small></span><span class="arrow">${arrow}</span>`;
+  list.appendChild(a); shown++;
+});
+
+/* marquee */
+const words=["Inomarka","Premium avto","Nasiya savdo","24/7","Sotib olamiz","Sotib beramiz"];
+document.getElementById('mq').innerHTML=[...words,...words].map(w=>`<span>${w}</span>`).join('');
+document.getElementById('y').textContent=new Date().getFullYear();
+
+/* reveal on scroll, staggered */
+const io=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){
+    const sibs=[...document.querySelectorAll('.rv')]; const n=sibs.indexOf(e.target);
+    e.target.style.transitionDelay=Math.min(n*60,500)+'ms';
+    e.target.classList.add('in'); io.unobserve(e.target);
+    if(e.target.id==='stats') counters();
+  }
+}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* counters */
+function counters(){
+  document.querySelectorAll('[data-n]').forEach(el=>{
+    const to=+el.dataset.n, s=el.dataset.s, t0=performance.now();
+    (function f(t){const p=Math.min((t-t0)/1400,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)))+s;if(p<1)requestAnimationFrame(f)})(t0);
+  });
+}
+
+/* typing */
+(function(){
+  const el=document.getElementById('typing'),P=CONFIG.phrases;let i=0,j=0,del=false;
+  (function tick(){
+    const w=P[i];el.textContent=w.slice(0,j);
+    if(!del&&j===w.length){del=true;return setTimeout(tick,1600)}
+    if(del&&j===0){del=false;i=(i+1)%P.length}
+    j+=del?-1:1;setTimeout(tick,del?28:55);
+  })();
+})();
+
+/* ripple + magnetic tilt */
+list.addEventListener('pointerdown',e=>{
+  const b=e.target.closest('.btn');if(!b)return;
+  const r=b.getBoundingClientRect(),d=Math.max(r.width,r.height),s=document.createElement('span');
+  s.className='ripple';s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
+  b.appendChild(s);setTimeout(()=>s.remove(),600);
+});
+if(matchMedia('(hover:hover)').matches){
+  list.addEventListener('pointermove',e=>{
+    const b=e.target.closest('.btn');if(!b)return;
+    const r=b.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    b.style.transform=`perspective(700px) rotateX(${-y*8}deg) rotateY(${x*8}deg) translateY(-2px)`;
+  });
+  list.addEventListener('pointerout',e=>{const b=e.target.closest('.btn');if(b)b.style.transform=''});
+}
+
+/* canvas: speed lines + headlight sparks */
+(function(){
+  const c=document.getElementById('fx'),x=c.getContext('2d');let W,H,L=[];
+  const dpr=Math.min(devicePixelRatio||1,2);
+  function rs(){W=c.width=innerWidth*dpr;H=c.height=innerHeight*dpr;}
+  addEventListener('resize',rs);rs();
+  const mk=()=>({x:Math.random()*W,y:Math.random()*H,l:(40+Math.random()*160)*dpr,v:(6+Math.random()*16)*dpr,a:.05+Math.random()*.25,h:Math.random()<.75?226:355});
+  for(let i=0;i<70;i++)L.push(mk());
+  let my=0;addEventListener('pointermove',e=>my=(e.clientY/innerHeight-.5)*2);
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  (function f(){
+    x.clearRect(0,0,W,H);
+    L.forEach(p=>{
+      p.y+=p.v*(1+my*.3);
+      if(p.y-p.l>H){Object.assign(p,mk(),{y:-20})}
+      const g=x.createLinearGradient(0,p.y-p.l,0,p.y);
+      g.addColorStop(0,`hsla(${p.h},100%,60%,0)`);g.addColorStop(1,`hsla(${p.h},100%,60%,${p.a})`);
+      x.strokeStyle=g;x.lineWidth=1.6*dpr;x.beginPath();x.moveTo(p.x,p.y-p.l);x.lineTo(p.x,p.y);x.stroke();
+    });
+    requestAnimationFrame(f);
+  })();
+})();
+</script>
+</body>
+</html>
