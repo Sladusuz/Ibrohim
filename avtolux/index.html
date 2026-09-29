@@ -158,6 +158,7 @@ footer{margin-top:26px;text-align:center;font-size:12.5px;color:var(--muted)}
 const CONFIG = {
   telegramChannel: "https://t.me/avtolux_uzb_original",
   instagram: "https://www.instagram.com/avtolux_uzb/",
+  email: "climber_uz@hotmail.com",
   phones: ["+998 99 238 70 77","+998 95 349 70 77","+998 99 258 70 77","+998 95 983 70 77"],
   addresses: [
     {n:"Uch tepa tumani, Kichik halqa yo'li 36", q:"Uch tepa tumani kichik halqa yo'li 36 Tashkent"},
@@ -173,6 +174,7 @@ const I = {
   ig:'<path d="M12 7a5 5 0 100 10 5 5 0 000-10zm0 8.200A3.200 3.200 0 1112 8.800a3.200 3.200 0 010 6.400zM17.300 5.500a1.200 1.200 0 100 2.400 1.200 1.200 0 000-2.400zM7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm0 1.800A3.200 3.200 0 003.800 7v10A3.200 3.200 0 007 20.200h10a3.200 3.200 0 003.200-3.200V7A3.200 3.200 0 0017 3.800z"/>',
   web:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm6.900 9h-3a15 15 0 00-1.300-5.200A8 8 0 0118.900 11zM12 4c.800 1 1.900 3.100 2.200 7H9.800C10.100 7.100 11.200 5 12 4zM4.100 13h3a15 15 0 001.300 5.200A8 8 0 014.100 13zm3-2h-3a8 8 0 014.300-5.200A15 15 0 007.100 11zM12 20c-.8-1-1.900-3.100-2.200-7h4.400c-.3 3.900-1.400 6-2.200 7zm3.600-1.800A15 15 0 0016.900 13h3a8 8 0 01-4.300 5.200z"/>',
   pin:'<path d="M12 2a7 7 0 00-7 7c0 5.200 7 13 7 13s7-7.800 7-13a7 7 0 00-7-7zm0 9.500A2.500 2.500 0 1112 6.500a2.500 2.500 0 010 5z"/>',
+  mail:'<path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5z"/>',
   cart:'<path d="M7 18a2 2 0 100 4 2 2 0 000-4zM1 2v2h2l3.600 7.600-1.400 2.400A2 2 0 007 17h12v-2H7.400l1.100-2h7.500a2 2 0 001.700-1l3.600-6.500A1 1 0 0020.400 4H5.200l-.9-2H1zm16 16a2 2 0 100 4 2 2 0 000-4z"/>'
 };
 const arrow='<svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
@@ -185,6 +187,7 @@ const items = [
   {t:"Instagram — 733K", s:"@avtolux_uzb", u:CONFIG.instagram, i:'ig', h:'#e1306c'},
   {label:"Qo'ng'iroq qilish"},
   ...CONFIG.phones.map(p=>({t:p, s:"Bosing va qo'ng'iroq qiling", u:"tel:"+clean(p), i:'ph', h:'#2be37a'})),
+  {t:"Email", s:CONFIG.email, u:"mailto:"+CONFIG.email, i:'mail', h:'#ff9f1c'},
   {label:"Filiallar"},
   ...CONFIG.addresses.map(a=>({t:a.n, s:"Tashkent · Xaritada ochish", u:map(a.q), i:'pin', h:'#ff3d4e'}))
 ];
@@ -198,7 +201,7 @@ items.forEach((it,idx)=>{
   const a=document.createElement('a');
   a.className='btn rv'+(it.main?' main':'');
   a.href=it.u; a.style.setProperty('--h',it.h);
-  if(!it.u.startsWith('tel:')){a.target='_blank';a.rel='noopener'}
+  if(!/^(tel|mailto):/.test(it.u)){a.target='_blank';a.rel='noopener'}
   a.innerHTML=`<span class="ico"><svg viewBox="0 0 24 24">${I[it.i]}</svg></span><span class="txt"><b>${it.t}</b><small>${it.s}</small></span><span class="arrow">${arrow}</span>`;
   list.appendChild(a); shown++;
 });
