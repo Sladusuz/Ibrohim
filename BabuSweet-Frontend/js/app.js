@@ -28,16 +28,34 @@
   /* ------------------------------------------------------------ data */
   const FALLBACK = { settings: { brand: 'BabuSweet', phone: '+998 33 623 33 13', address: 'Yangihayot, Sputnik-17, 52a, 100102, Tashkent, Tashkent Region', hours: {}, social: {}, hero: {}, stats: [], exportRegions: [] }, products: [], news: [] };
   function loadData() {
+    const norm = window.BS_normalize || (x => x);
     let d = null, draft = false;
-    try { const raw = localStorage.getItem('bs_draft'); if (raw) { const x = JSON.parse(raw); if (x && Array.isArray(x.products)) { d = x; draft = true; } } } catch (e) { /* ignore */ }
-    if (!d) d = window.BS_DATA;
-    if (!d || !Array.isArray(d.products)) d = FALLBACK;
-    d = Object.assign({}, d);
-    d.settings = d.settings || FALLBACK.settings;
+    const live = norm(window.BS_DATA || {});
+    try {
+      const raw = localStorage.getItem('bs_draft');
+      if (raw) {
+        const x = norm(JSON.parse(raw));
+        if (x._v && x._v === live._v) { localStorage.removeItem('bs_draft'); } // draft was published -> live data is current
+        else if (x.products.length || x.news.length || Object.keys(x.settings).length) { d = x; draft = true; }
+      }
+    } catch (e) { /* ignore broken draft */ }
+    if (!d) d = live;
+    LANGS_KEYS.forEach(l => { if (I[l] && d.texts && d.texts[l]) Object.assign(I[l], d.texts[l]); });
     d.products = d.products.filter(p => p.status !== 'hidden').sort((a, b) => (a.order || 0) - (b.order || 0));
-    d.news = (d.news || []).filter(n => n.published).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    d.news = d.news.filter(n => n.published).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
     d._draft = draft;
     return d;
+  }
+  const LANGS_KEYS = ['uz', 'ru', 'en'];
+  const absUrl = path => { const dom = DATA && DATA.settings && DATA.settings.domain; if (/^(https?:|data:)/.test(path)) return path; try { return dom ? dom + '/' + String(path).replace(/^\//, '') : new URL(path, location.href).href; } catch (e) { return path; } };
+  function canonicalTags() {
+    const dom = DATA.settings.domain; if (!dom) return;
+    const file = location.pathname.split('/').pop() || 'index.html';
+    const page = file === 'index.html' ? '' : file, q = PAGE === 'product' && qs.get('p') ? '?p=' + encodeURIComponent(qs.get('p')) : '';
+    const href = dom + '/' + page + q;
+    let l = $('link[rel=canonical]'); if (!l) { l = document.createElement('link'); l.rel = 'canonical'; document.head.appendChild(l); } l.href = href;
+    let u = $('meta[property="og:url"]'); if (!u) { u = document.createElement('meta'); u.setAttribute('property', 'og:url'); document.head.appendChild(u); } u.content = href;
+    const og = $('meta[property="og:image"]'); if (og && !/^https?:/.test(og.content) && !/^data:/.test(og.content)) og.content = dom + '/' + og.content.replace(/^\//, '');
   }
   const hex2rgb = h => { const m = /^#?([\da-f]{2})([\da-f]{2})([\da-f]{2})$/i.exec(h || ''); return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : [31, 99, 255]; };
   const pc = p => (p && p.color) || '#1f63ff';
@@ -278,10 +296,10 @@
     $('#pdpAsk').href = 'contact.html?product=' + encodeURIComponent(p.slug) + '&type=wholesale'; $('#pdpAsk').hidden = soon;
     const title = p.name + ' — BabuSweet', desc = L(p.desc) || L(p.tagline);
     document.title = title; setMeta('meta[name=description]', 'content', desc); setMeta('meta[property="og:title"]', 'content', title); setMeta('meta[property="og:description"]', 'content', desc);
-    if (!/^data:/.test(p.image)) setMeta('meta[property="og:image"]', 'content', new URL(p.image, location.href).href);
+    if (!/^data:/.test(p.image)) setMeta('meta[property="og:image"]', 'content', absUrl(p.image));
     try {
       const old = $('#ld-product'); if (old) old.remove(); const s = document.createElement('script'); s.type = 'application/ld+json'; s.id = 'ld-product';
-      s.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'Product', name: p.name, description: desc, category: p.category, image: /^data:/.test(p.image) ? undefined : new URL(p.image, location.href).href, brand: { '@type': 'Brand', name: 'BabuSweet' } });
+      s.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'Product', name: p.name, description: desc, category: p.category, image: /^data:/.test(p.image) ? undefined : absUrl(p.image), brand: { '@type': 'Brand', name: 'BabuSweet' } });
       document.head.appendChild(s);
     } catch (e) { /* ignore */ }
     const others = LIST.filter(x => x.slug !== p.slug); $('#moreSec').hidden = !others.length; renderCards($('#moreGrid'), others);
@@ -503,7 +521,7 @@
   function renderPage(first) {
     killAnim();
     LIST = DATA.products;
-    applyStatic(); renderSettings(); seoExtras();
+    applyStatic(); renderSettings(); seoExtras(); canonicalTags();
     if (PAGE === 'home') { heroBuild(); showBuild(); newsRender(); }
     if (PAGE === 'catalog') catRender(false);
     if (PAGE === 'product') productRender();
