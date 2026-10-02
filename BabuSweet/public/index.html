@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#120a05">
+<meta name="theme-color" content="#07050a">
 <!--SEO-->
 <title>BabuSweet — Shokolad fabrikasi | Chocolate factory</title>
 <meta name="description" content="BabuSweet — ichki bozor va eksport uchun shokolad mahsulotlari ishlab chiqaruvchi zamonaviy fabrika. Yangihayot, Toshkent.">
@@ -12,42 +12,30 @@
 <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="/js/theme.js"></script>
-<link rel="stylesheet" href="/css/main.css">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
 
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="loader-inner">
-    <svg class="loader-mark" viewBox="0 0 64 64"><use href="/assets/logo.svg#mark"/></svg>
-    <div class="loader-word">BabuSweet</div>
-    <div class="loader-bar"><i id="loaderBar"></i></div>
-    <div class="loader-num"><span id="loaderNum">0</span>%</div>
-  </div>
+  <div class="loader-bg" id="loaderBg"></div>
+  <div class="loader-in"><div class="loader-word">BABU<b>SWEET</b></div><div class="loader-num"><span id="loaderNum">0</span><i>%</i></div></div>
 </div>
 
 <div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
-<canvas id="dust" aria-hidden="true"></canvas>
-<div class="scrollbar" id="scrollbar" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="pbar" id="pbar" aria-hidden="true"></div>
 
 <header class="header" id="header">
-  <a href="/" class="logo" aria-label="BabuSweet">
-    <svg viewBox="0 0 64 64" width="38" height="38"><use href="/assets/logo.svg#mark"/></svg>
-    <span>BabuSweet</span>
-  </a>
+  <a href="/" class="logo" aria-label="BabuSweet"><svg viewBox="0 0 64 64" width="40" height="40"><use href="/assets/logo.svg#mark"/></svg><span>BabuSweet</span></a>
   <nav class="nav" aria-label="Main">
     <a href="#products" data-t="nav.products">Mahsulotlar</a>
     <a href="#factory" data-t="nav.factory">Ishlab chiqarish</a>
     <a href="#export" data-t="nav.export">Eksport</a>
-    <a href="#news" data-t="nav.news">Yangiliklar</a>
     <a href="#contact" data-t="nav.contact">Aloqa</a>
   </nav>
   <div class="head-tools">
-    <div class="lang" id="lang" role="group" aria-label="Language">
-      <button data-lang="uz">UZ</button><button data-lang="ru">RU</button><button data-lang="en">EN</button>
-    </div>
-    <a href="#contact" class="btn btn-gold btn-sm magnetic" data-t="nav.cta"><span>Hamkorlik</span></a>
+    <div class="lang" id="lang" role="group" aria-label="Language"><button data-lang="uz">UZ</button><button data-lang="ru">RU</button><button data-lang="en">EN</button></div>
     <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="menu"><i></i><i></i></button>
   </div>
 </header>
@@ -60,80 +48,68 @@
     <a href="#news" data-t="nav.news">Yangiliklar</a>
     <a href="#contact" data-t="nav.contact">Aloqa</a>
   </nav>
-  <div class="menu-foot"><a class="js-phone" href="tel:+998336233313">+998 33 623 33 13</a></div>
+  <a class="menu-phone js-phone" href="tel:+998336233313">+998 33 623 33 13</a>
 </div>
 
 <main id="main">
 <!-- HERO -->
 <section class="hero" id="top">
-  <div class="hero-glow" aria-hidden="true"></div>
-  <div class="hero-copy">
-    <p class="kicker" data-split-fade data-t="hero.kicker">Shokolad fabrikasi · Toshkent</p>
-    <h1 class="hero-word" id="heroWord" aria-label="BabuSweet"><span class="word-mask"><span class="word-line">BabuSweet</span></span></h1>
+  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+  <h1 class="hero-type" aria-label="BabuSweet"><span class="ht t1"><em>BABU</em></span><span class="ht t2"><em>SWEET</em></span></h1>
+  <div class="hero-prod" id="heroProd" aria-hidden="true">
+    <div class="hp-tilt" id="hpTilt"><div class="hp-stack" id="hpStack"></div><div class="hp-shine"></div></div>
+    <div class="floaters" id="floaters"></div>
+  </div>
+  <svg class="badge" id="badge" viewBox="0 0 200 200" aria-hidden="true"><defs><path id="circ" d="M100,100 m-76,0 a76,76 0 1,1 152,0 a76,76 0 1,1 -152,0"/></defs><text><textPath href="#circ" id="badgeText" textLength="468" lengthAdjust="spacing">REAL CHOCOLATE INSIDE • SEA SALT CARAMEL • </textPath></text><circle cx="100" cy="100" r="34"/><text x="100" y="108" text-anchor="middle" class="bs">BS</text></svg>
+  <div class="hero-meta">
     <p class="hero-title" id="heroTitle"></p>
     <p class="hero-lead" id="heroLead"></p>
-    <div class="hero-cta">
-      <a href="#products" class="btn btn-gold magnetic"><span data-t="hero.cta1">Mahsulotlarni ko'rish</span><i class="arr">→</i></a>
-      <a href="#contact" class="btn btn-line magnetic"><span data-t="hero.cta2">Ulgurji va eksport</span></a>
-    </div>
+    <div class="hero-cta"><a href="#products" class="btn btn-w magnetic"><span data-t="hero.cta1">Mahsulotlarni ko'rish</span><i class="arr">→</i></a><a href="#contact" class="btn btn-o magnetic"><span data-t="hero.cta2">Ulgurji va eksport</span></a></div>
   </div>
-  <div class="hero-stage" id="heroStage" aria-hidden="true"></div>
-  <div class="scroll-hint" aria-hidden="true"><i></i><span data-t="hero.scroll">Pastga</span></div>
+  <div class="hero-pick"><small data-t="hero.pick">Rangni tanlang</small><div class="dots" id="heroDots"></div><p class="hero-name" id="heroName"></p></div>
 </section>
 
-<div class="marquee" aria-hidden="true">
-  <div class="marquee-track" id="marquee1"></div>
-</div>
+<div class="bigmarq" aria-hidden="true"><div class="bigmarq-track" id="bigMarq"></div></div>
 
-<!-- STATEMENT -->
-<section class="statement sec" id="about">
-  <p class="statement-text" id="statement" data-t="about.text">BabuSweet — bu shunchaki shirinlik emas. Bu har bir luqmada haqiqiy shokolad, ipakdek karamel va O'zbekiston hunarmandchiligi uyg'unligi. Biz ichki bozorni sevimli mahsulot bilan to'ldiramiz va eksport orqali dunyoga ta'm yetkazamiz.</p>
-</section>
-
-<!-- PRODUCTS -->
-<section class="products" id="products">
-  <div class="products-pin" id="productsPin">
-    <div class="products-bg" id="productsBg"></div>
-    <div class="products-head">
-      <p class="kicker" data-t="prod.kicker">Kolleksiya</p>
-      <h2 class="h2" data-t="prod.title">Har bir rang — alohida kayfiyat</h2>
+<!-- SHOWCASE -->
+<section class="show" id="products">
+  <div class="show-pin" id="showPin">
+    <div class="chapters" id="chapters"></div>
+    <div class="show-ui" aria-hidden="true">
+      <div class="show-count"><b id="scur">01</b><span>/</span><em id="stotal">05</em></div>
+      <div class="show-rail"><i id="sprog"></i></div>
+      <p class="show-tap" data-t="sc.tap">Bosing — shokolad yog'iladi</p>
     </div>
-    <div class="products-rail" id="rail"></div>
-    <div class="products-ui" aria-hidden="true">
-      <div class="products-count"><b id="pcur">01</b><span>/</span><em id="ptotal">04</em></div>
-      <div class="products-progress"><i id="pprog"></i></div>
-    </div>
-  </div>
-</section>
-
-<!-- FACTORY -->
-<section class="factory sec" id="factory">
-  <div class="wrap">
-    <p class="kicker" data-t="fac.kicker">Ishlab chiqarish</p>
-    <h2 class="h2" data-t="fac.title">Kakaodan qadoqgacha — nazorat ostida</h2>
-    <div class="steps" id="steps">
-      <svg class="steps-line" viewBox="0 0 10 1000" preserveAspectRatio="none" aria-hidden="true"><path id="stepsPath" d="M5 0 V1000" /></svg>
-      <article class="step"><span class="step-n">01</span><h3 data-t="fac.1t">Xomashyo</h3><p data-t="fac.1d">Sifatli kakao va sut ingredientlarini tanlaymiz va qabul qilishda tekshiramiz.</p></article>
-      <article class="step"><span class="step-n">02</span><h3 data-t="fac.2t">Tayyorlash</h3><p data-t="fac.2d">Shokolad massasi mayin va barqaror bo'lishi uchun aniq retsept va harorat bilan tayyorlanadi.</p></article>
-      <article class="step"><span class="step-n">03</span><h3 data-t="fac.3t">Shakllantirish</h3><p data-t="fac.3d">Karamel mag'iz bilan to'ldirilgan konfetlar zamonaviy liniyada shakllantiriladi.</p></article>
-      <article class="step"><span class="step-n">04</span><h3 data-t="fac.4t">Qadoqlash</h3><p data-t="fac.4d">Mahsulot hidini va ta'mini saqlovchi himoyalangan qadoqda omborga yo'l oladi.</p></article>
-    </div>
+    <ol class="show-nav" id="showNav"></ol>
   </div>
 </section>
 
 <!-- STATS -->
-<section class="stats sec" aria-label="Stats"><div class="wrap stats-grid" id="stats"></div></section>
+<section class="stats sec" aria-label="Stats"><div class="wrap"><p class="kicker" data-t="st.title">Raqamlarda</p><div class="stats-grid" id="stats"></div></div></section>
 
-<!-- PARTNERSHIP -->
+<!-- FACTORY -->
+<section class="factory sec" id="factory">
+  <div class="wrap fac-grid">
+    <div class="fac-head"><p class="kicker" data-t="fac.kicker">Ishlab chiqarish</p><h2 class="h2 split" data-t="fac.title">Kakaodan qadoqgacha — nazorat ostida</h2></div>
+    <ol class="fsteps" id="fsteps">
+      <li class="fstep"><span class="fn">01</span><div><h3 data-t="fac.1t">Xomashyo</h3><p data-t="fac.1d"></p></div></li>
+      <li class="fstep"><span class="fn">02</span><div><h3 data-t="fac.2t">Tayyorlash</h3><p data-t="fac.2d"></p></div></li>
+      <li class="fstep"><span class="fn">03</span><div><h3 data-t="fac.3t">Shakllantirish</h3><p data-t="fac.3d"></p></div></li>
+      <li class="fstep"><span class="fn">04</span><div><h3 data-t="fac.4t">Qadoqlash</h3><p data-t="fac.4d"></p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PARTNER -->
 <section class="partner sec" id="partner">
   <div class="wrap">
     <p class="kicker" data-t="par.kicker">Hamkorlik</p>
-    <h2 class="h2" data-t="par.title">Sizning biznesingiz uchun uch yo'nalish</h2>
-    <div class="cards3">
-      <article class="pcard tilt"><i class="pcard-ic">01</i><h3 data-t="par.1t">Ulgurji savdo</h3><p data-t="par.1d">Do'konlar, tarmoqlar va distribyutorlar uchun barqaror yetkazib berish va qulay shartlar.</p><a href="#contact" data-type="wholesale" class="link-arrow"><span data-t="par.cta">So'rov yuborish</span> →</a></article>
-      <article class="pcard tilt"><i class="pcard-ic">02</i><h3 data-t="par.2t">Eksport</h3><p data-t="par.2d">Xalqaro hamkorlar uchun eksport hujjatlari, logistika va katta hajmdagi buyurtmalar.</p><a href="#contact" data-type="export" class="link-arrow"><span data-t="par.cta">So'rov yuborish</span> →</a></article>
-      <article class="pcard tilt"><i class="pcard-ic">03</i><h3 data-t="par.3t">Private label</h3><p data-t="par.3d">O'z brendingiz ostida shokolad mahsuloti — qadoq va assortimentni birgalikda ishlab chiqamiz.</p><a href="#contact" data-type="private" class="link-arrow"><span data-t="par.cta">So'rov yuborish</span> →</a></article>
-    </div>
+    <h2 class="h2 split" data-t="par.title">Sizning biznesingiz uchun uch yo'nalish</h2>
+    <ul class="prows">
+      <li class="prow"><a href="#contact" data-type="wholesale"><span class="pn">01</span><span class="pt" data-t="par.1t">Ulgurji savdo</span><span class="pd" data-t="par.1d"></span><i class="pa">↗</i></a></li>
+      <li class="prow"><a href="#contact" data-type="export"><span class="pn">02</span><span class="pt" data-t="par.2t">Eksport</span><span class="pd" data-t="par.2d"></span><i class="pa">↗</i></a></li>
+      <li class="prow"><a href="#contact" data-type="private"><span class="pn">03</span><span class="pt" data-t="par.3t">Private label</span><span class="pd" data-t="par.3d"></span><i class="pa">↗</i></a></li>
+    </ul>
   </div>
 </section>
 
@@ -142,89 +118,69 @@
   <div class="wrap export-grid">
     <div>
       <p class="kicker" data-t="exp.kicker">Eksport</p>
-      <h2 class="h2" data-t="exp.title">Toshkentdan dunyoga</h2>
-      <p class="lead" data-t="exp.lead">Yangihayotdagi fabrikamizdan mahsulotlar ichki bozorga va xorijga yo'l oladi. Hamkorlik yo'nalishlarimiz kengayib bormoqda.</p>
+      <h2 class="h2 split" data-t="exp.title">Toshkentdan dunyoga</h2>
+      <p class="lead" data-t="exp.lead"></p>
       <ul class="regions" id="regions"></ul>
     </div>
-    <div class="orbit" id="orbit" aria-hidden="true"></div>
+    <div class="globe-wrap"><canvas id="globe" aria-hidden="true"></canvas></div>
   </div>
 </section>
 
 <!-- NEWS -->
 <section class="news sec" id="news">
-  <div class="wrap">
-    <p class="kicker" data-t="news.kicker">Yangiliklar</p>
-    <h2 class="h2" data-t="news.title">Yaqinda yangilari chiqadi</h2>
-    <div class="news-grid" id="newsGrid"></div>
-  </div>
+  <div class="wrap"><p class="kicker" data-t="news.kicker">Yangiliklar</p><h2 class="h2 split" data-t="news.title">Yaqinda yangilari chiqadi</h2><div class="news-grid" id="newsGrid"></div></div>
 </section>
 
 <!-- CONTACT -->
 <section class="contact sec" id="contact">
-  <div class="wrap contact-grid">
-    <div class="contact-info">
-      <p class="kicker" data-t="ct.kicker">Aloqa</p>
-      <h2 class="h2" data-t="ct.title">Keling, birga ishlaymiz</h2>
+  <div class="wrap">
+    <p class="kicker" data-t="ct.kicker">Aloqa</p>
+    <h2 class="h2 split" data-t="ct.title">Keling, birga ishlaymiz</h2>
+    <a class="bigphone js-phone magnetic" href="tel:+998336233313">+998 33 623 33 13</a>
+    <div class="contact-grid">
       <ul class="cinfo">
-        <li><span class="ci">☎</span><div><small data-t="ct.phone">Telefon</small><a class="js-phone" href="tel:+998336233313">+998 33 623 33 13</a></div></li>
-        <li><span class="ci">⌖</span><div><small data-t="ct.addr">Manzil</small><a id="addrLink" href="#" target="_blank" rel="noopener">Yangihayot, Sputnik-17, 52a, 100102, Tashkent</a></div></li>
-        <li><span class="ci">◷</span><div><small data-t="ct.hours">Ish vaqti</small><b id="hours"></b></div></li>
-        <li id="emailRow" hidden><span class="ci">@</span><div><small>Email</small><a id="emailLink" href="#"></a></div></li>
+        <li><small data-t="ct.addr">Manzil</small><a id="addrLink" href="#" target="_blank" rel="noopener"></a></li>
+        <li><small data-t="ct.hours">Ish vaqti</small><b id="hours"></b></li>
+        <li id="emailRow" hidden><small>Email</small><a id="emailLink" href="#"></a></li>
+        <li class="socials" id="socials"></li>
       </ul>
-      <div class="socials" id="socials"></div>
+      <form class="form" id="form" novalidate>
+        <label><span data-t="f.name">Ismingiz</span><input name="name" required autocomplete="name" maxlength="80"></label>
+        <label><span data-t="f.company">Kompaniya</span><input name="company" autocomplete="organization" maxlength="100"></label>
+        <label><span data-t="f.contact">Telefon yoki Telegram</span><input name="contact" required autocomplete="tel" maxlength="100"></label>
+        <label><span data-t="f.type">So'rov turi</span><select name="type" id="fType"><option value="wholesale" data-t="f.t1">Ulgurji savdo</option><option value="export" data-t="f.t2">Eksport</option><option value="private" data-t="f.t3">Private label</option><option value="other" data-t="f.t4">Boshqa</option></select></label>
+        <label><span data-t="f.msg">Xabar</span><textarea name="msg" rows="3" maxlength="2000"></textarea></label>
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="btn btn-w magnetic" type="submit"><span data-t="f.send">Yuborish</span><i class="arr">→</i></button>
+        <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
+      </form>
     </div>
-    <form class="form" id="form" novalidate>
-      <label><span data-t="f.name">Ismingiz</span><input name="name" required autocomplete="name" maxlength="80"></label>
-      <label><span data-t="f.company">Kompaniya</span><input name="company" autocomplete="organization" maxlength="100"></label>
-      <label><span data-t="f.contact">Telefon yoki Telegram</span><input name="contact" required autocomplete="tel" maxlength="100"></label>
-      <label><span data-t="f.type">So'rov turi</span>
-        <select name="type" id="fType">
-          <option value="wholesale" data-t="f.t1">Ulgurji savdo</option>
-          <option value="export" data-t="f.t2">Eksport</option>
-          <option value="private" data-t="f.t3">Private label</option>
-          <option value="other" data-t="f.t4">Boshqa</option>
-        </select>
-      </label>
-      <label><span data-t="f.msg">Xabar</span><textarea name="msg" rows="4" maxlength="2000"></textarea></label>
-      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-      <button class="btn btn-gold magnetic" type="submit"><span data-t="f.send">Yuborish</span><i class="arr">→</i></button>
-      <p class="form-note" id="formNote" role="status" aria-live="polite"></p>
-    </form>
   </div>
 </section>
 </main>
 
 <footer class="footer">
-  <div class="footer-word" aria-hidden="true">BabuSweet</div>
-  <div class="wrap footer-in">
-    <span>© <span id="year"></span> BabuSweet. <span data-t="ft.rights">Barcha huquqlar himoyalangan.</span></span>
-    <a href="#top" data-t="ft.top">Yuqoriga ↑</a>
-  </div>
+  <div class="footer-word" aria-hidden="true">BABUSWEET</div>
+  <div class="wrap footer-in"><span>© <span id="year"></span> BabuSweet. <span data-t="ft.rights">Barcha huquqlar himoyalangan.</span></span><a href="#top" data-t="ft.top">Yuqoriga ↑</a></div>
 </footer>
 
-<!-- PRODUCT MODAL -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
   <div class="modal-back" data-close></div>
   <div class="modal-card" id="modalCard">
     <button class="modal-x" data-close aria-label="Close">×</button>
     <div class="modal-img"><img id="mImg" alt=""></div>
     <div class="modal-body">
-      <p class="kicker" id="mCat"></p>
-      <h3 id="mTitle"></h3>
-      <p class="modal-tag" id="mTag"></p>
-      <p id="mDesc"></p>
+      <p class="kicker" id="mCat"></p><h3 id="mTitle"></h3><p class="modal-tag" id="mTag"></p><p id="mDesc"></p>
       <dl class="modal-meta" id="mMeta"></dl>
-      <a href="#contact" class="btn btn-gold" id="mCta" data-close><span data-t="m.cta">Buyurtma / so'rov</span><i class="arr">→</i></a>
+      <a href="#contact" class="btn btn-w" id="mCta" data-close><span data-t="m.cta">Buyurtma / so'rov</span><i class="arr">→</i></a>
     </div>
   </div>
 </div>
-
-<noscript><style>.is-loading .loader{display:none}.sr-only-ns{display:block;padding:20px}</style></noscript>
 
 <script src="/assets/vendor/gsap.min.js" defer></script>
 <script src="/assets/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/assets/vendor/lenis.min.js" defer></script>
 <script src="/js/i18n.js" defer></script>
-<script src="/js/main.js" defer></script>
+<script src="/js/app.js" defer></script>
 </body>
 </html>

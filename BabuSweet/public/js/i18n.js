@@ -72,3 +72,7 @@ window.BS_I18N = {
     'ft.rights': 'All rights reserved.', 'ft.top': 'Back to top ↑'
   }
 };
+
+Object.assign(window.BS_I18N.uz, { 'hero.badge': 'REAL CHOCOLATE INSIDE • SEA SALT CARAMEL • ', 'sc.chapter': 'Mahsulot', 'sc.details': 'Batafsil', 'sc.tap': 'Bosing — shokolad yog‘iladi', 'sc.soon': 'Tez orada sotuvda', 'st.title': 'Raqamlarda', 'hero.pick': 'Rangni tanlang', 'par.hover': 'Ko‘rish' });
+Object.assign(window.BS_I18N.ru, { 'hero.badge': 'REAL CHOCOLATE INSIDE • SEA SALT CARAMEL • ', 'sc.chapter': 'Продукт', 'sc.details': 'Подробнее', 'sc.tap': 'Нажмите — польётся шоколад', 'sc.soon': 'Скоро в продаже', 'st.title': 'В цифрах', 'hero.pick': 'Выберите цвет', 'par.hover': 'Смотреть' });
+Object.assign(window.BS_I18N.en, { 'hero.badge': 'REAL CHOCOLATE INSIDE • SEA SALT CARAMEL • ', 'sc.chapter': 'Product', 'sc.details': 'Details', 'sc.tap': 'Tap — it rains chocolate', 'sc.soon': 'Coming soon', 'st.title': 'By the numbers', 'hero.pick': 'Pick a colour', 'par.hover': 'Explore' });
