@@ -23,15 +23,29 @@
 
   /* ------------------------------------------------------------ data */
   const FALLBACK = { settings: { brand: 'BabuSweet', phone: '+998 33 623 33 13', address: 'Yangihayot, Sputnik-17, 52a, 100102, Tashkent, Tashkent Region', hours: {}, social: {}, hero: {}, stats: [], exportRegions: [] }, products: [], news: [] };
-  async function loadData() {
-    for (const u of ['/api/public', '/data/public.json']) {
-      try {
-        const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 6000);
-        const r = await fetch(u, { signal: ctl.signal, cache: 'no-cache' }); clearTimeout(to);
-        if (r.ok) { const d = await r.json(); if (d && Array.isArray(d.products)) return d; }
-      } catch (e) { /* next */ }
-    }
-    return FALLBACK;
+  function loadData() {
+    let d = null, draft = false;
+    try { const raw = localStorage.getItem('bs_draft'); if (raw) { const x = JSON.parse(raw); if (x && Array.isArray(x.products)) { d = x; draft = true; } } } catch (e) { /* ignore */ }
+    if (!d) d = window.BS_DATA;
+    if (!d || !Array.isArray(d.products)) d = FALLBACK;
+    d = Object.assign({}, d);
+    d.products = d.products.filter(p => p.status !== 'hidden').sort((a, b) => (a.order || 0) - (b.order || 0));
+    d.news = (d.news || []).filter(n => n.published).sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+    d._draft = draft;
+    return d;
+  }
+  function seoExtras() {
+    try {
+      const old = document.getElementById('ld-products'); if (old) old.remove();
+      const s = document.createElement('script'); s.type = 'application/ld+json'; s.id = 'ld-products';
+      const base = location.protocol.startsWith('http') ? location.origin + location.pathname : '';
+      s.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: DATA.products.filter(p => p.status === 'active').map((p, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Product', name: p.name, description: L(p.desc), category: p.category, image: /^data:/.test(p.image) ? undefined : base + p.image, brand: { '@type': 'Brand', name: 'BabuSweet' } } })) });
+      document.head.appendChild(s);
+    } catch (e) { /* ignore */ }
+    let pill = $('#draftPill');
+    if (DATA._draft) {
+      if (!pill) { pill = el('button', '', 'QORALAMA REJIMI — faqat siz ko‘rasiz · o‘chirish'); pill.id = 'draftPill'; pill.type = 'button'; pill.style.cssText = 'position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:700;background:#fff;color:#000;border-radius:99px;padding:10px 18px;font:800 .68rem Manrope,sans-serif;letter-spacing:.1em;box-shadow:0 10px 40px rgba(0,0,0,.4)'; pill.onclick = () => { try { localStorage.removeItem('bs_draft'); } catch (e) {} location.reload(); }; document.body.appendChild(pill); }
+    } else if (pill) pill.remove();
   }
 
   /* ------------------------------------------------------------ colour from product photo */
@@ -287,13 +301,13 @@
     $('#mCta').style.display = p.status === 'soon' ? 'none' : '';
     modal.hidden = false; document.body.classList.add('noscroll'); if (lenis) lenis.stop();
     requestAnimationFrame(() => { modal.classList.add('open'); $('.modal-x', modal).focus(); });
-    if (push) history.pushState({ p: slug }, '', '/product/' + slug);
+    if (push) { try { history.replaceState(null, '', '#p=' + slug); } catch (e) { /* file:// */ } }
   }
   function closeModal(pop = false) {
     if (modal.hidden) return;
     modal.classList.remove('open'); setTimeout(() => { modal.hidden = true; }, 450);
     document.body.classList.remove('noscroll'); if (lenis && !$('#menu').classList.contains('open')) lenis.start();
-    if (!pop && /^\/product\//.test(location.pathname)) history.pushState({}, '', '/');
+    if (!pop && /^#p=/.test(location.hash)) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ } }
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   modal.addEventListener('click', e => { if (e.target.closest('[data-close]')) closeModal(); });
@@ -301,7 +315,7 @@
     if (e.key === 'Escape') closeModal();
     if (e.key === 'Tab' && !modal.hidden) { const f = $$('button,a[href]', modal).filter(x => x.offsetParent); if (!f.length) return; const a = f[0], z = f[f.length - 1]; if (e.shiftKey && document.activeElement === a) { e.preventDefault(); z.focus(); } else if (!e.shiftKey && document.activeElement === z) { e.preventDefault(); a.focus(); } }
   });
-  addEventListener('popstate', () => { const m = /^\/product\/([\w-]+)/.exec(location.pathname); if (m) openProduct(m[1], false); else closeModal(true); });
+  addEventListener('hashchange', () => { const m = /^#p=([\w-]+)/.exec(location.hash); if (m) openProduct(m[1], false); else closeModal(true); });
   document.addEventListener('click', e => {
     const o = e.target.closest('[data-open]'); if (o) { openProduct(o.dataset.open); return; }
     const w = e.target.closest('.ch-imgwrap'); if (w) { const r = w.getBoundingClientRect(); burst(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2, 80, 1.1); return; }
@@ -318,11 +332,17 @@
     note.classList.remove('bad');
     if (name.length < 2 || contact.length < 5) { note.textContent = t('f.err'); note.classList.add('bad'); return; }
     const btn = $('button[type=submit]', form); btn.disabled = true; note.textContent = t('f.sending');
-    try {
-      const r = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(f)) });
-      if (!r.ok) throw new Error(r.status);
-      note.textContent = t('f.ok'); form.reset(); const b = btn.getBoundingClientRect(); burst(b.left + b.width / 2, b.top, 50, 1);
-    } catch (err) { note.textContent = t('f.fail'); note.classList.add('bad'); }
+    const S = DATA.settings || {};
+    const typeName = { wholesale: t('f.t1'), export: t('f.t2'), private: t('f.t3'), other: t('f.t4') }[f.get('type')] || '';
+    const text = ['BabuSweet', typeName, name + ((f.get('company') || '').trim() ? ' — ' + f.get('company').trim() : ''), contact, (f.get('msg') || '').trim()].filter(Boolean).join('\n');
+    const tg = S.social && S.social.telegram, mail = S.email;
+    let ok = false;
+    try { if (navigator.clipboard) { await navigator.clipboard.writeText(text); ok = true; } } catch (err) { /* ignore */ }
+    if (f.get('website')) { btn.disabled = false; return; }
+    if (tg) { window.open(tg, '_blank', 'noopener'); note.textContent = ok ? t('f.copied') : t('f.ok2'); }
+    else if (mail) { location.href = 'mailto:' + mail + '?subject=' + encodeURIComponent('BabuSweet — ' + typeName) + '&body=' + encodeURIComponent(text); note.textContent = t('f.ok2'); }
+    else { note.textContent = ok ? t('f.callcopied') : t('f.call'); const ph = (S.phone || '').replace(/[^\d+]/g, ''); if (ph && matchMedia('(pointer:coarse)').matches) location.href = 'tel:' + ph; }
+    form.reset(); const b = btn.getBoundingClientRect(); burst(b.left + b.width / 2, b.top, 50, 1);
     btn.disabled = false;
   });
 
@@ -447,7 +467,7 @@
   /* ------------------------------------------------------------ render pipeline */
   function renderAll(first) {
     killAnim();
-    applyStatic(); renderSettings();
+    applyStatic(); renderSettings(); seoExtras();
     LIST = DATA.products.filter(p => p.status !== 'hidden');
     buildHero(); buildShow(); renderNews();
     glb.regs = (DATA._regs || []).map(geoFor);
@@ -488,7 +508,7 @@
     const visible = DATA.products.filter(p => p.status !== 'hidden');
     LIST = visible;
     const ref = { v: 0 };
-    runLoader(visible.length, ref, () => { heroIntro(); const m = /^\/product\/([\w-]+)/.exec(location.pathname); if (m) openProduct(m[1], false); });
+    runLoader(visible.length, ref, () => { heroIntro(); const m = /^#p=([\w-]+)/.exec(location.hash); if (m) openProduct(m[1], false); });
     await preload(visible, () => { ref.v++; });
     renderAll(true); heroTimer();
     globeInit(); pointerFx(); requestAnimationFrame(tiltLoop);
