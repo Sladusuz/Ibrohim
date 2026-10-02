@@ -107,7 +107,7 @@
     list.forEach((p, i) => {
       const d = el('div', 'fan'); d.innerHTML = `<img src="${esc(p.image)}" alt="" decoding="async" ${i === 0 ? 'fetchpriority="high"' : ''}>`;
       const o = i - (n - 1) / 2; d.dataset.o = o; d.dataset.i = i;
-      d.style.transform = `translateX(${o * 62}%) translateY(${Math.abs(o) * 8 - 6}%) rotate(${o * 9}deg)`;
+      d.style.transform = `translateX(${o * 54}%) translateY(${Math.abs(o) * 8 - 6}%) rotate(${o * 9}deg)`;
       d.style.zIndex = 10 - Math.round(Math.abs(o) * 2);
       st.appendChild(d);
     });
@@ -207,8 +207,9 @@
   document.addEventListener('click', anchorScroll);
 
   /* ---------------------------------------------------------------- dust canvas */
-  const cv = $('#dust'), cx2 = cv.getContext('2d'); let parts = [], dw = 0, dh = 0, mx = -999, my = -999, dustOn = true;
+  const cv = $('#dust'), cx2 = cv.getContext('2d'); let dustColor = '#ffe29a', parts = [], dw = 0, dh = 0, mx = -999, my = -999, dustOn = true;
   function dustInit() {
+    dustColor = getComputedStyle(document.documentElement).getPropertyValue('--dust').trim() || '#ffe29a';
     const dpr = Math.min(devicePixelRatio || 1, 2); dw = innerWidth; dh = innerHeight;
     cv.width = dw * dpr; cv.height = dh * dpr; cx2.setTransform(dpr, 0, 0, dpr, 0, 0);
     const n = Math.min(70, Math.floor(dw * dh / 24000));
@@ -224,7 +225,7 @@
       if (p.y < -5) { p.y = dh + 5; p.x = Math.random() * dw; }
       if (p.x < -5) p.x = dw + 5; if (p.x > dw + 5) p.x = -5;
       cx2.globalAlpha = p.a * (.55 + .45 * Math.sin(p.tw));
-      cx2.fillStyle = '#ffe29a'; cx2.beginPath(); cx2.arc(p.x, p.y, p.r, 0, 6.283); cx2.fill();
+      cx2.fillStyle = dustColor; cx2.beginPath(); cx2.arc(p.x, p.y, p.r, 0, 6.283); cx2.fill();
     }
     requestAnimationFrame(dustTick);
   }
