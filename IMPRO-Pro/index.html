@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IMPRO — Premium Web Studio</title>
+<meta name="description" content="IMPRO — студия премиальной веб-разработки в Ташкенте. Сайты, магазины и веб-приложения, которые приносят клиентов.">
+<meta name="theme-color" content="#07070b">
+<meta property="og:title" content="IMPRO — Premium Web Studio">
+<meta property="og:description" content="Быстрые, красивые и продающие сайты. Ташкент, Узбекистан.">
+<meta property="og:type" content="website">
+<link rel="icon" href="../DevFolio/assets/img/logo1.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>
+  try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t;}catch(e){}
+</script>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="nav" id="nav">
+  <a href="#top" class="brand"><span class="brand-mark">I</span>IMPRO</a>
+  <nav class="links" id="links">
+    <a href="#services" data-i18n="nav.services">Услуги</a>
+    <a href="#work" data-i18n="nav.work">Работы</a>
+    <a href="#process" data-i18n="nav.process">Процесс</a>
+    <a href="#pricing" data-i18n="nav.pricing">Цены</a>
+    <a href="#faq" data-i18n="nav.faq">FAQ</a>
+  </nav>
+  <div class="nav-tools">
+    <div class="lang" id="lang" role="group" aria-label="Language">
+      <button data-lang="ru" class="on">RU</button><button data-lang="uz">UZ</button><button data-lang="en">EN</button>
+    </div>
+    <button class="icon-btn" id="theme" aria-label="Theme">◐</button>
+    <a href="#contact" class="btn btn-sm magnetic" data-i18n="nav.cta">Начать проект</a>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="pill reveal"><i class="dot"></i><span data-i18n="hero.pill">Принимаем новые проекты</span></div>
+      <h1 class="reveal d1"><span data-i18n="hero.h1a">Сайты, которые</span><br><span class="grad" id="typed" data-i18n="hero.h1b">продают.</span></h1>
+      <p class="lead reveal d2" data-i18n="hero.lead">IMPRO — студия премиальной веб-разработки из Ташкента. Мы создаём быстрые, красивые и конверсионные сайты, магазины и веб-приложения.</p>
+      <div class="cta reveal d3">
+        <a href="#contact" class="btn magnetic" data-i18n="hero.cta1">Обсудить проект →</a>
+        <a href="#work" class="btn ghost magnetic" data-i18n="hero.cta2">Смотреть работы</a>
+      </div>
+      <ul class="trust reveal d4">
+        <li><b data-count="30">0</b><span data-i18n="hero.t1">проектов</span></li>
+        <li><b data-count="20" data-suffix="+">0</b><span data-i18n="hero.t2">клиентов</span></li>
+        <li><b data-count="98" data-suffix="">0</b><span data-i18n="hero.t3">Lighthouse</span></li>
+        <li><b data-count="7">0</b><span data-i18n="hero.t4">дней до запуска</span></li>
+      </ul>
+    </div>
+    <div class="mock reveal d2" id="mock" aria-hidden="true">
+      <div class="win">
+        <div class="win-bar"><i></i><i></i><i></i><span>impro.uz</span></div>
+        <div class="win-body">
+          <div class="code"><span class="c1">const</span> site = <span class="c2">await</span> impro.<span class="c3">build</span>({<br>
+            &nbsp;&nbsp;speed: <span class="c4">"⚡ 98/100"</span>,<br>
+            &nbsp;&nbsp;design: <span class="c4">"premium"</span>,<br>
+            &nbsp;&nbsp;result: <span class="c4">"more clients"</span><br>});</div>
+          <div class="bars"><i style="--h:40%"></i><i style="--h:62%"></i><i style="--h:48%"></i><i style="--h:80%"></i><i style="--h:68%"></i><i style="--h:96%"></i></div>
+        </div>
+      </div>
+      <div class="float f1"><b>+212%</b><small data-i18n="hero.f1">заявок</small></div>
+      <div class="float f2"><b>0.8s</b><small data-i18n="hero.f2">загрузка</small></div>
+    </div>
+  </div>
+  <div class="marquee" aria-hidden="true"><div class="track">
+    <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>React</span><span>Next.js</span><span>Node.js</span><span>Telegram Bots</span><span>SEO</span><span>UI/UX</span><span>Animations</span>
+    <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>React</span><span>Next.js</span><span>Node.js</span><span>Telegram Bots</span><span>SEO</span><span>UI/UX</span><span>Animations</span>
+  </div></div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="sec">
+  <div class="wrap">
+    <p class="eyebrow reveal" data-i18n="sv.eyebrow">Услуги</p>
+    <h2 class="reveal" data-i18n="sv.title">Всё, что нужно вашему бизнесу онлайн</h2>
+    <div class="bento">
+      <article class="card tilt reveal span2"><div class="ic">🚀</div><h3 data-i18n="sv.1t">Лендинги и корпоративные сайты</h3><p data-i18n="sv.1d">Продающая структура, премиальный дизайн, анимации и скорость загрузки меньше секунды.</p></article>
+      <article class="card tilt reveal d1"><div class="ic">🛒</div><h3 data-i18n="sv.2t">Интернет-магазины</h3><p data-i18n="sv.2d">Каталог, корзина, оплата Payme / Click и админка.</p></article>
+      <article class="card tilt reveal"><div class="ic">🤖</div><h3 data-i18n="sv.3t">Telegram-боты</h3><p data-i18n="sv.3d">Автоматизация заказов, уведомлений и поддержки.</p></article>
+      <article class="card tilt reveal d1"><div class="ic">🎨</div><h3 data-i18n="sv.4t">UI/UX дизайн</h3><p data-i18n="sv.4d">Интерфейсы, в которых приятно находиться и легко покупать.</p></article>
+      <article class="card tilt reveal d2"><div class="ic">📈</div><h3 data-i18n="sv.5t">SEO и скорость</h3><p data-i18n="sv.5d">Оптимизация под Google и Yandex, Core Web Vitals в зелёной зоне.</p></article>
+      <article class="card tilt reveal span2"><div class="ic">⚙️</div><h3 data-i18n="sv.6t">Веб-приложения и CRM</h3><p data-i18n="sv.6d">Кабинеты, дашборды, интеграции и API под ваши процессы — от идеи до продакшна.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work" class="sec">
+  <div class="wrap">
+    <p class="eyebrow reveal" data-i18n="wk.eyebrow">Портфолио</p>
+    <h2 class="reveal" data-i18n="wk.title">Реальные проекты, реальные результаты</h2>
+    <div class="works">
+      <a class="work tilt reveal" href="https://www.sladus.uz/" target="_blank" rel="noopener">
+        <img src="../DevFolio/assets/img/portfolio/Sladus.png" alt="Sladus" loading="lazy">
+        <div class="work-info"><h3>Sladus</h3><span data-i18n="wk.1">Бренд и сайт</span><i>↗</i></div>
+      </a>
+      <a class="work tilt reveal d1" href="https://159-school.netlify.app/" target="_blank" rel="noopener">
+        <img src="../DevFolio/assets/img/portfolio/159.png" alt="159 School" loading="lazy">
+        <div class="work-info"><h3>159-school</h3><span data-i18n="wk.2">Сайт школы</span><i>↗</i></div>
+      </a>
+      <a class="work tilt reveal d2" href="#contact">
+        <img src="../DevFolio/assets/img/logo.png" alt="IMPRO" loading="lazy" class="contain">
+        <div class="work-info"><h3>IMPRO</h3><span data-i18n="wk.3">Ваш проект — следующий</span><i>→</i></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="sec">
+  <div class="wrap">
+    <p class="eyebrow reveal" data-i18n="pr.eyebrow">Процесс</p>
+    <h2 class="reveal" data-i18n="pr.title">От идеи до запуска за 4 шага</h2>
+    <ol class="steps">
+      <li class="reveal"><span>01</span><h3 data-i18n="pr.1t">Бриф</h3><p data-i18n="pr.1d">Разбираем цели, аудиторию и конкурентов. Фиксируем ТЗ и сроки.</p></li>
+      <li class="reveal d1"><span>02</span><h3 data-i18n="pr.2t">Дизайн</h3><p data-i18n="pr.2d">Прототип и визуал. Согласовываем до единой точки.</p></li>
+      <li class="reveal d2"><span>03</span><h3 data-i18n="pr.3t">Разработка</h3><p data-i18n="pr.3d">Чистый код, адаптив, анимации, интеграции и тесты.</p></li>
+      <li class="reveal d3"><span>04</span><h3 data-i18n="pr.4t">Запуск</h3><p data-i18n="pr.4d">Домен, хостинг, SEO, аналитика и поддержка после релиза.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="sec">
+  <div class="wrap">
+    <p class="eyebrow reveal" data-i18n="pc.eyebrow">Цены</p>
+    <h2 class="reveal" data-i18n="pc.title">Прозрачные пакеты</h2>
+    <div class="plans">
+      <div class="plan reveal"><h3>Start</h3><p class="price" data-i18n="pc.1p">от $150</p><ul><li data-i18n="pc.f1">Лендинг до 5 блоков</li><li data-i18n="pc.f2">Адаптив под все экраны</li><li data-i18n="pc.f3">Форма заявок в Telegram</li><li data-i18n="pc.f4">Срок: 3–5 дней</li></ul><a href="#contact" class="btn ghost" data-i18n="pc.cta">Заказать</a></div>
+      <div class="plan hot reveal d1"><em data-i18n="pc.hot">Популярный</em><h3>Business</h3><p class="price" data-i18n="pc.2p">от $400</p><ul><li data-i18n="pc.g1">Многостраничный сайт</li><li data-i18n="pc.g2">Уникальный дизайн и анимации</li><li data-i18n="pc.g3">SEO и аналитика</li><li data-i18n="pc.g4">Админ-панель</li><li data-i18n="pc.g5">Срок: 7–14 дней</li></ul><a href="#contact" class="btn" data-i18n="pc.cta">Заказать</a></div>
+      <div class="plan reveal d2"><h3>Pro</h3><p class="price" data-i18n="pc.3p">от $900</p><ul><li data-i18n="pc.h1">Магазин / веб-приложение</li><li data-i18n="pc.h2">Оплата Payme / Click</li><li data-i18n="pc.h3">Telegram-бот и CRM</li><li data-i18n="pc.h4">Поддержка 3 месяца</li></ul><a href="#contact" class="btn ghost" data-i18n="pc.cta">Заказать</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="sec">
+  <div class="wrap about">
+    <img class="reveal" src="../DevFolio/assets/img/ibrohim.jpg" alt="Abdulboqiyev Ibrohim" loading="lazy">
+    <div>
+      <p class="eyebrow reveal" data-i18n="ab.eyebrow">Основатель</p>
+      <h2 class="reveal" data-i18n="ab.title">Иброхим Абдулбокиев</h2>
+      <p class="reveal" data-i18n="ab.p1">Full-stack разработчик из Ташкента. В IT с 2024 года — с 16 лет создаю цифровые продукты и веду студию IMPRO.</p>
+      <p class="reveal" data-i18n="ab.p2">Моя философия: технологичность, эстетика и ответственность. Каждый сайт — это отражение индивидуальности клиента.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="sec">
+  <div class="wrap narrow">
+    <p class="eyebrow reveal" data-i18n="fq.eyebrow">FAQ</p>
+    <h2 class="reveal" data-i18n="fq.title">Частые вопросы</h2>
+    <details class="reveal"><summary data-i18n="fq.1q">Сколько занимает создание сайта?</summary><p data-i18n="fq.1a">Лендинг — 3–5 дней, корпоративный сайт — 1–2 недели, магазин — от 3 недель.</p></details>
+    <details class="reveal"><summary data-i18n="fq.2q">Как проходит оплата?</summary><p data-i18n="fq.2a">50% предоплата после согласования ТЗ, 50% — после сдачи. Принимаем карты UZ и безнал.</p></details>
+    <details class="reveal"><summary data-i18n="fq.3q">Будет ли поддержка после запуска?</summary><p data-i18n="fq.3a">Да. Исправляем ошибки бесплатно в течение 30 дней и предлагаем пакеты поддержки.</p></details>
+    <details class="reveal"><summary data-i18n="fq.4q">Сайт будет работать на телефонах?</summary><p data-i18n="fq.4a">Обязательно. Все сайты адаптивны и тестируются в Chrome, Safari, Firefox и Edge.</p></details>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="sec">
+  <div class="wrap">
+    <div class="contact">
+      <div>
+        <p class="eyebrow" data-i18n="ct.eyebrow">Контакты</p>
+        <h2 data-i18n="ct.title">Расскажите о проекте — ответим за час</h2>
+        <ul class="cinfo">
+          <li><span>📞</span><a href="tel:+998333233313">+998 33 323 33 13</a></li>
+          <li><span>✉️</span><a href="mailto:chempme@gmail.com">chempme@gmail.com</a></li>
+          <li><span>✈️</span><a href="https://web.telegram.org/a/#7873475468" target="_blank" rel="noopener">Telegram</a></li>
+          <li><span>📍</span><b data-i18n="ct.addr">Ташкент, Узбекистан</b></li>
+        </ul>
+      </div>
+      <form id="form" novalidate>
+        <label><span data-i18n="ct.name">Имя</span><input name="name" required autocomplete="name"></label>
+        <label><span data-i18n="ct.phone">Телефон или Telegram</span><input name="contact" required autocomplete="tel"></label>
+        <label><span data-i18n="ct.msg">О проекте</span><textarea name="msg" rows="4"></textarea></label>
+        <button class="btn magnetic" type="submit" data-i18n="ct.send">Отправить в Telegram →</button>
+        <p class="note" id="note" role="status"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span>© <span id="year"></span> IMPRO. <span data-i18n="ft.rights">Все права защищены.</span></span>
+    <a href="#top" data-i18n="ft.top">Наверх ↑</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
