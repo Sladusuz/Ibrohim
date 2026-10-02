@@ -1,0 +1,4 @@
+data/db.json
+public/assets/uploads/*
+!public/assets/uploads/.gitkeep
+node_modules
