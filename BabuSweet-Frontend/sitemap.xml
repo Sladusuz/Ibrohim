@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://YOUR-DOMAIN.uz/</loc></url>
+  <url><loc>https://YOUR-DOMAIN.uz/catalog.html</loc></url>
+  <url><loc>https://YOUR-DOMAIN.uz/about.html</loc></url>
+  <url><loc>https://YOUR-DOMAIN.uz/export.html</loc></url>
+  <url><loc>https://YOUR-DOMAIN.uz/news.html</loc></url>
+  <url><loc>https://YOUR-DOMAIN.uz/contact.html</loc></url>
 </urlset>

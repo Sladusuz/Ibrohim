@@ -1,4 +1,4 @@
-/* BabuSweet sayt ma'lumotlari. Admin paneldan yuklab olingan fayl shu faylni almashtiradi. */
+/* BabuSweet sayt ma'lumotlari. Admin paneldan yaratilgan fayl shu faylni almashtiradi. */
 window.BS_DATA = {
   "settings": {
     "brand": "BabuSweet",
@@ -97,7 +97,9 @@ window.BS_DATA = {
       "color2": "#0a2a8f",
       "status": "active",
       "badge": "Bestseller",
-      "order": 1
+      "order": 1,
+      "thumb": "assets/products/kok-s.webp",
+      "bg": false
     },
     {
       "id": "p2",
@@ -121,7 +123,9 @@ window.BS_DATA = {
       "color2": "#8a5a00",
       "status": "active",
       "badge": "",
-      "order": 2
+      "order": 2,
+      "thumb": "assets/products/sariq-s.webp",
+      "bg": false
     },
     {
       "id": "p3",
@@ -141,11 +145,13 @@ window.BS_DATA = {
       "weight": "",
       "category": "Chocolate Candies",
       "image": "assets/products/qora.webp",
-      "color": "#c8892b",
+      "color": "#9a6030",
       "color2": "#2a1608",
       "status": "active",
       "badge": "Premium",
-      "order": 3
+      "order": 3,
+      "thumb": "assets/products/qora-s.webp",
+      "bg": false
     },
     {
       "id": "p4",
@@ -169,7 +175,9 @@ window.BS_DATA = {
       "color2": "#073b26",
       "status": "active",
       "badge": "",
-      "order": 4
+      "order": 4,
+      "thumb": "assets/products/yashil-s.webp",
+      "bg": false
     },
     {
       "id": "p5",
@@ -193,7 +201,9 @@ window.BS_DATA = {
       "color2": "#3a0a18",
       "status": "active",
       "badge": "",
-      "order": 5
+      "order": 5,
+      "thumb": "assets/products/bordo-s.webp",
+      "bg": false
     }
   ],
   "news": [

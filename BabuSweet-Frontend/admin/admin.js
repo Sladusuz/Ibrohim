@@ -64,16 +64,18 @@
     }));
   }
   const readTri = (root, name) => Object.fromEntries(LANGS.map(l => [l, $(`[data-tri="${name}"] [data-l="${l}"]:not(button)`, root).value.trim()]));
-  function fileToDataUrl(file, max = 1000) {
+  function fileToDataUrl(file, max = 1200) {
     return new Promise((res, rej) => {
       if (!/^image\//.test(file.type)) return rej(new Error('Faqat rasm fayli'));
       const img = new Image(), u = URL.createObjectURL(file);
       img.onload = () => {
         const k = Math.min(1, max / Math.max(img.width, img.height)), c = document.createElement('canvas');
         c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
-        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u);
-        let d = c.toDataURL('image/webp', .84); if (!d.startsWith('data:image/webp')) d = c.toDataURL('image/jpeg', .86);
-        res(d);
+        const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(u);
+        let opaque = true;
+        try { const w = c.width - 1, h = c.height - 1; opaque = [[0, 0], [w, 0], [0, h], [w, h]].every(([px, py]) => x.getImageData(px, py, 1, 1).data[3] > 250); } catch (e) { /* ignore */ }
+        let d = c.toDataURL('image/webp', .88); if (!d.startsWith('data:image/webp')) d = c.toDataURL('image/png');
+        res({ d, opaque });
       };
       img.onerror = () => rej(new Error('Rasm o‘qib bo‘lmadi'));
       img.src = u;
@@ -81,11 +83,11 @@
   }
   function imgField(root, getVal, setVal) {
     const pv = $('.pv', root), inp = $('input[type=file]', root);
-    const paint = () => { const v = getVal(); pv.style.backgroundImage = v ? `url("${v.startsWith('data:') ? v : '../' + v}")` : ''; };
+    const paint = () => { const v = getVal(); pv.style.backgroundImage = v ? `url("${v.startsWith('data:') ? v : '../' + v}")` : ''; pv.style.backgroundSize = 'contain'; pv.style.backgroundRepeat = 'no-repeat'; pv.style.backgroundPosition = 'center'; };
     paint();
     inp.onchange = async () => {
       const f = inp.files[0]; if (!f) return;
-      try { setVal(await fileToDataUrl(f)); paint(); toast('Rasm tayyor'); } catch (e) { toast(e.message, true); }
+      try { const r = await fileToDataUrl(f); setVal(r.d, r.opaque); paint(); toast(r.opaque ? 'Rasm tayyor (fonli — "Rasm fonli" belgisi yoqildi)' : 'Rasm tayyor (shaffof fon)'); } catch (e) { toast(e.message, true); }
     };
   }
   const imgSrc = v => (v && !v.startsWith('data:') ? '../' + v : v || '');
@@ -124,24 +126,26 @@
     });
   }
   function prodForm(p = null) {
-    const x = p || { name: '', tagline: tri(), desc: tri(), flavor: 'Sea Salt Caramel', weight: '', category: 'Chocolate Candies', image: '', color: '#e9b24a', color2: '#2a1608', status: 'active', badge: '' };
-    let image = x.image;
+    const x = p || { name: '', tagline: tri(), desc: tri(), flavor: 'Sea Salt Caramel', weight: '', category: 'Chocolate Candies', image: '', color: '#e9b24a', color2: '', status: 'active', badge: '', bg: false };
+    let image = x.image, bg = !!x.bg, changed = false;
     const o = dialog(`<h3>${p ? 'Mahsulotni tahrirlash' : 'Yangi mahsulot'}</h3><form class="form" novalidate>
       <div class="cols"><label>Nomi<input name="name" value="${esc(x.name)}" required maxlength="80"></label>
       <label>Holati<select name="status">${Object.entries(ST).map(([k, v]) => `<option value="${k}" ${x.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label></div>
-      <div class="upl"><div class="pv"></div><label>Rasm (kvadrat, fonli — saytda fon rangi rasmdan olinadi)<input type="file" accept="image/*"></label></div>
+      <div class="upl"><div class="pv"></div><label>Rasm — eng yaxshisi SHAFFOF fonli PNG/WebP (mahsulot fonsiz kesilgan)<input type="file" accept="image/*"></label></div>
+      <label class="chk"><input type="checkbox" name="bg" ${x.bg ? 'checked' : ''}> Rasm fonli (shaffof emas) — yumaloq burchakli rasm sifatida ko‘rsatiladi</label>
       ${triField('tagline', 'Qisqa tavsif', x.tagline)}${triField('desc', 'To‘liq tavsif', x.desc, true)}
       <div class="cols3"><label>Ta’mi<input name="flavor" value="${esc(x.flavor)}"></label><label>Og‘irligi<input name="weight" value="${esc(x.weight)}" placeholder="masalan, 40 g"></label><label>Turi<input name="category" value="${esc(x.category)}"></label></div>
-      <div class="cols"><label>Zaxira rang (rasm o‘qilmasa)<input type="color" name="color" value="${esc(x.color || '#e9b24a')}"></label><label>Belgi (Bestseller…)<input name="badge" value="${esc(x.badge)}" maxlength="24"></label></div>
+      <div class="cols3"><label>Asosiy rang (sahifa fon rangi)<input type="color" name="color" value="${esc(x.color || '#e9b24a')}"></label><label>To‘q rang (ixtiyoriy)<input type="color" name="color2" value="${esc(x.color2 || '#2a1608')}"></label><label>Belgi (Bestseller…)<input name="badge" value="${esc(x.badge)}" maxlength="24"></label></div>
       <div class="err" role="alert"></div>
       <div class="actions"><button type="button" class="btn" data-x>Bekor qilish</button><button class="btn pri" type="submit">Saqlash</button></div></form>`);
-    wireTri(o); imgField(o, () => image, v => { image = v; });
+    wireTri(o); imgField(o, () => image, (v, opaque) => { image = v; changed = true; $('input[name=bg]', o).checked = opaque; });
     $('[data-x]', o).onclick = () => o.remove();
     $('form', o).addEventListener('submit', e => {
       e.preventDefault(); const f = e.target, err = $('.err', o);
       if (!f.name.value.trim()) { err.textContent = 'Nomini kiriting'; return; }
       if (!image) { err.textContent = 'Rasm yuklang'; return; }
-      const data = { name: f.name.value.trim(), status: f.status.value, image, tagline: readTri(o, 'tagline'), desc: readTri(o, 'desc'), flavor: f.flavor.value.trim(), weight: f.weight.value.trim(), category: f.category.value.trim(), color: f.color.value, color2: x.color2 || '#2a1608', badge: f.badge.value.trim() };
+      const data = { name: f.name.value.trim(), status: f.status.value, image, tagline: readTri(o, 'tagline'), desc: readTri(o, 'desc'), flavor: f.flavor.value.trim(), weight: f.weight.value.trim(), category: f.category.value.trim(), color: f.color.value, color2: f.color2.value, badge: f.badge.value.trim(), bg: f.bg.checked };
+      if (changed) data.thumb = '';
       if (p) Object.assign(p, data);
       else {
         let slug = slugify(data.name), n = 2; while (D.products.some(q => q.slug === slug)) slug = slugify(data.name) + '-' + n++;
