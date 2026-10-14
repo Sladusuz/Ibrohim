@@ -1,76 +1,90 @@
-/* Mahsulot illyustratsiyalari (SVG). Rasm yuklanmaguncha shular ko'rinadi. */
+/*
+ * Mahsulot rasmi yuklanmagan bo'lsa ko'rinadigan studiya uslubidagi illyustratsiyalar.
+ *   BC.art('car' | 'stroller' | 'trike' | 'moto' | 'scooter', '#2b59ff') -> SVG satri
+ */
 (function () {
-  const INK = '#1d1b3a';
-  const shade = (hex, amt) => {
-    const n = parseInt(hex.slice(1), 16);
-    const f = (v) => Math.max(0, Math.min(255, v + amt));
-    return '#' + [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => f(v).toString(16).padStart(2, '0')).join('');
-  };
-  const wheel = (cx, cy, r) =>
-    `<g class="wheel" style="transform-origin:${cx}px ${cy}px"><circle cx="${cx}" cy="${cy}" r="${r}" fill="${INK}"/>` +
-    `<circle cx="${cx}" cy="${cy}" r="${r * 0.55}" fill="#d9ddf2"/>` +
-    `<path d="M${cx - r * 0.55} ${cy}h${r * 1.1}M${cx} ${cy - r * 0.55}v${r * 1.1}" stroke="${INK}" stroke-width="2.2"/>` +
-    `<circle cx="${cx}" cy="${cy}" r="2.6" fill="${INK}"/></g>`;
-  const shadow = (cx, w) => `<ellipse cx="${cx}" cy="138" rx="${w}" ry="5" fill="${INK}" opacity=".13"/>`;
+  'use strict';
+  let n = 0;
+  const hex2 = (h) => { const x = parseInt(String(h).replace('#', '').padEnd(6, '0').slice(0, 6), 16); return [(x >> 16) & 255, (x >> 8) & 255, x & 255]; };
+  const shade = (h, a) => '#' + hex2(h).map((v) => Math.max(0, Math.min(255, Math.round(a >= 0 ? v + (255 - v) * a : v * (1 + a)))).toString(16).padStart(2, '0')).join('');
+
+  function wheel(cx, cy, r, id, accent) {
+    const hub = accent || '#9aa4b8';
+    return `<g class="wh" style="transform-box:fill-box;transform-origin:center"><circle cx="${cx}" cy="${cy}" r="${r}" fill="#101218"/><circle cx="${cx}" cy="${cy}" r="${r * 0.9}" fill="none" stroke="#1d212b" stroke-width="${r * 0.08}"/>` +
+      `<circle cx="${cx}" cy="${cy}" r="${r * 0.62}" fill="url(#${id}r)"/><circle cx="${cx}" cy="${cy}" r="${r * 0.46}" fill="#161922"/>` +
+      [0, 72, 144, 216, 288].map((a) => `<rect x="${cx - r * 0.05}" y="${cy - r * 0.46}" width="${r * 0.1}" height="${r * 0.46}" rx="${r * 0.04}" fill="url(#${id}r)" transform="rotate(${a} ${cx} ${cy})"/>`).join('') +
+      `<circle cx="${cx}" cy="${cy}" r="${r * 0.15}" fill="${hub}"/></g>`;
+  }
+  const defs = (id, c) => `<defs>
+    <linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(c, 0.38)}"/><stop offset=".45" stop-color="${c}"/><stop offset="1" stop-color="${shade(c, -0.34)}"/></linearGradient>
+    <linearGradient id="${id}d" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${shade(c, 0.1)}"/><stop offset="1" stop-color="${shade(c, -0.5)}"/></linearGradient>
+    <linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2c4264"/><stop offset="1" stop-color="#0a1120"/></linearGradient>
+    <linearGradient id="${id}r" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f1f4f9"/><stop offset=".5" stop-color="#9ea8ba"/><stop offset="1" stop-color="#e6eaf2"/></linearGradient>
+    <radialGradient id="${id}s" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#0b1226" stop-opacity=".42"/><stop offset=".6" stop-color="#0b1226" stop-opacity=".14"/><stop offset="1" stop-color="#0b1226" stop-opacity="0"/></radialGradient></defs>`;
+  const shadow = (id, cx, w) => `<ellipse cx="${cx}" cy="240" rx="${w}" ry="13" fill="url(#${id}s)"/>`;
 
   const A = {
-    car: (c) => `${shadow(100, 78)}
-      <path d="M20 112v-16q0-15 17-18l23-6 17-23h42l18 23 25 6q16 3 16 18v16z" fill="${c}"/>
-      <path d="M20 108h160v6q0 6-6 6H26q-6 0-6-6z" fill="${shade(c, -40)}"/>
-      <path d="M77 71l11-17h30l12 17z" fill="#dff1ff"/><path d="M104 54v17" stroke="${c}" stroke-width="3"/>
-      <path d="M44 96h28" stroke="${shade(c, 50)}" stroke-width="4" stroke-linecap="round"/>
-      <circle cx="168" cy="98" r="6" fill="#FFD54A"/><circle cx="168" cy="98" r="10" fill="#FFD54A" opacity=".25"/>
-      <rect x="28" y="96" width="8" height="6" rx="2" fill="#ff7a8a"/>
-      ${wheel(56, 116, 17)}${wheel(146, 116, 17)}`,
+    car: (id, c, acc) => `${shadow(id, 200, 190)}
+      <rect x="30" y="146" width="344" height="68" rx="26" fill="url(#${id}b)"/>
+      <path d="M118 150 L158 96 Q164 88 176 88 H252 Q266 88 276 100 L312 150 Z" fill="url(#${id}g)"/>
+      <path d="M130 148 L162 102 Q166 96 174 96 H206 L196 148 Z" fill="#ffffff" opacity=".13"/>
+      <path d="M118 150 L158 96 Q164 88 176 88 H252 Q266 88 276 100 L312 150" fill="none" stroke="${shade(c, 0.1)}" stroke-width="7" stroke-linejoin="round"/>
+      <path d="M214 90 V148" stroke="${c}" stroke-width="6"/>
+      <rect x="326" y="162" width="40" height="11" rx="5.5" fill="#fff6d6"/><rect x="326" y="162" width="40" height="11" rx="5.5" fill="none" stroke="#ffe08a" stroke-width="2"/>
+      <rect x="34" y="162" width="20" height="11" rx="5.5" fill="#ff3340"/><rect x="288" y="150" width="6" height="26" rx="3" fill="${shade(c, -0.25)}" opacity=".5"/>
+      <path d="M62 188 H340" stroke="#fff" stroke-opacity=".75" stroke-width="3" stroke-linecap="round"/>
+      <text x="196" y="182" fill="#fff" font-family="Arial,sans-serif" font-weight="800" font-size="15" text-anchor="middle" opacity=".9">BabyCheer</text>
+      <rect x="276" y="212" width="94" height="8" rx="4" fill="#12141b"/><rect x="30" y="212" width="86" height="8" rx="4" fill="#12141b"/>
+      <circle cx="118" cy="204" r="40" fill="#0e1016"/><circle cx="292" cy="204" r="40" fill="#0e1016"/>
+      ${wheel(118, 204, 34, id, acc)}${wheel(292, 204, 34, id, acc)}`,
 
-    stroller: (c) => `${shadow(100, 72)}
-      <path d="M52 78a38 38 0 0 1 76 0z" fill="${c}"/>
-      <path d="M52 78a38 38 0 0 1 12-28" stroke="${shade(c, 45)}" stroke-width="4" fill="none" stroke-linecap="round"/>
-      <path d="M44 80h92v14q0 20-24 20H68q-24 0-24-20z" fill="${shade(c, -35)}"/>
-      <rect x="56" y="64" width="62" height="18" rx="9" fill="#fff6e0"/>
-      <circle cx="82" cy="70" r="7" fill="#ffd9b8"/><path d="M76 66q6-7 12 0" stroke="#7a4b2a" stroke-width="2" fill="none"/>
-      <path d="M136 80l22-38h14" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M62 114l-6 8M122 114l10 8" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
-      ${wheel(56, 124, 14)}${wheel(138, 124, 14)}`,
+    stroller: (id, c, acc) => `${shadow(id, 205, 180)}
+      <path d="M96 118 C96 66 134 36 186 36 C226 36 256 56 270 92 L282 124 Z" fill="url(#${id}b)"/>
+      <path d="M104 112 C108 74 138 50 178 46" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+      <path d="M92 124 H284 V150 Q284 186 246 186 H134 Q92 186 92 150 Z" fill="url(#${id}d)"/>
+      <path d="M104 124 H272 V142 H104 Z" fill="${shade(c, 0.5)}" opacity=".55"/>
+      <path d="M280 120 L318 66 H342" fill="none" stroke="#1a1d27" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="334" y="58" width="30" height="14" rx="7" fill="#1a1d27"/>
+      <path d="M140 186 L112 222 M248 186 L296 226 M176 186 H236" stroke="#8d97aa" stroke-width="7" stroke-linecap="round"/>
+      ${wheel(112, 204, 40, id, acc)}${wheel(300, 212, 28, id, acc)}`,
 
-    trike: (c) => `${shadow(100, 74)}
-      <path d="M50 46a34 30 0 0 1 68 0z" fill="${c}"/>
-      <rect x="62" y="56" width="48" height="26" rx="12" fill="#fff6e0"/>
-      <path d="M118 82l22 30M62 82l-8 32" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>
-      <path d="M128 60l14-4h10" stroke="${INK}" stroke-width="6" stroke-linecap="round" fill="none"/>
-      <path d="M112 76l28 34" stroke="${shade(c, -30)}" stroke-width="7" stroke-linecap="round"/>
-      <path d="M20 96h28" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
-      <path d="M26 90h18l2 10H24z" fill="${shade(c, 20)}"/>
-      ${wheel(148, 112, 22)}${wheel(50, 122, 15)}${wheel(92, 122, 15)}`,
+    trike: (id, c, acc) => `${shadow(id, 210, 170)}
+      <path d="M84 96 C84 58 118 32 162 32 C204 32 236 58 238 96 Z" fill="url(#${id}b)"/>
+      <path d="M92 90 C96 62 122 44 158 40" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="5" stroke-linecap="round"/>
+      <rect x="92" y="96" width="140" height="42" rx="20" fill="url(#${id}d)"/><rect x="104" y="102" width="116" height="18" rx="9" fill="${shade(c, 0.55)}" opacity=".6"/>
+      <path d="M236 98 L282 190 M232 90 L292 78 H318" fill="none" stroke="#1a1d27" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M112 138 L96 206 M210 138 L214 206 M150 138 V206" stroke="#8d97aa" stroke-width="7" stroke-linecap="round"/>
+      <path d="M298 176 l22 -4" stroke="#1a1d27" stroke-width="8" stroke-linecap="round"/>
+      <path d="M268 164 L284 126" stroke="${shade(c, -0.25)}" stroke-width="9" stroke-linecap="round"/>
+      ${wheel(290, 196, 44, id, acc)}${wheel(92, 214, 24, id, acc)}${wheel(214, 214, 24, id, acc)}`,
 
-    moto: (c) => `${shadow(100, 72)}
-      <path d="M46 92q10-26 42-26h36l16 14-10 14H60z" fill="${c}"/>
-      <path d="M76 66q6-16 22-16h18l-6 16z" fill="${shade(c, -35)}"/>
-      <rect x="60" y="58" width="46" height="12" rx="6" fill="${INK}"/>
-      <path d="M126 70l16 38" stroke="${INK}" stroke-width="7" stroke-linecap="round"/>
-      <path d="M118 54h24" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>
-      <path d="M136 54l8-4" stroke="${INK}" stroke-width="6" stroke-linecap="round"/>
-      <circle cx="148" cy="72" r="8" fill="#FFD54A"/><circle cx="148" cy="72" r="14" fill="#FFD54A" opacity=".25"/>
-      <path d="M44 96h-14" stroke="${shade(c, 40)}" stroke-width="5" stroke-linecap="round"/>
-      ${wheel(54, 112, 20)}${wheel(146, 112, 20)}
-      <circle cx="100" cy="124" r="5" fill="${INK}"/>`,
+    moto: (id, c, acc) => `${shadow(id, 205, 175)}
+      <path d="M96 176 Q100 118 168 112 H236 Q266 112 280 138 L292 168 Q290 184 270 186 H122 Q96 188 96 176 Z" fill="url(#${id}b)"/>
+      <path d="M150 112 Q156 84 190 82 H236 L228 112 Z" fill="url(#${id}d)"/>
+      <rect x="112" y="98" width="106" height="20" rx="10" fill="#171a23"/>
+      <path d="M276 110 L318 214" stroke="#1a1d27" stroke-width="10" stroke-linecap="round"/>
+      <path d="M268 84 H316 M308 84 L326 76" fill="none" stroke="#1a1d27" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="318" cy="120" r="15" fill="#fff6d6" stroke="#ffe08a" stroke-width="3"/>
+      <path d="M96 168 H62" stroke="${shade(c, 0.3)}" stroke-width="9" stroke-linecap="round"/>
+      <path d="M150 190 H236" stroke="#8d97aa" stroke-width="8" stroke-linecap="round"/>
+      <path d="M120 150 H262" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/>
+      ${wheel(92, 204, 36, id, acc)}${wheel(322, 204, 36, id, acc)}`,
 
-    scooter: (c) => `${shadow(100, 70)}
-      <rect x="34" y="104" width="112" height="9" rx="4.5" fill="${c}"/>
-      <path d="M142 108L130 38" stroke="${INK}" stroke-width="7" stroke-linecap="round"/>
-      <path d="M116 36h30" stroke="${INK}" stroke-width="8" stroke-linecap="round"/>
-      <rect x="112" y="31" width="10" height="10" rx="4" fill="${shade(c, -35)}"/><rect x="141" y="31" width="10" height="10" rx="4" fill="${shade(c, -35)}"/>
-      <path d="M36 104l-8-8" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>
-      <circle cx="94" cy="108" r="3" fill="#fff" opacity=".7"/><circle cx="104" cy="108" r="3" fill="#fff" opacity=".7"/>
-      ${wheel(42, 122, 15)}${wheel(146, 122, 16)}`,
-
-    bike: (c) => `${shadow(100, 80)}
-      <path d="M58 112l32-44h40l-8 44M90 68l-12 44M58 112h72" stroke="${c}" stroke-width="6" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-      <path d="M86 56h22" stroke="${INK}" stroke-width="7" stroke-linecap="round"/>
-      <path d="M130 68l-6-18h14" stroke="${INK}" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="94" cy="112" r="5" fill="${INK}"/>
-      ${wheel(54, 108, 28)}${wheel(146, 108, 28)}`,
+    scooter: (id, c, acc) => `${shadow(id, 205, 165)}
+      <rect x="82" y="196" width="226" height="18" rx="9" fill="url(#${id}b)"/>
+      <rect x="96" y="200" width="150" height="4" rx="2" fill="#fff" opacity=".5"/>
+      <path d="M302 202 L270 58" stroke="#1a1d27" stroke-width="10" stroke-linecap="round"/>
+      <path d="M284 202 L254 66" stroke="#aeb7c8" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+      <rect x="236" y="46" width="76" height="16" rx="8" fill="#1a1d27"/><rect x="226" y="42" width="24" height="24" rx="10" fill="${c}"/><rect x="298" y="42" width="24" height="24" rx="10" fill="${c}"/>
+      <path d="M86 206 l-22 -22" stroke="#1a1d27" stroke-width="7" stroke-linecap="round"/>
+      <circle cx="62" cy="206" r="32" fill="${acc || c}" opacity=".18"/><circle cx="314" cy="206" r="34" fill="${acc || c}" opacity=".18"/>
+      ${wheel(62, 212, 24, id, acc)}${wheel(314, 214, 26, id, acc)}`,
   };
 
-  window.BCArt = (type, color) => `<svg viewBox="0 0 200 150" role="img" aria-hidden="true">${(A[type] || A.car)(color || '#FFB800')}</svg>`;
+  window.BC = window.BC || {};
+  window.BC.art = (type, color) => {
+    const id = 'a' + ++n, c = /^#[0-9a-f]{6}$/i.test(color || '') ? color : '#2b59ff';
+    return `<svg class="art" viewBox="0 0 400 270" role="img" aria-hidden="true">${defs(id, c)}${(A[type] || A.car)(id, c, c)}</svg>`;
+  };
+  window.BC.shade = shade;
 })();
