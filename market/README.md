@@ -13,6 +13,7 @@ Mijoz saytda buyurtma beradi, u admin panelga **real vaqtda** tushadi.
 | `checkout.html` | Buyurtma berish |
 | `order.html` | Buyurtma qabul qilindi + holatni kuzatish |
 | `about.html`, `contact.html` | Biz haqimizda, bog'lanish (xabar adminga tushadi) |
+| `setup.html` | Supabase ulashni bosqichma-bosqich tekshiruvchi sahifa |
 | `admin/` | Admin panel: boshqaruv, **analitika**, buyurtmalar, mahsulotlar, kategoriyalar, xabarlar, sozlamalar |
 
 ```
@@ -31,6 +32,8 @@ Ochish: `index.html` ni brauzerda oching yoki `python3 -m http.server`.
 Mijozlar buyurtmasi boshqa qurilmadan admin panelga tushishi uchun quyidagi ulanish kerak.
 
 ## 1. Supabase ulash (bir marta, ~5 daqiqa)
+
+> Osonroq yo'l: **`setup.html`** sahifasini oching. U SQL ni nusxalaydi, kalitlaringizni tekshiradi va tayyor `config.js` matnini beradi.
 
 1. https://supabase.com da bepul loyiha yarating.
 2. **SQL Editor** da `supabase/schema.sql` ni to'liq qo'yib **Run** bosing. (Ixtiyoriy: keyin `seed.sql`.)

@@ -18,7 +18,7 @@
   --ok: #0fa968;
   --warn: #d98a00;
   --tint: #2b59ff;
-  --glass: rgba(255, 255, 255, .72);
+  --glass: rgba(255, 255, 255, .9);
   --glass-line: rgba(255, 255, 255, .6);
   --shadow-s: 0 1px 2px rgba(10, 18, 48, .05), 0 6px 16px -8px rgba(10, 18, 48, .14);
   --shadow-m: 0 2px 4px rgba(10, 18, 48, .04), 0 18px 40px -16px rgba(10, 18, 48, .22);
@@ -34,14 +34,14 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #060b1c; --bg-2: #0a1230; --surface: #0f1936; --surface-2: #131f42; --ink: #eaf0ff; --muted: #8e9cc4; --line: #1c2a58;
-    --glass: rgba(14, 24, 54, .66); --glass-line: rgba(120, 150, 255, .16);
+    --glass: rgba(14, 24, 54, .92); --glass-line: rgba(120, 150, 255, .16);
     --shadow-s: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 16px -8px rgba(0, 0, 0, .6); --shadow-m: 0 2px 4px rgba(0, 0, 0, .3), 0 18px 40px -16px rgba(0, 0, 0, .7); --shadow-l: 0 40px 80px -30px rgba(0, 0, 0, .8);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #060b1c; --bg-2: #0a1230; --surface: #0f1936; --surface-2: #131f42; --ink: #eaf0ff; --muted: #8e9cc4; --line: #1c2a58;
-  --glass: rgba(14, 24, 54, .66); --glass-line: rgba(120, 150, 255, .16);
+  --glass: rgba(14, 24, 54, .92); --glass-line: rgba(120, 150, 255, .16);
   --shadow-s: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 16px -8px rgba(0, 0, 0, .6); --shadow-m: 0 2px 4px rgba(0, 0, 0, .3), 0 18px 40px -16px rgba(0, 0, 0, .7); --shadow-l: 0 40px 80px -30px rgba(0, 0, 0, .8);
   color-scheme: dark;
 }
@@ -87,7 +87,7 @@ p { margin: 0; text-wrap: pretty; }
 .btn .arr { width: 18px; height: 18px; flex: none; transition: transform .45s var(--ease); } .btn:hover .arr { transform: translateX(4px); }
 .btn.dark { background: var(--ink); color: var(--bg); box-shadow: 0 12px 30px -12px rgba(10, 18, 48, .6); }
 .btn.dark::before { background: radial-gradient(160px circle at var(--mx) var(--my), rgba(255, 255, 255, .22), transparent 70%); }
-.btn.glass { background: var(--glass); color: var(--ink); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1.5px var(--glass-line), var(--shadow-s); }
+.btn.glass { background: var(--glass); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--glass-line), var(--shadow-s); }
 .btn.line { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--line); } .btn.line:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
 .btn.sm { height: 44px; padding: 0 20px; font-size: 14px; } .btn.xs { height: 36px; padding: 0 14px; font-size: 13px; } .btn.block { width: 100%; }
 .btn[disabled], .btn.is-disabled { opacity: .45; pointer-events: none; filter: saturate(.4); }
@@ -110,7 +110,7 @@ p { margin: 0; text-wrap: pretty; }
 .alert.ok { background: color-mix(in srgb, var(--ok) 12%, transparent); color: var(--ok); }
 
 /* ---------- umumiy bo'laklar ---------- */
-.eyebrow { display: inline-flex; align-items: center; gap: 10px; height: 34px; padding: 0 16px 0 12px; border-radius: 99px; background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 13px; font-weight: 700; box-shadow: var(--shadow-s); }
+.eyebrow { display: inline-flex; align-items: center; gap: 10px; height: 34px; padding: 0 16px 0 12px; border-radius: 99px; background: var(--glass); border: 1px solid var(--glass-line); font-size: 13px; font-weight: 700; box-shadow: var(--shadow-s); }
 .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--tint); box-shadow: 0 0 0 0 color-mix(in srgb, var(--tint) 60%, transparent); animation: ping 2.2s infinite; }
 @keyframes ping { 70% { box-shadow: 0 0 0 9px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
 .sec { padding-block: clamp(70px, 10vw, 140px) 0; position: relative; }
@@ -126,3 +126,6 @@ p { margin: 0; text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+/* ekrandan tashqaridagi animatsiyalar to'xtatiladi */
+.off, .off *, .off::before, .off::after { animation-play-state: paused !important; }

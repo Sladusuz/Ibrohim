@@ -31,7 +31,7 @@
     ]);
     main.innerHTML = `
     <section class="hero" id="hero">
-      <div class="hero-bg"><i class="blob b1"></i><i class="blob b2"></i><div class="grid-lines"></div><div class="hero-word" data-px="-0.06" aria-hidden="true">BABYCHEER</div></div>
+      <div class="hero-bg"><i class="blob b1"></i><i class="blob b2"></i><div class="grid-lines"></div><div class="hero-word" aria-hidden="true">BABYCHEER</div></div>
       <div class="wrap hero-grid">
         <div class="hero-copy">
           <span class="eyebrow"><i></i>${photo ? "Yangi: 360° ko'rinishda aylantiring" : "Yangi: 3D da aylantirib ko'ring"}</span>
@@ -148,10 +148,11 @@
     const stage = $('#stage3d');
     if (car3d && first && first.model3d) {
       hv = BC.car3d.create(stage, { model: first.model3d, color: st.hex, accent, interactive: true, driveIn: true, driveDelay: 1500, driveMs: 2800, sway: true, parallax: true, yaw: 0.72, pitch: 0.12, zoom: 1.28 });
-      const storyHost = $('#storyStage'); sv = BC.car3d.create(storyHost, { model: first.model3d, color: st.hex, accent, interactive: false, autorotate: false, damp: 0.07, yaw: 1.0, pitch: 0.12, zoom: 1.32 });
+      const mk = () => { sv = BC.car3d.create($('#storyStage'), { model: cur().model3d || first.model3d, color: st.hex, accent, interactive: false, autorotate: false, damp: 0.07, yaw: 1.0, pitch: 0.12, zoom: 1.32, fps: 40 }); C.onScroll(); };
+      if ('IntersectionObserver' in window) { const lo = new IntersectionObserver((es) => { if (es[0].isIntersecting) { lo.disconnect(); mk(); } }, { rootMargin: '150% 0px' }); lo.observe($('#story')); } else mk();
     }
     if (!hv) { stage.innerHTML = `<div class="art-fallback">${BC.art(C.artType(first || {}), st.hex)}</div>`; $('.hint')?.remove(); }
-    if (!sv) { const sec = $('#story'); sec.style.height = 'auto'; $('.story-pin', sec).style.position = 'static'; $('.story-pin', sec).style.height = 'auto'; $('#storyStage').innerHTML = `<div class="art-fallback" style="position:absolute;inset:8%;display:grid;place-items:center">${BC.art(C.artType(first || {}), st.hex)}</div>`; }
+    if (!car3d || !first || !first.model3d) { const sec = $('#story'); sec.style.height = 'auto'; $('.story-pin', sec).style.position = 'static'; $('.story-pin', sec).style.height = 'auto'; $('#storyStage').innerHTML = `<div class="art-fallback" style="position:absolute;inset:8%;display:grid;place-items:center">${BC.art(C.artType(first || {}), st.hex)}</div>`; }
     }
 
     function initStory3d() {

@@ -100,20 +100,20 @@ declare
 begin
   if length(trim(coalesce(p_name, ''))) < 2 then raise exception 'Ismingizni kiriting'; end if;
   digits := regexp_replace(coalesce(p_phone, ''), '\D', '', 'g');
-  if digits !~ '^(998)?[0-9]{9}$' then raise exception 'Telefon raqami notogri'; end if;
+  if digits !~ '^(998)?[0-9]{9}$' then raise exception 'Telefon raqami noto''g''ri'; end if;
   ph := '+998' || right(digits, 9);
   if p_delivery not in ('courier', 'pickup') then p_delivery := 'courier'; end if;
   if p_payment not in ('cash', 'card') then p_payment := 'cash'; end if;
   if p_delivery = 'courier' and length(trim(coalesce(p_address, ''))) < 5 then raise exception 'Manzilni kiriting'; end if;
   if jsonb_typeof(p_items) <> 'array' or jsonb_array_length(p_items) = 0 or jsonb_array_length(p_items) > 40 then
-    raise exception 'Savat bosh';
+    raise exception 'Savat bo''sh';
   end if;
 
   for it in select * from jsonb_array_elements(p_items) loop
     qty := coalesce((it->>'qty')::int, 0);
     select * into prod from products where id = (it->>'id')::uuid and active for update;
-    if not found then raise exception 'Mahsulotlardan biri sotuvda yoq'; end if;
-    if qty < 1 or qty > 20 then raise exception 'Miqdor notogri'; end if;
+    if not found then raise exception 'Mahsulotlardan biri sotuvda yo''q'; end if;
+    if qty < 1 or qty > 20 then raise exception 'Miqdor noto''g''ri'; end if;
     if prod.stock < qty then raise exception '"%" omborda yetarli emas (qoldi: %)', prod.title, prod.stock; end if;
     update products set stock = stock - qty where id = prod.id;
     sub := sub + prod.price * qty;
@@ -145,7 +145,7 @@ declare digits text;
 begin
   if length(trim(coalesce(p_name, ''))) < 2 then raise exception 'Ismingizni kiriting'; end if;
   digits := regexp_replace(coalesce(p_phone, ''), '\D', '', 'g');
-  if digits !~ '^(998)?[0-9]{9}$' then raise exception 'Telefon raqami notogri'; end if;
+  if digits !~ '^(998)?[0-9]{9}$' then raise exception 'Telefon raqami noto''g''ri'; end if;
   if length(trim(coalesce(p_message, ''))) < 3 then raise exception 'Xabarni yozing'; end if;
   insert into messages(name, phone, message) values (left(trim(p_name), 80), '+998' || right(digits, 9), left(trim(p_message), 2000));
   return json_build_object('ok', true);

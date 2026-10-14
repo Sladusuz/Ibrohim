@@ -186,7 +186,7 @@
     try {
       const probe = document.createElement('canvas');
       if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return null;
-      renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+      renderer = new T.WebGLRenderer({ antialias: (window.devicePixelRatio || 1) < 2, alpha: true, powerPreference: 'high-performance' });
     } catch (e) { return null; }
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cv = renderer.domElement; cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;outline:none';
@@ -219,7 +219,7 @@
     const shadow = new T.Mesh(new T.PlaneGeometry(1, 1), new T.MeshBasicMaterial({ map: shadowTex(), transparent: true, depthWrite: false, opacity: 0.9 }));
     shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.003; shadow.renderOrder = 0; scene.add(shadow);
 
-    let car = null, model = opts.model || 'single', visible = true, alive = true, last = performance.now();
+    let car = null, model = opts.model || 'single', visible = true, alive = true, last = performance.now(), force = 3; const minDt = 1000 / (opts.fps || 45);
     const cur = { yaw: opts.yaw ?? 0.62, pitch: opts.pitch ?? 0.13, zoom: opts.zoom ?? 1, x: 0, y: 0.62, z: 0 };
     const tgt = { ...cur }; let drag = null, vel = 0, idle = 0, auto = opts.autorotate !== false && !reduce, userAuto = auto, damp = opts.damp ?? 0.09;
     const tweens = []; let drive = null;
@@ -236,8 +236,8 @@
     }
     function resize() {
       const w = container.clientWidth || 1, h = container.clientHeight || 1;
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, w < 700 ? 1.6 : 2)); renderer.setSize(w, h, false);
-      cam.aspect = w / h; cam.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, w < 700 ? 1.25 : 1.6)); renderer.setSize(w, h, false);
+      cam.aspect = w / h; cam.updateProjectionMatrix(); force = 3;
     }
     const ro = 'ResizeObserver' in window ? new ResizeObserver(resize) : null; ro && ro.observe(container);
 
@@ -266,9 +266,11 @@
 
     function frame(now) {
       if (!alive) return; requestAnimationFrame(frame);
+      if (!visible || document.hidden) { last = now; return; }
+      if (now - last < minDt - 2) return;
       const dt = Math.min((now - last) / 1000, 0.05); last = now;
-      if (!visible || document.hidden) return;
-      runTweens(now);
+      const hadT = tweens.length > 0; runTweens(now);
+      let moving = hadT || !!drive || !!drag;
       if (drive) {
         const k = clamp((now - drive.t0) / drive.ms, 0, 1), e = ease.out4(k), x = drive.from * (1 - e); const dx = x - car.position.x; car.position.x = x;
         car.userData.wheels.forEach((w) => { w.rotation.z -= dx / ((VARIANTS[model] || VARIANTS.single).wr) * -1; });
@@ -276,13 +278,13 @@
         if (k >= 1) { drive = null; car.userData.body.rotation.z = 0; shadow.position.x = 0; opts.onArrive && opts.onArrive(); }
       }
       if (!drag) {
-        if (Math.abs(vel) > 0.0002) { tgt.yaw += vel; vel *= 0.94; idle = 0; } else { idle += dt; }
-        if (userAuto && idle > 1.6 && opts.sway) tgt.yaw += Math.sin(now / 2600) * 0.0016;
-        else if (userAuto && idle > 1.6 && !opts.sway) tgt.yaw += 0.0035;
+        if (Math.abs(vel) > 0.0002) { tgt.yaw += vel; vel *= 0.94; idle = 0; moving = true; } else { idle += dt; }
+        if (userAuto && idle > 1.6) { moving = true; if (opts.sway) tgt.yaw += Math.sin(now / 2600) * 0.0016; else tgt.yaw += 0.0035; }
       }
-      const k = 1 - Math.pow(1 - damp, dt * 60);
-      for (const key of ['yaw', 'pitch', 'zoom', 'x', 'y', 'z']) cur[key] += (tgt[key] - cur[key]) * k;
-      const ox = (tgt.px || 0) * 0.3, oy = (tgt.py || 0) * 0.12; cur.px = (cur.px || 0) + (ox - (cur.px || 0)) * k; cur.py = (cur.py || 0) + (oy - (cur.py || 0)) * k;
+      const k = 1 - Math.pow(1 - damp, dt * 60); let d = 0;
+      for (const key of ['yaw', 'pitch', 'zoom', 'x', 'y', 'z']) { const df = tgt[key] - cur[key]; d += Math.abs(df); cur[key] += df * k; }
+      const ox = (tgt.px || 0) * 0.3, oy = (tgt.py || 0) * 0.12; const dpx = ox - (cur.px || 0), dpy = oy - (cur.py || 0); d += Math.abs(dpx) + Math.abs(dpy); cur.px = (cur.px || 0) + dpx * k; cur.py = (cur.py || 0) + dpy * k;
+      if (!moving && d < 0.0004 && force <= 0) return; if (force > 0) force--;
       const sy = cur.yaw, sp = cur.pitch; cur.yaw += cur.px; cur.pitch += cur.py; place(); cur.yaw = sy; cur.pitch = sp;
       renderer.render(scene, cam);
     }
@@ -302,9 +304,9 @@
         const from = mats.body.color.clone(); tween(700, (e) => mats.body.color.copy(from).lerp(to, e));
       },
       setAccent(hex) { mats.hub.color.set(hex); },
-      setModel(m) { if (m === model || !VARIANTS[m]) return; model = m; setup(); },
-      view(v, snap) { Object.assign(tgt, v); if (snap) Object.assign(cur, v); },
-      glow(k) { mats.lamp.emissiveIntensity = 1.3 + k * 2.4; mats.tail.emissiveIntensity = 1 + k * 1.6; },
+      setModel(m) { if (m === model || !VARIANTS[m]) return; model = m; setup(); force = 3; },
+      view(v, snap) { Object.assign(tgt, v); if (snap) Object.assign(cur, v); force = 2; },
+      glow(k) { mats.lamp.emissiveIntensity = 1.3 + k * 2.4; mats.tail.emissiveIntensity = 1 + k * 1.6; force = 2; },
       autoRotate(on) { userAuto = on && !reduce; },
       spin(turns = 1, ms = 1400) { const y0 = tgt.yaw; tween(ms, (e) => { tgt.yaw = y0 + e * Math.PI * 2 * turns; }); },
       destroy() { alive = false; ro && ro.disconnect(); io && io.disconnect(); renderer.dispose(); cv.remove(); },

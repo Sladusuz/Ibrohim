@@ -62,7 +62,7 @@
   async function loadData() {
     let cached = null; try { cached = JSON.parse(sess.get('bc3_cat') || 'null'); } catch { /* */ }
     const fresh = () => api.catalog().then((c) => { Object.assign(D, c); sess.set('bc3_cat', JSON.stringify({ t: Date.now(), c })); return c; });
-    if (cached && Date.now() - cached.t < 60000) { Object.assign(D, cached.c); fresh().catch(() => {}); return; }
+    if (api.mode === 'live' && cached && Date.now() - cached.t < 20000) { Object.assign(D, cached.c); fresh().catch(() => {}); return; }
     await fresh();
   }
 
@@ -194,7 +194,11 @@
     if (reduce) { el.textContent = f(to); return; } const t0 = performance.now();
     (function tick(t) { const k = clamp((t - t0) / 2000, 0, 1); el.textContent = f(to * (1 - Math.pow(1 - k, 4))); if (k < 1) requestAnimationFrame(tick); })(t0);
   }
+  // Ekrandan chiqqan bo'limlarning cheksiz animatsiyalarini to'xtatish (tezlik uchun)
+  const pauseIO = 'IntersectionObserver' in window ? new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('off', !e.isIntersecting)), { rootMargin: '80px 0px' }) : null;
+  const paused = new WeakSet();
   function observe(scope = document) {
+    if (pauseIO) $$('.hero,.cta,.band,.marquee,.emblem,.feat,.story-card,.photo-card,.proc', scope).forEach((el) => { if (!paused.has(el)) { paused.add(el); pauseIO.observe(el); } });
     $$('[data-r],[data-count],[data-in],[data-split]', scope).forEach((el, i) => {
       if (seen.has(el)) return; seen.add(el); if (el.hasAttribute('data-r') && el.dataset.d === undefined) { const sib = [...(el.parentElement?.children || [])].filter((x) => x.hasAttribute('data-r')); el.dataset.d = String(Math.min(sib.indexOf(el), 6) * 80); }
       if (el.hasAttribute('data-split')) splitWords(el); io ? io.observe(el) : (el.dataset.count !== undefined && countUp(el));
@@ -204,30 +208,36 @@
     }
   }
   if (fine && !reduce) {
-    document.addEventListener('pointermove', (e) => {
-      const t = e.target.closest?.('[data-tilt]'); if (t) {
+    let pe = null, raf = 0;
+    const run = () => {
+      raf = 0; const e = pe; if (!e) return; const tg = e.target;
+      const t = tg.closest?.('[data-tilt]'); if (t) {
         const r = t.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height; t.style.setProperty('--mx', x * 100 + '%'); t.style.setProperty('--my', y * 100 + '%');
         const amt = +(t.dataset.tilt || 5); t.style.transform = `perspective(1000px) rotateX(${(0.5 - y) * amt}deg) rotateY(${(x - 0.5) * amt * 1.3}deg) translateY(-4px)`;
       }
-      const b = e.target.closest?.('.btn'); if (b) { const r = b.getBoundingClientRect(); b.style.setProperty('--mx', e.clientX - r.left + 'px'); b.style.setProperty('--my', e.clientY - r.top + 'px'); }
-    }, { passive: true });
+      const b = tg.closest?.('.btn'); if (b) { const r = b.getBoundingClientRect(); b.style.setProperty('--mx', e.clientX - r.left + 'px'); b.style.setProperty('--my', e.clientY - r.top + 'px'); }
+    };
+    document.addEventListener('pointermove', (e) => { pe = e; if (!raf) raf = requestAnimationFrame(run); }, { passive: true });
     document.addEventListener('pointerout', (e) => { const t = e.target.closest?.('[data-tilt]'); if (t && !t.contains(e.relatedTarget)) t.style.transform = ''; });
   }
 
   /* ====================== skroll effektlari ====================== */
-  let lastY = 0, vel = 0; const nav = () => $('#nav');
-  function onScroll() {
-    const y = scrollY, dy = y - lastY; lastY = y; vel = vel * 0.8 + dy * 0.2;
+  let lastY = 0, vel = 0, ticking = false, pxEls = null, mqEl = null, mqAnim = null, mqT = 0; const nav = () => $('#nav');
+  function tick() {
+    ticking = false; const y = scrollY, dy = y - lastY; lastY = y; vel = vel * 0.8 + dy * 0.2;
     const max = document.documentElement.scrollHeight - innerHeight || 1, k = clamp(y / max, 0, 1);
-    $('#progress').style.transform = `scaleX(${k})`;
+    const pr = $('#progress'); if (pr) pr.style.transform = `scaleX(${k})`;
     const n = nav(); if (n) { n.classList.toggle('hide', y > 500 && dy > 6 && !$('#menu').classList.contains('on')); if (dy < -6 || y < 200) n.classList.remove('hide'); }
-    const t = $('#totop'); if (t) { t.classList.toggle('on', y > 700); $('#totopFg').style.strokeDashoffset = 151 * (1 - k); }
+    const t = $('#totop'); if (t) { t.classList.toggle('on', y > 700); const f = $('#totopFg'); if (f) f.style.strokeDashoffset = 151 * (1 - k); }
     if (!reduce) {
-      const mq = $('.marquee .track'); if (mq) { const a = mq.getAnimations()[0]; if (a) a.playbackRate = 1 + clamp(Math.abs(vel) * 0.3, 0, 6); }
-      $$('[data-px]').forEach((el) => { const r = el.getBoundingClientRect(); if (r.bottom < -100 || r.top > innerHeight + 100) return; el.style.transform = `translate3d(0,${((r.top + r.height / 2 - innerHeight / 2) * -parseFloat(el.dataset.px)).toFixed(1)}px,0)`; });
+      if (mqEl === null) mqEl = $('.marquee .track') || false;
+      if (mqEl && y < 2400) { if (!mqAnim) mqAnim = mqEl.getAnimations()[0]; if (mqAnim) mqAnim.playbackRate = 1 + clamp(Math.abs(vel) * 0.3, 0, 6); }
+      if (pxEls === null) pxEls = $$('[data-px]');
+      pxEls.forEach((el) => { const r = el.getBoundingClientRect(); if (r.bottom < -100 || r.top > innerHeight + 100) return; el.style.transform = `translate3d(0,${((r.top + r.height / 2 - innerHeight / 2) * -parseFloat(el.dataset.px)).toFixed(1)}px,0)`; });
     }
     document.dispatchEvent(new CustomEvent('bc:scroll', { detail: { y, dy, vel } }));
   }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }
 
   /* ====================== sahifalararo o'tish (parda) ====================== */
   const curtain = () => $('#curtain');
@@ -275,7 +285,7 @@
     const move = (a) => { if (!a) { pill.style.opacity = 0; return; } pill.style.opacity = 1; pill.style.left = a.offsetLeft + 'px'; pill.style.width = a.offsetWidth + 'px'; };
     $$('a', links).forEach((a) => a.addEventListener('pointerenter', () => move(a))); links.addEventListener('pointerleave', () => move(on()));
     requestAnimationFrame(() => move(on())); addEventListener('resize', () => move(on()));
-    addEventListener('scroll', onScroll, { passive: true }); onScroll();
+    addEventListener('scroll', onScroll, { passive: true }); tick();
   }
 
   /* ====================== ishga tushirish ====================== */
@@ -298,5 +308,5 @@
     document.dispatchEvent(new Event('bc:shown'));
   }
 
-  window.BC.core = { imgFail, init, ready, data: D, cart, favs, toast, scrollTo, lock, observe, productCard, media, artType, catOf, catStyle, pColor, priceTxt, prodUrl, prodById, tgLink, colorName, addToCart, openDrawer, closeAll, leave, I, reduce, fine, clamp, store, onScroll: () => onScroll(), lenis: () => lenis, esc, money, normPhone };
+  window.BC.core = { imgFail, init, ready, data: D, cart, favs, toast, scrollTo, lock, observe, productCard, media, artType, catOf, catStyle, pColor, priceTxt, prodUrl, prodById, tgLink, colorName, addToCart, openDrawer, closeAll, leave, I, reduce, fine, clamp, store, onScroll: () => tick(), lenis: () => lenis, esc, money, normPhone };
 })();

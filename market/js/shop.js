@@ -10,7 +10,7 @@
     const colorMap = new Map(); all.forEach((p) => (p.colors || []).forEach((c) => { if (!colorMap.has(c.hex)) colorMap.set(c.hex, c.name); }));
     const sync = () => {
       const q = new URLSearchParams(); if (F.cat !== 'all') q.set('cat', F.cat); if (F.q) q.set('q', F.q); if (F.sort !== 'pop') q.set('sort', F.sort); if (F.min > PMIN) q.set('min', F.min); if (F.max < PMAX) q.set('max', F.max);
-      if (F.stock) q.set('stock', 1); if (F.sale) q.set('sale', 1); if (F.fav) q.set('fav', 1); if (F.color) q.set('color', F.color); history.replaceState(null, '', 'shop.html' + (q.toString() ? '?' + q : ''));
+      if (F.stock) q.set('stock', 1); if (F.sale) q.set('sale', 1); if (F.fav) q.set('fav', 1); if (F.color) q.set('color', F.color); try { history.replaceState(null, '', 'shop.html' + (q.toString() ? '?' + q : '')); } catch { /* file:// da URL o'zgartirib bo'lmaydi */ }
     };
 
     main.innerHTML = `<div class="page"><div class="wrap">
