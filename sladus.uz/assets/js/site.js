@@ -124,19 +124,6 @@
         '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
   }
 
-  /* Har qanday nisbatdagi rasm to'liq ko'rinsin: kvadratga yaqin bo'lmasa — cover o'rniga contain */
-  var FIT_BOX = { 'card__ph': 1.25, 'pd__ph': 1, 'award': .75 };
-  function fitMark(img) {
-    var w = img.naturalWidth, h = img.naturalHeight;
-    if (!w || !h) return;
-    var box = img.closest('.card__ph, .pd__ph, .award');
-    if (!box) return;
-    var want = FIT_BOX[box.classList.contains('card__ph') ? 'card__ph' : box.classList.contains('pd__ph') ? 'pd__ph' : 'award'];
-    box.classList.toggle('fit', Math.abs(Math.log((w / h) / want)) > .3);
-  }
-  function fitAll() { $$('.card__ph img, .pd__ph img, .award img').forEach(function (i) { if (i.complete) fitMark(i); }); }
-  document.addEventListener('load', function (ev) { if (ev.target && ev.target.tagName === 'IMG') fitMark(ev.target); }, true);
-
   function chrome() {
     var burger = $('.burger'), nav = $('#nav'), hdr = $('#hdr');
     if (burger) burger.addEventListener('click', function () {
@@ -449,7 +436,6 @@
       u.searchParams.set('cat', st.cat);
       st.q ? u.searchParams.set('q', st.q) : u.searchParams.delete('q');
       history.replaceState(null, '', u);
-      fitAll();
       document.dispatchEvent(new Event('sladus:redraw'));
     }
 
@@ -587,7 +573,6 @@
       if (window.console) console.error('Sladus:', err);
     }
     chrome();
-    fitAll();
     window.SL_READY = true;
     document.dispatchEvent(new Event('sladus:ready'));
   }

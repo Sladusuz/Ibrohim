@@ -2,7 +2,7 @@
    Sladus — rasmni avtomatik moslash (admin va panel uchun)
    Har qanday rasm (telefon suratlari, katta PNG/JPG, HEIC→JPEG) ochiladi,
    EXIF yo'nalishi to'g'rilanadi, eng uzun tomoni `max` pikselgacha
-   kichraytiriladi va WebP (yoki JPEG) ga siqiladi. Natija odatda
+   kichraytiriladi va JPEG ga siqiladi. Natija odatda
    100–300 KB — sayt tez ochiladi, xotira to'lmaydi.
    ============================================================ */
 window.SladusImg = (function () {
@@ -37,7 +37,7 @@ window.SladusImg = (function () {
   /* fit(file, {max, quality}) -> Promise<{blob, dataUrl, type, ext, width, height, kb}> */
   function fit(file, opt) {
     opt = opt || {};
-    var max = opt.max || 1400, q = opt.quality || .84;
+    var max = opt.max || 1400, q = opt.quality || .86;
     if (!file || !/^image\//.test(file.type || '')) return Promise.reject(new Error('Bu rasm fayli emas'));
     if (file.size > 40 * 1024 * 1024) return Promise.reject(new Error('Fayl juda katta (40 MB dan oshmasin)'));
     return decode(file).then(function (d) {
@@ -47,15 +47,12 @@ window.SladusImg = (function () {
       x.imageSmoothingQuality = 'high';
       x.drawImage(d.src, 0, 0, w, h);
       d.done();
-      return toBlob(c, 'image/webp', q).then(function (b) {
-        if (b && b.type === 'image/webp') return b;
-        /* WebP qo'llab-quvvatlanmasa — JPEG (shaffof fon oq bo'ladi) */
-        var c2 = document.createElement('canvas'); c2.width = w; c2.height = h;
-        var x2 = c2.getContext('2d'); x2.fillStyle = '#fff'; x2.fillRect(0, 0, w, h); x2.drawImage(c, 0, 0);
-        return toBlob(c2, 'image/jpeg', q);
-      }).then(function (b) {
+      /* JPEG: saytdagi mavjud rasmlar bilan bir xil format (shaffof fon oq bo'ladi) */
+      var c2 = document.createElement('canvas'); c2.width = w; c2.height = h;
+      var x2 = c2.getContext('2d'); x2.fillStyle = '#fff'; x2.fillRect(0, 0, w, h); x2.drawImage(c, 0, 0);
+      return toBlob(c2, 'image/jpeg', q).then(function (b) { return b;      }).then(function (b) {
         return readURL(b).then(function (u) {
-          return { blob: b, dataUrl: u, type: b.type, ext: b.type === 'image/webp' ? 'webp' : 'jpg', width: w, height: h, kb: Math.round(b.size / 1024) };
+          return { blob: b, dataUrl: u, type: b.type, ext: 'jpg', width: w, height: h, kb: Math.round(b.size / 1024) };
         });
       });
     });
