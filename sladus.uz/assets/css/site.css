@@ -302,7 +302,9 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
 .card__f b { color: var(--ink); }
 
 /* Nisbati mos kelmaydigan rasm (tik/keng) kesilmasdan to'liq ko'rinadi */
-.card__ph.fit img, .pd__ph.fit img { object-fit: contain; padding: .5rem; }
+.card__ph.fit img { object-fit: contain; padding: .5rem; }
+/* mahsulot sahifasi: rasm o'z nisbatida, bo'sh joysiz va kesilmasdan */
+.pd__ph.fit img { aspect-ratio: auto; height: auto; max-height: 80vh; object-fit: contain; padding: 0; }
 .award.fit img { object-fit: contain; padding: .5rem; }
 .noimg { display: grid; place-items: center; }
 .noimg img { opacity: 0; }
