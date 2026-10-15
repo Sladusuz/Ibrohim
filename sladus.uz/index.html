@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
+<script>try{var s=sessionStorage;if(!s.getItem('sl.ld')||s.getItem('sl.nav')){document.documentElement.classList.add('ld-on');setTimeout(function(){document.documentElement.classList.remove('ld-on')},5000)}}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sladus Leading — кондитерская фабрика в Узбекистане</title>
 <meta name="description" content="Производство драже, конфет с начинкой, декоративных посыпок и готовых завтраков с 2010 года. Более 30 позиций, экспорт в 17 стран. Состав, пищевая ценность и коды ТН ВЭД по каждой позиции.">
@@ -15,38 +16,46 @@
 <meta property="og:image" content="https://www.sladus.uz/assets/img/1.jpg">
 <meta property="og:url" content="https://www.sladus.uz/index.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#16100E">
+<meta name="theme-color" content="#0c0709">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/app.css">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@400;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body data-page="home">
 <div id="hdrSlot"></div>
 <main id="main">
   <section class="hero" id="hero"></section>
 
-  <section class="sec">
+  <div class="mq" aria-hidden="true"><div class="mq__t" id="mqt"></div></div>
+
+  <section class="man" id="man">
     <div class="wrap">
-      <div class="head"><span class="head__eyebrow">01 / 04</span><h2 id="rTitle"></h2><p id="rLead"></p></div>
-      <div class="ranges" id="ranges"></div>
+      <span class="head__eyebrow" id="manE"></span>
+      <p class="man__t" id="manT"></p>
+      <p class="man__s" id="manS"></p>
     </div>
   </section>
 
-  <section class="sec sec--tint">
+  <section class="hz" id="hz">
+    <div class="wrap head head--row"><div><span class="head__eyebrow">01 / 04</span><h2 id="rTitle"></h2><p id="rLead"></p></div></div>
+    <div class="track" id="ranges"></div>
+  </section>
+
+  <section class="sec">
     <div class="wrap">
       <div class="head head--row"><div><span class="head__eyebrow">02 / 04</span><h2 id="fTitle"></h2><p id="fLead"></p></div>
-        <a class="btn btn--line" id="fAll" href="catalog.html"></a></div>
+        <a class="btn btn--line mag" id="fAll" href="catalog.html"></a></div>
       <div class="grid" id="feat"></div>
     </div>
   </section>
 
-  <section class="sec sec--dark">
+  <section class="sec">
     <div class="wrap">
       <div class="head"><span class="head__eyebrow">03 / 04</span><h2 id="pTitle"></h2></div>
       <div class="pillars" id="pillars"></div>
-      <div class="head mt" style="margin-top:clamp(3rem,6vw,5rem)"><h2 id="gTitle" style="font-size:var(--t-2xl)"></h2><p id="gLead"></p></div>
+      <div class="head mt" style="margin-top:clamp(4rem,8vw,7rem)"><h2 id="gTitle"></h2><p id="gLead"></p></div>
       <div class="geo" id="geo"></div>
     </div>
   </section>
@@ -60,9 +69,9 @@
 
   <section class="sec sec--sm"><div class="wrap"><div class="cta" id="cta"></div></div></section>
 
-  <section class="sec sec--tint">
-    <div class="wrap" style="max-width:800px">
-      <h2 id="formTitle" style="font-size:var(--t-2xl);margin-bottom:1.6rem"></h2>
+  <section class="sec">
+    <div class="wrap" style="max-width:820px">
+      <h2 id="formTitle" style="font-size:var(--t-2xl);margin-bottom:1.6rem;text-transform:uppercase"></h2>
       <div id="formBox"></div>
     </div>
   </section>
@@ -74,5 +83,10 @@
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/store.js"></script>
 <script src="assets/js/site.js"></script>
+<script src="assets/vendor/three.min.js" defer></script>
+<script src="assets/vendor/gsap.min.js" defer></script>
+<script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+<script src="assets/vendor/lenis.min.js" defer></script>
+<script src="assets/js/fx.js" defer></script>
 </body>
 </html>

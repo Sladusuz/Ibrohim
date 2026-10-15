@@ -116,7 +116,7 @@
         local +
         '<li><a href="mailto:' + C.email + '">' + C.email + '</a></li>' +
         '<li>' + e(loc(C.hours)) + '</li></ul></div>' +
-      '</div><div class="ftr__b">' +
+      '</div><div class="ftr__big" aria-hidden="true">SLADUS</div><div class="ftr__b">' +
         '<span>© ' + new Date().getFullYear() + ' ' + e(C.legal) + '. ' + e(t('footer.rights')) + '</span>' +
         '<span>' + e(loc(C.address)) + '</span>' +
       '</div></div></footer>' +
@@ -175,7 +175,7 @@
   function card(p) {
     var c = cat(p.cat);
     return '<a class="card ' + colorOf(p.cat) + '" href="' + href('product.html', { id: p.id }) + '">' +
-      '<div class="card__ph"><img src="' + e(p.img) + '" alt="' + e(p.name) + '" loading="lazy" width="420" height="336">' +
+      '<i class="card__gl"></i><div class="card__ph"><img src="' + e(p.img) + '" alt="' + e(p.name) + '" loading="lazy" width="420" height="336">' +
         (c ? '<span class="card__cat">' + e(loc(c.name)) + '</span>' : '') + '</div>' +
       '<div class="card__b"><h3>' + e(p.name) + '</h3><p>' + e(loc(p.descr)) + '</p>' +
         '<div class="card__f num"><span>' + e(t('p.net')) + ': <b>' + e(p.pack.net) + '</b></span>' +
@@ -247,17 +247,14 @@
     var C = B.company, P = DATA.products, years = new Date().getFullYear() - C.founded;
 
     $('#hero').innerHTML =
-      '<div class="hero__bg"><video autoplay muted loop playsinline poster="' + C.photo1 + '">' +
-        '<source src="' + C.video + '" type="video/mp4"></video></div>' +
       '<div class="wrap hero__in">' +
         '<span class="hero__tag"><span>' + e(t('hero.badgetxt')) + '</span><b>' + e(t('hero.badge')) + '</b></span>' +
-        '<h1>' + e(t('hero.t1')) + ' <em>' + e(t('hero.t2')) + '</em></h1>' +
-        '<p class="hero__lead">' + e(t('hero.lead2')) + '</p>' +
-        '<div class="hero__act">' +
-          '<a class="btn btn--fill" href="' + href('catalog.html') + '">' + e(t('hero.cta1')) + '</a>' +
-          '<a class="btn btn--onDark" href="' + href('contact.html') + '">' + e(t('hero.cta2')) + '</a>' +
-        '</div></div>' +
-      '<div class="ticker"><div class="ticker__row" id="tick"></div></div>' +
+        '<h1 id="h1"><span class="ln">' + e(t('hero.t1')) + '</span><span class="ln"><span class="g">' + e(t('hero.t2')) + '</span></span></h1>' +
+        '<div class="hero__row"><p class="hero__lead">' + e(t('hero.lead2')) + '</p>' +
+          '<div class="hero__act">' +
+            '<a class="btn btn--fill mag" href="' + href('catalog.html') + '">' + e(t('hero.cta1')) + '</a>' +
+            '<a class="btn btn--onDark mag" href="' + href('contact.html') + '">' + e(t('hero.cta2')) + '</a>' +
+          '</div><span class="scrl">' + e(t('hero.scroll')) + '</span></div></div>' +
       '<div class="wrap"><div class="figures num">' +
         fig(years + '+', t('stat.years')) + fig(P.length + '+', t('stat.sku')) +
         fig(B.countries.length, t('stat.countries')) + fig('12+', t('stat.regions')) +
@@ -265,16 +262,19 @@
 
     function fig(n, l) { return '<div><b>' + e(n) + '</b><span>' + e(l) + '</span></div>'; }
 
-    var names = B.countries.map(function (c) { return '<span>' + e(loc(c)) + '</span>'; }).join('');
-    $('#tick').innerHTML = names + names;
+    var words = B.countries.map(function (c, k) { var n = e(loc(c)); return (k % 2 ? '<s>' + n + '</s>' : n); }).join('<i>✦</i>') + '<i>✦</i>';
+    $('#mqt').innerHTML = words + words + words + words;
 
-    $('#ranges').innerHTML = DATA.categories.map(function (c) {
+    txt('#manE', C.name); txt('#manT', t('hero.kicker')); txt('#manS', t('hero.lead'));
+
+    $('#ranges').innerHTML = DATA.categories.map(function (c, k) {
       var n = P.filter(function (p) { return p.cat === c.id; }).length;
-      return '<a class="range rv c-' + e(c.color || 'brand') + '" href="' + href('catalog.html', { cat: c.id }) + '">' +
-        '<img src="' + e(c.img) + '" alt="" loading="lazy" width="420" height="520">' +
+      return '<a class="range c-' + e(c.color || 'brand') + '" href="' + href('catalog.html', { cat: c.id }) + '">' +
+        '<div class="range__im"><img src="' + e(c.img) + '" alt="" loading="lazy" width="420" height="520"></div>' +
+        '<div class="range__tx"><span class="range__no">0' + (k + 1) + '</span><div>' +
         '<span class="range__n">' + n + ' ' + e(t('cat.count')) + '</span>' +
         '<h3>' + e(loc(c.name)) + '</h3><p>' + e(loc(c.tagline)) + '</p>' +
-        '<span class="range__go">' + e(t('cat.view')) + '<i>→</i></span></a>';
+        '<span class="range__go">' + e(t('cat.view')) + '<i>→</i></span></div></div></a>';
     }).join('');
 
     // Har yo'nalishdan 2 tadan, keyin bo'sh joyni qolganlari bilan to'ldiramiz
@@ -303,7 +303,7 @@
     }).join('');
 
     $('#awards').innerHTML = B.awards.map(function (a) {
-      return '<article class="award rv"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400">' +
+      return '<article class="award"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400">' +
         '<div class="award__b"><span>' + e(a.year) + '</span><h3>' + e(a.title) + '</h3><p>' + e(loc(a.text)) + '</p></div></article>';
     }).join('');
 
@@ -366,7 +366,7 @@
     }).join('');
 
     $('#awards').innerHTML = B.awards.map(function (a) {
-      return '<article class="award rv"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400">' +
+      return '<article class="award"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400">' +
         '<div class="award__b"><span>' + e(a.year) + '</span><h3>' + e(a.title) + '</h3><p>' + e(loc(a.text)) + '</p></div></article>';
     }).join('');
 
@@ -426,6 +426,7 @@
       u.searchParams.set('cat', st.cat);
       st.q ? u.searchParams.set('q', st.q) : u.searchParams.delete('q');
       history.replaceState(null, '', u);
+      document.dispatchEvent(new Event('sladus:redraw'));
     }
 
     $$('[data-c]').forEach(function (b) {
@@ -562,6 +563,8 @@
       if (window.console) console.error('Sladus:', err);
     }
     chrome();
+    window.SL_READY = true;
+    document.dispatchEvent(new Event('sladus:ready'));
   }
 
   window.Store.load().then(function (d) {
