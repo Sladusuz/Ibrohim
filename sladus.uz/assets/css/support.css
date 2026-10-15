@@ -1,0 +1,95 @@
+/* ============================================================
+   Sladus — Support sahifasi (FAQ, katalog yuklash, AI chat)
+   ============================================================ */
+
+/* ---------- katalog yuklab olish kartasi ---------- */
+.dlcard {
+  display: flex; align-items: center; gap: 1.1rem;
+  padding: 1.4rem 1.5rem; margin-bottom: 2rem;
+  background: var(--void); color: var(--on-dark);
+  border-radius: var(--r-l); box-shadow: var(--lift);
+}
+.dlcard__ic {
+  flex-shrink: 0; width: 52px; height: 52px; border-radius: var(--r-m);
+  background: linear-gradient(135deg, var(--brand), var(--gold));
+  display: flex; align-items: center; justify-content: center; color: #fff;
+}
+.dlcard__ic svg { width: 26px; height: 26px; }
+.dlcard__t { flex: 1; min-width: 0; }
+.dlcard__t h3 { font-family: var(--display); font-size: var(--t-lg); margin-bottom: .2rem; }
+.dlcard__t p { color: var(--on-dark-mu); font-size: var(--t-sm); }
+.dlcard .btn { flex-shrink: 0; }
+
+/* ---------- FAQ ---------- */
+.faq h2 { font-family: var(--display); font-size: var(--t-xl); margin-bottom: 1.1rem; }
+.faq__item {
+  border: 1px solid var(--hair); border-radius: var(--r-m);
+  margin-bottom: .7rem; overflow: hidden; background: #fff;
+}
+.faq__item summary {
+  list-style: none; cursor: pointer; padding: 1rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  font-weight: 600; font-size: var(--t-sm);
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary::after {
+  content: ''; flex-shrink: 0; width: 10px; height: 10px;
+  border-right: 2px solid var(--mute); border-bottom: 2px solid var(--mute);
+  transform: rotate(45deg); transition: transform .2s var(--ez);
+}
+.faq__item[open] summary::after { transform: rotate(-135deg); }
+.faq__item p {
+  padding: 0 1.2rem 1.1rem; color: var(--mute); font-size: var(--t-sm); line-height: 1.6;
+}
+
+/* ---------- AI chat vidjeti ---------- */
+.chatw {
+  border: 1px solid var(--hair); border-radius: var(--r-l); background: #fff;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: var(--lift); position: sticky; top: 1.5rem;
+  height: min(640px, 78vh);
+}
+.chatw__h {
+  display: flex; align-items: center; gap: .7rem;
+  padding: 1.1rem 1.3rem; border-bottom: 1px solid var(--hair);
+}
+.chatw__dot { width: 9px; height: 9px; border-radius: 50%; background: var(--mint); flex-shrink: 0; }
+.chatw__h h3 { font-family: var(--display); font-size: var(--t-md); }
+.chatw__h p { color: var(--mute); font-size: var(--t-xs); }
+.chatw__body {
+  flex: 1; overflow-y: auto; padding: 1.1rem 1.2rem;
+  display: flex; flex-direction: column; gap: .7rem;
+}
+.chatw__msg {
+  max-width: 88%; padding: .65rem .9rem; border-radius: var(--r-m);
+  font-size: var(--t-sm); line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+}
+.chatw__msg--bot { align-self: flex-start; background: var(--shell-2); color: var(--ink); border-bottom-left-radius: 4px; }
+.chatw__msg--user { align-self: flex-end; background: var(--brand); color: #fff; border-bottom-right-radius: 4px; }
+.chatw__msg--err { align-self: center; background: #FCEBEE; color: #93203B; font-size: var(--t-xs); }
+.chatw__typing { align-self: flex-start; display: flex; gap: 4px; padding: .65rem .9rem; }
+.chatw__typing span {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--mute);
+  animation: chatDot 1.1s infinite ease-in-out;
+}
+.chatw__typing span:nth-child(2) { animation-delay: .15s; }
+.chatw__typing span:nth-child(3) { animation-delay: .3s; }
+@keyframes chatDot { 0%, 60%, 100% { opacity: .25; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+.chatw__f {
+  display: flex; gap: .6rem; padding: .9rem 1rem; border-top: 1px solid var(--hair);
+}
+.chatw__f input {
+  flex: 1; border: 1px solid var(--hair); border-radius: var(--pill);
+  padding: .7rem 1.1rem; font: inherit; font-size: var(--t-sm); min-width: 0;
+}
+.chatw__f input:focus { outline: none; border-color: var(--brand); }
+.chatw__f button {
+  flex-shrink: 0; width: 42px; height: 42px; border-radius: 50%;
+  background: var(--brand); color: #fff; display: flex; align-items: center; justify-content: center;
+}
+.chatw__f button:disabled { opacity: .5; }
+.chatw__disc { padding: 0 1.2rem .9rem; color: var(--mute); font-size: .72rem; line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .chatw { position: static; height: 560px; }
+}

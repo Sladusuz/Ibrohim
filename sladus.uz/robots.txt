@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /panel-fa0717685948.html
+Disallow: /admin-56a7e0dcc2af.html
+Disallow: /config.js
+Disallow: /supabase/
+
+Sitemap: https://www.sladus.uz/sitemap.xml
