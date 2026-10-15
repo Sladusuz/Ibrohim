@@ -20,6 +20,10 @@
   }
   window.addEventListener('error', function (e) {
     if (e.target && e.target !== window && e.target.tagName) {
+      /* Rasm (IMG) yuklanmasa — bu xato emas (mahsulotda rasm yo'q yoki manzili noto'g'ri bo'lishi mumkin);
+         ba'zi brauzerlar (Safari) bo'sh src uchun sahifaning o'z manzilini qaytaradi va yolg'on ogohlantirish chiqadi. */
+      var tg = e.target.tagName;
+      if (tg !== 'SCRIPT' && !(tg === 'LINK' && /stylesheet/i.test(e.target.rel || ''))) return;
       var src = e.target.src || e.target.href || String(e.target.tagName);
       showBanner('Fayl yuklanmadi: ' + src.split('/').pop() +
         '. Zip arxivni TO‘LIQ (assets papkasi bilan birga, ichidagi tuzilishini o‘zgartirmasdan) qayta oching.');

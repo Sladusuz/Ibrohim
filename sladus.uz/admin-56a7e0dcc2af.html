@@ -25,6 +25,10 @@
   }
   window.addEventListener('error', function (e) {
     if (e.target && e.target !== window && e.target.tagName) {
+      /* Rasm (IMG) yuklanmasa — bu xato emas (mahsulotda rasm yo'q yoki manzili noto'g'ri bo'lishi mumkin);
+         ba'zi brauzerlar (Safari) bo'sh src uchun sahifaning o'z manzilini qaytaradi va yolg'on ogohlantirish chiqadi. */
+      var tg = e.target.tagName;
+      if (tg !== 'SCRIPT' && !(tg === 'LINK' && /stylesheet/i.test(e.target.rel || ''))) return;
       var src = e.target.src || e.target.href || String(e.target.tagName);
       showBanner('Fayl yuklanmadi: ' + src.split('/').pop() +
         '. Zip arxivni TO‘LIQ (assets papkasi bilan birga, ichidagi tuzilishini o‘zgartirmasdan) qayta oching.');
@@ -671,7 +675,7 @@ function renderDash(){
         '<h3>Oxirgi qo\'shilgan / o\'zgargan</h3><p class="d">Ro\'yxatdagi so\'nggi mahsulotlar</p>'+
         (recent.length ? recent.map(function(p){
           return '<div style="display:flex; align-items:center; gap:.7rem; padding:.5rem 0; border-top:1px solid var(--hair)">'+
-            '<img class="pimg" src="'+esc(p.img||'')+'" onerror="this.style.visibility=\'hidden\'">'+
+            '<img class="pimg" src="'+esc(p.img||'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==')+'" onerror="this.style.visibility=\'hidden\'">'+
             '<div style="min-width:0; flex:1"><b style="display:block; font-size:.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">'+esc(p.name)+'</b><small style="color:var(--mute); font-size:.72rem">'+esc(catName(p.cat))+'</small></div>'+
             '<span class="badge '+(p.active?'badge-on':'badge-off')+'">'+(p.active?'Faol':'Yashirin')+'</span>'+
           '</div>';
@@ -719,7 +723,7 @@ function renderProducts(){
   var rowsHtml = list.length ? list.map(function(p){
     return '<tr data-id="'+esc(p.id)+'">'+
       '<td><div class="name-cell">'+
-        '<img class="pimg" src="'+esc(p.img||'')+'" onerror="this.style.visibility=\'hidden\'">'+
+        '<img class="pimg" src="'+esc(p.img||'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==')+'" onerror="this.style.visibility=\'hidden\'">'+
         '<div><b>'+esc(p.name)+'</b><small>'+esc(p.id)+'</small></div>'+
       '</div></td>'+
       '<td>'+esc(catName(p.cat))+'</td>'+
@@ -981,7 +985,7 @@ function productFormHtml(p){
     '<div class="preview-col">'+
       '<div class="hint">Jonli ko\'rinish — saytdagi kartaga taxminan shunday ko\'rinadi</div>'+
       '<div class="preview-card">'+
-        '<img class="preview-img" id="prev_img" src="'+esc(p.img)+'" onerror="this.style.opacity=0.15">'+
+        '<img class="preview-img" id="prev_img" src="'+esc(p.img||'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==')+'" onerror="this.style.opacity=0.15">'+
         '<div class="preview-body">'+
           '<div class="preview-cat" id="prev_cat" style="color:'+catColorHex((catById(p.cat)||{}).color)+'">'+esc(catName(p.cat))+'</div>'+
           '<h4 id="prev_name">'+esc(p.name || 'Mahsulot nomi')+'</h4>'+
