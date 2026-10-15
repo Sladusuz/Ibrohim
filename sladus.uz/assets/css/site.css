@@ -301,6 +301,13 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
 .card__f { margin-top: auto; padding-top: .95rem; border-top: 1px solid var(--hair); display: flex; gap: 1rem; font-size: var(--t-xs); color: var(--mute); }
 .card__f b { color: var(--ink); }
 
+/* Nisbati mos kelmaydigan rasm (tik/keng) kesilmasdan to'liq ko'rinadi */
+.card__ph.fit img, .pd__ph.fit img { object-fit: contain; padding: .7rem; }
+.award.fit img { object-fit: contain; padding: .5rem; }
+.noimg { display: grid; place-items: center; }
+.noimg img { opacity: 0; }
+.noimg::before { content: 'SLADUS'; position: absolute; font-family: var(--display); font-weight: 900; letter-spacing: -.05em; font-size: 1.6rem; color: rgba(255, 243, 228, .18); }
+
 /* ---------- Filtrlar ---------- */
 .filters { display: grid; gap: 1.1rem; margin-bottom: 2.2rem; }
 .filters__top { display: flex; flex-wrap: wrap; gap: .7rem; align-items: center; }

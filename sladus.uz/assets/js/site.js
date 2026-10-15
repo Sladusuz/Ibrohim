@@ -124,6 +124,19 @@
         '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19V5M5 12l7-7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>';
   }
 
+  /* Har qanday nisbatdagi rasm to'liq ko'rinsin: kvadratga yaqin bo'lmasa — cover o'rniga contain */
+  var FIT_BOX = { 'card__ph': 1.25, 'pd__ph': 1, 'award': .75 };
+  function fitMark(img) {
+    var w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return;
+    var box = img.closest('.card__ph, .pd__ph, .award');
+    if (!box) return;
+    var want = FIT_BOX[box.classList.contains('card__ph') ? 'card__ph' : box.classList.contains('pd__ph') ? 'pd__ph' : 'award'];
+    box.classList.toggle('fit', Math.abs(Math.log((w / h) / want)) > .3);
+  }
+  function fitAll() { $$('.card__ph img, .pd__ph img, .award img').forEach(function (i) { if (i.complete) fitMark(i); }); }
+  document.addEventListener('load', function (ev) { if (ev.target && ev.target.tagName === 'IMG') fitMark(ev.target); }, true);
+
   function chrome() {
     var burger = $('.burger'), nav = $('#nav'), hdr = $('#hdr');
     if (burger) burger.addEventListener('click', function () {
@@ -175,7 +188,7 @@
   function card(p) {
     var c = cat(p.cat);
     return '<a class="card ' + colorOf(p.cat) + '" href="' + href('product.html', { id: p.id }) + '">' +
-      '<i class="card__gl"></i><div class="card__ph"><img src="' + e(p.img) + '" alt="' + e(p.name) + '" loading="lazy" width="420" height="336">' +
+      '<i class="card__gl"></i><div class="card__ph"><img src="' + e(p.img) + '" alt="' + e(p.name) + '" loading="lazy" decoding="async" width="420" height="336" onerror="this.parentNode.classList.add(\'noimg\')">' +
         (c ? '<span class="card__cat">' + e(loc(c.name)) + '</span>' : '') + '</div>' +
       '<div class="card__b"><h3>' + e(p.name) + '</h3><p>' + e(loc(p.descr)) + '</p>' +
         '<div class="card__f num"><span>' + e(t('p.net')) + ': <b>' + e(p.pack.net) + '</b></span>' +
@@ -436,6 +449,7 @@
       u.searchParams.set('cat', st.cat);
       st.q ? u.searchParams.set('q', st.q) : u.searchParams.delete('q');
       history.replaceState(null, '', u);
+      fitAll();
       document.dispatchEvent(new Event('sladus:redraw'));
     }
 
@@ -479,7 +493,7 @@
 
     $('#pd').className = 'wrap pd ' + cl;
     $('#pd').innerHTML =
-      '<div class="pd__ph"><img src="' + e(p.img) + '" alt="' + e(p.name) + '" width="720" height="720"></div><div>' +
+      '<div class="pd__ph"><img src="' + e(p.img) + '" alt="' + e(p.name) + '" decoding="async" width="720" height="720" onerror="this.parentNode.classList.add(\'noimg\')"></div><div>' +
       '<div class="tags"><span class="tag tag--c">' + e(cn) + '</span>' +
         '<span class="tag num">' + e(t('p.code')) + ' ' + e(p.code) + '</span>' +
         '<span class="tag num">' + e(p.pack.net) + '</span></div>' +
@@ -573,6 +587,7 @@
       if (window.console) console.error('Sladus:', err);
     }
     chrome();
+    fitAll();
     window.SL_READY = true;
     document.dispatchEvent(new Event('sladus:ready'));
   }

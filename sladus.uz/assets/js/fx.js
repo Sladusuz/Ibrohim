@@ -330,7 +330,7 @@
     $$('.figures b, .nutri b, .glass b').forEach(countUp);
 
     /* yo'nalish rasmlari parallaksi */
-    $$('#story img, .award img').forEach(function (img) {
+    $$('.award img').forEach(function (img) {
       gsap.fromTo(img, { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } });
     });
 
@@ -338,9 +338,6 @@
     $$('.tl').forEach(function (tl) {
       if (reduce) return;
       gsap.fromTo(tl, { '--p': 0 }, { '--p': 1, ease: 'none', scrollTrigger: { trigger: tl, start: 'top 70%', end: 'bottom 70%', scrub: true } });
-    });
-    $$('#story img').forEach(function (img) {
-      gsap.fromTo(img, { clipPath: 'inset(0 0 100% 0 round 32px)' }, { clipPath: 'inset(0 0 0% 0 round 32px)', duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: img, start: 'top 85%', once: true } });
     });
 
     /* footer */

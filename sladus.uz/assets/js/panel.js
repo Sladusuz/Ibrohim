@@ -370,19 +370,22 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
     function up(file) {
       if (!file) return;
       if (!/^image\//.test(file.type)) return toast('Bu rasm fayli emas', true);
-      if (file.size > 5 * 1024 * 1024) return toast('Rasm 5 MB dan katta', true);
-      d.innerHTML = '<b>Yuklanmoqda…</b>';
-      var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-      var path = new Date().toISOString().slice(0, 10) + '-' + Math.random().toString(36).slice(2, 9) + '.' + ext;
-      sb.storage.from('products').upload(path, file, { cacheControl: '31536000', upsert: false })
-        .then(function (r) {
-          if (r.error) { d.innerHTML = '<b>Yuklanmadi</b>' + esc(r.error.message); return toast(r.error.message, true); }
-          var url = sb.storage.from('products').getPublicUrl(path).data.publicUrl;
-          u.value = url; pv.src = url;
-          d.innerHTML = '<b>Rasm yuklandi ✓</b>Boshqasini tanlash uchun bosing';
-          onDone && onDone();
-          toast('Rasm yuklandi');
-        });
+      if (!window.SladusImg) return toast('Rasm moslash moduli yuklanmadi (assets/js/imgfit.js)', true);
+      d.innerHTML = '<b>Moslanmoqda…</b>';
+      /* har qanday rasm avtomatik 1400 px gacha kichraytirilib WebP ga siqiladi */
+      window.SladusImg.fit(file, { max: 1400, quality: .84 }).then(function (fit) {
+        d.innerHTML = '<b>Yuklanmoqda…</b>' + fit.width + '×' + fit.height + ' · ' + fit.kb + ' KB';
+        var path = new Date().toISOString().slice(0, 10) + '-' + Math.random().toString(36).slice(2, 9) + '.' + fit.ext;
+        return sb.storage.from('products').upload(path, fit.blob, { cacheControl: '31536000', upsert: false, contentType: fit.type })
+          .then(function (r) {
+            if (r.error) { d.innerHTML = '<b>Yuklanmadi</b>' + esc(r.error.message); return toast(r.error.message, true); }
+            var url = sb.storage.from('products').getPublicUrl(path).data.publicUrl;
+            u.value = url; pv.src = url;
+            d.innerHTML = '<b>Rasm yuklandi ✓</b>' + fit.width + '×' + fit.height + ' · ' + fit.kb + ' KB. Boshqasini tanlash uchun bosing';
+            onDone && onDone();
+            toast('Rasm yuklandi');
+          });
+      }).catch(function (e) { d.innerHTML = '<b>Yuklanmadi</b>'; toast(e.message || 'Rasm o‘qilmadi', true); });
     }
   }
 

@@ -414,6 +414,7 @@ legend{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spaci
 <script src="assets/js/seed.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/store.js"></script>
+<script src="assets/js/imgfit.js"></script>
 <script>
 (function(){
 'use strict';
@@ -1082,13 +1083,13 @@ function wireProductForm(root){
 }
 
 function handleImageFile(file, root){
-  if (!/^image\//.test(file.type)){ toast('Faqat rasm fayllari qabul qilinadi.', 'err'); return; }
-  if (file.size > 4.5 * 1024 * 1024){ toast("Rasm juda katta (4.5 MB dan oshmasin).", 'err'); return; }
-  readFileAsDataURL(file, function(dataUrl){
-    root.querySelector('#f_img').value = dataUrl;
-    root.querySelector('#prev_img').src = dataUrl;
-    toast('Rasm yuklandi.');
-  });
+  if (!window.SladusImg){ toast('Rasm moslash moduli yuklanmadi (assets/js/imgfit.js).', 'err'); return; }
+  toast('Rasm moslanmoqda...');
+  window.SladusImg.fit(file, { max: 1400, quality: .84 }).then(function(r){
+    root.querySelector('#f_img').value = r.dataUrl;
+    root.querySelector('#prev_img').src = r.dataUrl;
+    toast('Rasm moslandi: ' + r.width + '×' + r.height + ', ' + r.kb + ' KB.');
+  }).catch(function(e){ toast(e.message || 'Rasmni o\'qib bo\'lmadi.', 'err'); });
 }
 
 function saveProductForm(root){
