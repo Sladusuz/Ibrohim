@@ -228,7 +228,7 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
 @keyframes bob { 50% { transform: translateY(-12px); } }
 .drg { position: absolute; z-index: 4; border-radius: 50%; pointer-events: none; will-change: transform; box-shadow: inset -14px -18px 30px rgba(0, 0, 0, .35), inset 10px 10px 22px rgba(255, 255, 255, .55), 0 40px 60px -20px rgba(0, 0, 0, .7); animation: bob 7s ease-in-out infinite; }
 .drg::after { content: ''; position: absolute; left: 22%; top: 16%; width: 26%; height: 16%; border-radius: 50%; background: rgba(255, 255, 255, .75); filter: blur(3px); transform: rotate(-30deg); }
-.drg.d1 { width: clamp(80px, 11vw, 150px); aspect-ratio: 1; left: 49%; top: 17%; background: radial-gradient(circle at 35% 30%, #ff8fa9, #E8315B 55%, #8d1630); }
+.drg.d1 { width: clamp(80px, 11vw, 150px); aspect-ratio: 1; left: 38%; top: 10%; background: radial-gradient(circle at 35% 30%, #ff8fa9, #E8315B 55%, #8d1630); }
 .drg.d2 { width: clamp(50px, 6.6vw, 96px); aspect-ratio: 1; left: 66%; bottom: 20%; background: radial-gradient(circle at 35% 30%, #ffe29a, #D9A038 55%, #8a5f10); animation-delay: -2s; }
 .drg.d3 { width: clamp(60px, 8vw, 120px); aspect-ratio: 1; left: 43%; bottom: 24%; background: radial-gradient(circle at 35% 30%, #9fe8cf, #3E9E82 55%, #1b5c47); animation-delay: -4s; }
 .drg.d4 { width: clamp(36px, 4.8vw, 70px); aspect-ratio: 1; right: 6%; top: 18%; background: radial-gradient(circle at 35% 30%, #ffb487, #DE6A2E 55%, #8a3a10); animation-delay: -1s; }
