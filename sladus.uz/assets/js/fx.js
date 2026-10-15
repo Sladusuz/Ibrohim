@@ -15,6 +15,8 @@
   var isHome = page === 'home';
   var hasG = !!(window.gsap && window.ScrollTrigger);
   var small = innerWidth < 760;
+  var cores = navigator.hardwareConcurrency || 4, mem = navigator.deviceMemory || 4;
+  var lite = small || cores <= 4 || mem <= 4 || !fine; /* kuchsiz qurilma: yengil sahna */
   var LANG = document.documentElement.lang || 'ru';
   var CUR_LABEL = { ru: 'СМОТРЕТЬ', uz: 'KO‘RISH', en: 'VIEW' }[LANG] || 'VIEW';
   var P = 0, vel = 0, lenis = null, opened = false, cbs = [], booted = false;
@@ -41,8 +43,8 @@
     var cv = $('#gl');
     if (!window.THREE || !cv) return;
     var T = window.THREE, r;
-    try { r = new T.WebGLRenderer({ canvas: cv, antialias: !small, powerPreference: 'high-performance' }); } catch (e) { cv.remove(); return; }
-    r.setPixelRatio(Math.min(devicePixelRatio || 1, small ? 1.4 : 1.75));
+    try { r = new T.WebGLRenderer({ canvas: cv, antialias: !lite, powerPreference: 'high-performance' }); } catch (e) { cv.remove(); return; }
+    var pr = Math.min(devicePixelRatio || 1, lite ? 1 : 1.25); r.setPixelRatio(pr);
     r.outputEncoding = T.sRGBEncoding; r.toneMapping = T.ACESFilmicToneMapping; r.toneMappingExposure = .95;
 
     var scene = new T.Scene(), base = new T.Color(0x0c0709);
@@ -71,8 +73,8 @@
     var bump = new T.CanvasTexture(bc); bump.wrapS = bump.wrapT = T.RepeatWrapping; bump.repeat.set(3, 3);
 
     var pal = [0xff3d6e, 0xffbe3b, 0x2fe0a8, 0xff7a30, 0xfff3e4, 0x8b1a3c, 0x4a2a1c].map(lin);
-    var N = isHome ? (small ? 110 : 280) : (small ? 50 : 120), geo = new T.SphereGeometry(1, small ? 24 : 40, small ? 18 : 30);
-    var mat = new T.MeshPhysicalMaterial({ color: 0xffffff, roughness: .2, metalness: .02, clearcoat: 1, clearcoatRoughness: .07, envMapIntensity: .7, bumpMap: bump, bumpScale: .35 });
+    var N = isHome ? (lite ? 56 : 130) : (lite ? 34 : 70), geo = new T.SphereGeometry(1, lite ? 16 : 22, lite ? 12 : 16);
+    var mat = new T.MeshStandardMaterial({ color: 0xffffff, roughness: .22, metalness: .04, envMapIntensity: .95 }); if (!lite) { mat.bumpMap = bump; mat.bumpScale = .3; }
     var im = new T.InstancedMesh(geo, mat, N); scene.add(im);
     var D = [], dm = new T.Object3D(), zFar = isHome ? -135 : -80;
     for (var i = 0; i < N; i++) {
@@ -111,6 +113,15 @@
     document.addEventListener('visibilitychange', function () { run = !document.hidden; });
     var depth = isHome ? 128 : 58;
 
+    var heroEl = $('.hero--aurora'), acc = 0, frames = 0, last = performance.now();
+    function covered() { return heroEl && scrollY + innerHeight < heroEl.offsetHeight - 30; }
+    function adapt() {
+      var n = performance.now(), dt = n - last; last = n; acc += dt; frames++;
+      if (frames >= 40) {
+        if (acc / frames > 26 && pr > .6) { pr = Math.max(.6, pr * .8); r.setPixelRatio(pr); r.setSize(innerWidth, innerHeight, false); }
+        acc = 0; frames = 0;
+      }
+    }
     function draw(still) {
       var t = still ? 4 : (performance.now() - t0) / 1000;
       mouse.sx += (mouse.x - mouse.sx) * .05; mouse.sy += (mouse.y - mouse.sy) * .05;
@@ -141,7 +152,7 @@
       r.render(scene, cam);
     }
     if (reduce) { draw(true); addEventListener('scroll', function () { draw(true); }, { passive: true }); addEventListener('resize', function () { draw(true); }); return; }
-    (function frame() { requestAnimationFrame(frame); if (on && run) draw(false); })();
+    (function frame() { requestAnimationFrame(frame); if (on && run && !covered()) { draw(false); adapt(); } else last = performance.now(); })();
   }
 
   /* ---------- yordamchilar ---------- */
@@ -227,7 +238,7 @@
       mm.add('(min-width: 761px) and (prefers-reduced-motion: no-preference)', function () {
         hz.classList.add('hz--pin');
         gsap.to(tr, { x: function () { return -(tr.scrollWidth - innerWidth); }, ease: 'none',
-          scrollTrigger: { trigger: hz, start: 'top top', end: function () { return '+=' + (tr.scrollWidth - innerWidth + innerHeight * .35); }, pin: true, scrub: .8, invalidateOnRefresh: true, anticipatePin: 1 } });
+          scrollTrigger: { trigger: hz, start: 'top top', end: function () { return '+=' + (tr.scrollWidth - innerWidth + innerHeight * .35); }, pin: true, scrub: .4, invalidateOnRefresh: true, anticipatePin: 1 } });
         return function () { hz.classList.remove('hz--pin'); };
       });
     }
@@ -269,7 +280,7 @@
   /* ---------- scroll, kursor, magnit, tilt ---------- */
   function smooth() {
     if (window.Lenis && hasG && !reduce) {
-      lenis = new Lenis({ lerp: .09, smoothWheel: true });
+      lenis = new Lenis({ lerp: .12, smoothWheel: true });
       lenis.on('scroll', ScrollTrigger.update);
       gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
       gsap.ticker.lagSmoothing(0);
@@ -292,19 +303,20 @@
     }, true);
   }
 
-  var mqx = 0, lastY = scrollY, lastDir = 0, hdr = null;
+  var mqx = 0, lastY = scrollY, lastDir = 0, hdr = null, maxS = 1, pgEl = null, mqEl = null, navEl = null, mqW = 1;
+  function measure() { maxS = Math.max(1, document.documentElement.scrollHeight - innerHeight); if (mqEl) mqW = mqEl.scrollWidth / 4; }
   function loop() {
-    var y = scrollY, h = document.documentElement.scrollHeight - innerHeight, dy = y - lastY;
+    var y = scrollY, h = maxS, dy = y - lastY;
     vel += (dy - vel) * .1; lastY = y;
     P = h > 0 ? Math.max(0, Math.min(1, y / h)) : 0;
-    var pg = $('#prog'); if (pg) pg.style.transform = 'scaleX(' + P + ')';
+    if (pgEl) pgEl.style.transform = 'scaleX(' + P + ')';
     if (hdr) {
-      if (y > 220 && dy > 4 && !$('.nav.open')) hdr.classList.add('hide');
+      if (y > 220 && dy > 4 && !(navEl && navEl.classList.contains('open'))) hdr.classList.add('hide');
       else if (dy < -4 || y < 120) hdr.classList.remove('hide');
     }
-    var mq = $('#mqt');
-    if (mq && !reduce) {
-      mqx -= 1.5 + Math.abs(vel) * .3; var w = mq.scrollWidth / 4; if (mqx < -w) mqx += w;
+    var mq = mqEl;
+    if (mq && !reduce && y < 6000) {
+      mqx -= 1.5 + Math.abs(vel) * .3; var w = mqW; if (mqx < -w) mqx += w;
       mq.style.transform = 'translateX(' + mqx + 'px) skewX(' + Math.max(-12, Math.min(12, -vel * .4)) + 'deg)';
     }
     requestAnimationFrame(loop);
@@ -409,7 +421,8 @@
 
   function ready() {
     if (booted) return; booted = true;
-    hdr = $('#hdr');
+    hdr = $('#hdr'); pgEl = $('#prog'); mqEl = $('#mqt'); navEl = $('#nav');
+    measure(); addEventListener('resize', measure); addEventListener('load', measure); setInterval(measure, 2500);
     smooth(); choreography(); heroScene(); interactions(); transitions(); intro();
     document.addEventListener('sladus:redraw', function () {
       if (!hasG) return;
