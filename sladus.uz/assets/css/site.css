@@ -136,9 +136,10 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
 .hdr__in {
   display: flex; align-items: center; gap: clamp(.8rem, 3vw, 2.4rem); min-height: 64px;
   padding: 0 .6rem 0 1.3rem; border-radius: var(--pill);
-  background: rgba(21, 12, 15, .5); border: 1px solid var(--hair);
-  backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--hair); position: relative; isolation: isolate;
 }
+/* blur alohida qatlamda: backdrop-filter fixed menyuni qisib qo'yadi */
+.hdr__in::before { content: ''; position: absolute; inset: -1px; z-index: -2; border-radius: inherit; background: rgba(21, 12, 15, .5); backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%); }
 .logo { display: flex; align-items: center; gap: .6rem; flex-shrink: 0; }
 .logo img { height: 34px; width: auto; }
 .logo b { font-family: var(--display); font-weight: 900; font-size: 1.02rem; letter-spacing: -.05em; line-height: 1; }
@@ -413,7 +414,7 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
 .dlcard__t h3 { font-size: var(--t-md); font-weight: 800; margin-bottom: .25rem; }
 .dlcard__t p { color: var(--mute); font-size: var(--t-sm); }
 .dlcard .btn { flex-shrink: 0; }
-@media (max-width: 560px) { .dlcard { flex-wrap: wrap; } }
+@media (max-width: 560px) { .dlcard { flex-direction: column; align-items: flex-start; } }
 .faq h2 { font-size: var(--t-xl); font-weight: 900; text-transform: uppercase; margin-bottom: 1.2rem; }
 .faq__item { border: 1px solid var(--hair); border-radius: var(--r-m); margin-bottom: .7rem; overflow: hidden; background: var(--glass); backdrop-filter: blur(12px); transition: border-color .3s; }
 .faq__item[open] { border-color: var(--gold); }

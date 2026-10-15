@@ -201,3 +201,21 @@ sayt `assets/js/seed.js` dagi nusxadan ishlaydi — hech qachon bo'sh sahifa chi
 11. Manzil — «S**p**unik-17» → «Sputnik-17»
 12. Meta-teglar bo'sh, title'lar takrorlanardi
 13. Sayt faqat rus tilida edi — uz va en qo'shildi
+
+---
+
+## Dizayn qatlami (Cosmos)
+
+Ochiq sayt (`index`, `about`, `catalog`, `product`, `contact`, `support`) yangi
+dizaynda. Ma'lumotlar, tarjimalar (uz/ru/en), Supabase, chat va ikkala panel
+**o'zgarmagan** — panelda o'zgartirgan narsangiz saytda avvalgidek darhol ko'rinadi.
+
+| Fayl | Vazifasi |
+|---|---|
+| `assets/css/site.css` | Ochiq saytning dizayn tizimi (panellar `app.css`'da qoladi) |
+| `assets/js/fx.js` | WebGL draje sahnasi + GSAP animatsiyalari, kursor, sahifa o'tishlari |
+| `assets/vendor/` | three.js (r128), GSAP 3.12.5 + ScrollTrigger, Lenis 1.1.13 — saytning o'zida, CDN kerak emas |
+
+- Kutubxonalar yuklanmasa yoki WebGL bo'lmasa ham sayt to'liq ko'rinadi va ishlaydi.
+- `prefers-reduced-motion` yoqilgan bo'lsa, animatsiyalar o'chadi (sahna statik qoladi).
+- Telefonda sahna yengillashtiriladi (draje soni kam), kursor effektlari o'chadi.

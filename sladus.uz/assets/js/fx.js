@@ -95,7 +95,7 @@
         var s = new T.Mesh(new T.SphereGeometry(.38 + k * .08, 32, 24), new T.MeshPhysicalMaterial({ color: lin(c), roughness: .14, clearcoat: 1, envMapIntensity: .8 }));
         s.scale.y = .84; hero.add(s); return s;
       });
-      hero.position.set(small ? 0 : 4.3, small ? 2.8 : .4, -3);
+      hero.position.set(small ? 1.2 : 4.3, small ? 3.4 : .4, -3); if (small) hero.userData.k = .7;
     }
 
     function size() { var w = innerWidth, h = innerHeight; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); small = w < 760; }
@@ -134,7 +134,7 @@
         hero.rotation.y = t * .25 + mouse.sx * .5; hero.rotation.x = mouse.sy * .3;
         hm.rotation.y = t * .3; ring.rotation.z = t * .4; ring2.rotation.y = -t * .3;
         sats.forEach(function (s, k) { var q = t * (.7 + k * .25) + k * 2.1; s.position.set(Math.cos(q) * (3.1 + k * .4), Math.sin(q * 1.3) * 1.6, Math.sin(q) * (3.1 + k * .4)); });
-        var hs = Math.max(.001, G.intro.v * Math.max(0, 1 - P * 16)); hero.scale.setScalar(hs); hero.visible = hs > .01;
+        var hs = Math.max(.001, G.intro.v * Math.max(0, 1 - P * 16)); hero.scale.setScalar(hs * (small ? .7 : 1)); hero.visible = hs > .01;
         hm.material.color.copy(c).multiplyScalar(.6);
       }
       r.render(scene, cam);
