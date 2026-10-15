@@ -216,7 +216,7 @@
               var m = document.createElement('span'); m.className = 'mwm'; var i = document.createElement('span'); i.className = 'mw'; i.textContent = w; i.style.animationDelay = (k++ * 70) + 'ms'; m.appendChild(i); f.appendChild(m);
             });
             n.replaceChild(f, c);
-          } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
+          } else if (c.nodeType === 1 && c.tagName !== 'BR') { if (c.classList.contains('g')) c.classList.add('mwu'); else walk(c); }
         });
       })(h);
       h.setAttribute('aria-label', h.textContent.replace(/\s+/g, ' ').trim());

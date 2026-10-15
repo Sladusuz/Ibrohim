@@ -131,8 +131,8 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
 .btn[disabled] { opacity: .5; pointer-events: none; }
 
 /* ---------- Header ---------- */
-.hdr { position: fixed; top: 12px; left: 0; right: 0; z-index: 200; transition: transform .6s var(--ez); }
-.hdr.hide { transform: translateY(-140%); }
+.hdr { position: fixed; top: 12px; left: 0; right: 0; z-index: 200; transition: top .5s var(--ez); }
+.hdr.hide { top: -96px; }
 .hdr__in {
   display: flex; align-items: center; gap: clamp(.8rem, 3vw, 2.4rem); min-height: 64px;
   padding: 0 .6rem 0 1.3rem; border-radius: var(--pill);
@@ -173,8 +173,8 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
   .hide-sm { display: none; }
   .only-sm { display: block; }
   .hdr__in { padding-left: 1.1rem; }
-  .nav { position: fixed; inset: 0; z-index: -1; background: rgba(12, 7, 9, .97); padding: 6.5rem var(--gut) 2rem; display: flex; align-items: center; transform: translateY(-105%); transition: transform .6s var(--ez); margin: 0; }
-  .nav.open { transform: none; }
+  .nav { visibility: hidden; transition: transform .6s var(--ez), visibility 0s .6s; position: fixed; inset: 0; z-index: -1; background: rgba(12, 7, 9, .97); padding: 6.5rem var(--gut) 2rem; display: flex; align-items: center; transform: translateY(-105%); transition: transform .6s var(--ez); margin: 0; }
+  .nav.open { transform: none; visibility: visible; transition-delay: 0s; }
   .nav ul { flex-direction: column; align-items: stretch; gap: 0; width: 100%; }
   .nav a { display: block; padding: .9rem 0; border-bottom: 1px solid var(--hair); font-size: clamp(1.6rem, 7vw, 2.4rem); font-family: var(--display); font-weight: 900; text-transform: uppercase; letter-spacing: -.05em; color: var(--ink); }
   .nav a::after { display: none; }
@@ -502,7 +502,7 @@ html.nav-open, html.nav-open body { overflow: hidden; }
 /* telefon fon qatlami: gradient + suzuvchi mayda draje */
 .mbg { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; contain: strict;
   background: radial-gradient(70% 40% at 85% 8%, rgba(255, 61, 110, .26), transparent 70%), radial-gradient(60% 40% at 5% 62%, rgba(47, 224, 168, .16), transparent 70%), radial-gradient(70% 40% at 95% 100%, rgba(255, 122, 48, .2), transparent 70%), #0c0709; }
-.fl { position: absolute; border-radius: 50%; opacity: .5; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 55%, #fff), var(--c) 55%, color-mix(in srgb, var(--c) 45%, #000));
+.fl { position: absolute; border-radius: 50%; opacity: .3; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--c) 55%, #fff), var(--c) 55%, color-mix(in srgb, var(--c) 45%, #000));
   transform: translate3d(0, calc(var(--sy, 0) * var(--k, 1) * -.12px), 0); animation: flo 9s ease-in-out infinite alternate; will-change: transform; }
 @keyframes flo { to { translate: 14px -26px; } }
 
@@ -515,10 +515,11 @@ html.nav-open, html.nav-open body { overflow: hidden; }
 .mw { display: inline-block; transform: translate3d(0, 115%, 0); }
 .mgo .mw { animation: mw .9s var(--ez) forwards; }
 @keyframes mw { to { transform: none; } }
-.mgo-wait .mw { visibility: visible; }
+.mwu { display: inline-block; transform: translate3d(0, 115%, 0); }
+.mgo .mwu { animation: mw .9s .2s var(--ez) forwards; }
 .mscrub .w { opacity: .2; transition: opacity .5s; }
 .mscrub .w.on { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .m-rv { opacity: 1; transform: none; } .mw { transform: none; } .mscrub .w { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .m-rv { opacity: 1; transform: none; } .mw, .mwu { transform: none; } .mscrub .w { opacity: 1; } }
 
 @media (max-width: 820px), (pointer: coarse) {
   :root { --gut: 1.1rem; --sec: clamp(3.2rem, 12vw, 4.8rem); }
@@ -551,7 +552,7 @@ html.nav-open, html.nav-open body { overflow: hidden; }
   .glass b { font-size: 1.35rem; }
   .glass--a { left: 0; top: 8%; } .glass--b { right: 0; bottom: 4%; }
   .drg { animation: none; box-shadow: inset -6px -8px 14px rgba(0, 0, 0, .35), inset 4px 4px 9px rgba(255, 255, 255, .5); }
-  .drg.d1 { width: 54px; left: auto; right: 4%; top: 2%; }
+  .drg.d1 { width: 46px; left: auto; right: 3%; top: auto; bottom: 34%; }
   .drg.d2, .drg.d4, .drg.d5 { display: none; }
   .drg.d3 { width: 40px; left: 6%; bottom: 20%; }
   .figures { grid-template-columns: 1fr 1fr; }
@@ -607,6 +608,10 @@ html.nav-open, html.nav-open body { overflow: hidden; }
 
   /* ichki sahifalar */
   .phead { padding-block: 6.2rem 1.6rem; }
+  .phead + .sec { padding-top: 1.4rem; }
+  #story { grid-template-columns: 1fr !important; gap: 1.6rem !important; }
+  #story img { aspect-ratio: 4 / 3; border-radius: 24px !important; }
+  .phead + .sec .pd, .phead + .sec .cgrid { margin-top: 0; }
   .phead h1 { font-size: clamp(2rem, 9.6vw, 3rem); max-width: none; }
   .phead p { font-size: .98rem; margin-top: 1rem; }
   .filters { gap: .8rem; margin-bottom: 1.4rem; }
