@@ -224,7 +224,7 @@ body:not([data-page="home"]) .vig { background: radial-gradient(120% 90% at 50% 
 .glass { position: absolute; z-index: 5; padding: 1rem 1.3rem; border-radius: 22px; background: rgba(255, 255, 255, .1); border: 1px solid rgba(255, 255, 255, .2); font-size: var(--t-xs); color: var(--mute); min-width: 150px; animation: bob 6s ease-in-out infinite; }
 .glass b { display: block; font-family: var(--display); font-weight: 900; font-size: 2rem; letter-spacing: -.06em; color: #fff; margin-top: .2rem; }
 .glass--a { left: -6%; top: 14%; }
-.glass--b { right: -2%; bottom: 10%; animation-delay: -3s; }
+.glass--b { right: -5%; bottom: -3%; animation-delay: -3s; }
 @keyframes bob { 50% { transform: translateY(-12px); } }
 .drg { position: absolute; z-index: 4; border-radius: 50%; pointer-events: none; will-change: transform; box-shadow: inset -14px -18px 30px rgba(0, 0, 0, .35), inset 10px 10px 22px rgba(255, 255, 255, .55), 0 40px 60px -20px rgba(0, 0, 0, .7); animation: bob 7s ease-in-out infinite; }
 .drg::after { content: ''; position: absolute; left: 22%; top: 16%; width: 26%; height: 16%; border-radius: 50%; background: rgba(255, 255, 255, .75); filter: blur(3px); transform: rotate(-30deg); }
