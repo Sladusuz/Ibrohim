@@ -40,7 +40,7 @@ window.Store = (function () {
       var local = live ? null : localData();
       if (local) {
         cache = {
-          products: local.products,
+          products: local.products.filter(function (p) { return p.active !== false; }), /* yashirin mahsulotlar saytda ko'rinmaydi */
           categories: (local.categories && local.categories.length) ? local.categories : seed().categories,
           offline: true,
           localAdmin: true

@@ -549,7 +549,13 @@ function loadData(){
 
 function persist(){
   DATA.updatedAt = new Date().toISOString();
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(DATA));
+  try {
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(DATA));
+  } catch (e) {
+    /* odatda katta rasm (data URL) xotirani to'ldiradi — foydalanuvchiga aytamiz, ma'lumot yo'qolmasin */
+    toast("Xotira to'ldi: o'zgarish saqlanmadi. Rasmni kichraytiring yoki URL ishlating.", 'err');
+    throw e;
+  }
   if (window.Store && window.Store.clearCache) window.Store.clearCache();
 }
 
