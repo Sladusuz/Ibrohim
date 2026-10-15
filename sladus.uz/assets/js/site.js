@@ -246,15 +246,25 @@
   function home() {
     var C = B.company, P = DATA.products, years = new Date().getFullYear() - C.founded;
 
+    $('#hero').className = 'hero hero--aurora';
     $('#hero').innerHTML =
-      '<div class="wrap hero__in">' +
-        '<span class="hero__tag"><span>' + e(t('hero.badgetxt')) + '</span><b>' + e(t('hero.badge')) + '</b></span>' +
-        '<h1 id="h1"><span class="ln">' + e(t('hero.t1')) + '</span><span class="ln"><span class="g">' + e(t('hero.t2')) + '</span></span></h1>' +
-        '<div class="hero__row"><p class="hero__lead">' + e(t('hero.lead2')) + '</p>' +
+      '<div class="aur" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i><i class="b4"></i><i class="grain"></i></div>' +
+      '<div class="wrap hero__grid">' +
+        '<div class="hero__in">' +
+          '<span class="hero__tag"><span>' + e(t('hero.badgetxt')) + '</span><b>' + e(t('hero.badge')) + '</b></span>' +
+          '<h1 id="h1"><span class="ln">' + e(t('hero.t1')) + '</span><span class="ln"><span class="g">' + e(t('hero.t2')) + '</span></span></h1>' +
+          '<p class="hero__lead">' + e(t('hero.lead2')) + '</p>' +
           '<div class="hero__act">' +
-            '<a class="btn btn--fill mag" href="' + href('catalog.html') + '">' + e(t('hero.cta1')) + '</a>' +
-            '<a class="btn btn--onDark mag" href="' + href('contact.html') + '">' + e(t('hero.cta2')) + '</a>' +
-          '</div><span class="scrl">' + e(t('hero.scroll')) + '</span></div></div>' +
+            '<a class="btn btn--fill" href="' + href('catalog.html') + '">' + e(t('hero.cta1')) + ' →</a>' +
+            '<a class="btn btn--onDark" href="' + href('contact.html') + '">' + e(t('hero.cta2')) + '</a>' +
+          '</div></div>' +
+        '<div class="hero__vis">' +
+          '<div class="hero__card" id="hCard"><img src="' + e(C.photo1) + '" alt="Sladus export map" width="720" height="960"></div>' +
+          '<div class="glass glass--a"><span>' + e(t('stat.countries')) + '</span><b class="num">' + B.countries.length + '+</b></div>' +
+          '<div class="glass glass--b"><span>' + e(t('stat.sku')) + '</span><b class="num">' + P.length + '+</b></div>' +
+        '</div></div>' +
+      '<span class="drg d1" data-d="26"></span><span class="drg d2" data-d="-18"></span><span class="drg d3" data-d="34"></span>' +
+      '<span class="drg d4" data-d="-40"></span><span class="drg d5" data-d="14"></span>' +
       '<div class="wrap"><div class="figures num">' +
         fig(years + '+', t('stat.years')) + fig(P.length + '+', t('stat.sku')) +
         fig(B.countries.length, t('stat.countries')) + fig('12+', t('stat.regions')) +

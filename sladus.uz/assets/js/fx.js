@@ -84,8 +84,9 @@
     im.instanceColor.needsUpdate = true;
 
     /* asosiy sahifa uchun katta draje */
+    var HERO3D = false; /* bosh sahifa hero'si endi CSS sahna; 3D shar kerak emas */
     var hero = new T.Group(), hm, ring, ring2, sats = [];
-    if (isHome) {
+    if (isHome && HERO3D) {
       scene.add(hero);
       hm = new T.Mesh(new T.SphereGeometry(1.9, 72, 56), new T.MeshPhysicalMaterial({ color: lin(0xff3d6e), roughness: .14, clearcoat: 1, clearcoatRoughness: .05, envMapIntensity: .8, bumpMap: bump, bumpScale: .25 }));
       hm.scale.y = .86; hero.add(hm);
@@ -130,7 +131,7 @@
         dm.scale.set(d.s, d.s * .8, d.s * st); dm.updateMatrix(); im.setMatrixAt(i, dm.matrix);
       }
       im.instanceMatrix.needsUpdate = true;
-      if (isHome) {
+      if (isHome && HERO3D) {
         hero.rotation.y = t * .25 + mouse.sx * .5; hero.rotation.x = mouse.sy * .3;
         hm.rotation.y = t * .3; ring.rotation.z = t * .4; ring2.rotation.y = -t * .3;
         sats.forEach(function (s, k) { var q = t * (.7 + k * .25) + k * 2.1; s.position.set(Math.cos(q) * (3.1 + k * .4), Math.sin(q * 1.3) * 1.6, Math.sin(q) * (3.1 + k * .4)); });
@@ -232,7 +233,7 @@
     }
 
     /* bloklar paydo bo'lishi */
-    var sel = '.card, .award, .pillars > div, .tl li, .info__i, .faq__item, .form, .nutri > div, .blk, .dlcard, .chatw, .pd__ph, .cta, .geo span, .figures > div, .hero__tag, .crumb, #story > *, .map, .count, .filters > *';
+    var sel = '.card, .award, .pillars > div, .tl li, .info__i, .faq__item, .form, .nutri > div, .blk, .dlcard, .chatw, .pd__ph, .cta, .geo span, .figures > div, .crumb, #story > *, .map, .count, .filters > *';
     var items = $$(sel).filter(function (e) { return !e.closest('#ranges'); });
     if (items.length) gsap.set(items, { opacity: 0, y: 46 });
     if (items.length) ScrollTrigger.batch(items, {
@@ -241,11 +242,20 @@
     });
 
     /* raqamlar */
-    $$('.figures b, .nutri b').forEach(countUp);
+    $$('.figures b, .nutri b, .glass b').forEach(countUp);
 
     /* yo'nalish rasmlari parallaksi */
     $$('#story img, .award img').forEach(function (img) {
       gsap.fromTo(img, { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } });
+    });
+
+    /* tarix chizig'i scroll bilan chiziladi */
+    $$('.tl').forEach(function (tl) {
+      if (reduce) return;
+      gsap.fromTo(tl, { '--p': 0 }, { '--p': 1, ease: 'none', scrollTrigger: { trigger: tl, start: 'top 70%', end: 'bottom 70%', scrub: true } });
+    });
+    $$('#story img').forEach(function (img) {
+      gsap.fromTo(img, { clipPath: 'inset(0 0 100% 0 round 32px)' }, { clipPath: 'inset(0 0 0% 0 round 32px)', duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: img, start: 'top 85%', once: true } });
     });
 
     /* footer */
@@ -334,6 +344,29 @@
     }, { passive: true });
   }
 
+  /* ---------- hero: karta va sharlar kursorga ergashadi ---------- */
+  function heroScene() {
+    var hero = $('.hero--aurora'); if (!hero || !hasG) return;
+    var card = $('#hCard'), ds = $$('.drg', hero), gl = $$('.glass', hero);
+    whenOpen(function () {
+      gsap.from(card, { xPercent: 18, opacity: 0, rotationY: -50, duration: 1.6, ease: 'expo.out', delay: .15 });
+      gsap.from(ds, { scale: 0, duration: 1.8, stagger: .12, ease: 'elastic.out(1,.55)', delay: .3 });
+      gsap.from(gl, { y: 40, opacity: 0, duration: 1.2, stagger: .15, ease: 'expo.out', delay: .7 });
+      gsap.from('.hero--aurora .hero__tag, .hero--aurora .hero__lead, .hero--aurora .hero__act, .figures', { y: 36, opacity: 0, duration: 1.1, stagger: .1, ease: 'expo.out', delay: .35, clearProps: 'transform,opacity' });
+    });
+    if (reduce) return;
+    gsap.set(card, { transformPerspective: 1100, rotation: 4, rotationY: -12 });
+    var qx = ds.map(function (d) { return gsap.quickTo(d, 'x', { duration: .9, ease: 'power3.out' }); });
+    var qy = ds.map(function (d) { return gsap.quickTo(d, 'y', { duration: .9, ease: 'power3.out' }); });
+    hero.addEventListener('pointermove', function (e) {
+      var b = hero.getBoundingClientRect(), x = (e.clientX - b.left) / b.width - .5, y = (e.clientY - b.top) / b.height - .5;
+      gsap.to(card, { rotationY: -12 + x * 16, rotationX: -y * 12, duration: .8, ease: 'power3.out', overwrite: 'auto' });
+      ds.forEach(function (d, i) { var k = +d.getAttribute('data-d') || 20; qx[i](x * k * 2.2); qy[i](y * k * 2.2); });
+    });
+    gsap.to(ds, { yPercent: function (i) { return -40 - i * 18; }, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.to(card, { yPercent: -10, scale: .94, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+  }
+
   /* ---------- sahifalar orasidagi parda ---------- */
   function transitions() {
     var ct = $('#ct');
@@ -377,7 +410,7 @@
   function ready() {
     if (booted) return; booted = true;
     hdr = $('#hdr');
-    smooth(); choreography(); interactions(); transitions(); intro();
+    smooth(); choreography(); heroScene(); interactions(); transitions(); intro();
     document.addEventListener('sladus:redraw', function () {
       if (!hasG) return;
       var cards = $$('#grid .card');
