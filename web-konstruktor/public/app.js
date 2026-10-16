@@ -220,6 +220,15 @@
     msg.className = 'msg';
     if (name.length < 2) { msg.className = 'msg bad'; msg.textContent = 'Ismingizni kiriting'; return; }
     if (!/^[+\d][\d\s()\-]{6,}$/.test(phone)) { msg.className = 'msg bad'; msg.textContent = "Telefon raqamini to'g'ri kiriting (masalan, +998 90 123 45 67)"; return; }
+    if (window.__MAILTO__) {
+      const lines = [`Ism: ${name}`, `Telefon: ${phone}`];
+      const its = on('catalog') ? cartItems() : [];
+      if (its.length) lines.push('Buyurtma: ' + its.map((i) => `${i.p.name} x${i.qty}`).join(', '));
+      if (form.message.value.trim()) lines.push('Izoh: ' + form.message.value.trim());
+      location.href = `mailto:${window.__MAILTO__}?subject=${encodeURIComponent('Yangi buyurtma: ' + name)}&body=${encodeURIComponent(lines.join('\n'))}`;
+      msg.textContent = "Pochta ilovangiz ochiladi. Xabarni yuborishni unutmang yoki qo'ng'iroq qiling.";
+      return;
+    }
     if (isPreview || window.__SITE__) { msg.textContent = "Namuna rejimi: buyurtma yuborilmaydi. Haqiqiy saytda u adminga tushadi."; return; }
     btn.disabled = true;
     try {
