@@ -1,0 +1,61 @@
+{
+  "company": { "name": "Impro IT", "logo": "I" },
+  "theme": { "preset": "dark", "accent": "", "accent2": "" },
+  "features": { "catalog": true, "orders": true, "admin": true, "services": true, "process": true, "stats": true, "marquee": true, "themeSwitcher": true, "effects": true },
+  "hero": {
+    "badge": "Yangi loyihalar uchun ochiqmiz",
+    "titleStart": "Biznesingiz uchun",
+    "words": ["veb-sayt", "mobil ilova", "Telegram bot", "onlayn do'kon"],
+    "titleEnd": "yaratamiz",
+    "text": "Impro IT — veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaydigan jamoa.",
+    "cta1": "Loyihani boshlash",
+    "cta2": "Xizmatlarni ko'rish",
+    "navCta": "Bepul maslahat",
+    "visual": "window",
+    "image": "",
+    "windowLines": ["// Impro IT — sizning g'oyangiz", "const loyiha = {", "  mijoz: \"Sizning biznesingiz\",", "  tezlik: \"2 haftada tayyor\",", "  sifat: \"kafolatlangan\",", "};", "ishgaTushir(loyiha); // ✓ tayyor"],
+    "chips": ["Savdo +240%", "0.8s yuklanish", "24/7 yordam"],
+    "trust": [{ "value": "120+", "label": "loyiha" }, { "value": "8 yil", "label": "tajriba" }, { "value": "4.9/5", "label": "mijoz bahosi" }]
+  },
+  "marquee": ["Veb-saytlar", "Mobil ilovalar", "Telegram botlar", "UI/UX dizayn", "CRM tizimlar", "Onlayn do'konlar"],
+  "stats": [
+    { "value": 120, "suffix": "+", "label": "Bajarilgan loyiha" },
+    { "value": 60, "suffix": "+", "label": "Doimiy mijozlar" },
+    { "value": 8, "suffix": " yil", "label": "Bozordagi tajriba" },
+    { "value": 99, "suffix": "%", "label": "Mamnun mijozlar" }
+  ],
+  "services": {
+    "eyebrow": "Xizmatlar", "title": "Raqamli biznes uchun hamma narsa", "text": "G'oyadan tayyor mahsulotgacha butun jarayonni o'z zimmamizga olamiz.",
+    "items": [
+      { "icon": "code", "title": "Veb-sayt va onlayn do'kon", "text": "Tezkor, qidiruv tizimlariga moslashgan, admin paneli bor saytlar. Katalog, savat va to'lov integratsiyasi bilan." },
+      { "icon": "phone", "title": "Mobil ilovalar", "text": "iOS va Android uchun zamonaviy ilovalar." },
+      { "icon": "send", "title": "Telegram botlar", "text": "Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtiring." },
+      { "icon": "design", "title": "UI/UX dizayn", "text": "Ko'rinishi chiroyli, ishlatishi oson interfeyslar." },
+      { "icon": "shield", "title": "Xavfsizlik va hosting", "text": "Barqaror server va ma'lumotlar himoyasi." }
+    ]
+  },
+  "process": {
+    "eyebrow": "Jarayon", "title": "Qanday ishlaymiz", "text": "To'rt oddiy qadam, har bosqichda siz bilan aloqadamiz.",
+    "steps": [
+      { "title": "Bog'lanish", "text": "Talabingizni eshitamiz va aniq reja tuzamiz." },
+      { "title": "Dizayn", "text": "Ko'rinishni tayyorlab, sizga tasdiqlatamiz." },
+      { "title": "Ishlab chiqish", "text": "Tez va xatosiz quramiz, har kuni hisobot." },
+      { "title": "Ishga tushirish", "text": "Joylashtiramiz va doimiy qo'llab-quvvatlaymiz." }
+    ]
+  },
+  "catalog": { "eyebrow": "Katalog", "title": "Tayyor paketlar va xizmatlar", "text": "Narxlar oldindan aniq. Tanlang va buyurtma bering.", "currency": "so'm", "navLabel": "Narxlar" },
+  "products": [
+    { "id": "start", "name": "Start sayt", "price": 2500000, "category": "Veb-sayt", "badge": "", "description": "5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.", "image": "/img/p-start.svg", "active": true },
+    { "id": "dokon", "name": "Onlayn do'kon", "price": 6900000, "category": "Veb-sayt", "badge": "ENG KO'P TANLANADI", "description": "Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.", "image": "/img/p-dokon.svg", "active": true },
+    { "id": "bot", "name": "Telegram bot", "price": 3200000, "category": "Bot", "badge": "", "description": "Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.", "image": "/img/p-bot.svg", "active": true },
+    { "id": "ilova", "name": "Mobil ilova", "price": 15000000, "category": "Ilova", "badge": "", "description": "iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.", "image": "/img/p-ilova.svg", "active": true },
+    { "id": "dizayn", "name": "UI/UX dizayn", "price": 1800000, "category": "Dizayn", "badge": "", "description": "Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.", "image": "/img/p-dizayn.svg", "active": true },
+    { "id": "yordam", "name": "Oylik texnik yordam", "price": 900000, "category": "Xizmat", "badge": "", "description": "Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.", "image": "/img/p-yordam.svg", "active": true }
+  ],
+  "contacts": {
+    "eyebrow": "Aloqa", "title": "Loyihangiz bormi? Muhokama qilamiz", "text": "Raqamingizni qoldiring, 15 daqiqada aloqaga chiqamiz.",
+    "phone": "+998 90 123 45 67", "email": "info@improit.uz", "address": "Toshkent, Amir Temur ko'chasi 1", "hours": "Dush–Shan, 9:00–18:00", "telegram": "", "instagram": ""
+  },
+  "footer": { "text": "Barcha huquqlar himoyalangan." },
+  "notify": { "telegramBotToken": "", "telegramChatId": "" }
+}

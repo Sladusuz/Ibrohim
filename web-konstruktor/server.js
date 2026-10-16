@@ -177,7 +177,7 @@ async function api(req, res, url) {
     next.products = (Array.isArray(next.products) ? next.products : []).slice(0, 500).map((p) => ({
       id: str(p.id, 40) || crypto.randomBytes(4).toString('hex'),
       name: str(p.name, 120), price: Math.max(0, Number(p.price) || 0),
-      category: str(p.category, 60), description: str(p.description, 1000),
+      category: str(p.category, 60), badge: str(p.badge, 40), description: str(p.description, 1000),
       image: str(p.image, 300), active: p.active !== false,
     })).filter((p) => p.name);
     writeJSON(SITE_FILE, next);
