@@ -6,9 +6,12 @@ services:
     plan: starter
     buildCommand: "echo ok"
     startCommand: node server.js
+    healthCheckPath: /healthz
     envVars:
       - key: DATA_DIR
         value: /data
+      - key: TRUST_PROXY
+        value: "1"
       - key: ADMIN_PASSWORD
         sync: false
       - key: ALLOWED_ORIGINS

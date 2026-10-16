@@ -14,6 +14,9 @@ const UPLOADS = path.join(DATA, 'uploads');
 const PROJECTS = path.join(DATA, 'projects');
 const F = (n) => path.join(DATA, n);
 const PORT = Number(process.env.PORT) || 3000;
+const TRUST_PROXY = process.env.TRUST_PROXY === '1';   // Caddy / Nginx / Render orqasida ishlaganda yoqiladi
+const ipOf = (req) => (TRUST_PROXY && String(req.headers['x-forwarded-for'] || '').split(',')[0].trim()) || req.socket.remoteAddress || '';
+const isHttps = (req) => TRUST_PROXY && String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https';
 for (const d of [DATA, UPLOADS, PROJECTS]) fs.mkdirSync(d, { recursive: true });
 
 // Birinchi ishga tushishda namunaviy sayt va narxlarni ko'chirib qo'yamiz
@@ -122,7 +125,7 @@ function cleanOrder(b, user) {
 
 /* ---------- API ---------- */
 async function api(req, res, url) {
-  const ip = req.socket.remoteAddress || '';
+  const ip = ipOf(req);
   const pn = url.pathname, route = `${req.method} ${pn}`;
   cors(req, res, pn);
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
@@ -245,7 +248,7 @@ async function api(req, res, url) {
       if (limited(ip, 'alogin', 8, 600e3)) return send(res, 429, { error: "Juda ko'p urinish. 10 daqiqadan so'ng qayta urining." });
       const b = await readBody(req, 4096);
       if (!eq(hashPw(String(b.password || ''), secret.salt), secret.hash)) return send(res, 401, { error: "Parol noto'g'ri" });
-      return send(res, 200, { ok: true }, { 'Set-Cookie': `sid=${makeAdminToken()}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200` });
+      return send(res, 200, { ok: true }, { 'Set-Cookie': `sid=${makeAdminToken()}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200${isHttps(req) ? '; Secure' : ''}` });
     }
     if (route === 'POST /api/admin/logout') return send(res, 200, { ok: true }, { 'Set-Cookie': 'sid=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0' });
     if (!isAdmin(req)) return send(res, 401, { error: 'Kirish talab qilinadi' });
@@ -346,6 +349,8 @@ const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost'); let p;
     try { p = decodeURIComponent(url.pathname); } catch { return send(res, 400, "Noto'g'ri manzil"); }
+    if (isHttps(req)) res.setHeader('Strict-Transport-Security', 'max-age=15552000');
+    if (p === '/healthz') return send(res, 200, 'ok');
     if (p.startsWith('/api/')) return await api(req, res, url);
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, "Ruxsat yo'q");
     if (p === '/config.js') return send(res, 200, "window.__API__='';window.__SERVER__=true;", { 'Content-Type': 'application/javascript; charset=utf-8', 'Cache-Control': 'no-cache' });

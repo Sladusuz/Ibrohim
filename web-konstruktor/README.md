@@ -18,13 +18,16 @@ Har birining o'z mavzusi, shrifti va bo'limlari bor; hammasi konstruktorda tahri
 4. **Birinchi ishga tushishda admin paroli terminalda chiqadi.** Yozib oling va admin paneldan o'zgartiring.
    Oldindan belgilash: `ADMIN_PASSWORD=parol node server.js`
 
-Muhit o'zgaruvchilari: `PORT`, `DATA_DIR` (ma'lumotlar papkasi), `ADMIN_PASSWORD`, `ALLOWED_ORIGINS` (boshqa domendagi saytlar, vergul bilan), `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`.
+Muhit o'zgaruvchilari: `PORT`, `DATA_DIR` (ma'lumotlar papkasi), `ADMIN_PASSWORD`, `ALLOWED_ORIGINS` (boshqa domendagi saytlar, vergul bilan), `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `TRUST_PROXY=1` (Caddy/Nginx/Render orqasida).
 
 ## Internetga chiqarish
-- **Server (to'liq):** Node.js ishlaydigan VPS yoki hosting. Docker: `docker build -t impro . && docker run -p 3000:3000 -v impro-data:/data impro`. Render uchun `render.yaml` tayyor.
-  HTTPS uchun Nginx yoki Caddy orqasiga qo'ying. **`DATA_DIR` papkasini zaxiralang**: mijozlar, buyurtmalar, saytlar va rasmlar shu yerda.
-- **Statik nashr (GitHub Pages):** `node tools/build-static.js` `docs/` papkasini yig'adi. Bunda sayt, shablonlar va konstruktor ishlaydi, lekin **hisob, buyurtmalar bazasi va admin panel ishlamaydi** (ular server talab qiladi).
-  Server joylangach, `docs/config.js` ga `window.__API__ = 'https://sizning-server.uz';` yozing va admin paneldagi *Sozlamalar → Boshqa domenlardagi saytlar* ga sayt manzilini qo'shing: shunda statik sayt hisob va buyurtmalar uchun serverdan foydalanadi.
+**To'liq qo'llanma: [JOYLASH.md](JOYLASH.md).** Qisqacha: Ubuntu VPS da bitta buyruq:
+```
+curl -fsSL https://raw.githubusercontent.com/Sladusuz/impro/main/deploy/install.sh | sudo bash -s -- sizning-domen.uz
+```
+U Node.js, avtomatik HTTPS (Caddy), xizmat, xavfsizlik devori va kunlik zaxira nusxani o'rnatadi.
+Boshqa yo'llar: Docker (`Dockerfile`), Render (`render.yaml`, doimiy disk bilan).
+**Statik nashr (GitHub Pages):** `node tools/build-static.js` `docs/` ni yig'adi. Bunda sayt, shablonlar va konstruktor ishlaydi, lekin **hisob, baza va admin panel ishlamaydi** (ular server talab qiladi).
 
 ## Mijoz hisoblari va ma'lumotlar
 Ro'yxatdan o'tish telefon yoki email bilan. Parollar `scrypt` bilan shifrlanadi. Mijoz saytlari serverda saqlanadi va istalgan qurilmadan ochiladi.
