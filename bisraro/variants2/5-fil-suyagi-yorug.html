@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BISRARO — Shokolad san'ati</title>
+<meta name="description" content="BISRARO — O'zbekistondan dunyoga: premium shokolad va konfetlar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAF4EA;--bg2:#F1E6D4;--card:#FFFFFF;--gold:#9A6A2B;--gold2:#B27A33;--gold3:#6F4A1E;--cream:#2E1A10;--mut:rgba(46,26,16,.66);--line:rgba(154,106,43,.22);
+--foil:linear-gradient(120deg,#8A5A22,#B27A33 40%,#9A6A2B 60%,#6F4A1E);--serif:"Fraunces",Georgia,serif;--sans:"Manrope",system-ui,sans-serif;--g:clamp(20px,5vw,72px)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:var(--sans);line-height:1.65;overflow-x:hidden}
+img{display:block;max-width:100%}a{color:inherit;text-decoration:none}
+.c{max-width:1440px;margin:auto;padding:0 var(--g)}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:100;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* header */
+header{position:fixed;inset:0 0 auto;z-index:50;transition:.4s}
+header.s{background:rgba(250,244,234,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+header .c{display:flex;align-items:center;justify-content:space-between;height:88px;transition:.4s}header.s .c{height:70px}
+.brand{display:flex;align-items:center;gap:14px}.brand img{width:52px;height:52px;border-radius:50%}
+.brand b{font-family:var(--serif);font-weight:500;letter-spacing:.3em;font-size:19px}.brand small{display:block;font-size:9px;letter-spacing:.3em;color:var(--gold);margin-top:-4px}
+nav{display:flex;gap:36px;font-size:14px;font-weight:500}nav a{position:relative;color:var(--mut);transition:.3s}nav a:hover{color:var(--gold2)}
+nav a:after{content:"";position:absolute;left:0;bottom:-6px;height:1px;width:0;background:var(--gold);transition:.3s}nav a:hover:after{width:100%}
+.lang{display:flex;gap:2px;border:1px solid var(--line);border-radius:99px;padding:3px;font-size:11px;font-weight:700;letter-spacing:.08em}
+.lang span{padding:6px 11px;border-radius:99px;color:var(--mut)}.lang .on{background:var(--foil);color:#1A120B}
+.hr{display:flex;gap:18px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:16px 32px;border-radius:99px;font-weight:600;font-size:14px;border:1px solid var(--gold);color:var(--gold2);transition:.35s;cursor:pointer;background:none;font-family:inherit}
+.btn:hover{background:rgba(154,106,43,.12);transform:translateY(-2px)}
+.btn.f{background:var(--foil);color:#1A120B;border-color:transparent;box-shadow:0 14px 40px rgba(154,106,43,.25)}.btn.f:hover{box-shadow:0 18px 50px rgba(154,106,43,.45)}
+.k{display:inline-flex;align-items:center;gap:14px;font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:600}.k:before{content:"";width:44px;height:1px;background:var(--gold)}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.015em;line-height:1.02}
+em{font-style:italic;background:var(--foil);-webkit-background-clip:text;color:transparent;padding-right:.05em}
+/* hero */
+.hero{position:relative;min-height:100vh;padding:150px 0 90px;display:flex;align-items:center;overflow:hidden;background:radial-gradient(900px 600px at 78% 45%,rgba(154,106,43,.16),transparent 65%),radial-gradient(600px 400px at 10% 90%,rgba(214,170,110,.35),transparent 70%),var(--bg)}
+.hero .c{display:grid;grid-template-columns:1.1fr .9fr;gap:60px;align-items:center;width:100%}
+.hero h1{font-size:clamp(52px,7.6vw,128px);margin:26px 0 28px}
+.hero p.sub{max-width:520px;color:var(--mut);font-size:18px;margin-bottom:40px}
+.btns{display:flex;gap:16px;flex-wrap:wrap}
+.arch{position:relative;justify-self:end;width:min(100%,470px);aspect-ratio:4/5.6}
+.arch .fr{position:absolute;inset:0;border-radius:999px 999px 28px 28px;overflow:hidden;border:1px solid var(--gold);padding:12px}
+.arch .fr div{width:100%;height:100%;border-radius:999px 999px 18px 18px;overflow:hidden}
+.arch img{width:100%;height:112%;object-fit:cover;transition:transform .2s}
+.arch:before{content:"";position:absolute;inset:-26px;border-radius:999px 999px 40px 40px;border:1px solid var(--line)}
+.badge{position:absolute;left:-70px;bottom:70px;width:150px;height:150px}
+.badge svg{width:100%;height:100%;animation:spin 18s linear infinite}.badge img{position:absolute;inset:34px;width:82px;height:82px;border-radius:50%;object-fit:cover}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chip{position:absolute;right:-24px;top:90px;background:rgba(241,230,212,.85);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:18px;padding:14px 20px;font-size:13px;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.chip b{display:block;font-family:var(--serif);font-size:26px;color:var(--gold2);font-weight:500;line-height:1}
+.stats{display:flex;gap:56px;margin-top:56px;padding-top:30px;border-top:1px solid var(--line);flex-wrap:wrap}
+.stats b{display:block;font-family:var(--serif);font-size:44px;font-weight:400;color:var(--gold2);line-height:1}.stats div>span{font-size:13px;color:var(--mut)}
+.scroll{position:absolute;bottom:28px;left:50%;font-size:10px;letter-spacing:.3em;color:var(--mut);transform:translateX(-50%)}
+/* marquee */
+.mq{border-block:1px solid var(--line);background:var(--bg2);overflow:hidden;padding:26px 0}
+.mq div{display:flex;gap:60px;width:max-content;animation:mq 38s linear infinite;font-family:var(--serif);font-size:34px;font-style:italic;color:var(--gold)}
+.mq span{display:flex;gap:60px;align-items:center;white-space:nowrap}.mq span:after{content:"✦";font-size:16px;font-style:normal;color:var(--gold3)}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* sections */
+.sec{padding:clamp(80px,10vw,170px) 0}
+.sec h2{font-size:clamp(40px,5.6vw,92px);margin:22px 0 0}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:64px;flex-wrap:wrap}.hd p{max-width:420px;color:var(--mut)}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about p{color:var(--mut);font-size:18px;margin-top:28px}
+.about .ph{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.about .ph img{border-radius:22px;width:100%;height:100%;object-fit:cover;aspect-ratio:3/4}.about .ph img:nth-child(2){margin-top:60px}
+.vals{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:44px}
+.vals div{border:1px solid var(--line);border-radius:18px;padding:22px;background:rgba(255,255,255,.5)}.vals b{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--gold2)}.vals span{display:block;font-size:13px;color:var(--mut);margin-top:4px}
+/* collection */
+.col{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.cc{position:relative;border-radius:26px;overflow:hidden;aspect-ratio:3/4.4;border:1px solid var(--line);display:flex;flex-direction:column;justify-content:flex-end;padding:34px}
+.cc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}.cc:hover img{transform:scale(1.08)}
+.cc:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(to top,rgba(250,244,234,.95) 6%,rgba(250,244,234,.1) 58%)}
+.cc>*{position:relative;z-index:2}.cc>img{position:absolute;z-index:0}.cc:nth-child(2){margin-top:60px}
+.cc .n{position:absolute;top:26px;left:30px;font-family:var(--serif);font-size:20px;color:var(--gold2)}
+.cc h3{font-size:38px}.cc p{color:var(--mut);font-size:14px;margin:8px 0 18px}.cc .ar{display:flex;align-items:center;gap:10px;color:var(--gold2);font-size:13px;font-weight:600}.cc .ar i{width:42px;height:42px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;font-style:normal;transition:.3s}.cc:hover .ar i{background:var(--gold);color:#1A120B;transform:rotate(-45deg)}
+/* products rail */
+.pr{background:var(--bg2);border-block:1px solid var(--line)}
+.rail{display:flex;gap:22px;overflow-x:auto;padding:6px var(--g) 30px;scroll-snap-type:x mandatory;scrollbar-width:thin;scrollbar-color:var(--gold3) transparent}
+.pc{flex:0 0 clamp(260px,24vw,340px);scroll-snap-align:start;border-radius:24px;background:var(--card);border:1px solid var(--line);overflow:hidden;transition:.4s}
+.pc:hover{transform:translateY(-10px);border-color:var(--gold);box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 0 1px rgba(154,106,43,.3)}
+.pc .im{aspect-ratio:1;overflow:hidden}.pc img{width:100%;height:100%;object-fit:cover;transition:transform .9s}.pc:hover img{transform:scale(1.07)}
+.pc .tx{padding:20px 24px 24px;display:flex;justify-content:space-between;align-items:center}.pc h3{font-size:22px}.pc small{font-size:11px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}.pc i{font-style:normal;color:var(--gold2);font-size:22px}
+/* process */
+.steps{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line)}
+.st{padding:34px 24px 10px 0;position:relative}.st:before{content:"";position:absolute;top:-4px;left:0;width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.st i{font-style:normal;font-family:var(--serif);font-size:72px;line-height:1;background:var(--foil);-webkit-background-clip:text;color:transparent;opacity:.9}
+.st h3{font-size:24px;margin:16px 0 8px}.st p{font-size:14px;color:var(--mut)}
+/* awards bento */
+.bento{display:grid;grid-template-columns:1.4fr 1fr 1fr;grid-template-rows:260px 260px;gap:20px}
+.bento div{position:relative;border-radius:22px;overflow:hidden;border:1px solid var(--line)}.bento img{width:100%;height:100%;object-fit:cover;transition:transform 1s}.bento div:hover img{transform:scale(1.06)}
+.bento .big{grid-row:span 2}.bento figcaption{position:absolute;left:0;right:0;bottom:0;padding:50px 22px 18px;background:linear-gradient(transparent,rgba(250,244,234,.92));font-size:13px;color:var(--gold2);font-weight:600}
+.bento .tx{background:linear-gradient(150deg,#F6ECDD,#F1E6D4);padding:30px;display:flex;flex-direction:column;justify-content:center}.bento .tx b{font-family:var(--serif);font-size:56px;font-weight:400;color:var(--gold2);line-height:1}.bento .tx span{color:var(--mut);font-size:14px;margin-top:8px}
+/* cta */
+.cta{position:relative;overflow:hidden;background:radial-gradient(800px 500px at 20% 0%,rgba(154,106,43,.18),transparent 65%),#F4E9D8;border-top:1px solid var(--line)}
+.cta .c{display:grid;grid-template-columns:1.1fr .9fr;gap:80px;align-items:center}
+.cta h2{font-size:clamp(44px,6vw,100px)}.cta p{color:var(--mut);margin:26px 0 30px;max-width:460px}
+.ct{display:grid;gap:12px;font-size:15px}.ct b{color:var(--gold2);font-weight:600;display:inline-block;width:92px}
+form{display:grid;gap:14px;padding:38px;border-radius:26px;border:1px solid var(--line);background:rgba(255,255,255,.7)}
+form h3{font-size:30px;margin-bottom:6px}input,textarea{width:100%;padding:17px 20px;border-radius:14px;border:1px solid var(--line);background:rgba(250,244,234,.7);color:var(--cream);font:inherit;outline:none;transition:.3s}
+input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(154,106,43,.12)}
+footer{border-top:1px solid var(--line);padding:56px 0 34px;background:#EADCC6}
+.fg{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:50px}footer p,footer a{font-size:14px;color:var(--mut)}footer h4{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}footer a{display:block;margin-bottom:9px}footer a:hover{color:var(--gold2)}
+.fb{display:flex;justify-content:space-between;margin-top:44px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--mut);flex-wrap:wrap;gap:10px}
+/* reveal */
+[data-r]{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.2,.7,.2,1),transform 1s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}[data-r].in{opacity:1;transform:none}
+@media(max-width:1000px){nav,.lang{display:none}.hero .c,.about,.cta .c{grid-template-columns:1fr}.arch{justify-self:center;margin-top:30px}.badge{left:-10px}.chip{right:-6px}.col{grid-template-columns:1fr}.cc:nth-child(2){margin-top:0}.steps{grid-template-columns:1fr 1fr}.bento{grid-template-columns:1fr 1fr;grid-template-rows:none;grid-auto-rows:220px}.bento .big{grid-row:span 2}.fg{grid-template-columns:1fr 1fr}.vals{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}[data-r]{opacity:1;transform:none}}
+.btn.f{color:#FFF8F0}.cc:after{background:linear-gradient(to top,rgba(30,18,10,.92) 6%,rgba(30,18,10,.05) 58%)}.cc h3,.cc p,.cc .n{color:#F6EBDC}.cc .ar{color:#F3DE9F}.cc .ar i{border-color:#F3DE9F}.bento figcaption{background:linear-gradient(transparent,rgba(30,18,10,.9));color:#F3DE9F}.hero{background:radial-gradient(900px 600px at 78% 45%,rgba(214,170,110,.35),transparent 65%),#FAF4EA}.bento .tx{background:linear-gradient(150deg,#F6ECDD,#EBDCC4)}.cta{background:radial-gradient(800px 500px at 20% 0%,rgba(214,170,110,.3),transparent 65%),#F4E9D8}.pc{box-shadow:0 10px 30px rgba(60,35,15,.08)}body:before{opacity:.03}.badge svg text{fill:#9A6A2B}.mq div{color:#9A6A2B}</style>
+</head>
+<body>
+<header id="h"><div class="c">
+<a class="brand" href="#"><img src="../img/bisraro-logo.webp" alt="BISRARO"><div><b>BISRARO</b><small>HEALTHY FOOD PRODUCTION</small></div></a>
+<nav><a href="#">Bosh sahifa</a><a href="#biz">Biz haqimizda</a><a href="#katalog">Katalog</a><a href="#yutuq">Yutuqlarimiz</a><a href="#aloqa">Kontakt</a></nav>
+<div class="hr"><div class="lang"><span class="on">UZ</span><span>RU</span><span>EN</span></div><a class="btn f" href="#aloqa">Hamkorlik uchun</a></div>
+</div></header>
+
+<section class="hero"><div class="c">
+<div>
+<p class="k" data-r>2016-yildan buyon • Toshkent</p>
+<h1 data-r style="--d:.1s">Shokolad<br><em>san'ati.</em><br>Dunyoga.</h1>
+<p class="sub" data-r style="--d:.2s">O'zbekistonda ishlab chiqarilgan premium shokolad va konfetlar. Zamonaviy texnologiya, sara xomashyo va har bir donada mukammal ta'm.</p>
+<div class="btns" data-r style="--d:.3s"><a class="btn f" href="#katalog">Katalogni ko'rish →</a><a class="btn" href="#biz">Biz haqimizda</a></div>
+<div class="stats" data-r style="--d:.4s"><div><b><span data-n="2016">0</span></b><span>tashkil topgan yil</span></div><div><b><span data-n="16">0</span>+</b><span>mahsulot turi</span></div><div><b>ProdExpo</b><span>2023 oltin medali</span></div></div>
+</div>
+<div class="arch" data-r style="--d:.25s">
+<div class="fr"><div><img id="par" src="../img/kolleksiya/premium-karta.webp" alt="BISRARO premium"></div></div>
+<div class="badge"><svg viewBox="0 0 150 150"><defs><path id="cp" d="M75,75 m-60,0 a60,60 0 1,1 120,0 a60,60 0 1,1 -120,0"/></defs><circle cx="75" cy="75" r="74" fill="#F1E6D4" stroke="#9A6A2B" stroke-opacity=".5"/><text font-size="11" letter-spacing="3.6" fill="#9A6A2B" font-family="Manrope" font-weight="600"><textPath href="#cp">PREMIUM SIFAT • O'ZBEKISTON • BISRARO •</textPath></text></svg><img src="../img/bisraro-logo.webp" alt=""></div>
+<div class="chip"><b>Oltin medal</b>ProdExpo 2023</div>
+</div>
+</div><div class="scroll">SCROLL ↓</div></section>
+
+<div class="mq"><div><span>Konfetlar</span><span>Shokolad plitkalari</span><span>Premium kolleksiya</span><span>Sladus</span><span>Bunibi</span><span>Dorro</span><span>Eksport</span><span>Konfetlar</span><span>Shokolad plitkalari</span><span>Premium kolleksiya</span><span>Sladus</span><span>Bunibi</span><span>Dorro</span><span>Eksport</span></div></div>
+
+<section class="sec" id="biz"><div class="c about">
+<div><p class="k" data-r>Biz haqimizda</p><h2 data-r>Sifat — bizning <em>imzomiz</em></h2>
+<p data-r>«Healthy Food Production» MChJ 2016-yildan beri shokolad mahsulotlarini ishlab chiqaradi. Mahsulotlarimiz ichki bozor bilan bir qatorda eksport uchun ham mo'ljallangan, har bir partiya qat'iy sifat nazoratidan o'tadi.</p>
+<div class="vals" data-r><div><b>Sifat</b><span>Sara xomashyo</span></div><div><b>Ishonch</b><span>Hamkorlar tanlovi</span></div><div><b>Innovatsiya</b><span>Yangi ta'm va shakl</span></div></div></div>
+<div class="ph" data-r style="--d:.15s"><img src="../img/kolleksiya/konfetlar-karta.webp" alt=""><img src="../img/kolleksiya/plitka-karta.webp" alt=""></div>
+</div></section>
+
+<section class="sec" id="katalog" style="padding-top:0"><div class="c">
+<div class="hd"><div><p class="k" data-r>Kolleksiya</p><h2 data-r>Har bir did uchun <em>shokolad</em></h2></div><p data-r>Uchta asosiy yo'nalish — konfetlardan tortib premium sovg'a seriyasigacha.</p></div>
+<div class="col">
+<a class="cc" href="#" data-r><img src="../img/kolleksiya/konfetlar-karta.webp" alt=""><span class="n">01</span><h3>Konfetlar</h3><p>Yumshoq to'ldirmali, oltin o'ramli konfetlar</p><div class="ar"><i>→</i>Batafsil</div></a>
+<a class="cc" href="#" data-r style="--d:.12s"><img src="../img/kolleksiya/plitka-karta.webp" alt=""><span class="n">02</span><h3>Plitka va botonchik</h3><p>Klassik sut va qora shokolad</p><div class="ar"><i>→</i>Batafsil</div></a>
+<a class="cc" href="#" data-r style="--d:.24s"><img src="../img/kolleksiya/premium-karta.webp" alt=""><span class="n">03</span><h3>BISRARO Premium</h3><p>Sovg'a va bayramlar uchun maxsus seriya</p><div class="ar"><i>→</i>Batafsil</div></a>
+</div></div></section>
+
+<section class="sec pr"><div class="hd c"><div><p class="k" data-r>Mahsulotlar</p><h2 data-r>Mashhur <em>brendlar</em></h2></div><a class="btn" href="#">Barcha katalog →</a></div>
+<div class="rail" id="rail"></div></section>
+
+<section class="sec"><div class="c"><div class="hd"><div><p class="k" data-r>Ishlab chiqarish</p><h2 data-r>Kakao donidan <em>qadoqgacha</em></h2></div></div>
+<div class="steps">
+<div class="st" data-r><i>01</i><h3>Xomashyo</h3><p>Sara kakao donalari tanlanadi</p></div>
+<div class="st" data-r style="--d:.08s"><i>02</i><h3>Qovurish</h3><p>Ta'm va hid ochiladi</p></div>
+<div class="st" data-r style="--d:.16s"><i>03</i><h3>Maydalash</h3><p>Ipakdek mayin massa</p></div>
+<div class="st" data-r style="--d:.24s"><i>04</i><h3>Temperlash</h3><p>Yaltiroq va silliq sirt</p></div>
+<div class="st" data-r style="--d:.32s"><i>05</i><h3>Qadoqlash</h3><p>Sifat nazorati va o'rash</p></div>
+</div></div></section>
+
+<section class="sec" id="yutuq" style="padding-top:0"><div class="c"><div class="hd"><div><p class="k" data-r>Tan olish</p><h2 data-r>Xalqaro <em>e'tirof</em></h2></div><p data-r>ProdExpo 2023 ko'rgazmasida oltin medal va laureat diplomi sovrindori.</p></div>
+<div class="bento">
+<div class="big" data-r><img src="../img/mukofot/prodexpo-diplom-medal.webp" alt=""><figcaption>ProdExpo — diplom va medal</figcaption></div>
+<div data-r style="--d:.1s"><img src="../img/mukofot/prodexpo-2023-oltin-medal.webp" alt=""><figcaption>Oltin medal 2023</figcaption></div>
+<div data-r style="--d:.2s"><img src="../img/mukofot/prodexpo-2023-laureat-diplomi.webp" alt=""><figcaption>Laureat diplomi</figcaption></div>
+<div class="tx" data-r style="--d:.1s"><b>10+</b><span>yillik tajriba va ishonchli hamkorlar</span></div>
+<div data-r style="--d:.2s"><img src="../img/mukofot/f-istanbul-plaketa.webp" alt=""><figcaption>Istanbul plaketasi</figcaption></div>
+</div></div></section>
+
+<section class="sec cta" id="aloqa"><div class="c">
+<div><p class="k" data-r>Hamkorlik</p><h2 data-r style="margin-top:22px">Keling, birga <em>shirin</em> ish qilamiz</h2>
+<p data-r>Ulgurji, xususiy brend, eksport va korporativ sovg'alar bo'yicha takliflaringizni kutamiz.</p>
+<div class="ct" data-r><div><b>Manzil</b>Toshkent, O'zbekiston</div><div><b>Telefon</b>+998 __ ___ __ __</div><div><b>Email</b>info@bisraro.uz</div><div><b>Ish vaqti</b>Du–Ju 09:00–18:00</div></div></div>
+<form data-r style="--d:.15s" onsubmit="event.preventDefault();this.querySelector('button').textContent='Rahmat! Tez orada bog\'lanamiz ✓'"><h3>Xabar qoldiring</h3><input placeholder="Ismingiz" required><input placeholder="Telefon raqamingiz" required><input type="email" placeholder="Email"><textarea rows="4" placeholder="Xabaringiz"></textarea><button class="btn f" style="justify-content:center">Yuborish →</button></form>
+</div></section>
+
+<footer><div class="c"><div class="fg">
+<div><a class="brand" href="#" style="margin-bottom:16px"><img src="../img/bisraro-logo.webp" alt=""><div><b>BISRARO</b></div></a><p>Healthy Food Production MChJ. Shokolad san'ati — O'zbekistondan dunyoga.</p></div>
+<div><h4>Sahifalar</h4><a href="#biz">Biz haqimizda</a><a href="#katalog">Katalog</a><a href="#yutuq">Yutuqlarimiz</a><a href="#aloqa">Kontakt</a></div>
+<div><h4>Hamkorlik</h4><a href="#">Ulgurji</a><a href="#">Xususiy brend</a><a href="#">Eksport</a><a href="#">Korporativ sovg'alar</a></div>
+<div><h4>Ijtimoiy tarmoq</h4><a href="#">Instagram</a><a href="#">Telegram</a><a href="#">WhatsApp</a></div>
+</div><div class="fb"><span>© 2026 BISRARO. Barcha huquqlar himoyalangan.</span><span>Toshkent, O'zbekiston</span></div></div></footer>
+
+<script>
+const P=[['bisraro-liya','Bisraro Liya','Konfet'],['sladus-duo','Sladus Duo','Plitka'],['dorro','Dorro','Konfet'],['bunibi-larus','Bunibi Larus','Botonchik'],['sladus-kvadro','Sladus Kvadro','Plitka'],['sladus-issimo','Sladus Issimo','Premium'],['bunibi-fantos','Bunibi Fantos','Botonchik'],['sladus-one-milk','Sladus One Milk','Sut shokolad'],['yaza','Yaza','Konfet'],['nitro','Nitro','Konfet']];
+document.getElementById('rail').innerHTML=P.map(p=>`<a class="pc" href="#"><div class="im"><img loading="lazy" src="../img/mahsulot/${p[0]}.webp" alt="${p[1]}"></div><div class="tx"><div><small>${p[2]}</small><h3>${p[1]}</h3></div><i>↗</i></div></a>`).join('');
+const h=document.getElementById('h');const on=()=>h.classList.toggle('s',scrollY>40);on();addEventListener('scroll',on,{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('[data-r]').forEach(e=>io.observe(e));
+document.querySelectorAll('[data-n]').forEach(el=>{const t=+el.dataset.n,s=performance.now();(function f(n){const p=Math.min((n-s)/1800,1);el.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(s)});
+const par=document.getElementById('par');addEventListener('scroll',()=>{if(scrollY<900)par.style.transform=`translateY(${-scrollY*.06}px)`},{passive:true});
+</script>
+</body></html>
