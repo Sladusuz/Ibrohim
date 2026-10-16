@@ -1,0 +1,16 @@
+{
+  "name": "babycheer-shop",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "BabyCheer Telegram Mini App do'koni va boti (Netlify Functions + Blobs)",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^11.1.4"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
