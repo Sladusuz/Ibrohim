@@ -1,209 +1,258 @@
 'use strict';
-// Mijoz uchun sayt konstruktori: hammasi brauzerda ishlaydi, serverga ma'lumot yuborilmaydi.
+// Mijoz konstruktori: shablon tanlash -> tahrirlash -> yuklab olish yoki Impro IT ga yuborish.
+// Hisob (server) bo'lsa loyihalar bazada saqlanadi; bo'lmasa brauzerda (localStorage).
 (function () {
+  const E = window.E, Auth = window.Auth;
+  const { esc } = E;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const STORE_KEY = 'impro_builder_v1';
+  const icon = (n) => window.svgIcon(n);
   const IMPRO_EMAIL = 'chempme@gmail.com';
+  const LOCAL_KEY = 'impro_builder_v2';
+  const useAcc = !!(Auth && Auth.enabled);
+  const STATUS = { qoralama: 'Qoralama', yuborilgan: 'Yuborilgan', korilmoqda: "Ko'rib chiqilmoqda", narx: 'Narx belgilandi', joylandi: 'Joylandi', bekor: 'Bekor qilindi' };
 
-  let D = null, tab = 'asosiy', previewReady = false, pt = null, st = null, quotaWarned = false;
+  let D = null, P = null, tplId = '', ed = null, previewReady = false, pt = null, st = null, pricing = { plans: [] }, myProjects = [], dirty = false, saving = false;
+  const ls = { get() { try { return localStorage.getItem(LOCAL_KEY); } catch { return null; } }, set(v) { try { localStorage.setItem(LOCAL_KEY, v); return true; } catch { return false; } }, del() { try { localStorage.removeItem(LOCAL_KEY); } catch { /* ignore */ } } };
+  const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2800); };
+  const status = (txt, cls) => { const s = $('#st'); s.textContent = '● ' + txt; s.className = 'st ' + (cls || ''); };
+  const slug = () => ((D.company.name || 'sayt').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'sayt');
+  const clean = () => { const c = JSON.parse(JSON.stringify(D)); delete c.notify; c.account = { enabled: false }; return c; };
+  const tplName = (id) => ((window.TEMPLATES.find((t) => t.id === id) || {}).name) || id || '';
 
-  const store = {
-    get() { try { return localStorage.getItem(STORE_KEY); } catch { return null; } },
-    set(v) { try { localStorage.setItem(STORE_KEY, v); return true; } catch { return false; } },
-    del() { try { localStorage.removeItem(STORE_KEY); } catch { /* ignore */ } },
-  };
-  const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); };
-  const get = (p) => p.split('.').reduce((o, k) => (o == null ? o : o[k]), D);
-  const set = (p, v) => { const ks = p.split('.'); let o = D; ks.slice(0, -1).forEach((k) => { if (o[k] == null) o[k] = {}; o = o[k]; }); o[ks[ks.length - 1]] = v; changed(); };
+  /* ---------- Ko'rinish (jonli) ---------- */
+  function sendPreview() { const f = $('#if'); if (previewReady && f.contentWindow && D) f.contentWindow.postMessage({ type: 'site', data: clean() }, '*'); }
+  addEventListener('message', (e) => { if (e.data && e.data.type === 'ready' && e.source === $('#if').contentWindow) { previewReady = true; sendPreview(); } });
+  // Ishonchlilik uchun: iframe yuklanishi bilan ham ma'lumot yuboriladi (ready xabari erta kelib qolsa)
+  $('#if').addEventListener('load', () => { previewReady = true; sendPreview(); });
 
+  /* ---------- Saqlash ---------- */
   function changed() {
-    clearTimeout(pt); pt = setTimeout(sendPreview, 200);
-    clearTimeout(st); st = setTimeout(autosave, 500);
-    const s = $('#st'); s.textContent = '● Saqlanmoqda…'; s.className = 'st dirty';
+    dirty = true; status('Saqlanmoqda…', 'dirty');
+    clearTimeout(pt); pt = setTimeout(sendPreview, 180);
+    clearTimeout(st); st = setTimeout(save, useAcc && P ? 1400 : 500);
   }
-  function autosave() {
-    const ok = store.set(JSON.stringify(D));
-    const s = $('#st');
-    if (ok) { s.textContent = '● Avtomatik saqlandi'; s.className = 'st'; }
-    else { s.textContent = '● Brauzerda saqlanmadi'; s.className = 'st bad'; if (!quotaWarned) { quotaWarned = true; toast('Brauzer xotirasi to\'ldi. Loyihani «Tayyor» bo\'limidan fayl qilib saqlang.'); } }
-  }
-  const cleanData = () => { const c = JSON.parse(JSON.stringify(D)); delete c.notify; c.features = { ...c.features, builder: false }; return c; };
-  function sendPreview() { const f = $('#if'); if (previewReady && f.contentWindow) f.contentWindow.postMessage({ type: 'site', data: cleanData() }, location.origin); }
-  addEventListener('message', (e) => { if (e.origin === location.origin && e.data && e.data.type === 'ready') { previewReady = true; if (D) sendPreview(); } });
-
-  /* ---------- Maydon yasovchilar ---------- */
-  const fText = (label, path, o = {}) => `<label class="f">${esc(label)}</label>${o.area ? `<textarea data-p="${path}" rows="${o.rows || 3}" ${o.max ? `maxlength="${o.max}"` : ''}>${esc(get(path) || '')}</textarea>` : `<input type="${o.type || 'text'}" data-p="${path}" value="${esc(get(path) ?? '')}" ${o.ph ? `placeholder="${esc(o.ph)}"` : ''} ${o.max ? `maxlength="${o.max}"` : ''}>`}${o.hint ? `<div class="hint">${esc(o.hint)}</div>` : ''}`;
-  const fLines = (label, path, hint) => `<label class="f">${esc(label)}</label><textarea data-p="${path}" data-k="lines" rows="4">${esc((get(path) || []).join('\n'))}</textarea>${hint ? `<div class="hint">${esc(hint)}</div>` : ''}`;
-  const fToggle = (title, sub, path) => `<label class="sw"><span><b>${esc(title)}</b><small>${esc(sub)}</small></span><input type="checkbox" data-p="${path}" ${get(path) ? 'checked' : ''}><span class="tg"></span></label>`;
-  const fImg = (label, path) => { const v = get(path); return `<label class="f">${esc(label)}</label><div class="img"><div class="pv" style="${v ? `background-image:url('${esc(v)}')` : ''}"></div><label>Rasm tanlash<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" data-up="${path}"></label>${v ? `<button class="b g s" data-act="clr" data-path="${path}">O'chirish</button>` : ''}</div>`; };
-  const listHead = (title, path, i, n) => `<div class="hd"><b>${esc(title)}</b><div class="acts"><button data-act="up" data-path="${path}" data-i="${i}" ${i === 0 ? 'disabled' : ''} title="Yuqoriga">↑</button><button data-act="dn" data-path="${path}" data-i="${i}" ${i === n - 1 ? 'disabled' : ''} title="Pastga">↓</button><button class="x" data-act="del" data-path="${path}" data-i="${i}" title="O'chirish">✕</button></div></div>`;
-  const NEW = {
-    'services.items': () => ({ icon: 'star', title: 'Yangi xizmat', text: '' }),
-    'process.steps': () => ({ title: 'Yangi qadam', text: '' }),
-    stats: () => ({ value: 10, suffix: '+', label: 'Yangi ko\'rsatkich' }),
-    'hero.trust': () => ({ value: '', label: '' }),
-    products: () => ({ id: 'p' + Math.random().toString(36).slice(2, 8), name: 'Yangi mahsulot', price: 0, category: '', badge: '', description: '', image: '', active: true }),
-  };
-  const iconOpts = (cur) => Object.keys(window.ICONS).filter((k) => !['menu', 'x', 'arrow', 'check', 'mail', 'pin', 'clock', 'tel', 'insta'].includes(k)).map((k) => `<option value="${k}" ${k === cur ? 'selected' : ''}>${k}</option>`).join('');
-
-  /* ---------- Tayyorlik tekshiruvi ---------- */
-  function checks() {
-    const c = [];
-    const name = (get('company.name') || '').trim();
-    c.push([name && name !== 'Kompaniyangiz nomi', name && name !== 'Kompaniyangiz nomi' ? 'Kompaniya nomi kiritilgan' : 'Kompaniya nomini yozing («Asosiy» bo\'limi)']);
-    c.push([!!get('contacts.phone'), get('contacts.phone') ? 'Telefon raqami kiritilgan' : 'Telefon raqamini yozing («Aloqa» bo\'limi)']);
-    if (get('features.orders')) c.push([!!get('contacts.email'), get('contacts.email') ? 'Buyurtmalar ' + get('contacts.email') + ' ga tushadi' : 'Email yozing, aks holda buyurtmalar sizga kelmaydi («Aloqa» bo\'limi)']);
-    if (get('features.catalog')) { const n = (D.products || []).filter((p) => p.active !== false).length; c.push([n > 0, n > 0 ? `Katalogda ${n} ta mahsulot bor` : 'Katalog bo\'sh. Mahsulot qo\'shing yoki katalogni o\'chiring']); }
-    return c;
-  }
-
-  /* ---------- Bo'limlar ---------- */
-  const TABS = [['asosiy', 'Asosiy'], ['bosh', 'Bosh sahifa'], ['xizmat', 'Xizmatlar'], ['jarayon', 'Jarayon'], ['katalog', 'Katalog'], ['aloqa', 'Aloqa'], ['tayyor', '✓ Tayyor']];
-  function drawTabs() { $('#tabs').innerHTML = TABS.map(([k, l]) => `<button data-tab="${k}" class="${k === tab ? 'on' : ''}">${l}</button>`).join(''); }
-  const VIEWS = {
-    asosiy: () => `<div class="steps"><div><b>1</b>Ma'lumotlarni kiriting (yuqoridagi bo'limlar)</div><div><b>2</b>O'ng tomonda saytingiz jonli ko'rinadi</div><div><b>3</b>«Tayyor» bo'limidan saytni yuklab oling</div></div>
-      <h4>Kompaniya</h4>${fText('Kompaniya nomi', 'company.name', { max: 60 })}${fText('Logo harfi', 'company.logo', { max: 2, hint: '1–2 ta harf, logotip o\'rnida chiqadi' })}
-      <h4>Ko'rinish uslubi</h4><div class="th">${[['dark', "Qorong'i", 'linear-gradient(135deg,#0a0f1e,#22d3ee)'], ['light', "Yorug'", 'linear-gradient(135deg,#eceefb,#4f46e5)'], ['warm', 'Issiq', 'linear-gradient(135deg,#1d130d,#ff8a3d)']].map(([k, l, g]) => `<button data-theme="${k}" class="${get('theme.preset') === k ? 'on' : ''}"><i style="background:${g}"></i>${l}</button>`).join('')}</div>
-      <label class="f">Maxsus rang (ixtiyoriy)</label><div class="colors"><label><input type="color" data-p="theme.accent" value="${esc(get('theme.accent') || '#22d3ee')}"> Asosiy</label><label><input type="color" data-p="theme.accent2" value="${esc(get('theme.accent2') || '#7c5cff')}"> Qo'shimcha</label><button class="b g s" data-act="resetColors">Standart</button></div>
-      <h4>Bo'limlarni yoqish / o'chirish</h4>
-      ${fToggle('Katalog', 'Mahsulot yoki xizmatlar, rasm va narx bilan', 'features.catalog')}${fToggle('Buyurtma formasi va savat', 'Mijoz buyurtmasi sizning emailingizga tushadi', 'features.orders')}
-      ${fToggle('Xizmatlar', 'Xizmatlar kartochkalari', 'features.services')}${fToggle('Jarayon', 'Qanday ishlashingiz bosqichlari', 'features.process')}${fToggle('Raqamlar', 'Animatsiyali ko\'rsatkichlar', 'features.stats')}${fToggle('Yuguruvchi lenta', 'Xizmat nomlari lentasi', 'features.marquee')}
-      <h4>Effektlar</h4>${fToggle('Fon animatsiyalari', 'Harakatlanuvchi fon va yorug\'lik', 'features.effects')}${fToggle('Mavzu almashtirgich', 'Mehmon rangni o\'zi tanlay oladi', 'features.themeSwitcher')}`,
-    bosh: () => `<h4>Asosiy ekran</h4>${fText('Yuqoridagi yozuv', 'hero.badge', { max: 80 })}${fText('Sarlavha boshi', 'hero.titleStart', { max: 80 })}${fLines('Almashib turadigan so\'zlar', 'hero.words', 'Har bir qatorga bitta so\'z. Bo\'sh qoldirsangiz o\'chadi.')}${fText('Sarlavha oxiri', 'hero.titleEnd', { max: 80 })}${fText('Tavsif', 'hero.text', { area: 1, max: 300 })}
-      <div class="row2"><div>${fText('1-tugma matni', 'hero.cta1', { max: 40 })}</div><div>${fText('2-tugma matni', 'hero.cta2', { max: 40 })}</div></div>${fText('Menyudagi tugma', 'hero.navCta', { max: 40 })}
-      <h4>O'ng tomondagi tasvir</h4><label class="f">Turi</label><select data-p="hero.visual"><option value="none" ${get('hero.visual') === 'none' ? 'selected' : ''}>Yo'q (faqat matn)</option><option value="image" ${get('hero.visual') === 'image' ? 'selected' : ''}>Rasm</option><option value="window" ${get('hero.visual') === 'window' ? 'selected' : ''}>Kod oynasi (IT kompaniya uchun)</option></select>
-      ${get('hero.visual') === 'image' ? fImg('Rasm', 'hero.image') : ''}${get('hero.visual') === 'window' ? fLines('Oynadagi qatorlar', 'hero.windowLines') : ''}
-      ${get('hero.visual') !== 'none' ? fLines('Suzuvchi yozuvlar (3 tagacha)', 'hero.chips', 'Har bir qatorga bittadan') : ''}
-      <h4>Ishonch ko'rsatkichlari</h4>${(D.hero.trust || []).map((t, i) => `<div class="item">${listHead('Ko\'rsatkich ' + (i + 1), 'hero.trust', i, D.hero.trust.length)}<div class="row2"><div>${fText('Qiymat', `hero.trust.${i}.value`, { max: 20 })}</div><div>${fText('Yozuv', `hero.trust.${i}.label`, { max: 30 })}</div></div></div>`).join('')}<button class="addb" data-act="add" data-path="hero.trust">+ Qo'shish</button>
-      <h4>Yuguruvchi lenta</h4>${fLines('Lentadagi so\'zlar', 'marquee')}
-      <h4>Raqamlar</h4>${(D.stats || []).map((t, i) => `<div class="item">${listHead(t.label || 'Raqam', 'stats', i, D.stats.length)}<div class="row2"><div>${fText('Son', `stats.${i}.value`, { type: 'number' })}</div><div>${fText('Qo\'shimcha (+, %)', `stats.${i}.suffix`, { max: 10 })}</div></div>${fText('Yozuv', `stats.${i}.label`, { max: 40 })}</div>`).join('')}<button class="addb" data-act="add" data-path="stats">+ Qo'shish</button>`,
-    xizmat: () => `${!get('features.services') ? '<p class="hint" style="margin-top:14px">Bu bo\'lim hozir o\'chirilgan. «Asosiy» bo\'limidan yoqing.</p>' : ''}<h4>Sarlavha</h4>${fText('Kichik yozuv', 'services.eyebrow', { max: 30 })}${fText('Sarlavha', 'services.title', { max: 100 })}${fText('Tavsif', 'services.text', { area: 1, max: 250 })}
-      <h4>Xizmatlar</h4>${(D.services.items || []).map((it, i) => `<div class="item">${listHead(it.title || 'Xizmat', 'services.items', i, D.services.items.length)}<label class="f">Ikonka</label><select data-p="services.items.${i}.icon" data-rerender>${iconOpts(it.icon)}</select>${fText('Nomi', `services.items.${i}.title`, { max: 80 })}${fText('Tavsif', `services.items.${i}.text`, { area: 1, max: 300 })}</div>`).join('')}<button class="addb" data-act="add" data-path="services.items">+ Xizmat qo'shish</button>`,
-    jarayon: () => `${!get('features.process') ? '<p class="hint" style="margin-top:14px">Bu bo\'lim hozir o\'chirilgan. «Asosiy» bo\'limidan yoqing.</p>' : ''}<h4>Sarlavha</h4>${fText('Kichik yozuv', 'process.eyebrow', { max: 30 })}${fText('Sarlavha', 'process.title', { max: 100 })}${fText('Tavsif', 'process.text', { area: 1, max: 250 })}
-      <h4>Qadamlar</h4>${(D.process.steps || []).map((it, i) => `<div class="item">${listHead((i + 1) + '. ' + (it.title || 'Qadam'), 'process.steps', i, D.process.steps.length)}${fText('Nomi', `process.steps.${i}.title`, { max: 60 })}${fText('Tavsif', `process.steps.${i}.text`, { area: 1, max: 250 })}</div>`).join('')}<button class="addb" data-act="add" data-path="process.steps">+ Qadam qo'shish</button>`,
-    katalog: () => `${!get('features.catalog') ? '<p class="hint" style="margin-top:14px">Katalog hozir o\'chirilgan, saytda ko\'rinmaydi. «Asosiy» bo\'limidan yoqing.</p>' : ''}<h4>Sarlavha</h4>${fText('Kichik yozuv', 'catalog.eyebrow', { max: 30 })}${fText('Sarlavha', 'catalog.title', { max: 100 })}${fText('Tavsif', 'catalog.text', { area: 1, max: 250 })}<div class="row2"><div>${fText('Valyuta', 'catalog.currency', { max: 12, hint: 'masalan: so\'m, $, ₽' })}</div><div>${fText('Menyudagi nomi', 'catalog.navLabel', { max: 20 })}</div></div>
-      <h4>Mahsulotlar (${(D.products || []).length})</h4>${(D.products || []).map((p, i) => `<div class="item">${listHead(p.name || 'Mahsulot', 'products', i, D.products.length)}${fText('Nomi', `products.${i}.name`, { max: 120 })}<div class="row2"><div>${fText('Narxi', `products.${i}.price`, { type: 'number', hint: '0 = «Narxi kelishiladi»' })}</div><div>${fText('Kategoriya', `products.${i}.category`, { max: 60 })}</div></div>${fText('Belgi (ixtiyoriy)', `products.${i}.badge`, { max: 40, ph: 'masalan: YANGI yoki CHEGIRMA' })}${fText('Tavsif', `products.${i}.description`, { area: 1, max: 500 })}${fImg('Rasm', `products.${i}.image`)}${fToggle('Saytda ko\'rsatish', 'O\'chirsangiz mahsulot yashirinadi', `products.${i}.active`)}</div>`).join('')}<button class="addb" data-act="add" data-path="products">+ Mahsulot qo'shish</button>`,
-    aloqa: () => `<h4>Sarlavha</h4>${fText('Kichik yozuv', 'contacts.eyebrow', { max: 30 })}${fText('Sarlavha', 'contacts.title', { max: 100 })}${fText('Tavsif', 'contacts.text', { area: 1, max: 250 })}
-      <h4>Aloqa ma'lumotlari</h4>${fText('Telefon', 'contacts.phone', { max: 40, ph: '+998 90 123 45 67' })}${fText('Email', 'contacts.email', { max: 80, type: 'email', hint: 'Buyurtmalar shu emailga tushadi' })}${fText('Manzil', 'contacts.address', { max: 150 })}${fText('Ish vaqti', 'contacts.hours', { max: 80 })}${fText('Telegram', 'contacts.telegram', { max: 80, ph: '@username' })}${fText('Instagram', 'contacts.instagram', { max: 80, ph: '@username' })}${fText('Pastki yozuv', 'footer.text', { max: 120 })}`,
-    tayyor: () => `<h4>Saytingiz holati</h4>${checks().map(([ok, t]) => `<div class="chk ${ok ? 'ok' : 'w'}"><span>${ok ? '✓' : '!'}</span><span>${esc(t)}</span></div>`).join('')}
-      <h4>1. Tayyor saytni olish</h4><button class="b bigb" data-act="download">Saytni yuklab olish (.html)</button><div class="hint">Bitta fayl. Ikki marta bosib brauzerda oching yoki istalgan hostingga yuklang. Buyurtmalar emailingizga tushadi.</div>
-      <h4>2. Impro IT ga yuborish</h4><p class="hint">Saytni sizning nomingizdan internetga joylab, domenga ulab beramiz.</p><button class="b g bigb" data-act="mail">Impro IT ga so'rov yuborish</button><div class="hint">Pochta ilovangiz ochiladi. Avval loyihani fayl qilib saqlab, xatga ilova qiling.</div>
-      <h4>3. Loyihani saqlash</h4><p class="hint">Keyinroq davom ettirish yoki boshqa kompyuterda ochish uchun.</p><button class="b g bigb" data-act="exportJson">Loyihani yuklab olish (.json)</button><label class="b g bigb fileb">Loyihani ochish<input type="file" accept=".json,application/json" data-import></label>
-      <h4>Qaytadan boshlash</h4><button class="b d bigb" data-act="reset">Hammasini tozalash</button>`,
-  };
-  function draw(keepScroll) { const p = $('#panel'); const sc = p.scrollTop; drawTabs(); p.innerHTML = VIEWS[tab](); if (keepScroll) p.scrollTop = sc; }
-
-  /* ---------- Hodisalar ---------- */
-  $('#tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-tab]'); if (!b) return; tab = b.dataset.tab; draw(); });
-  $('#panel').addEventListener('input', (e) => {
-    const t = e.target; if (t.dataset.up || t.hasAttribute('data-import')) return;
-    if (t.dataset.p) {
-      let v = t.type === 'checkbox' ? t.checked : t.value;
-      if (t.type === 'number') v = v === '' ? 0 : Number(v);
-      if (t.dataset.k === 'lines') v = t.value.split('\n').map((x) => x.trim()).filter(Boolean);
-      set(t.dataset.p, v);
-      if (t.dataset.p === 'hero.visual' || t.dataset.rerender !== undefined) draw(true);
-    }
-  });
-  $('#panel').addEventListener('change', async (e) => {
-    const t = e.target;
-    if (t.dataset.up && t.files[0]) { try { const url = await toDataUrl(t.files[0]); set(t.dataset.up, url); draw(true); toast('Rasm qo\'shildi'); } catch (er) { toast(er.message); } }
-    if (t.hasAttribute('data-import') && t.files[0]) importJson(t.files[0]);
-    if (t.matches('[data-p]') && t.type === 'checkbox') draw(true);
-  });
-  $('#panel').addEventListener('click', async (e) => {
-    const t = e.target.closest('button'); if (!t) return;
-    if (t.dataset.theme) { set('theme.preset', t.dataset.theme); draw(true); return; }
-    const a = t.dataset.act; if (!a) return;
-    const path = t.dataset.path, i = +t.dataset.i;
-    if (a === 'resetColors') { set('theme.accent', ''); set('theme.accent2', ''); draw(true); }
-    if (a === 'clr') { set(path, ''); draw(true); }
-    if (a === 'add') { const arr = get(path) || []; arr.push(NEW[path]()); set(path, arr); draw(true); }
-    if (a === 'del') { if (!confirm('O\'chirilsinmi?')) return; const arr = get(path); arr.splice(i, 1); set(path, arr); draw(true); }
-    if (a === 'up' || a === 'dn') { const arr = get(path), j = a === 'up' ? i - 1 : i + 1; if (j < 0 || j >= arr.length) return; [arr[i], arr[j]] = [arr[j], arr[i]]; set(path, arr); draw(true); }
-    if (a === 'download') downloadSite();
-    if (a === 'exportJson') saveFile(slug() + '-loyiha.json', JSON.stringify(cleanData(), null, 2), 'application/json');
-    if (a === 'mail') mailRequest();
-    if (a === 'reset') { if (!confirm('Barcha kiritilgan ma\'lumot o\'chib, boshlang\'ich holatga qaytadi. Davom etasizmi?')) return; store.del(); await loadDefault(); draw(); sendPreview(); toast('Qaytadan boshlandi'); }
-  });
-  $$('.dev button').forEach((b) => b.addEventListener('click', () => { $$('.dev button').forEach((x) => x.classList.toggle('on', x === b)); $('#fr').classList.toggle('m', b.dataset.d === 'm'); }));
-  $('#save').addEventListener('click', () => { tab = 'tayyor'; draw(); downloadSite(); });
-
-  /* ---------- Fayllar ---------- */
-  const slug = () => ((get('company.name') || 'sayt').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'sayt');
-  function saveFile(name, text, type) {
-    const url = URL.createObjectURL(new Blob([text], { type: type + ';charset=utf-8' }));
-    const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 4000);
-  }
-  async function downloadSite() {
+  async function save() {
+    if (!D) return;
+    ls.set(JSON.stringify({ tplId, D, pid: P && P.id }));
+    if (!(useAcc && P)) { dirty = false; status('Brauzerda saqlandi'); return; }
+    if (saving) { clearTimeout(st); st = setTimeout(save, 800); return; }
+    saving = true;
     try {
-      const r = await fetch('/shablon.html', { cache: 'no-store' }); if (!r.ok) throw new Error('shablon');
-      const tpl = await r.text(); const MARK = '/*__DATA__*/null';
-      if (!tpl.includes(MARK)) throw new Error('shablon');
-      saveFile(slug() + '.html', tpl.replace(MARK, () => JSON.stringify(cleanData()).replace(/</g, '\\u003c')), 'text/html');
-      toast('Sayt yuklab olindi');
-    } catch { toast('Yuklab bo\'lmadi. Sahifani yangilab, qayta urinib ko\'ring.'); }
+      const j = await Auth.request(`/api/my/projects/${P.id}`, { method: 'PUT', body: { data: clean(), name: D.company.name, template: tplId } });
+      P = j.project; dirty = false; status('Hisobingizda saqlandi');
+    } catch (e) { status(e.status === 401 ? 'Qayta kiring' : 'Saqlanmadi', 'bad'); if (e.status !== 401) toast(e.message); }
+    saving = false;
   }
-  function importJson(file) {
-    const rd = new FileReader();
-    rd.onload = () => {
-      try {
-        const j = JSON.parse(rd.result);
-        if (!j || typeof j !== 'object' || !j.company || !j.hero) throw 0;
-        D = normalize(j); autosave(); draw(); sendPreview(); toast('Loyiha ochildi');
-      } catch { toast('Bu fayl loyiha fayli emas'); }
-    };
-    rd.readAsText(file);
-  }
-  function mailRequest() {
-    const body = [`Salom! Men Impro IT konstruktorida sayt tayyorladim.`, '', `Kompaniya: ${get('company.name') || ''}`, `Telefon: ${get('contacts.phone') || ''}`, `Email: ${get('contacts.email') || ''}`, `Katalog: ${get('features.catalog') ? 'bor (' + (D.products || []).length + ' ta)' : 'yo\'q'}`, '', 'Saytni joylab, domenga ulab berishingizni so\'rayman. Loyiha faylini ilova qildim.'].join('\n');
-    location.href = `mailto:${IMPRO_EMAIL}?subject=${encodeURIComponent('Sayt joylash so\'rovi: ' + (get('company.name') || ''))}&body=${encodeURIComponent(body)}`;
-  }
+  addEventListener('beforeunload', (e) => { if (dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  /* ---------- Rasm ---------- */
   function toDataUrl(file) {
     return new Promise((resolve, reject) => {
       if (!/^image\/(png|jpeg|webp|gif)$/.test(file.type)) return reject(new Error('Faqat PNG, JPG, WEBP yoki GIF rasm'));
-      const rd = new FileReader();
-      rd.onerror = () => reject(new Error('Faylni o\'qib bo\'lmadi'));
+      const rd = new FileReader(); rd.onerror = () => reject(new Error("Faylni o'qib bo'lmadi"));
       rd.onload = () => {
         if (file.type === 'image/gif') return file.size > 1.5e6 ? reject(new Error('GIF 1.5 MB dan oshmasin')) : resolve(rd.result);
-        const img = new Image();
-        img.onerror = () => reject(new Error('Rasm ochilmadi'));
-        img.onload = () => {
-          const k = Math.min(1, 1100 / Math.max(img.width, img.height));
-          const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          resolve(c.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.82));
-        };
+        const img = new Image(); img.onerror = () => reject(new Error('Rasm ochilmadi'));
+        img.onload = () => { const k = Math.min(1, 1200 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); resolve(c.toDataURL(file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.82)); };
         img.src = rd.result;
       };
       rd.readAsDataURL(file);
     });
   }
+  // Shablon rasmlarini (/img/...) faylga joylash: yuklab olingan sayt mustaqil ishlashi uchun
+  async function inlineImages(data) {
+    const urls = new Set(); (function walk(o) { if (typeof o === 'string') { if (/^\/img\/.+\.svg$/.test(o)) urls.add(o); } else if (Array.isArray(o)) o.forEach(walk); else if (o && typeof o === 'object') Object.values(o).forEach(walk); })(data);
+    const map = {};
+    await Promise.all([...urls].map(async (u) => { try { const r = await fetch(u); if (!r.ok) return; const t = await r.text(); map[u] = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(t))); } catch { /* ignore */ } }));
+    return JSON.parse(JSON.stringify(data, (k, v) => (typeof v === 'string' && map[v] ? map[v] : v)));
+  }
+  function saveFile(name, text, type) {
+    const url = URL.createObjectURL(new Blob([text], { type: type + ';charset=utf-8' }));
+    const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 4000);
+  }
+  async function downloadSite() {
+    try {
+      const r = await fetch('/shablon.html', { cache: 'no-store' }); if (!r.ok) throw new Error('x');
+      const tpl = await r.text(), MARK = '/*__DATA__*/null'; if (!tpl.includes(MARK)) throw new Error('x');
+      const data = await inlineImages(clean());
+      saveFile(slug() + '.html', tpl.replace(MARK, () => JSON.stringify(data).replace(/</g, '\\u003c')), 'text/html');
+      toast('Sayt yuklab olindi');
+    } catch { toast("Yuklab bo'lmadi. Sahifani yangilab, qayta urinib ko'ring."); }
+  }
+  async function exportJson() { saveFile(slug() + '-loyiha.json', JSON.stringify(await inlineImages(clean()), null, 2), 'application/json'); }
+  function importJson(file) {
+    const rd = new FileReader();
+    rd.onload = async () => {
+      try { const j = JSON.parse(rd.result); if (!j || !Array.isArray(j.sections) || !j.company) throw 0; await openData(E.normalize(j), j.template || 'kompaniya'); toast('Loyiha ochildi'); }
+      catch { toast('Bu fayl loyiha fayli emas'); }
+    };
+    rd.readAsText(file);
+  }
+
+  /* ---------- Narxlar va yuborish ---------- */
+  async function loadPricing() {
+    try { const r = await fetch((Auth && Auth.api) + '/api/pricing'); if (r.ok) { pricing = await r.json(); return; } } catch { /* ignore */ }
+    try { const r = await fetch('/pricing.json'); if (r.ok) pricing = await r.json(); } catch { /* ignore */ }
+  }
+  let chosenPlan = '';
+  function checks() {
+    const c = [], name = (D.company.name || '').trim();
+    c.push([name && name !== 'Kompaniyangiz nomi', name ? 'Sayt nomi kiritilgan' : "Sayt nomini yozing («Sayt» bo'limi)"]);
+    c.push([!!D.contacts.phone, D.contacts.phone ? 'Telefon raqami kiritilgan' : "Telefon raqamini yozing («Aloqa» bo'limi)"]);
+    c.push([!!D.contacts.email, D.contacts.email ? `Xabarlar ${D.contacts.email} ga tushadi` : "Email yozing, aks holda yuborilgan xabarlar sizga kelmaydi («Aloqa» bo'limi)"]);
+    const sec = D.sections.filter((s) => s.enabled !== false).length; c.push([sec >= 3, `Saytda ${sec} ta bo'lim ko'rinadi`]);
+    return c;
+  }
+  const tayyor = {
+    id: 'ready', label: '✓ Tayyor',
+    render() {
+      const sub = P && P.status !== 'qoralama';
+      return `<h4>Saytingiz holati</h4>${checks().map(([ok, t]) => `<div class="chk ${ok ? 'ok' : 'w'}"><span>${ok ? '✓' : '!'}</span><span>${esc(t)}</span></div>`).join('')}
+        <h4>1. Tayyor saytni olish</h4><button class="b w" style="padding:14px" data-x="download">${icon('download')} Saytni yuklab olish (.html)</button><div class="hint">Bitta fayl. Brauzerda oching yoki istalgan hostingga yuklang. Buyurtma va xabarlar emailingizga yuboriladi.</div>
+        <div class="guide"><b>Internetga qanday joylash?</b><ol><li>netlify.com/drop sahifasini oching</li><li>Yuklab olingan faylni (index.html deb nomlab) sudrab tashlang</li><li>Tayyor havolani oling, o'z domeningizni keyin ulaysiz</li></ol></div>
+        <h4>2. Impro IT ga topshirish</h4>${useAcc ? (sub ? submittedBox() : submitBox()) : `<p class="hint">Saytingizni joylab, domenga ulab beramiz.</p><button class="b g w" data-x="mail">Pochta orqali so'rov yuborish</button><div class="hint">Avval loyihani fayl qilib saqlab, xatga ilova qiling.</div>`}
+        <h4>3. Loyihani saqlash</h4><p class="hint">Boshqa kompyuterda davom ettirish uchun.</p><button class="b g w" data-x="json">Loyiha faylini yuklab olish (.json)</button><label class="b g w" style="margin-top:8px;cursor:pointer">Loyiha faylini ochish<input type="file" accept=".json,application/json" data-import hidden></label>
+        <h4>Boshqa shablon</h4><button class="b g w" data-x="tpl">Shablonni almashtirish</button><div class="hint">Sayt nomi va aloqa ma'lumotlari saqlanib qoladi.</div>`;
+    },
+    click(e) {
+      const x = e.target.closest('[data-x]'); if (!x) return;
+      const a = x.dataset.x;
+      if (a === 'download') downloadSite();
+      if (a === 'json') exportJson();
+      if (a === 'mail') mailRequest();
+      if (a === 'tpl') showGallery(true);
+      if (a === 'submit') submitProject();
+      if (a === 'plan') { chosenPlan = x.dataset.id; ed.render(true); }
+    },
+    change(e) { if (e.target.hasAttribute('data-import') && e.target.files[0]) importJson(e.target.files[0]); },
+  };
+  function planCards() {
+    const ps = pricing.plans || []; if (!ps.length) return '';
+    return `<div class="plans">${ps.map((p) => `<div class="plan2 ${p.popular ? 'pop' : ''}" ${useAcc ? `data-x="plan" data-id="${esc(p.id)}" style="cursor:pointer;${chosenPlan === p.id ? 'outline:2px solid var(--acc)' : ''}"` : ''}><b>${esc(p.name)}</b><div class="pr">${esc(p.price)} ${p.price && /\d/.test(p.price) ? esc(pricing.currency || '') : ''}<small>${esc(p.period || '')}</small></div><ul>${(p.features || []).map((f) => `<li>${esc(f)}</li>`).join('')}</ul></div>`).join('')}</div>`;
+  }
+  function submitBox() {
+    return `<p class="hint">Tarifni tanlang va so'rov yuboring. Biz siz bilan bog'lanamiz.</p>${planCards()}<label class="f">Izoh (ixtiyoriy)</label><textarea id="subNote" rows="3" maxlength="800" placeholder="Domen nomi, qo'shimcha istaklar..."></textarea><div class="msg" id="subMsg"></div><button class="b w" style="margin-top:10px;padding:14px" data-x="submit">So'rovni yuborish</button>`;
+  }
+  function submittedBox() {
+    return `<div class="chk ok"><span>✓</span><span><b>So'rov yuborilgan</b>. Holat: <b>${esc(STATUS[P.status] || P.status)}</b></span></div>${P.price ? `<div class="guide" style="margin-top:10px"><b>Impro IT narxi: ${esc(P.price)}</b></div>` : ''}${P.adminNote ? `<div class="guide">${esc(P.adminNote)}</div>` : ''}<p class="hint">Sayt o'zgartirilsa ham, so'rov ma'lumotlari yangilanib turadi.</p>`;
+  }
+  async function submitProject() {
+    const m = $('#subMsg'); m.className = 'msg'; m.textContent = '';
+    if (!chosenPlan && (pricing.plans || []).length) { m.className = 'msg bad'; m.textContent = 'Avval tarifni tanlang'; return; }
+    try {
+      await save();
+      const plan = (pricing.plans || []).find((p) => p.id === chosenPlan);
+      const j = await Auth.request(`/api/my/projects/${P.id}/submit`, { method: 'POST', body: { plan: plan ? plan.name : '', note: ($('#subNote') || {}).value || '' } });
+      P = j.project; toast("So'rov yuborildi! Tez orada bog'lanamiz."); ed.render(true);
+    } catch (e) { m.className = 'msg bad'; m.textContent = e.message; }
+  }
+  function mailRequest() {
+    const body = ['Salom! Men Impro IT konstruktorida sayt tayyorladim.', '', `Sayt: ${D.company.name || ''}`, `Shablon: ${tplName(tplId)}`, `Telefon: ${D.contacts.phone || ''}`, `Email: ${D.contacts.email || ''}`, '', "Saytni joylab, domenga ulab berishingizni so'rayman. Loyiha faylini ilova qildim."].join('\n');
+    location.href = `mailto:${IMPRO_EMAIL}?subject=${encodeURIComponent("Sayt joylash so'rovi: " + (D.company.name || ''))}&body=${encodeURIComponent(body)}`;
+  }
+
+  /* ---------- Galereya ---------- */
+  let catFilter = '';
+  function drawGallery() {
+    const cats = ['', ...new Set(window.TEMPLATES.map((t) => t.cat))];
+    $('#cats').innerHTML = cats.map((c) => `<button data-cat="${esc(c)}" class="${c === catFilter ? 'on' : ''}">${esc(c || 'Hammasi')}</button>`).join('');
+    $('#tgrid').innerHTML = window.TEMPLATES.filter((t) => !catFilter || t.cat === catFilter).map((t) => `<article class="tc"><div class="tci"><img src="${esc(t.thumb)}" alt="${esc(t.name)}" loading="lazy" onerror="this.remove()">${t.badge ? `<span class="bd">${esc(t.badge)}</span>` : ''}</div><div class="tcb"><small>${esc(t.cat)}</small><h3>${esc(t.name)}</h3><p>${esc(t.desc)}</p><div class="row"><button class="b g" data-prev="${t.id}">${icon('eye')} Ko'rish</button><button class="b" data-pick="${t.id}">Tanlash</button></div></div></article>`).join('');
+    // davom ettirish / mening saytlarim
+    const r = $('#resume'); r.hidden = true; r.innerHTML = '';
+    if (useAcc && myProjects.length) {
+      r.hidden = false; r.innerHTML = `<div class="rbox"><h4 style="margin:0 0 10px">Mening saytlarim</h4><div class="mine">${myProjects.map((p) => `<div class="pcard2"><div><b>${esc(p.name)}</b><span>${esc(tplName(p.template))} · ${esc(STATUS[p.status] || p.status)}</span></div><div class="row"><button class="b s" data-open="${p.id}">Tahrirlash</button><button class="b g s" data-del="${p.id}" title="O'chirish">✕</button></div></div>`).join('')}</div></div>`;
+    } else if (!useAcc) {
+      let saved = null; try { saved = JSON.parse(ls.get() || 'null'); } catch { saved = null; }
+      if (saved && saved.D) { r.hidden = false; r.innerHTML = `<div class="rbox flex"><div><b>Saqlangan loyiha: ${esc((saved.D.company || {}).name || 'Nomsiz')}</b><span>${esc(tplName(saved.tplId))}. Davom ettirishingiz mumkin.</span></div><button class="b" data-resume="1">Davom ettirish</button></div>`; }
+    }
+  }
+  function showGallery(fromEditor) {
+    $('#gallery').hidden = false; $('#editor').hidden = true; $('#tbar').hidden = true; $('#gbar').hidden = false; document.body.dataset.mode = 'gallery';
+    $('#gallery').dataset.switch = fromEditor ? '1' : '';
+    drawGallery();
+  }
+  function showEditor() {
+    $('#gallery').hidden = true; $('#editor').hidden = false; $('#tbar').hidden = false; $('#gbar').hidden = true; document.body.dataset.mode = 'editor';
+    if (!ed) {
+      ed = window.Editor.create({
+        root: $('#panel'), tabsEl: $('#tabs'), data: () => D, onChange: changed, upload: toDataUrl, toast, focus: (id) => { const f = $('#if'); if (f.contentWindow) f.contentWindow.postMessage({ type: 'focus', id }, '*'); },
+        extraTabs: [tayyor], startTab: 'sections', account: false,
+      });
+    } else ed.setTab('sections');
+    sendPreview();
+  }
+  function previewModal(id) {
+    const d = window.getTemplate(id), t = window.TEMPLATES.find((x) => x.id === id);
+    const w = document.createElement('div'); w.className = 'modalx';
+    w.innerHTML = `<div class="mx wide"><div class="pvh"><b>${esc(t.name)}</b><div style="display:flex;gap:8px"><button class="b" data-pick="${id}">Shu shablonni tanlash</button><button class="b g" data-closep>Yopish</button></div></div><iframe src="/shablon.html?preview=1" title="Ko'rish"></iframe></div>`;
+    document.body.appendChild(w);
+    const f = w.querySelector('iframe'), onmsg = (e) => { if (e.source === f.contentWindow && e.data && e.data.type === 'ready') f.contentWindow.postMessage({ type: 'site', data: d }, '*'); };
+    addEventListener('message', onmsg); f.addEventListener('load', () => f.contentWindow.postMessage({ type: 'site', data: d }, '*'));
+    w.addEventListener('click', (e) => { if (e.target.closest('[data-closep]') || e.target === w) { removeEventListener('message', onmsg); w.remove(); } if (e.target.closest('[data-pick]')) { removeEventListener('message', onmsg); w.remove(); pick(id); } });
+  }
+
+  /* ---------- Loyiha yaratish / ochish ---------- */
+  async function openData(data, tid, project) {
+    D = data; tplId = tid || D.template || ''; P = project || null; dirty = false;
+    if (useAcc && !P) {
+      const j = await Auth.request('/api/my/projects', { method: 'POST', body: { template: tplId, name: D.company.name, data: clean() } });
+      P = j.project; myProjects.unshift(P);
+    }
+    ls.set(JSON.stringify({ tplId, D, pid: P && P.id })); status(useAcc ? 'Hisobingizda saqlandi' : 'Brauzerda saqlandi'); showEditor();
+    $('#ttl').textContent = D.company.name || ''; history.replaceState(null, '', useAcc && P ? `?p=${P.id}` : location.pathname);
+  }
+  async function pick(id) {
+    const switching = $('#gallery').dataset.switch === '1' && D;
+    const d = E.normalize(window.getTemplate(id)); delete d.account;
+    if (switching) {
+      const o = D; d.company.name = o.company.name || d.company.name; d.company.logo = o.company.logo || d.company.logo; d.company.tagline = o.company.tagline || d.company.tagline; d.company.logoImage = o.company.logoImage || '';
+      d.contacts = Object.assign({}, d.contacts, Object.fromEntries(Object.entries(o.contacts || {}).filter(([, v]) => v)));
+      d.orders.currency = (o.orders && o.orders.currency) || d.orders.currency;
+      tplId = id; D = d; dirty = true; showEditor(); changed(); toast("Shablon almashtirildi. Ma'lumotlaringiz saqlandi."); return;
+    }
+    try { await openData(d, id, null); } catch (e) { toast(e.message); }
+  }
+  async function openProject(id) {
+    try { const j = await Auth.request(`/api/my/projects/${id}`); await openData(E.normalize(j.data), j.project.template, j.project); }
+    catch (e) { toast(e.message); showGallery(false); }
+  }
+
+  /* ---------- Hodisalar ---------- */
+  document.addEventListener('click', async (e) => {
+    const t = e.target.closest('button,a'); if (!t) return;
+    if (t.dataset.cat !== undefined) { catFilter = t.dataset.cat; drawGallery(); }
+    if (t.dataset.prev) previewModal(t.dataset.prev);
+    if (t.dataset.pick && !t.closest('.modalx')) pick(t.dataset.pick);
+    if (t.dataset.open) openProject(t.dataset.open);
+    if (t.dataset.resume) { try { const s = JSON.parse(ls.get()); await openData(E.normalize(s.D), s.tplId, null); } catch { toast('Ochib bo\'lmadi'); } }
+    if (t.dataset.del && confirm("Bu sayt o'chirilsinmi? Qaytarib bo'lmaydi.")) { try { await Auth.request(`/api/my/projects/${t.dataset.del}`, { method: 'DELETE' }); myProjects = myProjects.filter((p) => p.id !== t.dataset.del); drawGallery(); toast("O'chirildi"); } catch (er) { toast(er.message); } }
+    if (t.id === 'btnTpl') showGallery(true);
+    if (t.id === 'btnDone') { ed.setTab('ready'); }
+    if (t.id === 'btnOut') { Auth.logout(); location.reload(); }
+    if (t.closest('.dev') && t.dataset.d) { $$('.dev button').forEach((x) => x.classList.toggle('on', x === t)); $('#fr').classList.toggle('m', t.dataset.d === 'm'); }
+  });
 
   /* ---------- Boshlash ---------- */
-  function normalize(d) {
-    d.theme = d.theme || {}; d.features = d.features || {}; d.hero = d.hero || {}; d.catalog = d.catalog || {}; d.contacts = d.contacts || {};
-    d.services = d.services || { items: [] }; d.process = d.process || { steps: [] }; d.footer = d.footer || {}; d.company = d.company || {};
-    d.products = d.products || []; d.stats = d.stats || []; d.marquee = d.marquee || [];
-    d.hero.trust = d.hero.trust || []; d.hero.words = d.hero.words || []; d.hero.chips = d.hero.chips || []; d.hero.windowLines = d.hero.windowLines || [];
-    d.features.builder = false;
-    return d;
-  }
-  async function loadDefault() {
-    const r = await fetch('/builder-default.json', { cache: 'no-store' });
-    if (!r.ok) throw new Error('default');
-    D = normalize(await r.json());
+  async function userBar() {
+    const u = Auth && Auth.user(); const g = $('#gbar');
+    g.innerHTML = (u ? `<a class="b g s" href="/kabinet.html">${icon('user')} ${esc(String(u.name).split(' ')[0])}</a><button class="b g s" id="btnOut">Chiqish</button>` : '') + '<a class="b g s" href="/">← Bosh sahifa</a>';
   }
   (async function init() {
-    try {
-      const saved = store.get();
-      if (saved) { try { D = normalize(JSON.parse(saved)); } catch { D = null; } }
-      if (!D) await loadDefault();
-      $('#lm').textContent = 'I';
-      draw(); sendPreview();
-    } catch { $('#panel').innerHTML = '<p class="empty">Konstruktor yuklanmadi. Sahifani yangilab ko\'ring.</p>'; }
+    await loadPricing();
+    if (useAcc) {
+      await Auth.init();
+      if (!Auth.user()) {
+        $('#gallery').hidden = true; $('#gbar').innerHTML = '<a class="b g s" href="/">← Bosh sahifa</a>';
+        const u = await Auth.modal({ closable: false, title: 'Sayt yaratish uchun kiring', text: "Hisob ochsangiz, saytlaringiz saqlanadi va istalgan qurilmadan davom ettira olasiz." });
+        if (!u) return;
+      }
+      userBar();
+      try { myProjects = await Auth.request('/api/my/projects'); } catch { myProjects = []; }
+    }
+    const q = new URLSearchParams(location.search);
+    if (useAcc && q.get('p')) return openProject(q.get('p'));
+    showGallery(false);
+    if (q.get('t') && window.getTemplate(q.get('t'))) pick(q.get('t'));
   })();
 })();

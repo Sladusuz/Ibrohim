@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mening kabinetim</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="/ui.css">
+<style>
+body.ui{min-height:100vh}.wrapk{max-width:960px;margin:0 auto;padding:28px 20px 80px}
+.hk{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}.hk h1{font-size:28px;letter-spacing:-.02em}.hk p{color:var(--muted)}
+.tabsk{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap}.tabsk button{border:0;background:#fff;border:1px solid var(--line);border-radius:99px;padding:9px 18px;font-weight:600;color:var(--muted)}.tabsk button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.cardk{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.cardk b{font-size:15.5px}.cardk .sub{color:var(--muted);font-size:13px;margin-top:2px}.badge2{display:inline-block;border-radius:99px;padding:3px 11px;font-size:12px;font-weight:700}
+.s-qoralama,.s-yangi{background:#e2e8f0;color:#334155}.s-yuborilgan,.s-jarayonda{background:#dbeafe;color:#1d4ed8}.s-korilmoqda{background:#fef3c7;color:#b45309}.s-narx{background:#ede9fe;color:#6d28d9}.s-joylandi,.s-bajarildi{background:#dcfce7;color:#15803d}.s-bekor{background:#fee2e2;color:#b91c1c}
+.rowk{display:flex;gap:8px;flex-wrap:wrap}.boxk{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;max-width:520px;margin-bottom:16px}.boxk h3{margin-bottom:6px}
+.fk{margin-top:12px}.fk label{display:block;font-weight:600;font-size:13px;margin-bottom:5px}.mk{font-size:13px;margin-top:10px;min-height:18px}.mk.bad{color:var(--bad)}.mk.okk{color:var(--ok)}
+.priceb{margin-top:8px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:8px 12px;font-size:13px}
+.emptyk{text-align:center;padding:50px 20px;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:16px}
+</style>
+</head>
+<body class="ui">
+<header class="top"><a class="lg" href="/"><span class="m">I</span><span class="t">Impro IT</span></a><div class="tb"><a class="b g s" href="/yaratish.html">Sayt yaratish</a><a class="b g s" href="/">Bosh sahifa</a><button class="b g s" id="out" hidden>Chiqish</button></div></header>
+<div class="wrapk" id="main"><div class="emptyk">Yuklanmoqda…</div></div>
+<div class="toast" id="toast"></div>
+<script src="/config.js"></script>
+<script src="/icons.js"></script>
+<script src="/auth.js"></script>
+<script>
+(async function () {
+  'use strict';
+  const $ = (s, r = document) => r.querySelector(s), A = window.Auth;
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); };
+  const PS = { qoralama: 'Qoralama', yuborilgan: 'Yuborilgan', korilmoqda: "Ko'rib chiqilmoqda", narx: 'Narx belgilandi', joylandi: 'Joylandi', bekor: 'Bekor qilindi' };
+  const OS = { yangi: 'Yangi', jarayonda: 'Jarayonda', bajarildi: 'Bajarildi', bekor: 'Bekor qilindi' };
+  const TPL = { market: 'Onlayn market', dizayner: 'Portfolio: dizayner', dasturchi: 'Portfolio: dasturchi', fotograf: 'Portfolio: fotograf', kompaniya: 'IT kompaniya', restoran: 'Restoran', salon: "Go'zallik saloni", talim: "O'quv markaz" };
+  const fmt = (d) => { const t = new Date(d); if (isNaN(t)) return d || ''; const p = (n) => String(n).padStart(2, '0'); return `${p(t.getDate())}.${p(t.getMonth() + 1)}.${t.getFullYear()} ${p(t.getHours())}:${p(t.getMinutes())}`; };
+  const main = $('#main');
+  if (!A || !A.enabled) { main.innerHTML = '<div class="emptyk"><b>Kabinet hozircha ishlamayapti</b><p style="margin-top:6px">Hisob funksiyasi server ulanganda ishlaydi.</p></div>'; return; }
+  await A.init();
+  if (!A.user()) { const u = await A.modal({ closable: false, title: 'Kabinetga kiring', text: "Hisobingiz bo'lmasa, ro'yxatdan o'ting." }); if (!u) return; }
+  $('#out').hidden = false; $('#out').onclick = () => { A.logout(); location.href = '/'; };
+  let tab = 'sites', projects = [], orders = [];
+  async function load() { try { [projects, orders] = await Promise.all([A.request('/api/my/projects'), A.request('/api/my/orders')]); } catch (e) { toast(e.message); } draw(); }
+  function draw() {
+    const u = A.user();
+    const sites = projects.length ? projects.map((p) => `<div class="cardk"><div><b>${esc(p.name)}</b> <span class="badge2 s-${esc(p.status)}">${esc(PS[p.status] || p.status)}</span><div class="sub">${esc(TPL[p.template] || p.template || '')} · ${esc(fmt(p.updatedAt))}</div>${p.price ? `<div class="priceb"><b>Impro IT narxi: ${esc(p.price)}</b>${p.adminNote ? `<br>${esc(p.adminNote)}` : ''}</div>` : (p.adminNote ? `<div class="priceb">${esc(p.adminNote)}</div>` : '')}</div><div class="rowk"><a class="b s" href="/yaratish.html?p=${esc(p.id)}">Tahrirlash</a><button class="b g s" data-del="${esc(p.id)}">O'chirish</button></div></div>`).join('') : '<div class="emptyk"><b>Hali saytingiz yo\'q</b><p style="margin:6px 0 14px">Shablonni tanlab, birinchi saytingizni yarating.</p><a class="b" href="/yaratish.html">Sayt yaratish</a></div>';
+    const ords = orders.length ? orders.map((o) => `<div class="cardk"><div><b>#${esc(o.id)}</b> <span class="badge2 s-${esc(o.status)}">${esc(OS[o.status] || o.status)}</span><div class="sub">${esc(fmt(o.date))}${o.type === 'booking' ? ' · Ariza' : ''}</div><div style="margin-top:6px;font-size:13.5px">${(o.items || []).map((i) => `${esc(i.name)} × ${i.qty}`).join(', ') || esc(o.message || '')}</div>${Object.entries(o.extra || {}).map(([k, v]) => `<div class="sub">${esc(k)}: ${esc(v)}</div>`).join('')}</div>${o.total ? `<b style="font-size:16px">${Number(o.total).toLocaleString('ru-RU')} so'm</b>` : ''}</div>`).join('') : '<div class="emptyk">Hali buyurtma bermagansiz.</div>';
+    const prof = `<div class="boxk"><h3>Profil</h3><div class="fk"><label>Ism</label><input id="pn" type="text" value="${esc(u.name)}" maxlength="80"></div><div class="fk"><label>Telefon</label><input id="pp" type="text" value="${esc(u.phone)}" maxlength="30"></div><div class="fk"><label>Email</label><input id="pe" type="text" value="${esc(u.email)}" maxlength="120"></div><div class="mk" id="pm"></div><button class="b" id="psave" style="margin-top:8px">Saqlash</button></div>
+      <div class="boxk"><h3>Parolni o'zgartirish</h3><div class="fk"><label>Joriy parol</label><input id="o1" type="password" autocomplete="current-password"></div><div class="fk"><label>Yangi parol</label><input id="o2" type="password" autocomplete="new-password" placeholder="Kamida 6 belgi"></div><div class="mk" id="qm"></div><button class="b g" id="qsave" style="margin-top:8px">Parolni yangilash</button></div>`;
+    main.innerHTML = `<div class="hk"><div><h1>Salom, ${esc(String(u.name).split(' ')[0])}!</h1><p>Saytlaringiz va buyurtmalaringiz shu yerda saqlanadi.</p></div><a class="b" href="/yaratish.html">+ Yangi sayt</a></div>
+      <div class="tabsk"><button data-t="sites" class="${tab === 'sites' ? 'on' : ''}">Saytlarim (${projects.length})</button><button data-t="orders" class="${tab === 'orders' ? 'on' : ''}">Buyurtmalarim (${orders.length})</button><button data-t="prof" class="${tab === 'prof' ? 'on' : ''}">Profil</button></div>${tab === 'sites' ? sites : tab === 'orders' ? ords : prof}`;
+  }
+  main.addEventListener('click', async (e) => {
+    const t = e.target.closest('button'); if (!t) return;
+    if (t.dataset.t) { tab = t.dataset.t; draw(); }
+    if (t.dataset.del && confirm("Bu sayt o'chirilsinmi? Qaytarib bo'lmaydi.")) { try { await A.request(`/api/my/projects/${t.dataset.del}`, { method: 'DELETE' }); projects = projects.filter((p) => p.id !== t.dataset.del); draw(); toast("O'chirildi"); } catch (er) { toast(er.message); } }
+    if (t.id === 'psave') { const m = $('#pm'); m.className = 'mk'; try { const j = await A.request('/api/me', { method: 'PUT', body: { name: $('#pn').value, phone: $('#pp').value, email: $('#pe').value } }); A._set(j.user, null); m.className = 'mk okk'; m.textContent = 'Saqlandi'; } catch (er) { m.className = 'mk bad'; m.textContent = er.message; } }
+    if (t.id === 'qsave') { const m = $('#qm'); m.className = 'mk'; try { await A.request('/api/me/password', { method: 'POST', body: { old: $('#o1').value, password: $('#o2').value } }); m.className = 'mk okk'; m.textContent = 'Parol yangilandi'; $('#o1').value = $('#o2').value = ''; } catch (er) { m.className = 'mk bad'; m.textContent = er.message; } }
+  });
+  load();
+})();
+</script>
+</body>
+</html>

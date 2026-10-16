@@ -1,0 +1,19 @@
+# Render.com uchun sozlama (Blueprint). Doimiy disk pullik rejada ishlaydi; bepul rejada ma'lumotlar o'chib ketadi.
+services:
+  - type: web
+    name: impro-it
+    runtime: node
+    plan: starter
+    buildCommand: "echo ok"
+    startCommand: node server.js
+    envVars:
+      - key: DATA_DIR
+        value: /data
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://kicksport.uz
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1

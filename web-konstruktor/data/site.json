@@ -1,228 +1,39 @@
 {
+  "v": 2,
+  "template": "impro",
   "company": {
     "name": "Impro IT",
-    "logo": "I"
+    "logo": "I",
+    "tagline": "Veb-sayt, mobil ilova va Telegram botlar. Tez, sifatli, kafolat bilan."
   },
   "theme": {
     "preset": "dark",
     "accent": "",
-    "accent2": ""
+    "accent2": "",
+    "font": "modern",
+    "radius": "round",
+    "bg": "full",
+    "heads": "left",
+    "switcher": true
   },
-  "features": {
-    "catalog": true,
-    "orders": true,
-    "admin": true,
-    "services": true,
-    "process": true,
-    "stats": true,
-    "marquee": true,
-    "themeSwitcher": true,
-    "effects": true,
-    "builder": true
+  "nav": {
+    "style": "pill",
+    "cta": "Bepul maslahat",
+    "ctaLink": "#aloqa",
+    "search": false
   },
-  "hero": {
-    "badge": "Yangi loyihalar uchun ochiqmiz",
-    "titleStart": "Biznesingiz uchun",
-    "words": [
-      "veb-sayt",
-      "mobil ilova",
-      "Telegram bot",
-      "onlayn do'kon"
-    ],
-    "titleEnd": "yaratamiz",
-    "text": "Impro IT — veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaydigan jamoa.",
-    "cta1": "Loyihani boshlash",
-    "cta2": "Xizmatlarni ko'rish",
-    "navCta": "Bepul maslahat",
-    "visual": "window",
-    "image": "",
-    "windowLines": [
-      "// Impro IT — sizning g'oyangiz",
-      "const loyiha = {",
-      "  mijoz: \"Sizning biznesingiz\",",
-      "  tezlik: \"2 haftada tayyor\",",
-      "  sifat: \"kafolatlangan\",",
-      "};",
-      "ishgaTushir(loyiha); // ✓ tayyor"
-    ],
-    "chips": [
-      "Savdo +240%",
-      "0.8s yuklanish",
-      "24/7 yordam"
-    ],
-    "trust": [
-      {
-        "value": "120+",
-        "label": "loyiha"
-      },
-      {
-        "value": "8 yil",
-        "label": "tajriba"
-      },
-      {
-        "value": "4.9/5",
-        "label": "mijoz bahosi"
-      }
-    ]
+  "announce": {
+    "enabled": false,
+    "text": "",
+    "link": ""
   },
-  "marquee": [
-    "Veb-saytlar",
-    "Mobil ilovalar",
-    "Telegram botlar",
-    "UI/UX dizayn",
-    "CRM tizimlar",
-    "Onlayn do'konlar"
-  ],
-  "stats": [
-    {
-      "value": 120,
-      "suffix": "+",
-      "label": "Bajarilgan loyiha"
-    },
-    {
-      "value": 60,
-      "suffix": "+",
-      "label": "Doimiy mijozlar"
-    },
-    {
-      "value": 8,
-      "suffix": " yil",
-      "label": "Bozordagi tajriba"
-    },
-    {
-      "value": 99,
-      "suffix": "%",
-      "label": "Mamnun mijozlar"
-    }
-  ],
-  "services": {
-    "eyebrow": "Xizmatlar",
-    "title": "Raqamli biznes uchun hamma narsa",
-    "text": "G'oyadan tayyor mahsulotgacha butun jarayonni o'z zimmamizga olamiz.",
-    "items": [
-      {
-        "icon": "code",
-        "title": "Veb-sayt va onlayn do'kon",
-        "text": "Tezkor, qidiruv tizimlariga moslashgan, admin paneli bor saytlar. Katalog, savat va to'lov integratsiyasi bilan."
-      },
-      {
-        "icon": "phone",
-        "title": "Mobil ilovalar",
-        "text": "iOS va Android uchun zamonaviy ilovalar."
-      },
-      {
-        "icon": "send",
-        "title": "Telegram botlar",
-        "text": "Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtiring."
-      },
-      {
-        "icon": "design",
-        "title": "UI/UX dizayn",
-        "text": "Ko'rinishi chiroyli, ishlatishi oson interfeyslar."
-      },
-      {
-        "icon": "shield",
-        "title": "Xavfsizlik va hosting",
-        "text": "Barqaror server va ma'lumotlar himoyasi."
-      }
-    ]
-  },
-  "process": {
-    "eyebrow": "Jarayon",
-    "title": "Qanday ishlaymiz",
-    "text": "To'rt oddiy qadam, har bosqichda siz bilan aloqadamiz.",
-    "steps": [
-      {
-        "title": "Bog'lanish",
-        "text": "Talabingizni eshitamiz va aniq reja tuzamiz."
-      },
-      {
-        "title": "Dizayn",
-        "text": "Ko'rinishni tayyorlab, sizga tasdiqlatamiz."
-      },
-      {
-        "title": "Ishlab chiqish",
-        "text": "Tez va xatosiz quramiz, har kuni hisobot."
-      },
-      {
-        "title": "Ishga tushirish",
-        "text": "Joylashtiramiz va doimiy qo'llab-quvvatlaymiz."
-      }
-    ]
-  },
-  "catalog": {
-    "eyebrow": "Katalog",
-    "title": "Tayyor paketlar va xizmatlar",
-    "text": "Narxlar oldindan aniq. Tanlang va buyurtma bering.",
+  "orders": {
+    "enabled": true,
     "currency": "so'm",
-    "navLabel": "Narxlar"
+    "freeShipFrom": 0,
+    "deliveryFee": 0
   },
-  "products": [
-    {
-      "id": "start",
-      "name": "Start sayt",
-      "price": 2500000,
-      "category": "Veb-sayt",
-      "badge": "",
-      "description": "5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.",
-      "image": "/img/p-start.svg",
-      "active": true
-    },
-    {
-      "id": "dokon",
-      "name": "Onlayn do'kon",
-      "price": 6900000,
-      "category": "Veb-sayt",
-      "badge": "ENG KO'P TANLANADI",
-      "description": "Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.",
-      "image": "/img/p-dokon.svg",
-      "active": true
-    },
-    {
-      "id": "bot",
-      "name": "Telegram bot",
-      "price": 3200000,
-      "category": "Bot",
-      "badge": "",
-      "description": "Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.",
-      "image": "/img/p-bot.svg",
-      "active": true
-    },
-    {
-      "id": "ilova",
-      "name": "Mobil ilova",
-      "price": 15000000,
-      "category": "Ilova",
-      "badge": "",
-      "description": "iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.",
-      "image": "/img/p-ilova.svg",
-      "active": true
-    },
-    {
-      "id": "dizayn",
-      "name": "UI/UX dizayn",
-      "price": 1800000,
-      "category": "Dizayn",
-      "badge": "",
-      "description": "Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.",
-      "image": "/img/p-dizayn.svg",
-      "active": true
-    },
-    {
-      "id": "yordam",
-      "name": "Oylik texnik yordam",
-      "price": 900000,
-      "category": "Xizmat",
-      "badge": "",
-      "description": "Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.",
-      "image": "/img/p-yordam.svg",
-      "active": true
-    }
-  ],
   "contacts": {
-    "eyebrow": "Aloqa",
-    "title": "Loyihangiz bormi? Muhokama qilamiz",
-    "text": "Raqamingizni qoldiring, 15 daqiqada aloqaga chiqamiz.",
     "phone": "+998 33 623 33 13",
     "email": "chempme@gmail.com",
     "address": "Toshkent, Amir Temur ko'chasi 1",
@@ -231,31 +42,421 @@
     "instagram": ""
   },
   "footer": {
-    "text": "Barcha huquqlar himoyalangan."
-  },
-  "notify": {
-    "telegramBotToken": "",
-    "telegramChatId": ""
-  },
-  "builder": {
-    "eyebrow": "Sayt konstruktori",
-    "title": "Saytingizni o'zingiz yarating",
-    "text": "Dasturlash bilish shart emas. Ma'lumotlarni kiriting, natijani darrov ko'ring va tayyor saytni yuklab oling.",
-    "cta": "Yaratishni boshlash",
-    "navLabel": "Sayt yaratish",
-    "steps": [
+    "text": "Barcha huquqlar himoyalangan.",
+    "links": [
       {
-        "title": "Ma'lumot kiriting",
-        "text": "Kompaniya nomi, xizmatlar, mahsulotlar va rasmlar."
+        "label": "Sayt yaratish",
+        "url": "/yaratish.html"
       },
       {
-        "title": "Natijani ko'ring",
-        "text": "O'zgarishlar yonidagi oynada jonli ko'rinadi."
-      },
-      {
-        "title": "Yuklab oling yoki bizga yuboring",
-        "text": "Tayyor faylni oling yoki biz joylab beramiz."
+        "label": "Kabinet",
+        "url": "/kabinet.html"
       }
     ]
+  },
+  "sections": [
+    {
+      "id": "bosh",
+      "type": "hero",
+      "enabled": true,
+      "navLabel": "",
+      "layout": "split",
+      "badge": "Yangi loyihalar uchun ochiqmiz",
+      "titleStart": "Biznesingiz uchun",
+      "words": [
+        "veb-sayt",
+        "mobil ilova",
+        "Telegram bot",
+        "onlayn do'kon"
+      ],
+      "titleEnd": "yaratamiz",
+      "text": "Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Yoki saytingizni o'zingiz yarating.",
+      "cta1Text": "Saytni o'zim yarataman",
+      "cta1Link": "/yaratish.html",
+      "cta2Text": "Xizmatlarni ko'rish",
+      "cta2Link": "#xizmat",
+      "visual": "window",
+      "image": "",
+      "windowLines": [
+        "// Sizning g'oyangiz",
+        "const loyiha = {",
+        "  mijoz: \"Sizning biznesingiz\",",
+        "  tezlik: \"2 haftada tayyor\",",
+        "  sifat: \"kafolatlangan\",",
+        "};",
+        "ishgaTushir(loyiha); // ✓ tayyor"
+      ],
+      "chips": [
+        "Savdo +240%",
+        "0.8s yuklanish",
+        "24/7 yordam"
+      ],
+      "collage": [],
+      "trust": [
+        {
+          "value": "120+",
+          "label": "loyiha"
+        },
+        {
+          "value": "8 yil",
+          "label": "tajriba"
+        },
+        {
+          "value": "4.9/5",
+          "label": "mijoz bahosi"
+        }
+      ]
+    },
+    {
+      "id": "lenta",
+      "type": "marquee",
+      "enabled": true,
+      "navLabel": "",
+      "items": [
+        "Veb-saytlar",
+        "Mobil ilovalar",
+        "Telegram botlar",
+        "UI/UX dizayn",
+        "CRM tizimlar",
+        "Onlayn do'konlar"
+      ]
+    },
+    {
+      "id": "raqam",
+      "type": "stats",
+      "enabled": true,
+      "navLabel": "",
+      "items": [
+        {
+          "value": 120,
+          "suffix": "+",
+          "label": "Bajarilgan loyiha"
+        },
+        {
+          "value": 60,
+          "suffix": "+",
+          "label": "Doimiy mijozlar"
+        },
+        {
+          "value": 8,
+          "suffix": " yil",
+          "label": "Bozordagi tajriba"
+        },
+        {
+          "value": 99,
+          "suffix": "%",
+          "label": "Mamnun mijozlar"
+        }
+      ]
+    },
+    {
+      "id": "xizmat",
+      "type": "features",
+      "enabled": true,
+      "navLabel": "Xizmatlar",
+      "eyebrow": "Xizmatlar",
+      "title": "Raqamli biznes uchun hamma narsa",
+      "text": "G'oyadan tayyor mahsulotgacha butun jarayonni o'z zimmamizga olamiz.",
+      "layout": "bento",
+      "items": [
+        {
+          "icon": "code",
+          "title": "Veb-sayt va onlayn do'kon",
+          "text": "Tezkor, qidiruv tizimlariga moslashgan, admin paneli bor saytlar. Katalog, savat va to'lov integratsiyasi bilan."
+        },
+        {
+          "icon": "phone",
+          "title": "Mobil ilovalar",
+          "text": "iOS va Android uchun zamonaviy ilovalar."
+        },
+        {
+          "icon": "send",
+          "title": "Telegram botlar",
+          "text": "Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtiring."
+        },
+        {
+          "icon": "design",
+          "title": "UI/UX dizayn",
+          "text": "Ko'rinishi chiroyli, ishlatishi oson interfeyslar."
+        },
+        {
+          "icon": "shield",
+          "title": "Xavfsizlik va hosting",
+          "text": "Barqaror server va ma'lumotlar himoyasi."
+        }
+      ]
+    },
+    {
+      "id": "shablon",
+      "type": "cards",
+      "enabled": true,
+      "navLabel": "Shablonlar",
+      "eyebrow": "Tayyor shablonlar",
+      "title": "Kasbingizga mos sayt, bir necha daqiqada",
+      "text": "Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.",
+      "items": [
+        {
+          "title": "Onlayn market",
+          "badge": "Eng ommabop",
+          "text": "Do'kon va market uchun: katalog, qidiruv, chegirmalar, savat va yetkazib berish.",
+          "image": "/img/tpl/market.jpg",
+          "link": "/yaratish.html?t=market"
+        },
+        {
+          "title": "Portfolio: dizayner",
+          "badge": "Portfolio",
+          "text": "Grafik dizayner, rassom va ijodkorlar uchun: katta tipografiya va loyihalar galereyasi.",
+          "image": "/img/tpl/dizayner.jpg",
+          "link": "/yaratish.html?t=dizayner"
+        },
+        {
+          "title": "Portfolio: dasturchi",
+          "badge": "Portfolio",
+          "text": "Dasturchi va IT mutaxassislar uchun: kod oynasi, ko'nikmalar, loyihalar va tajriba.",
+          "image": "/img/tpl/dasturchi.jpg",
+          "link": "/yaratish.html?t=dasturchi"
+        },
+        {
+          "title": "Portfolio: fotograf",
+          "badge": "Portfolio",
+          "text": "Fotograf, videograf va ijodiy studiyalar uchun: to'liq ekran rasm, galereya, tariflar va bron.",
+          "image": "/img/tpl/fotograf.jpg",
+          "link": "/yaratish.html?t=fotograf"
+        },
+        {
+          "title": "IT kompaniya / agentlik",
+          "badge": "Biznes",
+          "text": "Xizmat ko'rsatuvchi kompaniya uchun: xizmatlar, jarayon, tariflar, savol-javob va aloqa.",
+          "image": "/img/tpl/kompaniya.jpg",
+          "link": "/yaratish.html?t=kompaniya"
+        },
+        {
+          "title": "Restoran / kafe",
+          "badge": "Yangi",
+          "text": "Restoran va kafe uchun: menyu kategoriyalar bilan, galereya va stol bron qilish.",
+          "image": "/img/tpl/restoran.jpg",
+          "link": "/yaratish.html?t=restoran"
+        },
+        {
+          "title": "Go'zallik saloni",
+          "badge": "Yangi",
+          "text": "Salon, barbershop va spa uchun: xizmatlar narxi, ustalar, galereya va onlayn yozilish.",
+          "image": "/img/tpl/salon.jpg",
+          "link": "/yaratish.html?t=salon"
+        },
+        {
+          "title": "O'quv markaz",
+          "badge": "Yangi",
+          "text": "Kurs va o'quv markazlari uchun: kurslar, o'qituvchilar, natijalar va ro'yxatdan o'tish.",
+          "image": "/img/tpl/talim.jpg",
+          "link": "/yaratish.html?t=talim"
+        }
+      ]
+    },
+    {
+      "id": "yaratish",
+      "type": "cta",
+      "enabled": true,
+      "navLabel": "Sayt yaratish",
+      "eyebrow": "Sayt konstruktori",
+      "title": "Saytingizni o'zingiz yarating",
+      "text": "Hisob oching, shablonni tanlang va tahrirlang. Saytlaringiz hisobingizda saqlanadi, istalgan qurilmadan davom ettirasiz.",
+      "buttonText": "Yaratishni boshlash",
+      "buttonLink": "/yaratish.html",
+      "countdownTo": "",
+      "image": ""
+    },
+    {
+      "id": "jarayon",
+      "type": "process",
+      "enabled": true,
+      "navLabel": "Jarayon",
+      "eyebrow": "Jarayon",
+      "title": "Qanday ishlaymiz",
+      "text": "To'rt oddiy qadam, har bosqichda siz bilan aloqadamiz.",
+      "items": [
+        {
+          "title": "Bog'lanish",
+          "text": "Talabingizni eshitamiz va aniq reja tuzamiz."
+        },
+        {
+          "title": "Dizayn",
+          "text": "Ko'rinishni tayyorlab, sizga tasdiqlatamiz."
+        },
+        {
+          "title": "Ishlab chiqish",
+          "text": "Tez va xatosiz quramiz, har kuni hisobot."
+        },
+        {
+          "title": "Ishga tushirish",
+          "text": "Joylashtiramiz va doimiy qo'llab-quvvatlaymiz."
+        }
+      ]
+    },
+    {
+      "id": "narx",
+      "type": "products",
+      "enabled": true,
+      "navLabel": "Narxlar",
+      "eyebrow": "Narxlar",
+      "title": "Tayyor paketlar",
+      "text": "Narxlar oldindan aniq. Tanlang va buyurtma bering.",
+      "mode": "cart",
+      "buttonText": "Buyurtma",
+      "columns": "3",
+      "search": false,
+      "filters": true,
+      "sort": false,
+      "items": [
+        {
+          "id": "start",
+          "name": "Start sayt",
+          "price": 2500000,
+          "oldPrice": 0,
+          "category": "Veb-sayt",
+          "badge": "",
+          "description": "5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.",
+          "image": "/img/t/kompaniya/p-start.svg",
+          "stock": "",
+          "active": true
+        },
+        {
+          "id": "dokon",
+          "name": "Onlayn do'kon",
+          "price": 6900000,
+          "oldPrice": 0,
+          "category": "Veb-sayt",
+          "badge": "ENG KO'P TANLANADI",
+          "description": "Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.",
+          "image": "/img/t/kompaniya/p-dokon.svg",
+          "stock": "",
+          "active": true
+        },
+        {
+          "id": "bot",
+          "name": "Telegram bot",
+          "price": 3200000,
+          "oldPrice": 0,
+          "category": "Bot",
+          "badge": "",
+          "description": "Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.",
+          "image": "/img/t/kompaniya/p-bot.svg",
+          "stock": "",
+          "active": true
+        },
+        {
+          "id": "ilova",
+          "name": "Mobil ilova",
+          "price": 15000000,
+          "oldPrice": 0,
+          "category": "Ilova",
+          "badge": "",
+          "description": "iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.",
+          "image": "/img/t/kompaniya/p-ilova.svg",
+          "stock": "",
+          "active": true
+        },
+        {
+          "id": "dizayn",
+          "name": "UI/UX dizayn",
+          "price": 1800000,
+          "oldPrice": 0,
+          "category": "Dizayn",
+          "badge": "",
+          "description": "Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.",
+          "image": "/img/t/kompaniya/p-dizayn.svg",
+          "stock": "",
+          "active": true
+        },
+        {
+          "id": "yordam",
+          "name": "Oylik texnik yordam",
+          "price": 900000,
+          "oldPrice": 0,
+          "category": "Xizmat",
+          "badge": "",
+          "description": "Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.",
+          "image": "/img/t/kompaniya/p-yordam.svg",
+          "stock": "",
+          "active": true
+        }
+      ]
+    },
+    {
+      "id": "fikr",
+      "type": "testimonials",
+      "enabled": true,
+      "navLabel": "",
+      "eyebrow": "Sharhlar",
+      "title": "Mijozlar fikri",
+      "text": "",
+      "items": [
+        {
+          "text": "Saytimiz 2 haftada tayyor bo'ldi, buyurtmalar ikki baravar oshdi.",
+          "name": "Akmal R.",
+          "role": "Do'kon egasi",
+          "image": "/img/t/kompaniya/a1.svg",
+          "stars": 5
+        },
+        {
+          "text": "Telegram bot ishimizni ancha yengillashtirdi. Jamoa juda mas'uliyatli.",
+          "name": "Gulnora S.",
+          "role": "Restoran menejeri",
+          "image": "/img/t/kompaniya/a2.svg",
+          "stars": 5
+        },
+        {
+          "text": "Hamma narsa aniq va shaffof. Muddat va narx so'zsiz bajarildi.",
+          "name": "Rustam K.",
+          "role": "Direktor",
+          "image": "/img/t/kompaniya/a3.svg",
+          "stars": 5
+        }
+      ]
+    },
+    {
+      "id": "savol",
+      "type": "faq",
+      "enabled": true,
+      "navLabel": "",
+      "eyebrow": "Savollar",
+      "title": "Ko'p so'raladigan savollar",
+      "text": "",
+      "items": [
+        {
+          "q": "Sayt qancha vaqtda tayyor bo'ladi?",
+          "a": "Vizitka sayt 3–5 kun, onlayn do'kon 2–3 hafta ichida tayyor bo'ladi."
+        },
+        {
+          "q": "Tayyor saytni o'zim tahrirlay olamimi?",
+          "a": "Ha, admin panel orqali matn, narx va rasmlarni o'zingiz o'zgartirasiz."
+        },
+        {
+          "q": "Domen va hostingni siz olib berasizmi?",
+          "a": "Ha, domen va hostingni ulab beramiz. Xohlasangiz o'zingiznikini ham ishlatamiz."
+        }
+      ]
+    },
+    {
+      "id": "aloqa",
+      "type": "contact",
+      "enabled": true,
+      "navLabel": "Aloqa",
+      "eyebrow": "Aloqa",
+      "title": "Loyihangiz bormi? Muhokama qilamiz",
+      "text": "Raqamingizni qoldiring, 15 daqiqada aloqaga chiqamiz.",
+      "form": "order",
+      "serviceOptions": [],
+      "askGuests": false,
+      "askAddress": false,
+      "payOptions": [],
+      "submitText": "Yuborish",
+      "mapUrl": ""
+    }
+  ],
+  "account": {
+    "enabled": true,
+    "requireOrder": true,
+    "requireBooking": false
   }
 }
