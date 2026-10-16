@@ -4,7 +4,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const money = (n) => Number(n).toLocaleString('ru-RU').replace(/ /g, ' ');
-  const safeUrl = (u) => (/^(https?:\/\/|\/)/i.test(u || '') ? u : '');
+  const safeUrl = (u) => (/^(https?:\/\/|\/(?!\/)|data:image\/(png|jpeg|webp|gif|svg\+xml)[;,])/i.test(u || '') ? u : '');
   const isPreview = new URLSearchParams(location.search).has('preview');
   const store = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch { /* ignore */ } } };
 
@@ -220,7 +220,7 @@
     msg.className = 'msg';
     if (name.length < 2) { msg.className = 'msg bad'; msg.textContent = 'Ismingizni kiriting'; return; }
     if (!/^[+\d][\d\s()\-]{6,}$/.test(phone)) { msg.className = 'msg bad'; msg.textContent = "Telefon raqamini to'g'ri kiriting (masalan, +998 90 123 45 67)"; return; }
-    if (isPreview) { msg.textContent = "Ko'rinish rejimi: buyurtma yuborilmaydi"; return; }
+    if (isPreview || window.__SITE__) { msg.textContent = "Namuna rejimi: buyurtma yuborilmaydi. Haqiqiy saytda u adminga tushadi."; return; }
     btn.disabled = true;
     try {
       const r = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, message: form.message.value, items: Object.entries(on('catalog') ? cart : {}).map(([id, qty]) => ({ id, qty })) }) });
@@ -323,7 +323,9 @@
   })();
 
   /* ---------- Yuklash ---------- */
-  if (isPreview) {
+  if (window.__SITE__) {
+    render(window.__SITE__);
+  } else if (isPreview) {
     addEventListener('message', (e) => { if (e.origin === location.origin && e.data && e.data.type === 'site') render(e.data.data); });
     parent.postMessage({ type: 'ready' }, location.origin);
   } else {
