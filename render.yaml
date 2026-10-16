@@ -1,0 +1,23 @@
+# Render Blueprint: Dashboard > New > Blueprint > shu repozitoriy
+services:
+  - type: web
+    name: babycheer-bot
+    runtime: docker
+    rootDir: market_bot
+    plan: starter            # doimiy disk va uyquga ketmaslik uchun (bepul rejada ikkalasi ham yo'q)
+    branch: claude/optimistic-edison-wtqe1e
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: PAYMENT_PROVIDER_TOKEN
+        sync: false
+      - key: CARD_NUMBER
+        sync: false
+      - key: CARD_OWNER
+        sync: false

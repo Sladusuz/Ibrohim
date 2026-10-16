@@ -4,7 +4,9 @@ from pathlib import Path
 
 import seed_data
 
-DB_PATH = Path(__file__).parent / "market.db"
+import os
+
+DB_PATH = Path(os.getenv("DB_PATH") or Path(__file__).parent / "market.db")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT NOT NULL);

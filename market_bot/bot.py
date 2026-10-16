@@ -41,7 +41,12 @@ ADMIN_IDS = {int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split("
 PROVIDER_TOKEN = os.getenv("PAYMENT_PROVIDER_TOKEN", "")
 CARD_NUMBER = os.getenv("CARD_NUMBER", "")
 CARD_OWNER = os.getenv("CARD_OWNER", "")
-WEBAPP_URL = os.getenv("WEBAPP_URL", "").rstrip("/")  # Mini App uchun ommaviy https manzil
+# Mini App uchun ommaviy https manzil. Render/Railway o'zi beradigan manzil avtomatik olinadi
+WEBAPP_URL = (
+    os.getenv("WEBAPP_URL")
+    or os.getenv("RENDER_EXTERNAL_URL")
+    or (f"https://{os.environ['RAILWAY_PUBLIC_DOMAIN']}" if os.getenv("RAILWAY_PUBLIC_DOMAIN") else "")
+).rstrip("/")
 PORT = int(os.getenv("PORT", "8080"))
 
 db = Database()

@@ -26,8 +26,9 @@ adminga bot orqali xabar tushadi, onlayn to'lov Telegram oynasida (`openInvoice`
 Ishga tushishi uchun **ommaviy HTTPS manzil** kerak: `WEBAPP_URL` ga yozing, bot menyu tugmasi va `/start` dagi
 «🛍 Do'konni ochish» tugmasini o'zi sozlaydi.
 
-Joylash (Render / Railway / Fly.io / VPS): shu papkadagi `Dockerfile` bilan deploy qiling, `.env` dagi qiymatlarni
-muhit o'zgaruvchilari sifatida kiriting va `market.db` uchun doimiy disk (volume) ulang.
+Joylash (Render): repozitoriy ildizidagi `render.yaml` (Blueprint) tayyor. Render/Railway bergan manzil `WEBAPP_URL` o'rnida
+avtomatik ishlatiladi. Boshqa joyda: `Dockerfile` bilan deploy qiling, `.env` qiymatlarini muhit o'zgaruvchisi qiling,
+`/data` ga doimiy disk (volume) ulang (baza `DB_PATH=/data/market.db`).
 
 ## Ishga tushirish
 1. @BotFather orqali bot yarating, tokenni oling.
