@@ -79,6 +79,7 @@
     if (on('services') && (S.services.items || []).length) links.push(['xizmat', S.services.eyebrow || 'Xizmatlar']);
     if (on('process') && (S.process.steps || []).length) links.push(['jarayon', S.process.eyebrow || 'Jarayon']);
     if (on('catalog') && (S.products || []).length) links.push(['katalog', S.catalog.navLabel || S.catalog.eyebrow || 'Katalog']);
+    if (on('builder')) links.push(['yaratish', (S.builder && S.builder.navLabel) || 'Sayt yaratish']);
     links.push(['aloqa', (S.contacts && S.contacts.eyebrow) || 'Aloqa']);
     const showCart = on('catalog') && on('orders') && (S.products || []).length;
     return `<header class="nav"><a class="logo" href="#top"><span class="mark">${text((S.company.logo || (S.company.name || 'S')[0]).slice(0, 2))}</span>${text(S.company.name)}</a>
@@ -155,6 +156,13 @@
       ${cats.length > 1 ? `<div class="filters rv" id="filters"><button class="on" data-cat="">Hammasi</button>${cats.map((x) => `<button data-cat="${esc(x)}">${text(x)}</button>`).join('')}</div>` : ''}
       <div class="price" id="grid">${ps.map(prodCard).join('')}</div></div></section>`;
   }
+  function builderHtml() {
+    const b = S.builder || {};
+    if (!on('builder')) return '';
+    return `<section class="sec" id="yaratish"><div class="wrap"><div class="cta-box rv"><div><span class="eyebrow">${text(b.eyebrow)}</span><h2>${text(b.title)}</h2>${b.text ? `<p class="sub">${text(b.text)}</p>` : ''}
+      <div style="margin-top:28px"><a class="btn mag" href="/yaratish.html">${text(b.cta || 'Boshlash')} ${svgIcon('arrow')}</a></div></div>
+      <div class="bsteps">${(b.steps || []).map((st, i) => `<div class="bstep"><div class="num">${i + 1}</div><div><h3>${text(st.title)}</h3><p>${text(st.text)}</p></div></div>`).join('')}</div></div></div></section>`;
+  }
   function contactHtml() {
     const c = S.contacts || {};
     const rows = [];
@@ -220,7 +228,9 @@
     msg.className = 'msg';
     if (name.length < 2) { msg.className = 'msg bad'; msg.textContent = 'Ismingizni kiriting'; return; }
     if (!/^[+\d][\d\s()\-]{6,}$/.test(phone)) { msg.className = 'msg bad'; msg.textContent = "Telefon raqamini to'g'ri kiriting (masalan, +998 90 123 45 67)"; return; }
-    if (window.__MAILTO__) {
+    if (isPreview || (window.__SITE__ && window.__MAILTO__ === undefined)) { msg.textContent = "Namuna rejimi: buyurtma yuborilmaydi. Haqiqiy saytda u adminga tushadi."; return; }
+    if (typeof window.__MAILTO__ === 'string') {
+      if (!window.__MAILTO__) { msg.className = 'msg bad'; msg.textContent = "Buyurtma qabul qilinmayapti. Iltimos, telefon orqali bog'laning."; return; }
       const lines = [`Ism: ${name}`, `Telefon: ${phone}`];
       const its = on('catalog') ? cartItems() : [];
       if (its.length) lines.push('Buyurtma: ' + its.map((i) => `${i.p.name} x${i.qty}`).join(', '));
@@ -229,7 +239,6 @@
       msg.textContent = "Pochta ilovangiz ochiladi. Xabarni yuborishni unutmang yoki qo'ng'iroq qiling.";
       return;
     }
-    if (isPreview || window.__SITE__) { msg.textContent = "Namuna rejimi: buyurtma yuborilmaydi. Haqiqiy saytda u adminga tushadi."; return; }
     btn.disabled = true;
     try {
       const r = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, phone, message: form.message.value, items: Object.entries(on('catalog') ? cart : {}).map(([id, qty]) => ({ id, qty })) }) });
@@ -270,10 +279,10 @@
   /* ---------- Asosiy render ---------- */
   function render(data) {
     S = data;
-    S.company = S.company || {}; S.hero = S.hero || {}; S.catalog = S.catalog || {}; S.contacts = S.contacts || {}; S.services = S.services || {}; S.process = S.process || {};
+    S.company = S.company || {}; S.hero = S.hero || {}; S.catalog = S.catalog || {}; S.contacts = S.contacts || {}; S.services = S.services || {}; S.process = S.process || {}; S.builder = S.builder || {};
     S.products = (S.products || []).filter((p) => p.active !== false).map((p) => ({ ...p, price: Number(p.price) || 0 }));
     loadCart(); applyTheme(); setMeta();
-    $('#app').innerHTML = navHtml() + heroHtml() + marqueeHtml() + statsHtml() + servicesHtml() + processHtml() + catalogHtml() + contactHtml() + footerHtml() + drawerHtml() + switcherHtml();
+    $('#app').innerHTML = navHtml() + heroHtml() + marqueeHtml() + statsHtml() + servicesHtml() + processHtml() + catalogHtml() + builderHtml() + contactHtml() + footerHtml() + drawerHtml() + switcherHtml();
     $('#aurora').style.display = ''; renderCart(); initEffects();
   }
 

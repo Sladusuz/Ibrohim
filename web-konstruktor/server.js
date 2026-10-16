@@ -251,6 +251,7 @@ const server = http.createServer(async (req, res) => {
       const f = path.join(UPLOADS, path.basename(p));
       return serveFile(res, f, true);
     }
+    if (p === '/yaratish') p = '/yaratish.html';
     if (p === '/') p = '/index.html';
     const file = path.normalize(path.join(PUBLIC, p));
     if (!file.startsWith(PUBLIC + path.sep) || path.basename(file) === 'admin.html') return send(res, 404, 'Sahifa topilmadi');

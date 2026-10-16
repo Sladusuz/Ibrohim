@@ -59,7 +59,7 @@
       <label class="f">Maxsus rang (ixtiyoriy)</label><div class="colors"><label><input type="color" data-p="theme.accent" value="${esc(get('theme.accent') || '#22d3ee')}"> Asosiy</label><label><input type="color" data-p="theme.accent2" value="${esc(get('theme.accent2') || '#7c5cff')}"> Qo'shimcha</label><button class="b g s" data-act="resetColors">Standart</button></div>
       <h4>Bo'limlarni yoqish / o'chirish</h4>
       ${fToggle('Katalog', 'Mahsulot yoki xizmatlar, rasm va narx bilan', 'features.catalog')}${fToggle('Buyurtma formasi va savat', 'Mijoz buyurtma yoki so\'rov yuboradi', 'features.orders')}
-      ${fToggle('Xizmatlar', 'Xizmatlar kartochkalari', 'features.services')}${fToggle('Jarayon', 'Qanday ishlashingiz bosqichlari', 'features.process')}${fToggle('Raqamlar', 'Animatsiyali ko\'rsatkichlar', 'features.stats')}${fToggle('Yuguruvchi lenta', 'Xizmat nomlari lentasi', 'features.marquee')}
+      ${fToggle('Xizmatlar', 'Xizmatlar kartochkalari', 'features.services')}${fToggle('Jarayon', 'Qanday ishlashingiz bosqichlari', 'features.process')}${fToggle('Raqamlar', 'Animatsiyali ko\'rsatkichlar', 'features.stats')}${fToggle('Sayt yaratish bo\'limi', 'Mijoz o\'z saytini o\'zi yaratadi (/yaratish)', 'features.builder')}${fToggle('Yuguruvchi lenta', 'Xizmat nomlari lentasi', 'features.marquee')}
       <h4>Effektlar</h4>${fToggle('Fon animatsiyalari', 'Harakatlanuvchi fon va yorug\'lik', 'features.effects')}${fToggle('Mavzu almashtirgich', 'Mehmon rangni o\'zi tanlay oladi', 'features.themeSwitcher')}`,
     bosh: () => `<h4>Asosiy ekran</h4>${fText('Yuqoridagi yozuv', 'hero.badge', { max: 80 })}${fText('Sarlavha boshi', 'hero.titleStart', { max: 80 })}${fLines('Almashib turadigan so\'zlar', 'hero.words', 'Har bir qatorga bitta so\'z. Bo\'sh qoldirsangiz o\'chadi.')}${fText('Sarlavha oxiri', 'hero.titleEnd', { max: 80 })}${fText('Tavsif', 'hero.text', { area: 1, max: 300 })}
       <div class="row2"><div>${fText('1-tugma matni', 'hero.cta1', { max: 40 })}</div><div>${fText('2-tugma matni', 'hero.cta2', { max: 40 })}</div></div>${fText('Menyudagi tugma', 'hero.navCta', { max: 40 })}
@@ -67,6 +67,7 @@
       ${get('hero.visual') === 'image' ? fImg('Rasm', 'hero.image') : ''}${get('hero.visual') === 'window' ? fLines('Oynadagi qatorlar', 'hero.windowLines') : ''}
       ${get('hero.visual') !== 'none' ? fLines('Suzuvchi yozuvlar (3 tagacha)', 'hero.chips', 'Har bir qatorga bittadan') : ''}
       <h4>Ishonch ko'rsatkichlari</h4>${(D.hero.trust || []).map((t, i) => `<div class="item">${listHead('Ko\'rsatkich ' + (i + 1), 'hero.trust', i, D.hero.trust.length)}<div class="row2"><div>${fText('Qiymat', `hero.trust.${i}.value`, { max: 20 })}</div><div>${fText('Yozuv', `hero.trust.${i}.label`, { max: 30 })}</div></div></div>`).join('')}<button class="addb" data-act="add" data-path="hero.trust">+ Qo'shish</button>
+      <h4>Sayt yaratish bo'limi</h4>${fText('Kichik yozuv', 'builder.eyebrow', { max: 30 })}${fText('Sarlavha', 'builder.title', { max: 100 })}${fText('Tavsif', 'builder.text', { area: 1, max: 250 })}${fText('Tugma matni', 'builder.cta', { max: 40 })}
       <h4>Yuguruvchi lenta</h4>${fLines('Lentadagi so\'zlar', 'marquee')}
       <h4>Raqamlar</h4>${(D.stats || []).map((t, i) => `<div class="item">${listHead(t.label || 'Raqam', 'stats', i, D.stats.length)}<div class="row2"><div>${fText('Son', `stats.${i}.value`, { type: 'number' })}</div><div>${fText('Qo\'shimcha (+, %)', `stats.${i}.suffix`, { max: 10 })}</div></div>${fText('Yozuv', `stats.${i}.label`, { max: 40 })}</div>`).join('')}<button class="addb" data-act="add" data-path="stats">+ Qo'shish</button>`,
     xizmat: () => `${!get('features.services') ? '<p class="hint" style="margin-top:14px">Bu bo\'lim hozir o\'chirilgan. «Asosiy» bo\'limidan yoqing.</p>' : ''}<h4>Sarlavha</h4>${fText('Kichik yozuv', 'services.eyebrow', { max: 30 })}${fText('Sarlavha', 'services.title', { max: 100 })}${fText('Tavsif', 'services.text', { area: 1, max: 250 })}
@@ -162,7 +163,7 @@
   async function load() {
     D = await api('GET', '/api/admin/site');
     D.theme = D.theme || {}; D.features = D.features || {}; D.hero = D.hero || {}; D.notify = D.notify || {}; D.catalog = D.catalog || {}; D.contacts = D.contacts || {}; D.services = D.services || { items: [] }; D.process = D.process || { steps: [] };
-    D.products = D.products || []; D.stats = D.stats || []; D.marquee = D.marquee || []; D.footer = D.footer || {}; D.company = D.company || {};
+    D.builder = D.builder || {}; D.products = D.products || []; D.stats = D.stats || []; D.marquee = D.marquee || []; D.footer = D.footer || {}; D.company = D.company || {};
     D.hero.trust = D.hero.trust || []; D.hero.words = D.hero.words || []; D.hero.chips = D.hero.chips || []; D.hero.windowLines = D.hero.windowLines || [];
     try { orders = await api('GET', '/api/admin/orders'); } catch { orders = []; }
     $('#lm').textContent = (D.company.logo || 'I').slice(0, 2); dirty = false;

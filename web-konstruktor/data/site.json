@@ -17,7 +17,8 @@
     "stats": true,
     "marquee": true,
     "themeSwitcher": true,
-    "effects": true
+    "effects": true,
+    "builder": true
   },
   "hero": {
     "badge": "Yangi loyihalar uchun ochiqmiz",
@@ -235,5 +236,26 @@
   "notify": {
     "telegramBotToken": "",
     "telegramChatId": ""
+  },
+  "builder": {
+    "eyebrow": "Sayt konstruktori",
+    "title": "Saytingizni o'zingiz yarating",
+    "text": "Dasturlash bilish shart emas. Ma'lumotlarni kiriting, natijani darrov ko'ring va tayyor saytni yuklab oling.",
+    "cta": "Yaratishni boshlash",
+    "navLabel": "Sayt yaratish",
+    "steps": [
+      {
+        "title": "Ma'lumot kiriting",
+        "text": "Kompaniya nomi, xizmatlar, mahsulotlar va rasmlar."
+      },
+      {
+        "title": "Natijani ko'ring",
+        "text": "O'zgarishlar yonidagi oynada jonli ko'rinadi."
+      },
+      {
+        "title": "Yuklab oling yoki bizga yuboring",
+        "text": "Tayyor faylni oling yoki biz joylab beramiz."
+      }
+    ]
   }
 }

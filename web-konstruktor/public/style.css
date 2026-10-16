@@ -125,6 +125,7 @@ form{display:grid;gap:14px}.fld{position:relative}.fld input,.fld textarea{width
 footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:14px}footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
 .sw{position:fixed;right:18px;bottom:18px;z-index:60;display:flex;gap:6px;padding:7px;border-radius:99px;background:var(--surf);border:1px solid var(--line);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
 .sw button{border:0;cursor:pointer;padding:9px 15px;border-radius:99px;background:transparent;color:var(--muted);font-weight:600;font-size:13px;transition:.25s}.sw button.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on)}
+.bsteps{display:grid;gap:14px}.bstep{display:flex;gap:16px;align-items:center;padding:16px 18px;border-radius:20px;background:var(--surf);border:1px solid var(--line)}.bstep .num{margin:0;flex:none;width:48px;height:48px;font-size:17px}.bstep h3{font-size:17px;margin-bottom:2px}.bstep p{color:var(--muted);font-size:14px;margin:0}
 /* admin ko'rinish rejimi: animatsiyalar bir zumda */
 .preview .w span{transform:none;animation:none}.preview .lead,.preview .cta,.preview .trust,.preview .vis,.preview .nav{opacity:1;animation:none}.preview .nav{transform:translateX(-50%)}
 .preview pre .l{opacity:1;transform:none;animation:none}.preview .chart i{transform:none;animation:none}.preview .rv{opacity:1;transform:none;transition:none}
