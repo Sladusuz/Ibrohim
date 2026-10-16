@@ -1019,7 +1019,7 @@ async def main(session=None):
     logging.info("Mini App serveri: http://0.0.0.0:%s (WEBAPP_URL=%s)", PORT, WEBAPP_URL or "-")
     if WEBAPP_URL:
         await bot.set_chat_menu_button(
-            menu_button=MenuButtonWebApp(text="🛍 Do'kon", web_app=WebAppInfo(url=WEBAPP_URL))
+            menu_button=MenuButtonWebApp(text="Open", web_app=WebAppInfo(url=WEBAPP_URL))
         )
     else:
         await bot.set_chat_menu_button(menu_button=MenuButtonDefault())
