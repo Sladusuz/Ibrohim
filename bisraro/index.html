@@ -38,7 +38,7 @@ section.s{padding:var(--y) 0}
 .card:hover{transform:translateY(-6px)}
 .card .n{position:absolute;top:24px;left:28px;font-family:var(--serif);color:var(--gold);font-size:18px}
 .card h3{font-size:28px}.card p{opacity:.7;font-size:14px;margin-top:8px}
-.card.a{background:linear-gradient(160deg,#6B3F2A,#241A12)}.card.b{background:linear-gradient(160deg,#3E2418,#1A120B)}.card.c{background:linear-gradient(160deg,#8F6E2E,#2A1D13)}
+.card.a0{background:linear-gradient(160deg,#6B3F2A,#241A12)}.card.b{background:linear-gradient(160deg,#3E2418,#1A120B)}.card.c{background:linear-gradient(160deg,#8F6E2E,#2A1D13)}
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border-top:1px solid var(--line-dark)}
 .step{padding:32px 24px 32px 0;border-bottom:1px solid var(--line-dark)}
 .step i{font-style:normal;font-family:var(--serif);color:var(--gold);font-size:40px}
@@ -48,12 +48,14 @@ form{display:grid;gap:14px;max-width:560px}
 input,textarea{padding:16px 18px;border-radius:12px;border:1px solid var(--line-dark);background:var(--ink-3);color:var(--cream);font:inherit}
 footer{padding:48px 0;border-top:1px solid var(--line-dark);font-size:13px;opacity:.7}
 footer .c{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.gal{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}.gal img,.prod img{width:100%;border-radius:16px;display:block;object-fit:cover}
+.prod{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}.prod figure{margin:0;background:var(--ink-3);border-radius:16px;overflow:hidden;border:1px solid var(--line-dark)}.prod figcaption{padding:12px 16px;font-family:var(--serif)}
 @media(max-width:760px){nav{display:none}}
 </style>
 </head>
 <body>
-<header><div class="c"><a class="logo" href="#">BISRARO</a>
-<nav><a href="#">Bosh sahifa</a><a href="#kolleksiya">Katalog</a><a href="#jarayon">Ishlab chiqarish</a><a href="#yutuq">Yutuqlarimiz</a><a href="#aloqa">Kontakt</a></nav>
+<header><div class="c"><a class="logo" href="#"><img src="img/bisraro-logo.webp" alt="BISRARO" style="height:44px;display:block"></a>
+<nav><a href="#">Bosh sahifa</a><a href="#katalog">Katalog</a><a href="#jarayon">Ishlab chiqarish</a><a href="#yutuq">Yutuqlarimiz</a><a href="#aloqa">Kontakt</a></nav>
 <a class="btn" href="#aloqa">Hamkorlik uchun</a></div></header>
 
 <section class="hero"><div class="c">
@@ -67,12 +69,14 @@ footer .c{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 <section class="s cream" id="kolleksiya"><div class="c">
 <p class="kicker" style="color:var(--cocoa)">Kolleksiya</p><h2>Har bir did uchun shokolad</h2>
 <div class="grid3">
-<a class="card a" href="#"><span class="n">01</span><h3>Konfetlar</h3><p>Yumshoq to'ldirmali konfetlar</p></a>
-<a class="card b" href="#"><span class="n">02</span><h3>Plitka va botonchik</h3><p>Klassik shokolad plitkalari</p></a>
-<a class="card c" href="#"><span class="n">03</span><h3>Premium</h3><p>BISRARO premium seriyasi</p></a>
+<a class="card a" href="#" style="background:linear-gradient(to top,rgba(26,18,11,.9),rgba(26,18,11,.1)),url(img/kolleksiya/konfetlar-karta.webp) center/cover"><span class="n">01</span><h3>Konfetlar</h3><p>Yumshoq to'ldirmali konfetlar</p></a>
+<a class="card b" href="#" style="background:linear-gradient(to top,rgba(26,18,11,.9),rgba(26,18,11,.1)),url(img/kolleksiya/plitka-karta.webp) center/cover"><span class="n">02</span><h3>Plitka va botonchik</h3><p>Klassik shokolad plitkalari</p></a>
+<a class="card c" href="#" style="background:linear-gradient(to top,rgba(26,18,11,.9),rgba(26,18,11,.1)),url(img/kolleksiya/premium-karta.webp) center/cover"><span class="n">03</span><h3>Premium</h3><p>BISRARO premium seriyasi</p></a>
 </div></div></section>
 
-<section class="s deep" id="jarayon"><div class="c">
+<section class="s deep" id="katalog"><div class="c"><p class="kicker">Katalog</p><h2>Mahsulotlarimiz</h2><div class="prod"><figure><img loading="lazy" src="img/mahsulot/bisraro.webp" alt="bisraro"><figcaption>Bisraro</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/bisraro-liya.webp" alt="bisraro-liya"><figcaption>Bisraro Liya</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/bisraro-buni.webp" alt="bisraro-buni"><figcaption>Bisraro Buni</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/sladus-duo.webp" alt="sladus-duo"><figcaption>Sladus Duo</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/sladus-duo-milk.webp" alt="sladus-duo-milk"><figcaption>Sladus Duo Milk</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/sladus-kvadro.webp" alt="sladus-kvadro"><figcaption>Sladus Kvadro</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/sladus-issimo.webp" alt="sladus-issimo"><figcaption>Sladus Issimo</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/sladus-lactic.webp" alt="sladus-lactic"><figcaption>Sladus Lactic</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/sladus-morning.webp" alt="sladus-morning"><figcaption>Sladus Morning</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/sladus-one-milk.webp" alt="sladus-one-milk"><figcaption>Sladus One Milk</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/bunibi-fantos.webp" alt="bunibi-fantos"><figcaption>Bunibi Fantos</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/bunibi-larus.webp" alt="bunibi-larus"><figcaption>Bunibi Larus</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/dorro.webp" alt="dorro"><figcaption>Dorro</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/nitro.webp" alt="nitro"><figcaption>Nitro</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/one-bite.webp" alt="one-bite"><figcaption>One Bite</figcaption></figure><figure><img loading="lazy" src="img/mahsulot/yaza.webp" alt="yaza"><figcaption>Yaza</figcaption></figure></div></div></section>
+
+<section class="s" id="jarayon"><div class="c">
 <p class="kicker">Ishlab chiqarish</p><h2>Kakao donidan qadoqgacha</h2>
 <div class="steps">
 <div class="step"><i>01</i><h3>Kakao tanlash</h3><p>Sifatli xom ashyo</p></div>
@@ -84,7 +88,7 @@ footer .c{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
 
 <section class="s cream" id="yutuq"><div class="c">
 <p class="kicker" style="color:var(--cocoa)">Tan olish</p><h2>ProdExpo 2023 — oltin medal</h2>
-<div class="grid3"><div class="card"><h3>Sifat</h3><p>Qat'iy nazorat</p></div><div class="card"><h3>Ishonch</h3><p>Hamkorlar tanlovi</p></div><div class="card"><h3>Innovatsiya</h3><p>Yangi retseptlar</p></div></div>
+<div class="gal"><img src="img/mukofot/prodexpo-2023-oltin-medal.webp" alt=""><img src="img/mukofot/prodexpo-2023-laureat-diplomi.webp" alt=""><img src="img/mukofot/prodexpo-diplom-medal.webp" alt=""><img src="img/mukofot/f-istanbul-plaketa.webp" alt=""><img src="img/mukofot/davlat-guvohnomasi.webp" alt=""></div><div class="grid3" style="margin-top:32px"><div class="card"><h3>Sifat</h3><p>Qat'iy nazorat</p></div><div class="card"><h3>Ishonch</h3><p>Hamkorlar tanlovi</p></div><div class="card"><h3>Innovatsiya</h3><p>Yangi retseptlar</p></div></div>
 </div></section>
 
 <section class="s" id="aloqa"><div class="c">
