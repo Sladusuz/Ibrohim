@@ -145,7 +145,7 @@
   ];
   define('products', {
     label: 'Mahsulotlar / katalog', icon: 'cart', desc: 'Do\'kon: qidiruv, kategoriya, savat. Kurs va paketlar uchun ham',
-    fields: [...HEAD, F.sel('mode', 'Tugma vazifasi', [['cart', 'Savatga qo\'shish (buyurtma)'], ['inquiry', 'So\'rov qoldirish (kurs, xizmat)']]), F.text('buttonText', 'Tugma matni', { max: 30, ph: 'Savatga' }),
+    fields: [...HEAD, F.sel('mode', 'Tugma vazifasi', [['cart', 'Savatga qo\'shish (buyurtma)'], ['inquiry', 'So\'rov qoldirish (kurs, xizmat)'], ['brief', 'Buyurtma anketasini ochish (loyiha so\'rovi)']]), F.text('buttonText', 'Tugma matni', { max: 30, ph: 'Savatga' }),
       F.sel('columns', 'Ustunlar', [['3', '3 ta'], ['4', '4 ta'], ['2', '2 ta']]), F.tog('search', 'Qidiruv'), F.tog('filters', 'Kategoriya tugmalari'), F.tog('sort', 'Saralash'),
       F.list('items', 'Mahsulotlar', { title: 'name', fields: productFields, add: () => ({ id: uid(), name: 'Yangi mahsulot', price: 0, oldPrice: 0, category: '', badge: '', description: '', image: '', stock: '', active: true }), idKey: 'id' })],
     defaults: () => ({ eyebrow: 'Katalog', title: 'Mahsulotlar', text: 'Tanlang va buyurtma bering.', mode: 'cart', buttonText: '', columns: '3', search: true, filters: true, sort: true, items: [{ id: uid(), name: 'Birinchi mahsulot', price: 100000, oldPrice: 0, category: 'Asosiy', badge: 'YANGI', description: 'Mahsulot haqida qisqa tavsif.', image: '', stock: '', active: true }, { id: uid(), name: 'Ikkinchi mahsulot', price: 250000, oldPrice: 300000, category: 'Asosiy', badge: '', description: 'Mahsulot haqida qisqa tavsif.', image: '', stock: '', active: true }, { id: uid(), name: 'Uchinchi mahsulot', price: 0, oldPrice: 0, category: 'Qo\'shimcha', badge: '', description: 'Narxi kelishiladi.', image: '', stock: '', active: true }] }),
@@ -174,6 +174,7 @@
   function actionBtn(sec, p, big) {
     const out = E.maxQty(p) <= 0 && (sec.mode || 'cart') === 'cart';
     if (out) return `<button class="btn ${big ? '' : 'sm'} dis" disabled>Tugagan</button>`;
+    if ((sec.mode || 'cart') === 'brief') return `<button class="btn ${big ? '' : 'sm'}" data-act="brief-open" data-svc="${esc(p.id)}" data-name="${esc(p.name)}">${text(sec.buttonText || 'Buyurtma')} ${icon('arrow')}</button>`;
     if ((sec.mode || 'cart') === 'inquiry') return `<button class="btn ${big ? '' : 'sm'}" data-act="inq" data-name="${esc(p.name)}">${text(sec.buttonText || 'So\'rov qoldirish')}</button>`;
     return `<button class="btn ${big ? '' : 'sm'}" data-act="add" data-id="${esc(p.id)}">${icon('cart')} ${text(sec.buttonText || 'Savatga')}</button>`;
   }
@@ -380,6 +381,38 @@
     render(sec) {
       const it = arr(sec.items); if (!it.length) return '';
       return E.wrap(sec, `${E.head(sec)}<div class="lcards">${it.map((c, i) => `<a class="lc rv" style="--d:${(i % 4) * 0.07}s" href="${esc(linkUrl(c.link) || '#')}"><div class="lci">${imgUrl(c.image) ? E.img(c.image, c.title) : `<div class="ph">${E.initial(c.title)}</div>`}${c.badge ? `<span class="badge">${text(c.badge)}</span>` : ''}</div><div class="lct"><h3>${text(c.title)}</h3>${c.text ? `<p>${text(c.text)}</p>` : ''}<span class="more">Ko'rish ${icon('arrow')}</span></div></a>`).join('')}</div>`);
+    },
+  });
+
+
+  /* =============== BRIEF (buyurtma anketasi) =============== */
+  const SVC_ICONS = ['globe', 'cart', 'send', 'phone', 'design', 'tool', 'code', 'zap', 'shield', 'chart', 'users', 'star'];
+  define('brief', {
+    label: 'Buyurtma anketasi', icon: 'edit', desc: "Mijozning xohishlarini bosqichma-bosqich so'raydigan anketa: xizmat, imkoniyatlar, dizayn, byudjet va aloqa",
+    fields: [...HEAD, F.text('buttonText', 'Tugma matni', { max: 40, ph: "Anketani to'ldirish" }), F.text('promise', "Va'da (tugma ostida)", { max: 120, ph: "15 daqiqada aloqaga chiqamiz" }),
+      F.lines('usp', 'Afzalliklar (har qatorga bittadan)'), F.tog('showEstimate', "Taxminiy narxni ko'rsatish"),
+      F.list('services', 'Xizmat turlari', { title: 'name', fields: [F.text('name', 'Nomi', { max: 60 }), F.text('desc', 'Qisqa tavsif', { max: 120 }), F.icon('icon', 'Ikonka'), F.num('price', "Boshlang'ich narx", { min: 0, hint: "Taxminiy narx hisobi uchun" }), F.text('days', 'Muddat', { max: 30, ph: '5–10 kun' })], add: () => ({ id: uid(), name: 'Yangi xizmat', desc: '', icon: 'star', price: 0, days: '' }), idKey: 'id' }),
+      F.list('features', 'Qo\'shimcha imkoniyatlar', { title: 'name', fields: [F.text('name', 'Nomi', { max: 60 }), F.num('price', "Qo'shimcha narx", { min: 0 }), F.text('types', 'Qaysi xizmatlar uchun (id lar, vergul bilan)', { max: 120, hint: "Bo'sh qoldirsangiz hammasi uchun ko'rinadi" })], add: () => ({ name: 'Yangi imkoniyat', price: 0, types: '' }) }),
+      F.list('styles', 'Dizayn uslublari', { title: 'name', fields: [F.text('name', 'Nomi', { max: 40 }), F.text('desc', 'Tavsif', { max: 80 }), F.text('c1', '1-rang', { max: 9, ph: '#4f46e5' }), F.text('c2', '2-rang', { max: 9, ph: '#06b6d4' })], add: () => ({ name: 'Yangi uslub', desc: '', c1: '#4f46e5', c2: '#06b6d4' }) }),
+      F.list('references', 'Namuna saytlar (rasm bilan)', { title: 'name', fields: [F.text('name', 'Nomi', { max: 40 }), F.img('image', 'Rasm')], add: () => ({ name: 'Namuna', image: '' }) }),
+      F.lines('goals', 'Maqsadlar'), F.lines('budgets', 'Byudjet variantlari'), F.lines('deadlines', 'Muddat variantlari'), F.lines('languages', 'Sayt tillari'), F.lines('methods', "Aloqa usullari"), F.lines('times', 'Qulay vaqtlar'), F.lines('fieldsList', 'Faoliyat sohalari (tavsiyalar)'),
+      F.text('successTitle', 'Muvaffaqiyat sarlavhasi', { max: 80 }), F.area('successText', 'Muvaffaqiyat matni', { max: 300, rows: 3 })],
+    defaults: () => ({ eyebrow: 'Loyihani boshlang', title: 'Xohishlaringizni ayting, biz amalga oshiramiz', text: "3 daqiqalik anketa: nima kerakligini, qanday ko'rinishni va qancha byudjetni tanlaysiz. Qolganini biz hal qilamiz.", buttonText: "Anketani to'ldirish", promise: '15 daqiqada aloqaga chiqamiz', showEstimate: true,
+      usp: ["Aniq narx va muddat: suhbatdan keyin shartnoma", "Bepul maslahat va g'oyalar", "Natijaga kafolat"],
+      services: [{ id: 'sayt', name: 'Veb-sayt', desc: 'Vizitka, korporativ yoki landing sahifa', icon: 'globe', price: 2500000, days: '5–10 kun' }, { id: 'dokon', name: "Onlayn do'kon", desc: "Katalog, savat va to'lov bilan", icon: 'cart', price: 6900000, days: '2–3 hafta' }, { id: 'bot', name: 'Telegram bot', desc: 'Buyurtma va aloqani avtomatlashtirish', icon: 'send', price: 3200000, days: '1–2 hafta' }],
+      features: [{ name: 'Admin panel', price: 800000, types: '' }, { name: "Ko'p tillilik", price: 500000, types: '' }, { name: 'SEO sozlash', price: 400000, types: 'sayt,dokon' }],
+      styles: [{ name: 'Zamonaviy', desc: 'Toza va yorqin', c1: '#4f46e5', c2: '#06b6d4' }, { name: 'Minimal', desc: 'Oq-qora, aniq', c1: '#111111', c2: '#e8452c' }, { name: 'Premium', desc: 'Qora va oltin', c1: '#d4a64a', c2: '#17110a' }],
+      references: [], goals: ["Ko'proq mijoz jalb qilish", 'Onlayn sotuvni yo\'lga qo\'yish', 'Brend va ishonchni oshirish', 'Jarayonlarni avtomatlashtirish'],
+      budgets: ["1–3 mln so'm", "3–7 mln so'm", "7–15 mln so'm", "15 mln so'mdan ko'p", "Maslahat kerak"], deadlines: ['Shoshilinch (1 hafta)', '2–3 hafta', '1 oy', 'Shoshilmayman'], languages: ["O'zbekcha", 'Ruscha', 'Inglizcha'],
+      methods: ['Telefon', 'Telegram', 'WhatsApp', 'Email'], times: ['9:00–12:00', '12:00–17:00', '17:00–20:00', 'Istalgan vaqt'], fieldsList: ['Savdo', 'Restoran / kafe', "Ta'lim", 'Tibbiyot', "Go'zallik", 'Qurilish', 'Transport', 'Xizmat ko\'rsatish', 'IT'],
+      successTitle: "So'rovingiz qabul qilindi!", successText: "Mutaxassisimiz ish vaqtida 15–30 daqiqa ichida, boshqa vaqtda keyingi ish kuni ertalab siz bilan bog'lanadi." }),
+    render(sec) {
+      const usp = arr(sec.usp).filter(Boolean);
+      const steps = [['edit', "Anketa to'ldirasiz", '3 daqiqa'], ['tel', "Biz aloqaga chiqamiz", sec.promise || '15–30 daqiqa'], ['check', 'Narx va muddat kelishiladi', 'Bepul maslahat'], ['zap', 'Ish boshlanadi', "Har kuni hisobot"]];
+      return E.wrap(sec, `<div class="briefb rv"><div class="bfl">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${text(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}
+        ${usp.length ? `<ul class="pts">${usp.map((u) => `<li>${icon('check')}<span>${text(u)}</span></li>`).join('')}</ul>` : ''}
+        <div class="bcta"><button class="btn mag" data-act="brief-open">${text(sec.buttonText || "Anketani to'ldirish")} ${icon('arrow')}</button>${sec.promise ? `<span class="prom">${icon('clock')} ${text(sec.promise)}</span>` : ''}</div></div>
+        <div class="bsteps2">${steps.map(([i, t, d], k) => `<div class="bs2"><span class="n">${k + 1}</span><div><b>${text(t)}</b><small>${text(d)}</small></div><em>${icon(i)}</em></div>`).join('')}</div></div>`, 'tight');
     },
   });
 

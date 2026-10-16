@@ -111,16 +111,16 @@ function siteItems() {
   const m = {}; for (const s of db.site().sections || []) if (['products', 'menu'].includes(s.type)) for (const p of s.items || []) if (p && p.id) m[p.id] = p; return m;
 }
 function cleanOrder(b, user) {
-  const type = ['order', 'booking', 'message'].includes(b.type) ? b.type : 'order';
+  const type = ['order', 'booking', 'message', 'brief'].includes(b.type) ? b.type : 'order';
   const local = siteItems();
   const items = (Array.isArray(b.items) ? b.items : []).slice(0, 60).map((i) => {
     const l = local[i && i.id]; const qty = Math.min(999, Math.max(1, parseInt(i && i.qty, 10) || 1));
     return l ? { id: str(l.id, 40), name: str(l.name, 120), price: Number(l.price) || 0, qty } : { id: str(i && i.id, 40), name: str(i && i.name, 120), price: Math.max(0, Number(i && i.price) || 0), qty };
   }).filter((i) => i.name);
-  const extra = {}; if (b.extra && typeof b.extra === 'object') for (const k of Object.keys(b.extra).slice(0, 12)) extra[str(k, 40)] = str(b.extra[k], 300);
+  const extra = {}; if (b.extra && typeof b.extra === 'object') for (const k of Object.keys(b.extra).slice(0, 30)) extra[str(k, 40)] = str(b.extra[k], 700);
   const shipping = Math.max(0, Number(b.shipping) || 0);
   const total = items.reduce((a, i) => a + i.price * i.qty, 0) + (items.length ? shipping : 0);
-  return { type, name: str(b.name, 100) || (user && user.name) || '', phone: str(b.phone, 40) || (user && user.phone) || '', message: str(b.message, 1000), items, extra, shipping, total };
+  return { type, name: str(b.name, 100) || (user && user.name) || '', phone: str(b.phone, 40) || (user && user.phone) || '', message: str(b.message, type === 'brief' ? 3000 : 1000), items, extra, shipping, total };
 }
 
 /* ---------- API ---------- */
@@ -187,16 +187,17 @@ async function api(req, res, url) {
     if (limited(ip, 'order', 10, 600e3)) return send(res, 429, { error: "Juda ko'p so'rov. Birozdan so'ng urinib ko'ring." });
     const b = await readBody(req, 200 * 1024);
     const site = db.site(), acc = site.account || {}, gate = [];
-    if (acc.enabled) { if (acc.requireOrder !== false) gate.push('order'); if (acc.requireBooking) gate.push('booking'); }
+    if (acc.enabled) { if (acc.requireOrder !== false) gate.push('order', 'brief'); if (acc.requireBooking) gate.push('booking'); }
     const o = cleanOrder(b, me);
     if (gate.includes(o.type) && !me) return send(res, 401, { error: "Buyurtma berish uchun hisobingizga kiring", needAuth: true });
     if (o.name.length < 2) return send(res, 400, { error: 'Ismingizni kiriting' });
     if (!goodPhone(o.phone)) return send(res, 400, { error: "Telefon raqamini to'g'ri kiriting" });
     if (o.type === 'order' && !o.items.length) return send(res, 400, { error: "Savat bo'sh" });
+    if (o.type === 'brief' && !Object.keys(o.extra).length) return send(res, 400, { error: "So'rov ma'lumotlari bo'sh" });
     const order = { id: newId(4), date: new Date().toISOString(), userId: me ? me.id : '', ...o, status: 'yangi', note: '' };
     const orders = db.orders(); orders.unshift(order); db.saveOrders(orders.slice(0, 20000));
     const cur = (site.orders && site.orders.currency) || '';
-    notifyTelegram(`${o.type === 'booking' ? 'Yangi ariza' : o.type === 'message' ? 'Yangi xabar' : 'Yangi buyurtma'} #${order.id}\n${o.name}\n${o.phone}\n` + o.items.map((i) => `- ${i.name} x${i.qty}`).join('\n') + (o.total ? `\nJami: ${o.total} ${cur}` : '') + Object.entries(o.extra).map(([k, v]) => `\n${k}: ${v}`).join('') + (o.message ? `\n${o.message}` : ''));
+    notifyTelegram(`${o.type === 'booking' ? 'Yangi ariza' : o.type === 'message' ? 'Yangi xabar' : o.type === 'brief' ? "Yangi LOYIHA SO'ROVI" : 'Yangi buyurtma'} #${order.id}\n${o.name}\n${o.phone}\n` + o.items.map((i) => `- ${i.name} x${i.qty}`).join('\n') + (o.total ? `\nJami: ${o.total} ${cur}` : '') + Object.entries(o.extra).map(([k, v]) => `\n${k}: ${v}`).join('') + (o.message ? `\n${o.message}` : ''));
     return send(res, 200, { ok: true, id: order.id });
   }
 

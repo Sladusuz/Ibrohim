@@ -6,12 +6,13 @@
   const icon = (n) => window.svgIcon(n);
   const PS = { qoralama: 'Qoralama', yuborilgan: 'Yuborilgan', korilmoqda: "Ko'rib chiqilmoqda", narx: 'Narx belgilandi', joylandi: 'Joylandi', bekor: 'Bekor qilindi' };
   const OS = { yangi: 'Yangi', jarayonda: 'Jarayonda', bajarildi: 'Bajarildi', bekor: 'Bekor qilindi' };
+  const OT = { order: 'Buyurtma', brief: "Loyiha so'rovi", booking: 'Ariza', message: 'Xabar' };
   const TPL = { market: 'Onlayn market', dizayner: 'Portfolio: dizayner', dasturchi: 'Portfolio: dasturchi', fotograf: 'Portfolio: fotograf', kompaniya: 'IT kompaniya', restoran: 'Restoran / kafe', salon: "Go'zallik saloni", talim: "O'quv markaz" };
   const fdate = (d) => { const t = new Date(d); if (isNaN(t)) return d || ''; const p = (n) => String(n).padStart(2, '0'); return `${p(t.getDate())}.${p(t.getMonth() + 1)}.${t.getFullYear()} ${p(t.getHours())}:${p(t.getMinutes())}`; };
   const sum = (n) => Number(n || 0).toLocaleString('ru-RU').replace(/ /g, ' ');
   const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600); };
   const pg = $('#pg');
-  const st = { page: 'dash', stats: null, orders: [], projects: [], users: [], pricing: null, site: null, settings: null, of: { q: '', s: '' }, pf: { q: '', s: '' }, uq: '', siteDirty: false, ed: null, previewReady: false };
+  const st = { page: 'dash', stats: null, orders: [], projects: [], users: [], pricing: null, site: null, settings: null, of: { q: '', s: '', t: '' }, pf: { q: '', s: '' }, uq: '', siteDirty: false, ed: null, previewReady: false };
 
   async function api(method, url, body) {
     const r = await fetch(url, { method, headers: body !== undefined ? { 'Content-Type': 'application/json' } : {}, body: body !== undefined ? JSON.stringify(body) : undefined });
@@ -73,15 +74,15 @@
       render() {
         $('#pa').innerHTML = '<a class="b g s" href="/api/admin/orders.csv">' + icon('download') + ' CSV yuklab olish</a>';
         const cnt = (s) => (s ? st.orders.filter((o) => o.status === s).length : st.orders.length);
-        pg.innerHTML = `<div class="bar2"><input type="search" id="oq" placeholder="Ism, telefon yoki # bo'yicha qidirish" value="${esc(st.of.q)}"><div class="chips">${[['', 'Hammasi'], ...Object.entries(OS)].map(([k, l]) => `<button data-of="${k}" class="${st.of.s === k ? 'on' : ''}">${l} (${cnt(k)})</button>`).join('')}</div></div><div id="olist"></div>`;
+        pg.innerHTML = `<div class="bar2"><input type="search" id="oq" placeholder="Ism, telefon yoki # bo'yicha qidirish" value="${esc(st.of.q)}"><div class="chips">${[['', 'Hammasi'], ...Object.entries(OS)].map(([k, l]) => `<button data-of="${k}" class="${st.of.s === k ? 'on' : ''}">${l} (${cnt(k)})</button>`).join('')}</div><div class="chips">${[['', 'Barcha turlar'], ...Object.entries(OT)].map(([k, l]) => `<button data-ot="${k}" class="${st.of.t === k ? 'on' : ''}">${l}</button>`).join('')}</div></div><div id="olist"></div>`;
         P.orders.list();
       },
       list() {
-        const q = st.of.q.toLowerCase(), l = st.orders.filter((o) => (!st.of.s || o.status === st.of.s) && (!q || `${o.name} ${o.phone} ${o.id} ${o.userName || ''}`.toLowerCase().includes(q)));
-        $('#olist').innerHTML = l.length ? l.map((o) => `<div class="rowc" data-oid="${esc(o.id)}"><div class="top2"><div><b>#${esc(o.id)}</b> <span class="pill s-${esc(o.status)}">${esc(OS[o.status] || o.status)}</span> ${o.type !== 'order' ? `<span class="pill s-qoralama">${o.type === 'booking' ? 'Ariza' : 'Xabar'}</span>` : ''}<div class="meta">${esc(fdate(o.date))}</div></div><div style="text-align:right"><b style="font-size:17px">${o.total ? sum(o.total) + " so'm" : ''}</b></div></div>
+        const q = st.of.q.toLowerCase(), l = st.orders.filter((o) => (!st.of.s || o.status === st.of.s) && (!st.of.t || o.type === st.of.t) && (!q || `${o.name} ${o.phone} ${o.id} ${o.userName || ''}`.toLowerCase().includes(q)));
+        $('#olist').innerHTML = l.length ? l.map((o) => `<div class="rowc" data-oid="${esc(o.id)}"><div class="top2"><div><b>#${esc(o.id)}</b> <span class="pill s-${esc(o.status)}">${esc(OS[o.status] || o.status)}</span> ${o.type !== 'order' ? `<span class="pill ${o.type === 'brief' ? 's-narx' : 's-qoralama'}">${esc(OT[o.type] || o.type)}</span>` : ''}<div class="meta">${esc(fdate(o.date))}</div></div><div style="text-align:right"><b style="font-size:17px">${o.total ? sum(o.total) + " so'm" : ''}</b></div></div>
           <div style="margin-top:8px"><b>${esc(o.name)}</b> · <a href="tel:${esc(o.phone)}">${esc(o.phone)}</a>${o.userName ? ` <span class="meta">(hisob: ${esc(o.userName)})</span>` : ' <span class="meta">(mehmon)</span>'}</div>
           ${(o.items || []).length ? `<div style="margin-top:6px;font-size:13.5px">${o.items.map((i) => `${esc(i.name)} × ${i.qty}`).join(', ')}${o.shipping ? ` <span class="meta">+ yetkazish ${sum(o.shipping)}</span>` : ''}</div>` : ''}
-          ${Object.entries(o.extra || {}).map(([k, v]) => `<div class="meta">${esc(k)}: <b style="color:var(--ink)">${esc(v)}</b></div>`).join('')}${o.message ? `<div style="margin-top:6px;color:var(--muted)">${esc(o.message)}</div>` : ''}
+          ${o.type === 'brief' ? `<div class="briefx">${Object.entries(o.extra || {}).map(([k, v]) => `<div><small>${esc(k)}</small><b>${esc(v)}</b></div>`).join('')}</div>` : Object.entries(o.extra || {}).map(([k, v]) => `<div class="meta">${esc(k)}: <b style="color:var(--ink)">${esc(v)}</b></div>`).join('')}${o.message ? `<div style="margin-top:6px;color:var(--muted)">${o.type === 'brief' ? '<b style="color:var(--ink)">Izoh:</b> ' : ''}${esc(o.message)}</div>` : ''}
           <div class="ed"><div><label>Holat</label><select data-ost>${Object.entries(OS).map(([k, l2]) => `<option value="${k}" ${o.status === k ? 'selected' : ''}>${l2}</option>`).join('')}</select></div><div style="grid-column:span 2"><label>Ichki izoh (mijozga ko'rinmaydi)</label><input type="text" data-onote value="${esc(o.note || '')}" maxlength="300"></div><div><button class="b d s" data-odel>O'chirish</button></div></div></div>`).join('') : '<div class="empty2">Buyurtma topilmadi</div>';
       },
     },
@@ -127,6 +128,7 @@
         const prod = [];
         (st.site.sections || []).forEach((s, si) => { if (['products', 'menu'].includes(s.type)) (s.items || []).forEach((p, pi) => prod.push({ s, si, p, pi })); });
         pg.innerHTML = `<div class="form1" style="max-width:980px"><div class="card"><h3>Saytdagi mahsulot va paketlar narxi</h3><p class="hint" style="margin:-6px 0 10px">Asosiy saytdagi mahsulot narxlarini shu yerda tez tuzating. «Saqlash» bosilgach sayt darrov yangilanadi.</p>${prod.length ? `<table class="tbl"><thead><tr><th>Nomi</th><th>Narx</th><th>Eski narx</th><th>Ombor</th><th>Ko'rinadi</th></tr></thead><tbody>${prod.map(({ s, p, si, pi }) => `<tr data-si="${si}" data-pi="${pi}"><td><b>${esc(p.name)}</b><div class="meta" style="color:var(--muted);font-size:12px">${esc(s.title || '')}${p.category ? ' · ' + esc(p.category) : ''}</div></td><td><input type="number" min="0" data-f="price" value="${esc(p.price)}" style="width:130px"></td><td><input type="number" min="0" data-f="oldPrice" value="${esc(p.oldPrice || 0)}" style="width:130px"></td><td><input type="number" min="0" data-f="stock" value="${p.stock === '' || p.stock == null ? '' : esc(p.stock)}" placeholder="cheksiz" style="width:100px"></td><td><label class="sw mini"><input type="checkbox" data-f="active" ${p.active !== false ? 'checked' : ''}><span class="tg"></span></label></td></tr>`).join('')}</tbody></table><div class="mx2" id="pm1"></div><button class="b" id="saveProd">Mahsulot narxlarini saqlash</button>` : '<div class="empty2">Saytda mahsulot yo\'q</div>'}</div>
+          ${(st.site.sections || []).map((s, si) => (s.type === 'brief' ? `<div class="card"><h3>Buyurtma anketasi narxlari</h3><p class="hint" style="margin:-6px 0 10px">Mijoz anketada xizmat va imkoniyat tanlaganda «taxminiy narx» shu qiymatlardan hisoblanadi.</p><table class="tbl"><thead><tr><th>Xizmat</th><th>Boshlang'ich narx</th><th>Muddat</th></tr></thead><tbody>${(s.services || []).map((x, i) => `<tr data-bsi="${si}" data-bk="services" data-bix="${i}"><td><b>${esc(x.name)}</b></td><td><input type="number" min="0" data-bf="price" value="${esc(x.price || 0)}" style="width:140px"></td><td><input type="text" data-bf="days" value="${esc(x.days || '')}" style="width:130px" maxlength="30"></td></tr>`).join('')}</tbody></table><table class="tbl" style="margin-top:14px"><thead><tr><th>Qo'shimcha imkoniyat</th><th>Narxi</th></tr></thead><tbody>${(s.features || []).map((x, i) => `<tr data-bsi="${si}" data-bk="features" data-bix="${i}"><td><b>${esc(x.name)}</b></td><td><input type="number" min="0" data-bf="price" value="${esc(x.price || 0)}" style="width:140px"></td></tr>`).join('')}</tbody></table><div class="mx2" id="pm3"></div><button class="b" id="saveBrief">Anketa narxlarini saqlash</button></div>` : '')).join('')}
           <div class="card"><h3>Konstruktor tariflari</h3><p class="hint" style="margin:-6px 0 10px">Mijoz saytini sizga topshirayotganda ko'radigan tariflar (joylash, domen, to'liq xizmat).</p>
           <div class="fx" style="margin-top:0"><label>Valyuta</label><input type="text" id="pcur" value="${esc(pr.currency || "so'm")}" maxlength="12" style="max-width:160px"></div><div id="plans">${pr.plans.map((p, i) => planHtml(p, i)).join('')}</div><button class="addb" id="addPlan">+ Tarif qo'shish</button><div class="mx2" id="pm2"></div><button class="b" id="savePlans">Tariflarni saqlash</button></div></div>`;
       },
@@ -229,6 +231,7 @@
     try {
       if (t.dataset.go2) return go(t.dataset.go2);
       if (t.dataset.of !== undefined) { st.of.s = t.dataset.of; return P.orders.render(); }
+      if (t.dataset.ot !== undefined) { st.of.t = t.dataset.ot; return P.orders.render(); }
       if (t.dataset.pf !== undefined) { st.pf.s = t.dataset.pf; return P.projects.render(); }
       if (t.dataset.uopen) return userModal(t.dataset.uopen);
       const oc = t.closest('[data-oid]'), pc = t.closest('[data-pid]');
@@ -244,6 +247,10 @@
       if (t.id === 'saveProd') {
         const site = st.site; $$('tr[data-si]').forEach((tr) => { const it = site.sections[+tr.dataset.si].items[+tr.dataset.pi]; $$('[data-f]', tr).forEach((inp) => { const k = inp.dataset.f; if (k === 'active') it.active = inp.checked; else if (k === 'stock') it.stock = inp.value === '' ? '' : Math.max(0, Number(inp.value)); else it[k] = Math.max(0, Number(inp.value) || 0); }); });
         await api('PUT', '/api/admin/site', site); const m = $('#pm1'); m.className = 'mx2 okk'; m.textContent = 'Narxlar saqlandi, sayt yangilandi'; toast('Saqlandi'); return;
+      }
+      if (t.id === 'saveBrief') {
+        $$('tr[data-bsi]').forEach((tr) => { const it = st.site.sections[+tr.dataset.bsi][tr.dataset.bk][+tr.dataset.bix]; $$('[data-bf]', tr).forEach((inp) => { const k = inp.dataset.bf; it[k] = k === 'price' ? Math.max(0, Number(inp.value) || 0) : inp.value; }); });
+        await api('PUT', '/api/admin/site', st.site); const m = $('#pm3'); m.className = 'mx2 okk'; m.textContent = 'Anketa narxlari saqlandi'; toast('Saqlandi'); return;
       }
       if (t.id === 'addPlan') { st.pricing.plans.push({ id: '', name: 'Yangi tarif', price: '', period: '', popular: false, features: [] }); return P.prices.render(); }
       if (t.hasAttribute('data-plan-del')) { st.pricing.plans.splice(+t.dataset.planDel, 1); return P.prices.render(); }

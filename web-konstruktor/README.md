@@ -3,6 +3,7 @@
 Bitta loyiha ichida:
 
 - **Impro IT sayti** (animatsiyali, 8 ta kasbiy shablon vitrinasi, paketlar va buyurtma)
+- **Buyurtma anketasi**: mijozning xohishlarini 6 bosqichda so'raydigan master (xizmat, biznes, imkoniyatlar, dizayn, muddat/byudjet, aloqa), jonli taxminiy narx, qoralamani saqlash va «tez orada aloqaga chiqamiz» sahifasi. Hamma matn, xizmat va narx admin paneldan tahrirlanadi
 - **Sayt konstruktori** (`/yaratish.html`): mijoz shablonni tanlaydi, hammasini tahrirlaydi va yuklab oladi yoki sizga topshiradi
 - **Mijoz kabineti** (`/kabinet.html`): ro'yxatdan o'tish / kirish, saytlari va buyurtmalari (istalgan qurilmadan)
 - **Admin panel** (`/admin`): boshqaruv, buyurtmalar, mijoz saytlari, mijozlar, narxlar, asosiy sayt tahrirlagichi, sozlamalar
@@ -43,7 +44,8 @@ Ma'lumotlar `DATA_DIR` ichidagi JSON fayllarda (`users.json`, `orders.json`, `pr
 ```
 server.js                    server (tashqi kutubxonasiz)
 public/engine-core.js        sayt dvigateli (savat, formalar, effektlar)
-public/sections.js           20 ta bo'lim turi (ko'rinishi va tahrirlash maydonlari)
+public/sections.js           21 ta bo'lim turi (ko'rinishi va tahrirlash maydonlari)
+public/brief.js              buyurtma anketasi (master)
 public/templates.js          8 ta kasbiy shablon
 public/editor.js             umumiy tahrirlagich
 public/builder.js, yaratish.html   konstruktor

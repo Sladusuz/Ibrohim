@@ -282,13 +282,51 @@ footer{position:relative;z-index:2;border-top:1px solid var(--line);padding:44px
  .hero-image:before{background:linear-gradient(180deg,rgba(6,8,14,.55),rgba(6,8,14,.82))}.qimg{min-height:240px}.qinfo{padding:24px}.pdt{padding:24px}}
 @media(max-width:560px){.fgrid2.f-grid,.fgrid2.f-bento{grid-template-columns:1fr}.c2,.c3,.c4,.c6{grid-column:span 1}.pgrid,.pgrid.cols-4,.pgrid.cols-2,.proj,.p-masonry{grid-template-columns:1fr}.g-masonry,.g-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:130px}.g-grid .gi{aspect-ratio:auto}.row2{grid-template-columns:1fr}.trust{gap:22px}.stat b{font-size:36px}.tsearch{max-width:none}.cc figcaption{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important}.rv{opacity:1;transform:none}.w span{transform:none}.lead,.cta,.trust,.vis{opacity:1}pre .l{opacity:1;transform:none}.chart i{transform:none}.bt i{width:var(--lv)}}
+
+/* ===== Buyurtma anketasi: banner va master ===== */
+.briefb{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center;padding:52px;border-radius:calc(var(--rc) + 12px);border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--acc2) 24%,var(--bg2)),color-mix(in srgb,var(--acc) 14%,var(--bg2)));position:relative;overflow:hidden}
+.briefb:before{content:'';position:absolute;width:420px;height:420px;border-radius:50%;left:-140px;bottom:-180px;background:radial-gradient(var(--acc3),transparent 65%);opacity:.22;pointer-events:none}.briefb>*{position:relative}
+.briefb .pts{margin-top:22px}.bcta{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin-top:28px}.prom{display:inline-flex;gap:8px;align-items:center;color:var(--muted);font-size:14px;font-weight:600}.prom svg{width:17px;height:17px;color:var(--acc)}
+.bsteps2{display:grid;gap:12px}.bs2{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:var(--rc);background:var(--card);border:1px solid var(--line);box-shadow:var(--cs)}.bs2 .n{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on);flex:none;font-family:var(--fh)}.bs2 b{display:block}.bs2 small{color:var(--muted);font-size:13px}.bs2 em{margin-left:auto;color:var(--acc);display:grid;place-items:center}.bs2 em svg{width:22px;height:22px}
+.bw{position:fixed;inset:0;z-index:110;display:grid;place-items:center;padding:16px;animation:fade .25s both;font-family:var(--fb);color:var(--ink)}
+.bwback{position:absolute;inset:0;background:rgba(4,6,14,.68);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.bwin{position:relative;width:min(1140px,100%);height:min(790px,calc(100vh - 32px));height:min(790px,calc(100dvh - 32px));display:grid;grid-template-columns:330px minmax(0,1fr);grid-template-rows:minmax(0,1fr);background:var(--bg2);border:1px solid var(--line);border-radius:30px;overflow:hidden;box-shadow:0 50px 130px rgba(0,0,0,.6);animation:pop .5s var(--ease)}
+.bwin.fin{grid-template-columns:1fr}.bwin.fin .bwok{overflow:auto;min-height:0}
+.bws{min-height:0;display:flex;flex-direction:column;gap:16px;padding:26px 24px;background:linear-gradient(165deg,color-mix(in srgb,var(--acc2) 30%,var(--bg2)),color-mix(in srgb,var(--acc) 14%,var(--bg2)) 70%);border-right:1px solid var(--line);overflow:auto}
+.bwh{display:flex;gap:12px;align-items:center}.bwh b{display:block;font-size:16px;font-family:var(--fh)}.bwh small{color:var(--muted);font-size:12.5px}
+.bstp{list-style:none;display:grid;gap:4px;position:relative}.bstp li{display:flex;gap:12px;align-items:center;padding:6px 10px;border-radius:12px;font-weight:600;font-size:14px;color:var(--muted);cursor:pointer;transition:.25s}.bstp li span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surf);border:1px solid var(--line);flex:none;transition:.25s}.bstp li span svg{width:15px;height:15px}
+.bstp li.act{color:var(--ink);background:color-mix(in srgb,var(--acc) 14%,transparent)}.bstp li.act span{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on);border-color:transparent;box-shadow:0 6px 18px color-mix(in srgb,var(--acc) 40%,transparent)}.bstp li.done{color:var(--ink)}.bstp li.done span{background:color-mix(in srgb,var(--acc) 22%,transparent);color:var(--acc);border-color:color-mix(in srgb,var(--acc) 40%,transparent)}
+.bsm{margin-top:auto;display:grid;gap:12px;padding:16px;border-radius:var(--rc);background:var(--bg2);border:1px solid var(--line)}.bsm .sl small{display:block;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.08em}.bsm .sl b{display:block;font-size:14.5px}.bsm .sl ul{list-style:none;display:grid;gap:3px;margin-top:3px;font-size:13.5px;font-weight:600}.bsm .sl li{display:flex;gap:6px;align-items:center}.bsm .sl li svg{width:13px;height:13px;color:var(--acc);flex:none}.bsm .tot{padding-top:10px;border-top:1px dashed var(--line)}.bsm .tot b{font-size:19px;color:var(--acc);font-family:var(--fh)}.bnone{color:var(--muted);font-size:13px}
+.bpr{display:flex;gap:10px;align-items:center;font-size:13px;font-weight:600;color:var(--muted)}.bpr svg{width:18px;height:18px;color:var(--acc);flex:none}
+.bwm{display:grid;grid-template-rows:auto minmax(0,1fr) auto;min-width:0;min-height:0}
+.bwm>header{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:18px 24px;border-bottom:1px solid var(--line)}.bwt{font-weight:700;font-size:14px;color:var(--muted);white-space:nowrap}.bwp{height:6px;border-radius:99px;background:var(--surf);overflow:hidden}.bwp i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--acc),var(--acc2),var(--acc3));transition:width .5s var(--ease);width:0}
+.bx{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:transparent;color:inherit;display:grid;place-items:center}.bx:hover{border-color:var(--acc)}.bx svg{width:18px;height:18px}
+.bwb{overflow:auto;padding:30px 38px 24px}.bstep.in{animation:bsl .45s var(--ease)}@keyframes bsl{from{opacity:0;transform:translateX(22px)}}
+.bwtt{font-size:clamp(24px,3vw,32px);letter-spacing:var(--hls);margin:0 0 6px;font-weight:var(--hw);line-height:1.15}.bd{color:var(--muted);margin-bottom:22px}.bl2{display:block;font-weight:700;font-size:14px;margin:22px 0 10px}.bl2 small{font-weight:500;color:var(--muted)}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.opt{position:relative;text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:var(--rc);padding:20px;display:flex;flex-direction:column;gap:6px;transition:.3s var(--ease)}.opt:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--acc) 55%,var(--line))}.opt.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 10%,var(--card));box-shadow:0 12px 30px color-mix(in srgb,var(--acc) 22%,transparent)}
+.opt .oi{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 24%,transparent),color-mix(in srgb,var(--acc2) 24%,transparent));color:var(--acc);margin-bottom:6px}.opt .oi svg{width:23px;height:23px}.opt b{font-size:17px;font-family:var(--fh)}.opt small{color:var(--muted);font-size:13.5px;line-height:1.45}.opt .om{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:12.5px;font-weight:700}.opt .op{color:var(--acc)}.opt .od{display:inline-flex;gap:5px;align-items:center;color:var(--muted)}.opt .od svg{width:13px;height:13px}
+.ck{position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;background:var(--acc);color:var(--on);display:grid;place-items:center;transform:scale(0);transition:.3s var(--ease)}.ck svg{width:14px;height:14px;stroke-width:3}.on>.ck{transform:scale(1)}
+.cps{display:flex;gap:9px;flex-wrap:wrap}.cp{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:10px 18px;font-weight:600;font-size:14px;transition:.25s;display:inline-flex;align-items:center;gap:8px}.cp:hover{border-color:var(--acc)}.cp.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on);border-color:transparent;box-shadow:0 8px 20px color-mix(in srgb,var(--acc) 30%,transparent)}
+.cps.big .cp{padding:13px 20px;border-radius:16px}.cp .cx{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;flex:none}.cp .cx svg{width:12px;height:12px;stroke-width:3;opacity:0}.cp.on .cx{background:rgba(255,255,255,.25);border-color:transparent}.cp.on .cx svg{opacity:1}.cp em{font-style:normal;font-size:12.5px;opacity:.75;margin-left:2px}
+.stys{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}.sty{position:relative;text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:var(--rc);padding:10px;display:flex;flex-direction:column;gap:4px;transition:.3s var(--ease)}.sty:hover{transform:translateY(-3px)}.sty.on{border-color:var(--acc);box-shadow:0 10px 26px color-mix(in srgb,var(--acc) 24%,transparent)}.sty .sp{height:76px;border-radius:calc(var(--rc) - 6px);display:grid;place-items:center;color:#fff}.sty .sp b{font-size:30px;font-family:var(--fh);text-shadow:0 2px 10px rgba(0,0,0,.25)}.sty .sn{font-weight:700;font-size:14px;margin-top:4px}.sty small{color:var(--muted);font-size:12px}
+.pals{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.pal{display:flex;border:2px solid var(--line);border-radius:99px;padding:4px;background:var(--card);transition:.25s}.pal i{width:26px;height:26px;border-radius:50%;margin-left:-6px;border:2px solid var(--card)}.pal i:first-child{margin-left:0}.pal:hover{transform:scale(1.06)}.pal.on{border-color:var(--acc);box-shadow:0 0 0 4px color-mix(in srgb,var(--acc) 20%,transparent)}
+.refs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}.ref{position:relative;border:2px solid var(--line);border-radius:var(--rc);overflow:hidden;padding:0;background:var(--card);text-align:left;transition:.3s var(--ease)}.ref img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:top}.ref span{display:block;padding:8px 10px;font-weight:600;font-size:13px}.ref:hover{transform:translateY(-3px)}.ref.on{border-color:var(--acc);box-shadow:0 10px 26px color-mix(in srgb,var(--acc) 24%,transparent)}
+.lnks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fgrid3{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.bwb .fld{margin-bottom:12px}.fgrid3 .fld{margin-bottom:0}
+.est{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-top:22px;padding:20px;border-radius:var(--rc);background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 14%,var(--card)),color-mix(in srgb,var(--acc2) 10%,var(--card)));border:1px solid color-mix(in srgb,var(--acc) 35%,var(--line))}.est small{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}.est b{font-size:24px;font-family:var(--fh);letter-spacing:-.02em;color:var(--acc)}.est p{grid-column:1/-1;color:var(--muted);font-size:13px}
+.agree{display:flex;gap:12px;align-items:center;margin-top:18px;font-size:14px;cursor:pointer}.agree input{display:none}.tg2{width:44px;height:25px;border-radius:99px;background:var(--surf);border:1px solid var(--line);position:relative;flex:none;transition:.25s}.tg2:after{content:'';position:absolute;top:3px;left:3px;width:17px;height:17px;border-radius:50%;background:var(--muted);transition:.25s}.agree input:checked+.tg2{background:var(--acc);border-color:var(--acc)}.agree input:checked+.tg2:after{left:22px;background:var(--on)}
+.bwf{display:flex;align-items:center;gap:14px;padding:16px 24px;border-top:1px solid var(--line);background:color-mix(in srgb,var(--bg2) 92%,transparent)}.bk{border:1px solid var(--line);background:transparent;color:inherit;border-radius:var(--rb);padding:12px 18px;font-weight:600;display:inline-flex;gap:6px;align-items:center}.bk:hover{border-color:var(--acc)}.bk svg{width:16px;height:16px}.berr{flex:1;color:#e11d48;font-size:13.5px;font-weight:600;min-height:20px}.bmini{display:none;text-align:right}.bmini small{display:block;font-size:11px;color:var(--muted)}.bmini b{font-size:15px;color:var(--acc)}.bwf .nx{margin-left:auto}
+.bwok{padding:46px 40px;text-align:center;overflow:auto;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}.bwok .tick{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on);margin-bottom:14px;animation:tick .7s var(--ease);box-shadow:0 20px 50px color-mix(in srgb,var(--acc) 40%,transparent)}.bwok .tick svg{width:44px;height:44px;stroke-width:3}@keyframes tick{from{transform:scale(0) rotate(-40deg)}}
+.bwok h2{font-size:clamp(26px,3.4vw,38px);margin:0}.bwok .sub{margin:6px auto 0;max-width:520px}.ref2{margin-top:14px;padding:8px 16px;border-radius:99px;background:var(--surf);border:1px solid var(--line);font-size:14px}.nxt{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0 22px;width:min(760px,100%)}.nxt div{padding:16px;border-radius:var(--rc);background:var(--card);border:1px solid var(--line);text-align:left}.nxt span{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));color:var(--on);display:inline-grid;place-items:center;font-weight:800;font-size:13px;margin-bottom:8px}.nxt b{display:block}.nxt small{color:var(--muted);font-size:12.5px}.bwa{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media(max-width:1000px){.briefb{grid-template-columns:1fr;padding:32px 24px}.bwin{grid-template-columns:260px minmax(0,1fr)}.opts{grid-template-columns:1fr}.lnks{grid-template-columns:1fr}}
+@media(max-width:800px){.bw{padding:0}.bwin{width:100%;height:100vh;height:100dvh;border-radius:0;grid-template-columns:1fr;border:0}.bws{display:none}.bwm>header{padding:14px 16px;gap:10px}.bwb{padding:22px 18px 16px}.bwf{padding:12px 14px;gap:10px;flex-wrap:wrap}.bmini{display:block;margin-left:4px}.berr{order:-1;flex-basis:100%;flex:none}.berr:empty{display:none}.bk .t{display:none}.bk{padding:12px 14px}.bwf .nx{margin-left:auto}.fgrid3{grid-template-columns:1fr}.est{grid-template-columns:1fr}.nxt{grid-template-columns:1fr}.bwok{padding:30px 20px}}
 </style>
 </head>
 <body>
 <div id="prog"></div><div class="aurora" id="aurora"><i></i><i></i><i></i></div><div class="gridbg" id="gridbg"></div><canvas id="bg"></canvas><div id="glow"></div>
 <div id="app"><div class="boot"><span></span></div></div>
 <script src="/config.js"></script>
-<script>window.__SITE__={"v":2,"template":"impro","company":{"name":"Impro IT","logo":"I","tagline":"Veb-sayt, mobil ilova va Telegram botlar. Tez, sifatli, kafolat bilan."},"theme":{"preset":"dark","accent":"","accent2":"","font":"modern","radius":"round","bg":"full","heads":"left","switcher":true},"nav":{"style":"pill","cta":"Bepul maslahat","ctaLink":"#aloqa","search":false},"announce":{"enabled":false,"text":"","link":""},"orders":{"enabled":true,"currency":"so'm","freeShipFrom":0,"deliveryFee":0},"contacts":{"phone":"+998 33 623 33 13","email":"chempme@gmail.com","address":"Toshkent, Amir Temur ko'chasi 1","hours":"Dush–Shan, 9:00–18:00","telegram":"","instagram":""},"footer":{"text":"Barcha huquqlar himoyalangan.","links":[{"label":"Sayt yaratish","url":"/yaratish.html"},{"label":"Kabinet","url":"/kabinet.html"}]},"sections":[{"id":"bosh","type":"hero","enabled":true,"navLabel":"","layout":"split","badge":"Yangi loyihalar uchun ochiqmiz","titleStart":"Biznesingiz uchun","words":["veb-sayt","mobil ilova","Telegram bot","onlayn do'kon"],"titleEnd":"yaratamiz","text":"Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Yoki saytingizni o'zingiz yarating.","cta1Text":"Saytni o'zim yarataman","cta1Link":"/yaratish.html","cta2Text":"Xizmatlarni ko'rish","cta2Link":"#xizmat","visual":"window","image":"","windowLines":["// Sizning g'oyangiz","const loyiha = {","  mijoz: \"Sizning biznesingiz\",","  tezlik: \"2 haftada tayyor\",","  sifat: \"kafolatlangan\",","};","ishgaTushir(loyiha); // ✓ tayyor"],"chips":["Savdo +240%","0.8s yuklanish","24/7 yordam"],"collage":[],"trust":[{"value":"120+","label":"loyiha"},{"value":"8 yil","label":"tajriba"},{"value":"4.9/5","label":"mijoz bahosi"}]},{"id":"lenta","type":"marquee","enabled":true,"navLabel":"","items":["Veb-saytlar","Mobil ilovalar","Telegram botlar","UI/UX dizayn","CRM tizimlar","Onlayn do'konlar"]},{"id":"raqam","type":"stats","enabled":true,"navLabel":"","items":[{"value":120,"suffix":"+","label":"Bajarilgan loyiha"},{"value":60,"suffix":"+","label":"Doimiy mijozlar"},{"value":8,"suffix":" yil","label":"Bozordagi tajriba"},{"value":99,"suffix":"%","label":"Mamnun mijozlar"}]},{"id":"xizmat","type":"features","enabled":true,"navLabel":"Xizmatlar","eyebrow":"Xizmatlar","title":"Raqamli biznes uchun hamma narsa","text":"G'oyadan tayyor mahsulotgacha butun jarayonni o'z zimmamizga olamiz.","layout":"bento","items":[{"icon":"code","title":"Veb-sayt va onlayn do'kon","text":"Tezkor, qidiruv tizimlariga moslashgan, admin paneli bor saytlar. Katalog, savat va to'lov integratsiyasi bilan."},{"icon":"phone","title":"Mobil ilovalar","text":"iOS va Android uchun zamonaviy ilovalar."},{"icon":"send","title":"Telegram botlar","text":"Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtiring."},{"icon":"design","title":"UI/UX dizayn","text":"Ko'rinishi chiroyli, ishlatishi oson interfeyslar."},{"icon":"shield","title":"Xavfsizlik va hosting","text":"Barqaror server va ma'lumotlar himoyasi."}]},{"id":"shablon","type":"cards","enabled":true,"navLabel":"Shablonlar","eyebrow":"Tayyor shablonlar","title":"Kasbingizga mos sayt, bir necha daqiqada","text":"Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.","items":[{"title":"Onlayn market","badge":"Eng ommabop","text":"Do'kon va market uchun: katalog, qidiruv, chegirmalar, savat va yetkazib berish.","image":"/img/tpl/market.jpg","link":"/yaratish.html?t=market"},{"title":"Portfolio: dizayner","badge":"Portfolio","text":"Grafik dizayner, rassom va ijodkorlar uchun: katta tipografiya va loyihalar galereyasi.","image":"/img/tpl/dizayner.jpg","link":"/yaratish.html?t=dizayner"},{"title":"Portfolio: dasturchi","badge":"Portfolio","text":"Dasturchi va IT mutaxassislar uchun: kod oynasi, ko'nikmalar, loyihalar va tajriba.","image":"/img/tpl/dasturchi.jpg","link":"/yaratish.html?t=dasturchi"},{"title":"Portfolio: fotograf","badge":"Portfolio","text":"Fotograf, videograf va ijodiy studiyalar uchun: to'liq ekran rasm, galereya, tariflar va bron.","image":"/img/tpl/fotograf.jpg","link":"/yaratish.html?t=fotograf"},{"title":"IT kompaniya / agentlik","badge":"Biznes","text":"Xizmat ko'rsatuvchi kompaniya uchun: xizmatlar, jarayon, tariflar, savol-javob va aloqa.","image":"/img/tpl/kompaniya.jpg","link":"/yaratish.html?t=kompaniya"},{"title":"Restoran / kafe","badge":"Yangi","text":"Restoran va kafe uchun: menyu kategoriyalar bilan, galereya va stol bron qilish.","image":"/img/tpl/restoran.jpg","link":"/yaratish.html?t=restoran"},{"title":"Go'zallik saloni","badge":"Yangi","text":"Salon, barbershop va spa uchun: xizmatlar narxi, ustalar, galereya va onlayn yozilish.","image":"/img/tpl/salon.jpg","link":"/yaratish.html?t=salon"},{"title":"O'quv markaz","badge":"Yangi","text":"Kurs va o'quv markazlari uchun: kurslar, o'qituvchilar, natijalar va ro'yxatdan o'tish.","image":"/img/tpl/talim.jpg","link":"/yaratish.html?t=talim"}]},{"id":"yaratish","type":"cta","enabled":true,"navLabel":"Sayt yaratish","eyebrow":"Sayt konstruktori","title":"Saytingizni o'zingiz yarating","text":"Hisob oching, shablonni tanlang va tahrirlang. Saytlaringiz hisobingizda saqlanadi, istalgan qurilmadan davom ettirasiz.","buttonText":"Yaratishni boshlash","buttonLink":"/yaratish.html","countdownTo":"","image":""},{"id":"jarayon","type":"process","enabled":true,"navLabel":"Jarayon","eyebrow":"Jarayon","title":"Qanday ishlaymiz","text":"To'rt oddiy qadam, har bosqichda siz bilan aloqadamiz.","items":[{"title":"Bog'lanish","text":"Talabingizni eshitamiz va aniq reja tuzamiz."},{"title":"Dizayn","text":"Ko'rinishni tayyorlab, sizga tasdiqlatamiz."},{"title":"Ishlab chiqish","text":"Tez va xatosiz quramiz, har kuni hisobot."},{"title":"Ishga tushirish","text":"Joylashtiramiz va doimiy qo'llab-quvvatlaymiz."}]},{"id":"narx","type":"products","enabled":true,"navLabel":"Narxlar","eyebrow":"Narxlar","title":"Tayyor paketlar","text":"Narxlar oldindan aniq. Tanlang va buyurtma bering.","mode":"cart","buttonText":"Buyurtma","columns":"3","search":false,"filters":true,"sort":false,"items":[{"id":"start","name":"Start sayt","price":2500000,"oldPrice":0,"category":"Veb-sayt","badge":"","description":"5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.","image":"/img/t/kompaniya/p-start.svg","stock":"","active":true},{"id":"dokon","name":"Onlayn do'kon","price":6900000,"oldPrice":0,"category":"Veb-sayt","badge":"ENG KO'P TANLANADI","description":"Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.","image":"/img/t/kompaniya/p-dokon.svg","stock":"","active":true},{"id":"bot","name":"Telegram bot","price":3200000,"oldPrice":0,"category":"Bot","badge":"","description":"Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.","image":"/img/t/kompaniya/p-bot.svg","stock":"","active":true},{"id":"ilova","name":"Mobil ilova","price":15000000,"oldPrice":0,"category":"Ilova","badge":"","description":"iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.","image":"/img/t/kompaniya/p-ilova.svg","stock":"","active":true},{"id":"dizayn","name":"UI/UX dizayn","price":1800000,"oldPrice":0,"category":"Dizayn","badge":"","description":"Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.","image":"/img/t/kompaniya/p-dizayn.svg","stock":"","active":true},{"id":"yordam","name":"Oylik texnik yordam","price":900000,"oldPrice":0,"category":"Xizmat","badge":"","description":"Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.","image":"/img/t/kompaniya/p-yordam.svg","stock":"","active":true}]},{"id":"fikr","type":"testimonials","enabled":true,"navLabel":"","eyebrow":"Sharhlar","title":"Mijozlar fikri","text":"","items":[{"text":"Saytimiz 2 haftada tayyor bo'ldi, buyurtmalar ikki baravar oshdi.","name":"Akmal R.","role":"Do'kon egasi","image":"/img/t/kompaniya/a1.svg","stars":5},{"text":"Telegram bot ishimizni ancha yengillashtirdi. Jamoa juda mas'uliyatli.","name":"Gulnora S.","role":"Restoran menejeri","image":"/img/t/kompaniya/a2.svg","stars":5},{"text":"Hamma narsa aniq va shaffof. Muddat va narx so'zsiz bajarildi.","name":"Rustam K.","role":"Direktor","image":"/img/t/kompaniya/a3.svg","stars":5}]},{"id":"savol","type":"faq","enabled":true,"navLabel":"","eyebrow":"Savollar","title":"Ko'p so'raladigan savollar","text":"","items":[{"q":"Sayt qancha vaqtda tayyor bo'ladi?","a":"Vizitka sayt 3–5 kun, onlayn do'kon 2–3 hafta ichida tayyor bo'ladi."},{"q":"Tayyor saytni o'zim tahrirlay olamimi?","a":"Ha, admin panel orqali matn, narx va rasmlarni o'zingiz o'zgartirasiz."},{"q":"Domen va hostingni siz olib berasizmi?","a":"Ha, domen va hostingni ulab beramiz. Xohlasangiz o'zingiznikini ham ishlatamiz."}]},{"id":"aloqa","type":"contact","enabled":true,"navLabel":"Aloqa","eyebrow":"Aloqa","title":"Loyihangiz bormi? Muhokama qilamiz","text":"Raqamingizni qoldiring, 15 daqiqada aloqaga chiqamiz.","form":"order","serviceOptions":[],"askGuests":false,"askAddress":false,"payOptions":[],"submitText":"Yuborish","mapUrl":""}],"account":{"enabled":true,"requireOrder":true,"requireBooking":false}};</script>
+<script>window.__SITE__={"v":2,"template":"impro","company":{"name":"Impro IT","logo":"I","tagline":"Veb-sayt, mobil ilova va Telegram botlar. Tez, sifatli, kafolat bilan."},"theme":{"preset":"dark","accent":"","accent2":"","font":"modern","radius":"round","bg":"full","heads":"left","switcher":true},"nav":{"style":"pill","cta":"Bepul maslahat","ctaLink":"#brief-open","search":false},"announce":{"enabled":false,"text":"","link":""},"orders":{"enabled":true,"currency":"so'm","freeShipFrom":0,"deliveryFee":0},"contacts":{"phone":"+998 33 623 33 13","email":"chempme@gmail.com","address":"Toshkent, Amir Temur ko'chasi 1","hours":"Dush–Shan, 9:00–18:00","telegram":"","instagram":""},"footer":{"text":"Barcha huquqlar himoyalangan.","links":[{"label":"Sayt yaratish","url":"/yaratish.html"},{"label":"Kabinet","url":"/kabinet.html"}]},"sections":[{"id":"bosh","type":"hero","enabled":true,"navLabel":"","layout":"split","badge":"Yangi loyihalar uchun ochiqmiz","titleStart":"Biznesingiz uchun","words":["veb-sayt","mobil ilova","Telegram bot","onlayn do'kon"],"titleEnd":"yaratamiz","text":"Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Xohlasangiz, saytni o'zingiz ham yarata olasiz.","cta1Text":"Loyihani buyurtma qilish","cta1Link":"#brief-open","cta2Text":"Saytni o'zim yarataman","cta2Link":"/yaratish.html","visual":"window","image":"","windowLines":["// Sizning g'oyangiz","const loyiha = {","  mijoz: \"Sizning biznesingiz\",","  tezlik: \"2 haftada tayyor\",","  sifat: \"kafolatlangan\",","};","ishgaTushir(loyiha); // ✓ tayyor"],"chips":["Savdo +240%","0.8s yuklanish","24/7 yordam"],"collage":[],"trust":[{"value":"120+","label":"loyiha"},{"value":"8 yil","label":"tajriba"},{"value":"4.9/5","label":"mijoz bahosi"}]},{"id":"lenta","type":"marquee","enabled":true,"navLabel":"","items":["Veb-saytlar","Mobil ilovalar","Telegram botlar","UI/UX dizayn","CRM tizimlar","Onlayn do'konlar"]},{"id":"raqam","type":"stats","enabled":true,"navLabel":"","items":[{"value":120,"suffix":"+","label":"Bajarilgan loyiha"},{"value":60,"suffix":"+","label":"Doimiy mijozlar"},{"value":8,"suffix":" yil","label":"Bozordagi tajriba"},{"value":99,"suffix":"%","label":"Mamnun mijozlar"}]},{"id":"xizmat","type":"features","enabled":true,"navLabel":"Xizmatlar","eyebrow":"Xizmatlar","title":"Raqamli biznes uchun hamma narsa","text":"G'oyadan tayyor mahsulotgacha butun jarayonni o'z zimmamizga olamiz.","layout":"bento","items":[{"icon":"code","title":"Veb-sayt va onlayn do'kon","text":"Tezkor, qidiruv tizimlariga moslashgan, admin paneli bor saytlar. Katalog, savat va to'lov integratsiyasi bilan."},{"icon":"phone","title":"Mobil ilovalar","text":"iOS va Android uchun zamonaviy ilovalar."},{"icon":"send","title":"Telegram botlar","text":"Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtiring."},{"icon":"design","title":"UI/UX dizayn","text":"Ko'rinishi chiroyli, ishlatishi oson interfeyslar."},{"icon":"shield","title":"Xavfsizlik va hosting","text":"Barqaror server va ma'lumotlar himoyasi."}]},{"id":"shablon","type":"cards","enabled":true,"navLabel":"Shablonlar","eyebrow":"Tayyor shablonlar","title":"Kasbingizga mos sayt, bir necha daqiqada","text":"Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.","items":[{"title":"Onlayn market","badge":"Eng ommabop","text":"Do'kon va market uchun: katalog, qidiruv, chegirmalar, savat va yetkazib berish.","image":"/img/tpl/market.jpg","link":"/yaratish.html?t=market"},{"title":"Portfolio: dizayner","badge":"Portfolio","text":"Grafik dizayner, rassom va ijodkorlar uchun: katta tipografiya va loyihalar galereyasi.","image":"/img/tpl/dizayner.jpg","link":"/yaratish.html?t=dizayner"},{"title":"Portfolio: dasturchi","badge":"Portfolio","text":"Dasturchi va IT mutaxassislar uchun: kod oynasi, ko'nikmalar, loyihalar va tajriba.","image":"/img/tpl/dasturchi.jpg","link":"/yaratish.html?t=dasturchi"},{"title":"Portfolio: fotograf","badge":"Portfolio","text":"Fotograf, videograf va ijodiy studiyalar uchun: to'liq ekran rasm, galereya, tariflar va bron.","image":"/img/tpl/fotograf.jpg","link":"/yaratish.html?t=fotograf"},{"title":"IT kompaniya / agentlik","badge":"Biznes","text":"Xizmat ko'rsatuvchi kompaniya uchun: xizmatlar, jarayon, tariflar, savol-javob va aloqa.","image":"/img/tpl/kompaniya.jpg","link":"/yaratish.html?t=kompaniya"},{"title":"Restoran / kafe","badge":"Yangi","text":"Restoran va kafe uchun: menyu kategoriyalar bilan, galereya va stol bron qilish.","image":"/img/tpl/restoran.jpg","link":"/yaratish.html?t=restoran"},{"title":"Go'zallik saloni","badge":"Yangi","text":"Salon, barbershop va spa uchun: xizmatlar narxi, ustalar, galereya va onlayn yozilish.","image":"/img/tpl/salon.jpg","link":"/yaratish.html?t=salon"},{"title":"O'quv markaz","badge":"Yangi","text":"Kurs va o'quv markazlari uchun: kurslar, o'qituvchilar, natijalar va ro'yxatdan o'tish.","image":"/img/tpl/talim.jpg","link":"/yaratish.html?t=talim"}]},{"id":"yaratish","type":"cta","enabled":true,"navLabel":"Sayt yaratish","eyebrow":"Sayt konstruktori","title":"Saytingizni o'zingiz yarating","text":"Hisob oching, shablonni tanlang va tahrirlang. Saytlaringiz hisobingizda saqlanadi, istalgan qurilmadan davom ettirasiz.","buttonText":"Yaratishni boshlash","buttonLink":"/yaratish.html","countdownTo":"","image":""},{"id":"jarayon","type":"process","enabled":true,"navLabel":"Jarayon","eyebrow":"Jarayon","title":"Qanday ishlaymiz","text":"To'rt oddiy qadam, har bosqichda siz bilan aloqadamiz.","items":[{"title":"Bog'lanish","text":"Talabingizni eshitamiz va aniq reja tuzamiz."},{"title":"Dizayn","text":"Ko'rinishni tayyorlab, sizga tasdiqlatamiz."},{"title":"Ishlab chiqish","text":"Tez va xatosiz quramiz, har kuni hisobot."},{"title":"Ishga tushirish","text":"Joylashtiramiz va doimiy qo'llab-quvvatlaymiz."}]},{"id":"narx","type":"products","enabled":true,"navLabel":"Narxlar","eyebrow":"Narxlar","title":"Tayyor paketlar","text":"Narxlar oldindan aniq. Tanlang va buyurtma bering.","mode":"brief","buttonText":"Buyurtma","columns":"3","search":false,"filters":true,"sort":false,"items":[{"id":"start","name":"Start sayt","price":2500000,"oldPrice":0,"category":"Veb-sayt","badge":"","description":"5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.","image":"/img/t/kompaniya/p-start.svg","stock":"","active":true},{"id":"dokon","name":"Onlayn do'kon","price":6900000,"oldPrice":0,"category":"Veb-sayt","badge":"ENG KO'P TANLANADI","description":"Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.","image":"/img/t/kompaniya/p-dokon.svg","stock":"","active":true},{"id":"bot","name":"Telegram bot","price":3200000,"oldPrice":0,"category":"Bot","badge":"","description":"Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.","image":"/img/t/kompaniya/p-bot.svg","stock":"","active":true},{"id":"ilova","name":"Mobil ilova","price":15000000,"oldPrice":0,"category":"Ilova","badge":"","description":"iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.","image":"/img/t/kompaniya/p-ilova.svg","stock":"","active":true},{"id":"dizayn","name":"UI/UX dizayn","price":1800000,"oldPrice":0,"category":"Dizayn","badge":"","description":"Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.","image":"/img/t/kompaniya/p-dizayn.svg","stock":"","active":true},{"id":"yordam","name":"Oylik texnik yordam","price":900000,"oldPrice":0,"category":"Xizmat","badge":"","description":"Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.","image":"/img/t/kompaniya/p-yordam.svg","stock":"","active":true}]},{"id":"brief","type":"brief","enabled":true,"navLabel":"Buyurtma","eyebrow":"Loyihani boshlang","title":"Xohishlaringizni ayting, biz amalga oshiramiz","text":"3 daqiqalik anketa: nima kerakligini, qanday ko'rinish yoqishini va qancha byudjet borligini aytasiz. Qolganini biz hal qilamiz va tez orada aloqaga chiqamiz.","buttonText":"Anketani to'ldirish","promise":"15 daqiqada aloqaga chiqamiz","showEstimate":true,"usp":["Bepul maslahat va g'oyalar: mutaxassis sizga eng mos yechimni tanlab beradi","Aniq narx va muddat suhbatdan keyin, shartnoma bilan","Natijaga kafolat va ishga tushgandan keyin ham yordam"],"services":[{"id":"start","name":"Vizitka / korporativ sayt","desc":"Kompaniyangiz yoki xizmatingizni tanishtiruvchi 5 sahifagacha sayt","icon":"globe","price":2500000,"days":"5–10 kun"},{"id":"dokon","name":"Onlayn do'kon","desc":"Katalog, savat, buyurtma va admin panel bilan to'liq do'kon","icon":"cart","price":6900000,"days":"2–3 hafta"},{"id":"bot","name":"Telegram bot","desc":"Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtirish","icon":"send","price":3200000,"days":"1–2 hafta"},{"id":"ilova","name":"Mobil ilova","desc":"iOS va Android uchun ilova: dizayn, ishlab chiqish, e'lon qilish","icon":"phone","price":15000000,"days":"1–2 oy"},{"id":"dizayn","name":"UI/UX dizayn","desc":"Sayt yoki ilova uchun zamonaviy interfeys va prototip","icon":"design","price":1800000,"days":"1–2 hafta"},{"id":"yordam","name":"Texnik yordam","desc":"Mavjud saytni yangilash, xavfsizlik va tezkor tuzatishlar","icon":"tool","price":900000,"days":"Oyiga"}],"features":[{"name":"Admin panel","price":800000,"types":"start,dokon,bot"},{"name":"Ko'p tillilik (uz/ru/en)","price":600000,"types":"start,dokon,ilova"},{"name":"SEO sozlash va Google ro'yxati","price":500000,"types":"start,dokon"},{"name":"Onlayn to'lov (Click, Payme)","price":900000,"types":"dokon,bot,ilova"},{"name":"Telegram xabarnoma","price":200000,"types":"start,dokon"},{"name":"Mijozlar hisobi (login/ro'yxat)","price":1200000,"types":"dokon,ilova"},{"name":"Blog va yangiliklar","price":500000,"types":"start"},{"name":"Onlayn bron / yozilish","price":700000,"types":"start,bot,ilova"},{"name":"Chat va qo'ng'iroq tugmalari","price":150000,"types":"start,dokon"},{"name":"Analitika (Google, Meta Pixel)","price":300000,"types":"start,dokon"},{"name":"Mahsulotlarni Excel'dan yuklash","price":400000,"types":"dokon"},{"name":"Push-xabarnomalar","price":600000,"types":"ilova"},{"name":"Logotip va brend uslubi","price":700000,"types":""},{"name":"Domen va hosting 1 yil","price":350000,"types":"start,dokon"},{"name":"Matn va rasmlarni tayyorlash","price":500000,"types":""}],"styles":[{"name":"Zamonaviy neon","desc":"Qorong'i, animatsiyali","c1":"#22d3ee","c2":"#7c5cff"},{"name":"Toza va yorug'","desc":"Oq fon, aniq","c1":"#4f46e5","c2":"#06b6d4"},{"name":"Minimal","desc":"Oq-qora, tipografiya","c1":"#111111","c2":"#e8452c"},{"name":"Premium","desc":"Qora va oltin","c1":"#d4a64a","c2":"#17110a"},{"name":"Tabiiy yashil","desc":"Yangi va samimiy","c1":"#16a34a","c2":"#84cc16"},{"name":"Iliq va mayin","desc":"Pastel ranglar","c1":"#d6457a","c2":"#f08aa8"}],"references":[{"name":"Onlayn market","image":"/img/tpl/market.jpg"},{"name":"Portfolio: dizayner","image":"/img/tpl/dizayner.jpg"},{"name":"Portfolio: dasturchi","image":"/img/tpl/dasturchi.jpg"},{"name":"Portfolio: fotograf","image":"/img/tpl/fotograf.jpg"},{"name":"IT kompaniya / agentlik","image":"/img/tpl/kompaniya.jpg"},{"name":"Restoran / kafe","image":"/img/tpl/restoran.jpg"},{"name":"Go'zallik saloni","image":"/img/tpl/salon.jpg"},{"name":"O'quv markaz","image":"/img/tpl/talim.jpg"}],"goals":["Ko'proq mijoz jalb qilish","Onlayn sotuvni yo'lga qo'yish","Brend va ishonchni oshirish","Jarayonlarni avtomatlashtirish","Raqobatchilardan ajralib turish"],"budgets":["1–3 mln so'm","3–7 mln so'm","7–15 mln so'm","15 mln so'mdan ko'p","Maslahat kerak"],"deadlines":["Shoshilinch (1 hafta)","2–3 hafta","1 oy","Shoshilmayman"],"languages":["O'zbekcha","Ruscha","Inglizcha"],"methods":["Telefon","Telegram","WhatsApp","Email"],"times":["9:00–12:00","12:00–17:00","17:00–20:00","Istalgan vaqt"],"fieldsList":["Savdo","Restoran / kafe","Ta'lim","Tibbiyot","Go'zallik","Qurilish","Transport","Xizmat ko'rsatish","IT","Ishlab chiqarish","Ko'chmas mulk"],"successTitle":"So'rovingiz qabul qilindi!","successText":"Mutaxassisimiz ish vaqtida 15–30 daqiqa ichida, boshqa vaqtda keyingi ish kuni ertalab siz bilan bog'lanadi. Ko'rishguncha!"},{"id":"fikr","type":"testimonials","enabled":true,"navLabel":"","eyebrow":"Sharhlar","title":"Mijozlar fikri","text":"","items":[{"text":"Saytimiz 2 haftada tayyor bo'ldi, buyurtmalar ikki baravar oshdi.","name":"Akmal R.","role":"Do'kon egasi","image":"/img/t/kompaniya/a1.svg","stars":5},{"text":"Telegram bot ishimizni ancha yengillashtirdi. Jamoa juda mas'uliyatli.","name":"Gulnora S.","role":"Restoran menejeri","image":"/img/t/kompaniya/a2.svg","stars":5},{"text":"Hamma narsa aniq va shaffof. Muddat va narx so'zsiz bajarildi.","name":"Rustam K.","role":"Direktor","image":"/img/t/kompaniya/a3.svg","stars":5}]},{"id":"savol","type":"faq","enabled":true,"navLabel":"","eyebrow":"Savollar","title":"Ko'p so'raladigan savollar","text":"","items":[{"q":"Sayt qancha vaqtda tayyor bo'ladi?","a":"Vizitka sayt 3–5 kun, onlayn do'kon 2–3 hafta ichida tayyor bo'ladi."},{"q":"Tayyor saytni o'zim tahrirlay olamimi?","a":"Ha, admin panel orqali matn, narx va rasmlarni o'zingiz o'zgartirasiz."},{"q":"Domen va hostingni siz olib berasizmi?","a":"Ha, domen va hostingni ulab beramiz. Xohlasangiz o'zingiznikini ham ishlatamiz."}]},{"id":"aloqa","type":"contact","enabled":true,"navLabel":"Aloqa","eyebrow":"Aloqa","title":"Savolingiz bormi?","text":"Qisqa savol bo'lsa, shu yerga yozing. Loyiha buyurtma qilmoqchi bo'lsangiz, yuqoridagi anketani to'ldiring.","form":"message","serviceOptions":[],"askGuests":false,"askAddress":false,"payOptions":[],"submitText":"Yuborish","mapUrl":""}],"account":{"enabled":true,"requireOrder":true,"requireBooking":false}};</script>
 <script>'use strict';
 // Umumiy ikonkalar (sayt va admin panel ishlatadi)
 window.ICONS = {
@@ -537,11 +575,12 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     const u = window.Auth.user();
     return u ? `<a class="btn sm ghost acc" href="/kabinet.html" title="Mening kabinetim">${icon('user')}<span>${text(String(u.name).split(' ')[0])}</span></a>` : `<button class="btn sm ghost acc" data-act="login">${icon('user')}<span>Kirish</span></button>`;
   }
-  const needAuth = (kind) => accOn() && !window.Auth.user() && ((kind === 'order' && S.account.requireOrder !== false) || (kind === 'booking' && S.account.requireBooking));
+  const needAuth = (kind) => accOn() && !window.Auth.user() && (((kind === 'order' || kind === 'brief') && S.account.requireOrder !== false) || (kind === 'booking' && S.account.requireBooking));
   function fillUser() {
     const u = accOn() && window.Auth.user(); if (!u) return;
     $$('form[data-kind]').forEach((f) => { if (f.elements.name && !f.elements.name.value) f.elements.name.value = u.name || ''; if (f.elements.phone && !f.elements.phone.value) f.elements.phone.value = u.phone || ''; });
   }
+  E.account = { on: accOn, needAuth, fill: fillUser };
   function refreshNav() { const n = $('#nav'); if (!n || !S) return; const was = n.classList.contains('scrolled'); n.outerHTML = navHtml(); if (was) $('#nav').classList.add('scrolled'); renderCart(); fillUser(); }
   function navHtml() {
     const links = S.sections.filter((s) => on(s) && s.navLabel).slice(0, 7).map((s) => `<a href="#${esc(s.id)}">${text(s.navLabel)}</a>`);
@@ -594,6 +633,38 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     setTimeout(() => (f.querySelector('[name=name]') || f).focus({ preventScroll: true }), 500);
     return true;
   };
+  const KIND_TITLE = { booking: 'Yangi ariza: ', order: 'Yangi buyurtma: ', brief: "Yangi loyiha so'rovi: ", message: 'Yangi xabar: ' };
+  // Pochta orqali yuborish (server bo'lmaganda zaxira yo'l)
+  E.mailto = function (payload) {
+    const email = (S.contacts && S.contacts.email) || '';
+    if (!email) throw new Error("Xabar yuborilmadi. Iltimos, telefon orqali bog'laning.");
+    const L = [`Ism: ${payload.name}`, `Telefon: ${payload.phone}`, ...Object.entries(payload.extra || {}).map(([k, v]) => `${k}: ${v}`)];
+    if ((payload.items || []).length) L.push('Buyurtma: ' + payload.items.map((i) => `${i.name} x${i.qty}`).join(', '), `Jami: ${money(payload.items.reduce((a, i) => a + i.price * i.qty, 0) + (payload.shipping || 0))} ${cur()}`);
+    if (payload.message) L.push('', payload.message);
+    location.href = `mailto:${email}?subject=${encodeURIComponent((KIND_TITLE[payload.type] || KIND_TITLE.message) + payload.name)}&body=${encodeURIComponent(L.join('\n'))}`;
+  };
+  // Serverga yuborish; server bo'lmasa pochtaga o'tadi. Natija: {ok, id} yoki {mail:true}
+  E.send = async function (payload) {
+    const embedded = !!window.__SITE__;
+    const API = String(window.__API__ || '').replace(/\/$/, '');
+    const viaServer = !!(window.Auth && window.Auth.enabled);
+    if (embedded && !API && !viaServer) { E.mailto(payload); return { mail: true }; }
+    try {
+      let j;
+      if (viaServer) j = await window.Auth.request('/api/order', { method: 'POST', body: payload });
+      else {
+        const r = await fetch(API + '/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        j = await r.json().catch(() => ({}));
+        if (!r.ok) { const er = new Error(j.error || "Xatolik yuz berdi. Qayta urinib ko'ring."); er.status = r.status; throw er; }
+      }
+      return { ok: true, id: j.id };
+    } catch (e) {
+      if (e.status) throw e;
+      if (embedded) { E.mailto(payload); return { mail: true }; }
+      throw e;
+    }
+  };
+
   async function submitForm(form) {
     const msg = $('.fmsg', form), btn = form.querySelector('button[type=submit]');
     // Savat bo'sh bo'lsa, buyurtma formasi oddiy xabar sifatida yuboriladi
@@ -619,35 +690,13 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
       if (kind === 'order') { cart = {}; saveCart(); renderCart(); }
       const box = form.parentElement; box.innerHTML = `<div class="ok"><div class="tick">${icon('check')}</div><h3>${kind === 'booking' ? "Arizangiz qabul qilindi" : kind === 'order' ? 'Buyurtmangiz qabul qilindi' : 'Xabaringiz yuborildi'}</h3><p class="sub">Tez orada siz bilan bog'lanamiz.</p></div>`;
     };
-    const mail = () => {
-      const email = (S.contacts && S.contacts.email) || '';
-      if (!email) throw new Error("Xabar yuborilmadi. Iltimos, telefon orqali bog'laning.");
-      const L = [`Ism: ${name}`, `Telefon: ${phone}`, ...Object.entries(extra).map(([k, v]) => `${k}: ${v}`)];
-      if (items.length) L.push('Buyurtma: ' + items.map((i) => `${i.name} x${i.qty}`).join(', '), `Jami: ${money(subtotal() + payload.shipping)} ${cur()}`);
-      if (payload.message) L.push('Izoh: ' + payload.message);
-      location.href = `mailto:${email}?subject=${encodeURIComponent((kind === 'booking' ? 'Yangi ariza: ' : kind === 'order' ? 'Yangi buyurtma: ' : 'Yangi xabar: ') + name)}&body=${encodeURIComponent(L.join('\n'))}`;
-      msg.textContent = "Pochta ilovangiz ochiladi. Xabarni yuborishni unutmang yoki qo'ng'iroq qiling."; btn.disabled = false;
-    };
     try {
-      const embedded = !!window.__SITE__;
-      const API = String(window.__API__ || '').replace(/\/$/, '');
-      const viaServer = !!(window.Auth && window.Auth.enabled);
-      if (embedded && !API && !viaServer) return mail();
-      try {
-        if (viaServer) await window.Auth.request('/api/order', { method: 'POST', body: payload });
-        else {
-          const r = await fetch(API + '/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-          const j = await r.json().catch(() => ({}));
-          if (!r.ok) { const er = new Error(j.error || "Xatolik yuz berdi. Qayta urinib ko'ring."); er.status = r.status; throw er; }
-        }
-        done();
-      } catch (e) {
-        if (e.status === 401 && accOn()) { btn.disabled = false; window.Auth.modal({ title: 'Hisobingizga kiring', text: 'Buyurtma uchun hisob kerak. Kiring yoki ro\'yxatdan o\'ting.' }).then((u) => { if (u) { fillUser(); submitForm(form); } }); return; }
-        if (e.status) throw e;
-        if (embedded) { mail(); return; }
-        throw e;
-      }
-    } catch (e) { msg.className = 'fmsg bad'; msg.textContent = e.message; btn.disabled = false; }
+      const r = await E.send(payload);
+      if (r.mail) { msg.textContent = "Pochta ilovangiz ochiladi. Xabarni yuborishni unutmang yoki qo'ng'iroq qiling."; btn.disabled = false; } else done();
+    } catch (e) {
+      if (e.status === 401 && accOn()) { btn.disabled = false; window.Auth.modal({ title: 'Hisobingizga kiring', text: "Buyurtma uchun hisob kerak. Kiring yoki ro'yxatdan o'ting." }).then((u) => { if (u) { fillUser(); submitForm(form); } }); return; }
+      msg.className = 'fmsg bad'; msg.textContent = e.message; btn.disabled = false;
+    }
   }
 
   /* ---------- Effektlar ---------- */
@@ -708,6 +757,7 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
   document.addEventListener('click', (e) => {
     const el = e.target.closest('[data-act]');
     if (el && E.actions[el.dataset.act]) { if (el.tagName === 'A' && !el.getAttribute('href')) e.preventDefault(); E.actions[el.dataset.act](el, e); return; }
+    const bo = e.target.closest('a[href="#brief-open"]'); if (bo && E.actions['brief-open']) { e.preventDefault(); $('#links') && $('#links').classList.remove('open'); E.actions['brief-open'](bo, e); return; }
     const a = e.target.closest('#links a'); if (a) $('#links').classList.remove('open');
   });
   document.addEventListener('change', (e) => { const el = e.target.closest('[data-chg]'); if (el && E.changes[el.dataset.chg]) E.changes[el.dataset.chg](el, e); });
@@ -907,7 +957,7 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
   ];
   define('products', {
     label: 'Mahsulotlar / katalog', icon: 'cart', desc: 'Do\'kon: qidiruv, kategoriya, savat. Kurs va paketlar uchun ham',
-    fields: [...HEAD, F.sel('mode', 'Tugma vazifasi', [['cart', 'Savatga qo\'shish (buyurtma)'], ['inquiry', 'So\'rov qoldirish (kurs, xizmat)']]), F.text('buttonText', 'Tugma matni', { max: 30, ph: 'Savatga' }),
+    fields: [...HEAD, F.sel('mode', 'Tugma vazifasi', [['cart', 'Savatga qo\'shish (buyurtma)'], ['inquiry', 'So\'rov qoldirish (kurs, xizmat)'], ['brief', 'Buyurtma anketasini ochish (loyiha so\'rovi)']]), F.text('buttonText', 'Tugma matni', { max: 30, ph: 'Savatga' }),
       F.sel('columns', 'Ustunlar', [['3', '3 ta'], ['4', '4 ta'], ['2', '2 ta']]), F.tog('search', 'Qidiruv'), F.tog('filters', 'Kategoriya tugmalari'), F.tog('sort', 'Saralash'),
       F.list('items', 'Mahsulotlar', { title: 'name', fields: productFields, add: () => ({ id: uid(), name: 'Yangi mahsulot', price: 0, oldPrice: 0, category: '', badge: '', description: '', image: '', stock: '', active: true }), idKey: 'id' })],
     defaults: () => ({ eyebrow: 'Katalog', title: 'Mahsulotlar', text: 'Tanlang va buyurtma bering.', mode: 'cart', buttonText: '', columns: '3', search: true, filters: true, sort: true, items: [{ id: uid(), name: 'Birinchi mahsulot', price: 100000, oldPrice: 0, category: 'Asosiy', badge: 'YANGI', description: 'Mahsulot haqida qisqa tavsif.', image: '', stock: '', active: true }, { id: uid(), name: 'Ikkinchi mahsulot', price: 250000, oldPrice: 300000, category: 'Asosiy', badge: '', description: 'Mahsulot haqida qisqa tavsif.', image: '', stock: '', active: true }, { id: uid(), name: 'Uchinchi mahsulot', price: 0, oldPrice: 0, category: 'Qo\'shimcha', badge: '', description: 'Narxi kelishiladi.', image: '', stock: '', active: true }] }),
@@ -936,6 +986,7 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
   function actionBtn(sec, p, big) {
     const out = E.maxQty(p) <= 0 && (sec.mode || 'cart') === 'cart';
     if (out) return `<button class="btn ${big ? '' : 'sm'} dis" disabled>Tugagan</button>`;
+    if ((sec.mode || 'cart') === 'brief') return `<button class="btn ${big ? '' : 'sm'}" data-act="brief-open" data-svc="${esc(p.id)}" data-name="${esc(p.name)}">${text(sec.buttonText || 'Buyurtma')} ${icon('arrow')}</button>`;
     if ((sec.mode || 'cart') === 'inquiry') return `<button class="btn ${big ? '' : 'sm'}" data-act="inq" data-name="${esc(p.name)}">${text(sec.buttonText || 'So\'rov qoldirish')}</button>`;
     return `<button class="btn ${big ? '' : 'sm'}" data-act="add" data-id="${esc(p.id)}">${icon('cart')} ${text(sec.buttonText || 'Savatga')}</button>`;
   }
@@ -1145,6 +1196,38 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     },
   });
 
+
+  /* =============== BRIEF (buyurtma anketasi) =============== */
+  const SVC_ICONS = ['globe', 'cart', 'send', 'phone', 'design', 'tool', 'code', 'zap', 'shield', 'chart', 'users', 'star'];
+  define('brief', {
+    label: 'Buyurtma anketasi', icon: 'edit', desc: "Mijozning xohishlarini bosqichma-bosqich so'raydigan anketa: xizmat, imkoniyatlar, dizayn, byudjet va aloqa",
+    fields: [...HEAD, F.text('buttonText', 'Tugma matni', { max: 40, ph: "Anketani to'ldirish" }), F.text('promise', "Va'da (tugma ostida)", { max: 120, ph: "15 daqiqada aloqaga chiqamiz" }),
+      F.lines('usp', 'Afzalliklar (har qatorga bittadan)'), F.tog('showEstimate', "Taxminiy narxni ko'rsatish"),
+      F.list('services', 'Xizmat turlari', { title: 'name', fields: [F.text('name', 'Nomi', { max: 60 }), F.text('desc', 'Qisqa tavsif', { max: 120 }), F.icon('icon', 'Ikonka'), F.num('price', "Boshlang'ich narx", { min: 0, hint: "Taxminiy narx hisobi uchun" }), F.text('days', 'Muddat', { max: 30, ph: '5–10 kun' })], add: () => ({ id: uid(), name: 'Yangi xizmat', desc: '', icon: 'star', price: 0, days: '' }), idKey: 'id' }),
+      F.list('features', 'Qo\'shimcha imkoniyatlar', { title: 'name', fields: [F.text('name', 'Nomi', { max: 60 }), F.num('price', "Qo'shimcha narx", { min: 0 }), F.text('types', 'Qaysi xizmatlar uchun (id lar, vergul bilan)', { max: 120, hint: "Bo'sh qoldirsangiz hammasi uchun ko'rinadi" })], add: () => ({ name: 'Yangi imkoniyat', price: 0, types: '' }) }),
+      F.list('styles', 'Dizayn uslublari', { title: 'name', fields: [F.text('name', 'Nomi', { max: 40 }), F.text('desc', 'Tavsif', { max: 80 }), F.text('c1', '1-rang', { max: 9, ph: '#4f46e5' }), F.text('c2', '2-rang', { max: 9, ph: '#06b6d4' })], add: () => ({ name: 'Yangi uslub', desc: '', c1: '#4f46e5', c2: '#06b6d4' }) }),
+      F.list('references', 'Namuna saytlar (rasm bilan)', { title: 'name', fields: [F.text('name', 'Nomi', { max: 40 }), F.img('image', 'Rasm')], add: () => ({ name: 'Namuna', image: '' }) }),
+      F.lines('goals', 'Maqsadlar'), F.lines('budgets', 'Byudjet variantlari'), F.lines('deadlines', 'Muddat variantlari'), F.lines('languages', 'Sayt tillari'), F.lines('methods', "Aloqa usullari"), F.lines('times', 'Qulay vaqtlar'), F.lines('fieldsList', 'Faoliyat sohalari (tavsiyalar)'),
+      F.text('successTitle', 'Muvaffaqiyat sarlavhasi', { max: 80 }), F.area('successText', 'Muvaffaqiyat matni', { max: 300, rows: 3 })],
+    defaults: () => ({ eyebrow: 'Loyihani boshlang', title: 'Xohishlaringizni ayting, biz amalga oshiramiz', text: "3 daqiqalik anketa: nima kerakligini, qanday ko'rinishni va qancha byudjetni tanlaysiz. Qolganini biz hal qilamiz.", buttonText: "Anketani to'ldirish", promise: '15 daqiqada aloqaga chiqamiz', showEstimate: true,
+      usp: ["Aniq narx va muddat: suhbatdan keyin shartnoma", "Bepul maslahat va g'oyalar", "Natijaga kafolat"],
+      services: [{ id: 'sayt', name: 'Veb-sayt', desc: 'Vizitka, korporativ yoki landing sahifa', icon: 'globe', price: 2500000, days: '5–10 kun' }, { id: 'dokon', name: "Onlayn do'kon", desc: "Katalog, savat va to'lov bilan", icon: 'cart', price: 6900000, days: '2–3 hafta' }, { id: 'bot', name: 'Telegram bot', desc: 'Buyurtma va aloqani avtomatlashtirish', icon: 'send', price: 3200000, days: '1–2 hafta' }],
+      features: [{ name: 'Admin panel', price: 800000, types: '' }, { name: "Ko'p tillilik", price: 500000, types: '' }, { name: 'SEO sozlash', price: 400000, types: 'sayt,dokon' }],
+      styles: [{ name: 'Zamonaviy', desc: 'Toza va yorqin', c1: '#4f46e5', c2: '#06b6d4' }, { name: 'Minimal', desc: 'Oq-qora, aniq', c1: '#111111', c2: '#e8452c' }, { name: 'Premium', desc: 'Qora va oltin', c1: '#d4a64a', c2: '#17110a' }],
+      references: [], goals: ["Ko'proq mijoz jalb qilish", 'Onlayn sotuvni yo\'lga qo\'yish', 'Brend va ishonchni oshirish', 'Jarayonlarni avtomatlashtirish'],
+      budgets: ["1–3 mln so'm", "3–7 mln so'm", "7–15 mln so'm", "15 mln so'mdan ko'p", "Maslahat kerak"], deadlines: ['Shoshilinch (1 hafta)', '2–3 hafta', '1 oy', 'Shoshilmayman'], languages: ["O'zbekcha", 'Ruscha', 'Inglizcha'],
+      methods: ['Telefon', 'Telegram', 'WhatsApp', 'Email'], times: ['9:00–12:00', '12:00–17:00', '17:00–20:00', 'Istalgan vaqt'], fieldsList: ['Savdo', 'Restoran / kafe', "Ta'lim", 'Tibbiyot', "Go'zallik", 'Qurilish', 'Transport', 'Xizmat ko\'rsatish', 'IT'],
+      successTitle: "So'rovingiz qabul qilindi!", successText: "Mutaxassisimiz ish vaqtida 15–30 daqiqa ichida, boshqa vaqtda keyingi ish kuni ertalab siz bilan bog'lanadi." }),
+    render(sec) {
+      const usp = arr(sec.usp).filter(Boolean);
+      const steps = [['edit', "Anketa to'ldirasiz", '3 daqiqa'], ['tel', "Biz aloqaga chiqamiz", sec.promise || '15–30 daqiqa'], ['check', 'Narx va muddat kelishiladi', 'Bepul maslahat'], ['zap', 'Ish boshlanadi', "Har kuni hisobot"]];
+      return E.wrap(sec, `<div class="briefb rv"><div class="bfl">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${text(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}
+        ${usp.length ? `<ul class="pts">${usp.map((u) => `<li>${icon('check')}<span>${text(u)}</span></li>`).join('')}</ul>` : ''}
+        <div class="bcta"><button class="btn mag" data-act="brief-open">${text(sec.buttonText || "Anketani to'ldirish")} ${icon('arrow')}</button>${sec.promise ? `<span class="prom">${icon('clock')} ${text(sec.promise)}</span>` : ''}</div></div>
+        <div class="bsteps2">${steps.map(([i, t, d], k) => `<div class="bs2"><span class="n">${k + 1}</span><div><b>${text(t)}</b><small>${text(d)}</small></div><em>${icon(i)}</em></div>`).join('')}</div></div>`, 'tight');
+    },
+  });
+
   /* =============== CONTACT =============== */
   define('contact', {
     label: 'Aloqa va forma', icon: 'mail', desc: 'Aloqa ma\'lumotlari va xabar / bron / buyurtma formasi',
@@ -1185,6 +1268,212 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     const s = e.target; if (!s || s.name !== 'delivery') return;
     const a = s.form.querySelector('[data-addr]'); if (a) a.hidden = s.value === 'Olib ketish';
   });
+})();
+
+'use strict';
+// Buyurtma anketasi: mijozning xohishlarini 6 bosqichda so'raydigan master.
+// Ma'lumot saytdagi "brief" bo'limidan olinadi (admin paneldan tahrirlanadi).
+(function () {
+  const E = window.E; if (!E) return;
+  const { $, $$, esc, text, icon, imgUrl } = E;
+  const KEY = 'brief_draft_v2';
+  const arr = (a) => (Array.isArray(a) ? a : []);
+  const STEPS = [['Xizmat', 'globe'], ['Biznes', 'briefcase'], ['Imkoniyatlar', 'zap'], ['Dizayn', 'design'], ['Muddat', 'calendar'], ['Aloqa', 'phone']];
+  const PALETTES = [['#4f46e5', '#06b6d4', '#ec4899'], ['#16a34a', '#84cc16', '#f59e0b'], ['#0b78d1', '#12b5a6', '#7c5cff'], ['#d4a64a', '#17110a', '#f0d28a'], ['#e8452c', '#111111', '#f3ede2'], ['#d6457a', '#f08aa8', '#c9a063']];
+  let sec = null, B = null, root = null, step = 0, busy = false, keyFn = null;
+
+  const fresh = () => ({ v: 2, service: '', bizName: '', field: '', about: '', site: '', goals: [], features: [], extraWish: '', style: '', palette: -1, refs: [], links: ['', '', ''], langs: [], budget: '', deadline: '', note: '', cname: '', cphone: '', cemail: '', method: '', time: '', agree: true });
+  const svcs = () => arr(sec.services);
+  const svc = () => svcs().find((s) => s.id === B.service);
+  const feats = () => arr(sec.features).filter((f) => { const t = String(f.types || '').split(',').map((x) => x.trim()).filter(Boolean); return !t.length || (B.service && t.includes(B.service)); });
+  const estimate = () => { const s = svc(); if (!s) return 0; return (Number(s.price) || 0) + feats().filter((f) => B.features.includes(f.name)).reduce((a, f) => a + (Number(f.price) || 0), 0); };
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ B, step })); } catch { /* ignore */ } };
+  const clear = () => { try { localStorage.removeItem(KEY); } catch { /* ignore */ } };
+  const tog = (a, v) => { const i = a.indexOf(v); if (i >= 0) a.splice(i, 1); else a.push(v); };
+
+  /* ---------- Bosqichlar ---------- */
+  const chips = (list, key, multi, cur) => `<div class="cps">${list.map((x) => `<button type="button" class="cp ${(multi ? cur.includes(x) : cur === x) ? 'on' : ''}" data-b="${key}" data-v="${esc(x)}">${text(x)}</button>`).join('')}</div>`;
+  const fld = (key, label, val, o = {}) => `<div class="fld ${o.area ? 'ta' : ''}">${o.area ? `<textarea data-bi="${key}" rows="${o.rows || 3}" placeholder=" " maxlength="${o.max || 600}">${esc(val)}</textarea>` : `<input data-bi="${key}" value="${esc(val)}" placeholder=" " maxlength="${o.max || 120}" ${o.type ? `type="${o.type}"` : ''} ${o.list ? `list="${o.list}"` : ''} ${o.mode ? `inputmode="${o.mode}"` : ''} ${o.auto ? `autocomplete="${o.auto}"` : ''}>`}<label>${label}</label></div>`;
+  const head = (t, d) => `<h3 class="bwtt">${t}</h3><p class="bd">${d}</p>`;
+
+  function stepHtml(n) {
+    if (n === 0) {
+      return `${head('Qanday loyiha kerak?', "Xizmat turini tanlang. Keyingi bosqichlarda tafsilotlarni aniqlaymiz.")}<div class="opts">${svcs().map((s) => `<button type="button" class="opt ${B.service === s.id ? 'on' : ''}" data-b="svc" data-v="${esc(s.id)}"><span class="oi">${icon(s.icon)}</span><b>${text(s.name)}</b><small>${text(s.desc)}</small><span class="om">${Number(s.price) > 0 && sec.showEstimate !== false ? `<span class="op">${E.fmt(s.price)} dan</span>` : ''}${s.days ? `<span class="od">${icon('clock')} ${text(s.days)}</span>` : ''}</span><i class="ck">${icon('check')}</i></button>`).join('')}</div>`;
+    }
+    if (n === 1) {
+      const fl = arr(sec.fieldsList).filter(Boolean);
+      return `${head('Biznesingiz haqida', "Bu bizga sizga mos yechim va dizayn tanlashga yordam beradi.")}
+        <div class="fgrid3">${fld('bizName', 'Kompaniya yoki brend nomi *', B.bizName, { auto: 'organization' })}${fld('field', 'Faoliyat sohasi', B.field, { list: 'bflds' })}</div>${fl.length ? `<datalist id="bflds">${fl.map((x) => `<option value="${esc(x)}">`).join('')}</datalist>` : ''}
+        ${fld('about', "Biznesingiz haqida qisqacha (nima qilasiz, kimlarga?)", B.about, { area: 1, rows: 3, max: 600 })}
+        ${fld('site', "Mavjud sayt yoki Instagram / Telegram havolasi (bo'lsa)", B.site, { max: 200 })}
+        ${arr(sec.goals).length ? `<label class="bl2">Loyihadan asosiy maqsadingiz <small>(bir nechtasini tanlash mumkin)</small></label>${chips(arr(sec.goals), 'goal', true, B.goals)}` : ''}`;
+    }
+    if (n === 2) {
+      const f = feats();
+      return `${head('Qanday imkoniyatlar kerak?', f.length ? "Kerakli imkoniyatlarni belgilang. Narx avtomatik hisoblanadi." : "Imkoniyatlarni suhbatda birgalikda aniqlaymiz.")}
+        ${f.length ? `<div class="cps big">${f.map((x) => `<button type="button" class="cp ${B.features.includes(x.name) ? 'on' : ''}" data-b="feat" data-v="${esc(x.name)}"><span class="cx">${icon('check')}</span>${text(x.name)}${Number(x.price) > 0 && sec.showEstimate !== false ? `<em>+ ${E.fmt(x.price)}</em>` : ''}</button>`).join('')}</div>` : ''}
+        ${fld('extraWish', "Boshqa istaklaringiz yoki aytmoqchi bo'lgan narsalar", B.extraWish, { area: 1, rows: 4, max: 800 })}`;
+    }
+    if (n === 3) {
+      const st = arr(sec.styles), refs = arr(sec.references).filter((r) => imgUrl(r.image));
+      return `${head('Qanday ko\'rinish yoqadi?', "Uslub, ranglar va yoqqan namunalarni tanlang. Hech biri yoqmasa, o'tkazib yuboring.")}
+        ${st.length ? `<label class="bl2">Dizayn uslubi</label><div class="stys">${st.map((s) => `<button type="button" class="sty ${B.style === s.name ? 'on' : ''}" data-b="style" data-v="${esc(s.name)}"><span class="sp" style="background:linear-gradient(135deg,${esc(/^#[0-9a-f]{3,8}$/i.test(s.c1) ? s.c1 : '#4f46e5')},${esc(/^#[0-9a-f]{3,8}$/i.test(s.c2) ? s.c2 : '#06b6d4')})"><b>Aa</b></span><span class="sn">${text(s.name)}</span><small>${text(s.desc)}</small><i class="ck">${icon('check')}</i></button>`).join('')}</div>` : ''}
+        <label class="bl2">Ranglar</label><div class="pals">${PALETTES.map((p, i) => `<button type="button" class="pal ${B.palette === i ? 'on' : ''}" data-b="pal" data-v="${i}" aria-label="Ranglar ${i + 1}">${p.map((c) => `<i style="background:${c}"></i>`).join('')}</button>`).join('')}<button type="button" class="cp ${B.palette === 98 ? 'on' : ''}" data-b="pal" data-v="98">Logotipimdagi ranglar</button><button type="button" class="cp ${B.palette === 99 ? 'on' : ''}" data-b="pal" data-v="99">Maslahat bering</button></div>
+        ${refs.length ? `<label class="bl2">Yoqqan namunalar <small>(3 tagacha)</small></label><div class="refs">${refs.map((r) => `<button type="button" class="ref ${B.refs.includes(r.name) ? 'on' : ''}" data-b="ref" data-v="${esc(r.name)}"><img src="${esc(imgUrl(r.image))}" alt="" loading="lazy"><span>${text(r.name)}</span><i class="ck">${icon('check')}</i></button>`).join('')}</div>` : ''}
+        <label class="bl2">Yoqqan saytlar havolasi <small>(ixtiyoriy)</small></label><div class="lnks">${[0, 1, 2].map((i) => `<div class="fld"><input data-bl="${i}" value="${esc(B.links[i])}" placeholder=" " maxlength="200"><label>${i + 1}-sayt havolasi</label></div>`).join('')}</div>
+        ${arr(sec.languages).length ? `<label class="bl2">Sayt tili</label>${chips(arr(sec.languages), 'lang', true, B.langs)}` : ''}`;
+    }
+    if (n === 4) {
+      const e = estimate(), s = svc();
+      return `${head('Muddat va byudjet', "Taxminiy ma'lumot ham yetadi. Aniq narxni suhbatdan keyin kelishamiz.")}
+        ${arr(sec.budgets).length ? `<label class="bl2">Byudjetingiz</label>${chips(arr(sec.budgets), 'budget', false, B.budget)}` : ''}
+        ${arr(sec.deadlines).length ? `<label class="bl2">Qachon tayyor bo'lishi kerak?</label>${chips(arr(sec.deadlines), 'deadline', false, B.deadline)}` : ''}
+        ${fld('note', "Qo'shimcha izoh", B.note, { area: 1, rows: 3, max: 800 })}
+        ${sec.showEstimate !== false && s ? `<div class="est"><div><small>Taxminiy narx</small><b>${e ? E.fmt(e) + ' dan' : 'Kelishiladi'}</b></div><div><small>Taxminiy muddat</small><b>${text(s.days || 'Kelishiladi')}</b></div><p>Bu taxminiy hisob. Aniq narx va muddat vazifani muhokama qilgach belgilanadi.</p></div>` : ''}`;
+    }
+    const u = window.Auth && window.Auth.user && window.Auth.user();
+    return `${head("Siz bilan qanday bog'lanamiz?", "Mutaxassisimiz tez orada aloqaga chiqadi va barcha savollarga javob beradi.")}
+      <div class="fgrid3">${fld('cname', 'Ismingiz *', B.cname || (u && u.name) || '', { auto: 'name' })}${fld('cphone', 'Telefon raqamingiz *', B.cphone || (u && u.phone) || '', { mode: 'tel', auto: 'tel', max: 40 })}</div>
+      ${fld('cemail', 'Email (ixtiyoriy)', B.cemail || (u && u.email) || '', { type: 'email', auto: 'email' })}
+      ${arr(sec.methods).length ? `<label class="bl2">Qanday bog'lanish qulay?</label>${chips(arr(sec.methods), 'method', false, B.method)}` : ''}
+      ${arr(sec.times).length ? `<label class="bl2">Qulay vaqt</label>${chips(arr(sec.times), 'time', false, B.time)}` : ''}
+      <label class="agree"><input type="checkbox" data-bi="agree" ${B.agree ? 'checked' : ''}><span class="tg2"></span><span>Ma'lumotlarim so'rovni ko'rib chiqish uchun ishlatilishiga roziman</span></label>`;
+  }
+
+  /* ---------- Yon panel: jonli xulosa ---------- */
+  function summary() {
+    const s = svc(), f = feats().filter((x) => B.features.includes(x.name)), e = estimate();
+    if (!s) return `<p class="bnone">Xizmat turini tanlang, xulosa shu yerda paydo bo'ladi.</p>`;
+    return `<div class="sl"><small>Xizmat</small><b>${text(s.name)}</b></div>${B.bizName ? `<div class="sl"><small>Biznes</small><b>${text(B.bizName)}</b></div>` : ''}
+      ${f.length ? `<div class="sl"><small>Imkoniyatlar</small><ul>${f.map((x) => `<li>${icon('check')}${text(x.name)}</li>`).join('')}</ul></div>` : ''}
+      ${B.style ? `<div class="sl"><small>Uslub</small><b>${text(B.style)}</b></div>` : ''}
+      ${sec.showEstimate !== false ? `<div class="sl tot"><small>Taxminiy narx</small><b>${e ? E.fmt(e) + ' dan' : 'Kelishiladi'}</b></div>` : ''}${s.days ? `<div class="sl"><small>Muddat</small><b>${text(s.days)}</b></div>` : ''}`;
+  }
+  function side() {
+    return `<aside class="bws"><div class="bwh"><span class="mark">${text((E.state().company.logo || (E.state().company.name || 'S')[0]).slice(0, 2))}</span><div><b>Loyiha anketasi</b><small>${text(E.state().company.name)}</small></div></div>
+      <ol class="bstp">${STEPS.map(([l, i], k) => `<li class="${k === step ? 'act' : ''} ${k < step ? 'done' : ''}" data-b="goto" data-v="${k}"><span>${k < step ? icon('check') : icon(i)}</span>${l}</li>`).join('')}</ol>
+      <div class="bsm" id="bsum">${summary()}</div>${sec.promise ? `<div class="bpr">${icon('clock')}<span>${text(sec.promise)}</span></div>` : ''}</aside>`;
+  }
+
+  /* ---------- Chizish ---------- */
+  function paint() {
+    const last = step === STEPS.length - 1;
+    $('#bwb').innerHTML = `<div class="bstep in">${stepHtml(step)}</div>`;
+    $('#bwf').innerHTML = `<button type="button" class="bk" data-b="back" aria-label="Orqaga" ${step === 0 ? 'hidden' : ''}>${icon('left')}<span class="t">Orqaga</span></button><span class="berr" id="berr" role="alert"></span><div class="bmini">${sec.showEstimate !== false && svc() ? `<small>Taxminan</small><b>${estimate() ? E.fmt(estimate()) : '—'}</b>` : ''}</div><button type="button" class="btn nx" data-b="${last ? 'submit' : 'next'}">${last ? "So'rovni yuborish" : step === 0 ? 'Davom etish' : 'Keyingi'} ${icon(last ? 'send' : 'arrow')}</button>`;
+    $('#bwp i').style.width = `${((step + 1) / STEPS.length) * 100}%`;
+    $('#bwt').textContent = `${step + 1} / ${STEPS.length}: ${STEPS[step][0]}`;
+    $$('.bstp li').forEach((li, k) => { li.className = `${k === step ? 'act' : ''} ${k < step ? 'done' : ''}`; li.firstElementChild.innerHTML = k < step ? icon('check') : icon(STEPS[k][1]); });
+    $('#bsum').innerHTML = summary(); $('#bwb').scrollTop = 0; save();
+    const f = $('#bwb input[data-bi], #bwb textarea'); if (f && step !== 0 && matchMedia('(min-width:700px)').matches) setTimeout(() => f.focus({ preventScroll: true }), 120);
+  }
+  function refreshSide() { $('#bsum').innerHTML = summary(); const m = $('.bmini'); if (m) m.innerHTML = sec.showEstimate !== false && svc() ? `<small>Taxminan</small><b>${estimate() ? E.fmt(estimate()) : '—'}</b>` : ''; save(); }
+
+  function validate(n) {
+    if (n === 0 && !B.service) return 'Iltimos, xizmat turini tanlang';
+    if (n === 1 && B.bizName.trim().length < 2) return 'Kompaniya yoki brend nomini kiriting';
+    if (n === 5) {
+      if (B.cname.trim().length < 2) return 'Ismingizni kiriting';
+      if (!/^[+\d][\d\s()\-]{6,}$/.test(B.cphone.trim())) return "Telefon raqamini to'g'ri kiriting (masalan, +998 90 123 45 67)";
+      if (B.cemail.trim() && !/^\S+@\S+\.\S+$/.test(B.cemail.trim())) return "Email noto'g'ri";
+      if (!B.agree) return 'Davom etish uchun rozilikni belgilang';
+    }
+    return '';
+  }
+  const err = (m) => { const e = $('#berr'); if (e) { e.textContent = m; e.classList.toggle('show', !!m); } };
+  function go(n) { if (n < 0 || n >= STEPS.length) return; step = n; paint(); }
+
+  /* ---------- Yuborish ---------- */
+  function compose() {
+    const s = svc(), ps = B.palette >= 0 && B.palette < 98 ? PALETTES[B.palette].join(', ') : B.palette === 98 ? 'Logotipdagi ranglar' : B.palette === 99 ? 'Maslahat kerak' : '';
+    const f = feats().filter((x) => B.features.includes(x.name)).map((x) => x.name);
+    const links = B.links.map((x) => x.trim()).filter(Boolean);
+    const extra = {}; const put = (k, v) => { if (v && String(v).trim()) extra[k] = String(v).trim().slice(0, 600); };
+    put('Xizmat', s && s.name); put('Biznes nomi', B.bizName); put('Soha', B.field); put('Biznes haqida', B.about); put('Mavjud sayt', B.site); put('Maqsadlar', B.goals.join(', '));
+    put('Imkoniyatlar', f.join(', ')); put('Boshqa istaklar', B.extraWish); put('Dizayn uslubi', B.style); put('Ranglar', ps); put('Namunalar', B.refs.join(', ')); put('Yoqqan saytlar', links.join(' | '));
+    put('Tillar', B.langs.join(', ')); put('Byudjet', B.budget); put('Muddat', B.deadline); put('Taxminiy narx', estimate() ? `${E.money(estimate())} ${E.cur()} dan` : ''); put('Email', B.cemail); put('Aloqa usuli', B.method); put('Qulay vaqt', B.time);
+    return { type: 'brief', name: B.cname.trim(), phone: B.cphone.trim(), message: B.note.trim(), items: [], extra, shipping: 0 };
+  }
+  async function submit() {
+    if (busy) return;
+    for (let n = 0; n <= 5; n++) { const m = validate(n); if (m) { if (n !== step) go(n); err(m); return; } }
+    if (E.isPreview) { err("Ko'rinish rejimi: so'rov yuborilmaydi"); return; }
+    if (E.account && E.account.needAuth('brief')) {
+      const u = await window.Auth.modal({ title: 'So\'rovni yuborish uchun kiring', text: "Hisobingiz bo'lmasa, ro'yxatdan o'ting. So'rovingiz va uning holati hisobingizda saqlanadi." });
+      if (!u) { err('Yuborish uchun hisobga kirish kerak'); return; }
+      B.cname = B.cname || u.name; B.cphone = B.cphone || u.phone;
+    }
+    busy = true; const btn = $('.nx'); if (btn) { btn.disabled = true; btn.textContent = 'Yuborilmoqda…'; }
+    const payload = compose();
+    try { const r = await E.send(payload); success(r, payload); }
+    catch (e) {
+      busy = false; const b2 = $('.nx'); if (b2) { b2.disabled = false; b2.innerHTML = `So'rovni yuborish ${icon('send')}`; }
+      if (e.status === 401 && E.account && E.account.on()) { err('Seans tugagan. Qayta urinib, hisobga kiring.'); return; }
+      err(e.message);
+    }
+  }
+  function success(r, payload) {
+    busy = false; clear();
+    const S = E.state(), c = S.contacts || {}, tg = c.telegram ? String(c.telegram).replace(/^@/, '').replace(/^https?:\/\/t\.me\//, '') : '';
+    const id = r.id || Math.random().toString(36).slice(2, 8);
+    const u = window.Auth && window.Auth.user && window.Auth.user();
+    $('.bwin').classList.add('fin');
+    $('.bwin').innerHTML = `<div class="bwok"><div class="tick">${icon('check')}</div><h2>${text(r.mail ? 'Deyarli tayyor!' : (sec.successTitle || "So'rovingiz qabul qilindi!"))}</h2>
+      <p class="sub">${text(r.mail ? "Pochta ilovangiz ochildi. Xabarni yuborishni unutmang, shundan keyin biz siz bilan bog'lanamiz." : (sec.successText || "Tez orada siz bilan bog'lanamiz."))}</p>
+      ${r.ok ? `<div class="ref2">Murojaat raqami: <b>#${esc(id)}</b></div>` : ''}
+      <div class="nxt"><div><span>1</span><b>Aloqa</b><small>${text(sec.promise || 'Tez orada qo\'ng\'iroq qilamiz')}</small></div><div><span>2</span><b>Muhokama</b><small>Vazifa, narx va muddat kelishiladi</small></div><div><span>3</span><b>Ish boshlanadi</b><small>Har kuni hisobot beramiz</small></div></div>
+      <div class="bwa">${c.phone ? `<a class="btn ghost" href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}">${icon('tel')} ${text(c.phone)}</a>` : ''}${tg ? `<a class="btn ghost" href="https://t.me/${esc(tg)}" target="_blank" rel="noopener">${icon('send')} Telegram</a>` : ''}${u && r.ok ? `<a class="btn ghost" href="/kabinet.html">${icon('user')} Kabinetim</a>` : ''}<button class="btn" data-b="close">Yopish</button></div></div>`;
+  }
+
+  /* ---------- Ochish / yopish ---------- */
+  function close() {
+    if (root) { root.remove(); root = null; }
+    document.body.classList.remove('noscroll'); if (keyFn) { document.removeEventListener('keydown', keyFn); keyFn = null; }
+  }
+  function open(svcId) {
+    sec = E.state().sections.find((s) => s.type === 'brief' && s.enabled !== false);
+    if (!sec) { E.toast("Anketa hozircha mavjud emas"); return; }
+    if (!svcs().length) { E.toast('Anketada xizmatlar kiritilmagan'); return; }
+    B = fresh(); step = 0;
+    try { const d = JSON.parse(localStorage.getItem(KEY) || 'null'); if (d && d.B && d.B.v === 2) { B = Object.assign(fresh(), d.B); if (!svc()) B.service = ''; step = Math.min(d.step || 0, 5); } } catch { /* ignore */ }
+    if (svcId && svcs().some((s) => s.id === svcId)) { if (B.service !== svcId) { B.service = svcId; B.features = []; } if (step === 0) step = 1; }
+    if (root) root.remove();
+    root = document.createElement('div'); root.className = 'bw'; root.setAttribute('role', 'dialog'); root.setAttribute('aria-modal', 'true'); root.setAttribute('aria-label', 'Buyurtma anketasi');
+    root.innerHTML = `<div class="bwback" data-b="close"></div><div class="bwin">${side()}<section class="bwm"><header><div class="bwt" id="bwt"></div><div class="bwp" id="bwp"><i></i></div><button type="button" class="bx" data-b="close" aria-label="Yopish">${icon('x')}</button></header><div class="bwb" id="bwb"></div><footer class="bwf" id="bwf"></footer></section></div>`;
+    document.body.appendChild(root); document.body.classList.add('noscroll'); paint();
+    keyFn = (e) => { if (!root) return; if (e.key === 'Escape') close(); else if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'checkbox') { e.preventDefault(); step === 5 ? submit() : next(); } };
+    document.addEventListener('keydown', keyFn);
+    root.addEventListener('click', onClick); root.addEventListener('input', onInput); root.addEventListener('change', onInput);
+  }
+  function next() { const m = validate(step); if (m) { err(m); return; } err(''); go(step + 1); }
+
+  function onClick(e) {
+    const t = e.target.closest('[data-b]'); if (!t) return;
+    const k = t.dataset.b, v = t.dataset.v, one = (list, cur) => { $$(`[data-b="${k}"]`, root).forEach((x) => x.classList.toggle('on', x === t && cur)); };
+    if (k === 'close') return close();
+    if (k === 'next') return next();
+    if (k === 'back') { err(''); return go(step - 1); }
+    if (k === 'submit') return submit();
+    if (k === 'goto') { const n = +v; if (n < step) go(n); else if (n === step + 1 || n <= step) { const m = validate(step); if (m) err(m); else go(n); } return; }
+    err('');
+    if (k === 'svc') { B.service = v; B.features = B.features.filter((x) => feats().some((f) => f.name === x)); one(null, true); refreshSide(); setTimeout(() => { if (root && step === 0) go(1); }, 260); return; }
+    if (k === 'goal') { tog(B.goals, v); t.classList.toggle('on'); }
+    if (k === 'feat') { tog(B.features, v); t.classList.toggle('on'); }
+    if (k === 'lang') { tog(B.langs, v); t.classList.toggle('on'); }
+    if (k === 'ref') { if (!B.refs.includes(v) && B.refs.length >= 3) { err('Eng ko\'pi bilan 3 ta namuna tanlash mumkin'); return; } tog(B.refs, v); t.classList.toggle('on'); }
+    if (k === 'style') { B.style = B.style === v ? '' : v; one(null, !!B.style); }
+    if (k === 'pal') { B.palette = B.palette === +v ? -1 : +v; $$('[data-b="pal"]', root).forEach((x) => x.classList.toggle('on', +x.dataset.v === B.palette)); }
+    if (k === 'budget' || k === 'deadline' || k === 'method' || k === 'time') { B[k] = B[k] === v ? '' : v; one(null, !!B[k]); }
+    refreshSide();
+  }
+  function onInput(e) {
+    const t = e.target;
+    if (t.dataset.bi) { B[t.dataset.bi] = t.type === 'checkbox' ? t.checked : t.value; if (t.dataset.bi === 'bizName') refreshSide(); else save(); }
+    if (t.dataset.bl !== undefined) { B.links[+t.dataset.bl] = t.value; save(); }
+    if (t.dataset.bi || t.dataset.bl !== undefined) err('');
+  }
+
+  E.actions['brief-open'] = (el) => open(el && el.dataset ? el.dataset.svc : '');
+  E.openBrief = open;
 })();
 </script>
 <script src="/auth.js"></script>

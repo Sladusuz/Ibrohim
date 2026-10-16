@@ -173,11 +173,12 @@
     const u = window.Auth.user();
     return u ? `<a class="btn sm ghost acc" href="/kabinet.html" title="Mening kabinetim">${icon('user')}<span>${text(String(u.name).split(' ')[0])}</span></a>` : `<button class="btn sm ghost acc" data-act="login">${icon('user')}<span>Kirish</span></button>`;
   }
-  const needAuth = (kind) => accOn() && !window.Auth.user() && ((kind === 'order' && S.account.requireOrder !== false) || (kind === 'booking' && S.account.requireBooking));
+  const needAuth = (kind) => accOn() && !window.Auth.user() && (((kind === 'order' || kind === 'brief') && S.account.requireOrder !== false) || (kind === 'booking' && S.account.requireBooking));
   function fillUser() {
     const u = accOn() && window.Auth.user(); if (!u) return;
     $$('form[data-kind]').forEach((f) => { if (f.elements.name && !f.elements.name.value) f.elements.name.value = u.name || ''; if (f.elements.phone && !f.elements.phone.value) f.elements.phone.value = u.phone || ''; });
   }
+  E.account = { on: accOn, needAuth, fill: fillUser };
   function refreshNav() { const n = $('#nav'); if (!n || !S) return; const was = n.classList.contains('scrolled'); n.outerHTML = navHtml(); if (was) $('#nav').classList.add('scrolled'); renderCart(); fillUser(); }
   function navHtml() {
     const links = S.sections.filter((s) => on(s) && s.navLabel).slice(0, 7).map((s) => `<a href="#${esc(s.id)}">${text(s.navLabel)}</a>`);
@@ -230,6 +231,38 @@
     setTimeout(() => (f.querySelector('[name=name]') || f).focus({ preventScroll: true }), 500);
     return true;
   };
+  const KIND_TITLE = { booking: 'Yangi ariza: ', order: 'Yangi buyurtma: ', brief: "Yangi loyiha so'rovi: ", message: 'Yangi xabar: ' };
+  // Pochta orqali yuborish (server bo'lmaganda zaxira yo'l)
+  E.mailto = function (payload) {
+    const email = (S.contacts && S.contacts.email) || '';
+    if (!email) throw new Error("Xabar yuborilmadi. Iltimos, telefon orqali bog'laning.");
+    const L = [`Ism: ${payload.name}`, `Telefon: ${payload.phone}`, ...Object.entries(payload.extra || {}).map(([k, v]) => `${k}: ${v}`)];
+    if ((payload.items || []).length) L.push('Buyurtma: ' + payload.items.map((i) => `${i.name} x${i.qty}`).join(', '), `Jami: ${money(payload.items.reduce((a, i) => a + i.price * i.qty, 0) + (payload.shipping || 0))} ${cur()}`);
+    if (payload.message) L.push('', payload.message);
+    location.href = `mailto:${email}?subject=${encodeURIComponent((KIND_TITLE[payload.type] || KIND_TITLE.message) + payload.name)}&body=${encodeURIComponent(L.join('\n'))}`;
+  };
+  // Serverga yuborish; server bo'lmasa pochtaga o'tadi. Natija: {ok, id} yoki {mail:true}
+  E.send = async function (payload) {
+    const embedded = !!window.__SITE__;
+    const API = String(window.__API__ || '').replace(/\/$/, '');
+    const viaServer = !!(window.Auth && window.Auth.enabled);
+    if (embedded && !API && !viaServer) { E.mailto(payload); return { mail: true }; }
+    try {
+      let j;
+      if (viaServer) j = await window.Auth.request('/api/order', { method: 'POST', body: payload });
+      else {
+        const r = await fetch(API + '/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        j = await r.json().catch(() => ({}));
+        if (!r.ok) { const er = new Error(j.error || "Xatolik yuz berdi. Qayta urinib ko'ring."); er.status = r.status; throw er; }
+      }
+      return { ok: true, id: j.id };
+    } catch (e) {
+      if (e.status) throw e;
+      if (embedded) { E.mailto(payload); return { mail: true }; }
+      throw e;
+    }
+  };
+
   async function submitForm(form) {
     const msg = $('.fmsg', form), btn = form.querySelector('button[type=submit]');
     // Savat bo'sh bo'lsa, buyurtma formasi oddiy xabar sifatida yuboriladi
@@ -255,35 +288,13 @@
       if (kind === 'order') { cart = {}; saveCart(); renderCart(); }
       const box = form.parentElement; box.innerHTML = `<div class="ok"><div class="tick">${icon('check')}</div><h3>${kind === 'booking' ? "Arizangiz qabul qilindi" : kind === 'order' ? 'Buyurtmangiz qabul qilindi' : 'Xabaringiz yuborildi'}</h3><p class="sub">Tez orada siz bilan bog'lanamiz.</p></div>`;
     };
-    const mail = () => {
-      const email = (S.contacts && S.contacts.email) || '';
-      if (!email) throw new Error("Xabar yuborilmadi. Iltimos, telefon orqali bog'laning.");
-      const L = [`Ism: ${name}`, `Telefon: ${phone}`, ...Object.entries(extra).map(([k, v]) => `${k}: ${v}`)];
-      if (items.length) L.push('Buyurtma: ' + items.map((i) => `${i.name} x${i.qty}`).join(', '), `Jami: ${money(subtotal() + payload.shipping)} ${cur()}`);
-      if (payload.message) L.push('Izoh: ' + payload.message);
-      location.href = `mailto:${email}?subject=${encodeURIComponent((kind === 'booking' ? 'Yangi ariza: ' : kind === 'order' ? 'Yangi buyurtma: ' : 'Yangi xabar: ') + name)}&body=${encodeURIComponent(L.join('\n'))}`;
-      msg.textContent = "Pochta ilovangiz ochiladi. Xabarni yuborishni unutmang yoki qo'ng'iroq qiling."; btn.disabled = false;
-    };
     try {
-      const embedded = !!window.__SITE__;
-      const API = String(window.__API__ || '').replace(/\/$/, '');
-      const viaServer = !!(window.Auth && window.Auth.enabled);
-      if (embedded && !API && !viaServer) return mail();
-      try {
-        if (viaServer) await window.Auth.request('/api/order', { method: 'POST', body: payload });
-        else {
-          const r = await fetch(API + '/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-          const j = await r.json().catch(() => ({}));
-          if (!r.ok) { const er = new Error(j.error || "Xatolik yuz berdi. Qayta urinib ko'ring."); er.status = r.status; throw er; }
-        }
-        done();
-      } catch (e) {
-        if (e.status === 401 && accOn()) { btn.disabled = false; window.Auth.modal({ title: 'Hisobingizga kiring', text: 'Buyurtma uchun hisob kerak. Kiring yoki ro\'yxatdan o\'ting.' }).then((u) => { if (u) { fillUser(); submitForm(form); } }); return; }
-        if (e.status) throw e;
-        if (embedded) { mail(); return; }
-        throw e;
-      }
-    } catch (e) { msg.className = 'fmsg bad'; msg.textContent = e.message; btn.disabled = false; }
+      const r = await E.send(payload);
+      if (r.mail) { msg.textContent = "Pochta ilovangiz ochiladi. Xabarni yuborishni unutmang yoki qo'ng'iroq qiling."; btn.disabled = false; } else done();
+    } catch (e) {
+      if (e.status === 401 && accOn()) { btn.disabled = false; window.Auth.modal({ title: 'Hisobingizga kiring', text: "Buyurtma uchun hisob kerak. Kiring yoki ro'yxatdan o'ting." }).then((u) => { if (u) { fillUser(); submitForm(form); } }); return; }
+      msg.className = 'fmsg bad'; msg.textContent = e.message; btn.disabled = false;
+    }
   }
 
   /* ---------- Effektlar ---------- */
@@ -344,6 +355,7 @@
   document.addEventListener('click', (e) => {
     const el = e.target.closest('[data-act]');
     if (el && E.actions[el.dataset.act]) { if (el.tagName === 'A' && !el.getAttribute('href')) e.preventDefault(); E.actions[el.dataset.act](el, e); return; }
+    const bo = e.target.closest('a[href="#brief-open"]'); if (bo && E.actions['brief-open']) { e.preventDefault(); $('#links') && $('#links').classList.remove('open'); E.actions['brief-open'](bo, e); return; }
     const a = e.target.closest('#links a'); if (a) $('#links').classList.remove('open');
   });
   document.addEventListener('change', (e) => { const el = e.target.closest('[data-chg]'); if (el && E.changes[el.dataset.chg]) E.changes[el.dataset.chg](el, e); });
