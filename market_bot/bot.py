@@ -111,8 +111,16 @@ def price_line(p) -> str:
 
 
 @user_router.message(CommandStart())
-async def start(message: Message, state: FSMContext):
+async def start(message: Message, state: FSMContext, bot: Bot):
     await state.clear()
+    if WEBAPP_URL:  # chat yozish maydoni yonidagi «Open» tugmasi (shu chat uchun ham o'rnatiladi)
+        try:
+            await bot.set_chat_menu_button(
+                chat_id=message.chat.id,
+                menu_button=MenuButtonWebApp(text="Open", web_app=WebAppInfo(url=WEBAPP_URL)),
+            )
+        except Exception:
+            logging.warning("Menyu tugmasi o'rnatilmadi: %s", message.chat.id)
     logging.info("START user_id=%s name=%s", message.from_user.id, message.from_user.full_name)
     s = db.settings()
     await message.answer(
