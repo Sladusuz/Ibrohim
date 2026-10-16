@@ -65,6 +65,7 @@ def kb(rows):
 @user_router.message(CommandStart())
 async def start(message: Message, state: FSMContext):
     await state.clear()
+    logging.info("START user_id=%s name=%s", message.from_user.id, message.from_user.full_name)
     await message.answer(
         f"Assalomu alaykum, {message.from_user.full_name}! 👋\n"
         "Do'konimizga xush kelibsiz. Quyidagi menyudan tanlang.",
