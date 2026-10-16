@@ -25,7 +25,8 @@ const ADMIN_HELP = `🔧 <b>Admin buyruqlari</b>
 export default async (req) => {
   if (req.method !== 'POST') return new Response('ok');
   const secret = process.env.WEBHOOK_SECRET;
-  if (secret && req.headers.get('x-telegram-bot-api-secret-token') !== secret) return new Response('forbidden', { status: 403 });
+  // kalit sozlanmagan bo'lsa ham rad etiladi: aks holda har kim soxta (admin nomidan) update yubora olardi
+  if (!secret || req.headers.get('x-telegram-bot-api-secret-token') !== secret) return new Response('forbidden', { status: 403 });
   let update;
   try { update = await req.json(); } catch { return new Response('bad request', { status: 400 }); }
   try {

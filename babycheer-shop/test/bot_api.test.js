@@ -82,6 +82,9 @@ test('onlayn to\'lov: invoice havolasi; o\'tkazma: karta ma\'lumoti', async () =
 
 test('webhook: maxfiy kalit, /start, pre_checkout, to\'lov', async () => {
   assert.equal((await hook({}, 'wrong')).status, 403);
+  const keep = process.env.WEBHOOK_SECRET; delete process.env.WEBHOOK_SECRET;
+  assert.equal((await hook({}, 'undefined')).status, 403); // kalit sozlanmagan = rad
+  process.env.WEBHOOK_SECRET = keep;
   calls.length = 0;
   await hook({ message: { chat: { id: 111 }, from: { id: 111, first_name: 'Ali' }, text: '/start' } });
   assert.ok(sent('setChatMenuButton').some((c) => c.menu_button.text === 'Open' && c.menu_button.web_app.url === 'https://shop.test'));
