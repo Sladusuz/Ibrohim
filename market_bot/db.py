@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS products (
     specs TEXT NOT NULL DEFAULT '{}',
     colors TEXT NOT NULL DEFAULT '[]',
     photo TEXT,
+    model3d TEXT NOT NULL DEFAULT '',
+    featured INTEGER NOT NULL DEFAULT 0,
     active INTEGER NOT NULL DEFAULT 1
 );
 CREATE TABLE IF NOT EXISTS cart (
@@ -83,7 +85,18 @@ class Database:
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA foreign_keys = ON")
         self.conn.executescript(SCHEMA)
+        self._migrate()
         self._seed()
+
+    def _migrate(self):
+        cols = {r["name"] for r in self.conn.execute("PRAGMA table_info(products)")}
+        missing = [(c, d) for c, d in (("model3d", "TEXT NOT NULL DEFAULT ''"), ("featured", "INTEGER NOT NULL DEFAULT 0")) if c not in cols]
+        with self.conn:
+            for col, ddl in missing:
+                self.conn.execute(f"ALTER TABLE products ADD COLUMN {col} {ddl}")
+            if missing:
+                for name, (m3d, feat) in seed_data.META.items():
+                    self.conn.execute("UPDATE products SET model3d=?, featured=? WHERE name=?", (m3d, int(feat), name))
 
     def _seed(self):
         if self.conn.execute("SELECT COUNT(*) FROM categories").fetchone()[0]:
@@ -99,10 +112,11 @@ class Database:
                 ids[slug] = cur.lastrowid
             for slug, name, price, old, stock, badge, short, desc, specs, colors in seed_data.PRODUCTS:
                 self.conn.execute(
-                    "INSERT INTO products(category_id,name,price,old_price,stock,badge,short,description,specs,colors)"
-                    " VALUES (?,?,?,?,?,?,?,?,?,?)",
+                    "INSERT INTO products(category_id,name,price,old_price,stock,badge,short,description,"
+                    "specs,colors,model3d,featured) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                     (ids[slug], name, price, old, stock, badge, short, desc,
-                     json.dumps(specs, ensure_ascii=False), json.dumps(colors, ensure_ascii=False)),
+                     json.dumps(specs, ensure_ascii=False), json.dumps(colors, ensure_ascii=False),
+                     *[seed_data.META.get(name, ("", False))[0], int(seed_data.META.get(name, ("", False))[1])]),
                 )
 
     # --- settings ---
@@ -230,14 +244,29 @@ class Database:
 
     # --- orders ---
     def create_order(self, user_id, name, phone, address, comment, delivery, payment) -> int:
-        """Narx, ombor va yetkazish narxi serverda (shu yerda) hisoblanadi, saytdagi place_order() kabi."""
-        items = self.cart(user_id)
+        """Bot savatidan buyurtma."""
+        items = [{"pid": i["pid"], "color": i["color"], "qty": i["qty"]} for i in self.cart(user_id)]
+        oid = self.create_order_items(user_id, name, phone, address, comment, delivery, payment, items)
+        self.cart_clear(user_id)
+        return oid
+
+    def create_order_items(self, user_id, name, phone, address, comment, delivery, payment, items) -> int:
+        """Narx, ombor va yetkazish narxi serverda (shu yerda) hisoblanadi, saytdagi place_order() kabi.
+        items: [{"pid": int, "color": str, "qty": int}]"""
         if not items:
             raise OrderError("Savat bo'sh")
-        for i in items:
-            if i["qty"] > i["stock"]:
-                raise OrderError(f"«{i['name']}» omborda yetarli emas (qoldi: {i['stock']})")
-        sub = sum(i["price"] * i["qty"] for i in items)
+        lines = []
+        for it in items:
+            p = self.product(int(it["pid"]))
+            qty = int(it["qty"])
+            if not p or qty < 1:
+                raise OrderError("Mahsulot topilmadi")
+            if qty > p["stock"]:
+                raise OrderError(f"«{p['name']}» omborda yetarli emas (qoldi: {p['stock']})")
+            colors = json.loads(p["colors"])
+            color = it.get("color") if it.get("color") in colors else (colors[0] if colors else "")
+            lines.append((p, color, qty))
+        sub = sum(p["price"] * q for p, _, q in lines)
         fee = self.delivery_fee(sub, delivery)
         with self.conn:
             cur = self.conn.execute(
@@ -246,15 +275,11 @@ class Database:
                 (user_id, name, phone, address, comment, delivery, payment, sub, fee, sub + fee),
             )
             oid = cur.lastrowid
-            for i in items:
+            for p, color, qty in lines:
                 self.conn.execute(
-                    "INSERT INTO order_items VALUES (?,?,?,?,?,?)",
-                    (oid, i["pid"], i["name"], i["color"], i["price"], i["qty"]),
+                    "INSERT INTO order_items VALUES (?,?,?,?,?,?)", (oid, p["id"], p["name"], color, p["price"], qty)
                 )
-                self.conn.execute(
-                    "UPDATE products SET stock=stock-? WHERE id=?", (i["qty"], i["pid"])
-                )
-            self.conn.execute("DELETE FROM cart WHERE user_id=?", (user_id,))
+                self.conn.execute("UPDATE products SET stock=stock-? WHERE id=?", (qty, p["id"]))
         return oid
 
     def order(self, order_id: int):

@@ -91,3 +91,20 @@ FAQ = [
     ("Rangni keyin o'zgartirsa bo'ladimi?", "Buyurtma tasdiqlanishidan oldin Telegram yoki telefon orqali rangni o'zgartirish mumkin."),
     ("Buyurtmani qanday kuzataman?", "Botda «🔎 Buyurtmani kuzatish» tugmasi: buyurtma raqami va telefon raqamingizni yozasiz."),
 ]
+
+# Sayt (Mini App) uchun: rang kodlari, 3D model va bosh sahifada ko'rsatish
+HEX = {
+    "Ko'k": "#2b59ff", "Qizil": "#e5262b", "Oq": "#eef0f4", "Qora": "#1b1d24", "Yashil": "#12a66b",
+    "Pushti": "#f0589f", "Sariq": "#f5b800", "To'q sariq": "#ff7a1a", "Zangori": "#10a5b8",
+    "Kulrang": "#7d8594", "Metallik kulrang": "#6f7f86",
+}
+# mahsulot nomi -> (model3d, featured)
+META = {
+    "Sport elektromobil, 2 kishilik": ("", True),
+    "1 kishilik elektromobil": ("single", True),
+    "2 kishilik elektromobil": ("double", True),
+    "Jip uslubidagi elektromobil": ("suv", True),
+    "Dron kalyaska 3/1": ("", True),
+    "Velokalyaska 5/1": ("", True),
+    "Bolalar elektromototsikli": ("", True),
+}

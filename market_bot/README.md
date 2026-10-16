@@ -19,6 +19,16 @@ Ma'lumotlar `seed_data.py` da (saytning `js/seed.js` idan olingan), birinchi ish
   Yangi buyurtma, to'lov, chek va mijoz xabarlari adminlarga avtomatik keladi.
 - Narx, ombor va yetkazish narxi serverda (`db.create_order`) hisoblanadi, saytdagi `place_order()` kabi.
 
+## Mini App (sayt Telegram ichida)
+`webapp/` papkasi, saytning o'zi (BabyCheer sayti) Telegram Mini App sifatida: 3D/360° ko'rinish, katalog, savat, buyurtma, kuzatish.
+Bot bitta jarayonda sayt va `/api` ni beradi: katalog va buyurtmalar bot bazasidan, buyurtma `initData` imzosi bilan tekshiriladi,
+adminga bot orqali xabar tushadi, onlayn to'lov Telegram oynasida (`openInvoice`) ochiladi.
+Ishga tushishi uchun **ommaviy HTTPS manzil** kerak: `WEBAPP_URL` ga yozing, bot menyu tugmasi va `/start` dagi
+«🛍 Do'konni ochish» tugmasini o'zi sozlaydi.
+
+Joylash (Render / Railway / Fly.io / VPS): shu papkadagi `Dockerfile` bilan deploy qiling, `.env` dagi qiymatlarni
+muhit o'zgaruvchilari sifatida kiriting va `market.db` uchun doimiy disk (volume) ulang.
+
 ## Ishga tushirish
 1. @BotFather orqali bot yarating, tokenni oling.
 2. `cp .env.example .env`, `BOT_TOKEN` va `ADMIN_IDS` ni to'ldiring.

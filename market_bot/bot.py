@@ -21,6 +21,9 @@ from aiogram.types import (
     PreCheckoutQuery,
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
+    MenuButtonDefault,
+    MenuButtonWebApp,
+    WebAppInfo,
 )
 from dotenv import load_dotenv
 
@@ -38,6 +41,8 @@ ADMIN_IDS = {int(x) for x in os.getenv("ADMIN_IDS", "").replace(" ", "").split("
 PROVIDER_TOKEN = os.getenv("PAYMENT_PROVIDER_TOKEN", "")
 CARD_NUMBER = os.getenv("CARD_NUMBER", "")
 CARD_OWNER = os.getenv("CARD_OWNER", "")
+WEBAPP_URL = os.getenv("WEBAPP_URL", "").rstrip("/")  # Mini App uchun ommaviy https manzil
+PORT = int(os.getenv("PORT", "8080"))
 
 db = Database()
 user_router = Router()
@@ -71,7 +76,18 @@ def money(value: int) -> str:
 
 def main_menu() -> ReplyKeyboardMarkup:
     b = [KeyboardButton(text=t) for t in MENU.values()]
-    return ReplyKeyboardMarkup(keyboard=[b[0:2], b[2:4], b[4:6]], resize_keyboard=True)
+    rows = [b[0:2], b[2:4], b[4:6]]
+    if WEBAPP_URL:
+        rows.insert(0, [KeyboardButton(text="🛍 Do'konni ochish", web_app=WebAppInfo(url=WEBAPP_URL))])
+    return ReplyKeyboardMarkup(keyboard=rows, resize_keyboard=True)
+
+
+def open_shop_kb():
+    if not WEBAPP_URL:
+        return None
+    return InlineKeyboardMarkup(
+        inline_keyboard=[[InlineKeyboardButton(text="🛍 Do'konni ochish", web_app=WebAppInfo(url=WEBAPP_URL))]]
+    )
 
 
 def kb(rows):
@@ -100,6 +116,8 @@ async def start(message: Message, state: FSMContext):
         f"✅ {s['warrantyMonths']} oylik kafolat · 🚚 butun O'zbekiston bo'ylab yetkazib berish",
         reply_markup=main_menu(),
     )
+    if WEBAPP_URL:
+        await message.answer("Do'konni to'liq ko'rinishda ochish uchun 👇", reply_markup=open_shop_kb())
 
 
 async def cat_list(target: Message):
@@ -489,7 +507,7 @@ def pay_kb(o):
     return None
 
 
-async def send_invoice(bot: Bot, chat_id: int, oid: int):
+def invoice_prices(oid: int):
     o = db.order(oid)
     prices = [
         LabeledPrice(label=f"{i['product_name']} × {i['qty']}"[:60], amount=i["price"] * i["qty"] * 100)
@@ -497,6 +515,11 @@ async def send_invoice(bot: Bot, chat_id: int, oid: int):
     ]
     if o["delivery_fee"]:
         prices.append(LabeledPrice(label="Yetkazib berish", amount=o["delivery_fee"] * 100))
+    return prices
+
+
+async def send_invoice(bot: Bot, chat_id: int, oid: int):
+    prices = invoice_prices(oid)
     await bot.send_invoice(
         chat_id,
         title=f"Buyurtma {order_no(oid)}",
@@ -983,6 +1006,23 @@ async def main(session=None):
     dp = Dispatcher()
     dp.include_router(admin_router)
     dp.include_router(user_router)
+
+    import sys
+
+    from aiohttp import web
+
+    import web as webapp
+
+    runner = web.AppRunner(webapp.create_app(bot, sys.modules[__name__]))
+    await runner.setup()
+    await web.TCPSite(runner, "0.0.0.0", PORT).start()
+    logging.info("Mini App serveri: http://0.0.0.0:%s (WEBAPP_URL=%s)", PORT, WEBAPP_URL or "-")
+    if WEBAPP_URL:
+        await bot.set_chat_menu_button(
+            menu_button=MenuButtonWebApp(text="🛍 Do'kon", web_app=WebAppInfo(url=WEBAPP_URL))
+        )
+    else:
+        await bot.set_chat_menu_button(menu_button=MenuButtonDefault())
     await dp.start_polling(bot)
 
 
