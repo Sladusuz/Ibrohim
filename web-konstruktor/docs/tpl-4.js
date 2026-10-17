@@ -194,13 +194,12 @@
           { title: "To'liq ta'mirlash", text: "Kvartira va uylar uchun dizayn-loyihadan tayyor interyergacha.", tags: ['Dizayn', "Ta'mir"], image: P('rieltor', 4), link: '#smeta' },
           { title: 'Tijorat obyektlari', text: "Ofis, do'kon va restoranlar: tez va hisobli ish.", tags: ['Ofis', "Do'kon"], image: P('qurilish', 6), link: '#smeta' },
           { title: 'Tom va fasad', text: "Tom yopish, issiqlik izolyatsiyasi va fasad pardozi.", tags: ['Tom', 'Fasad'], image: P('rieltor', 5), link: '#smeta' }] }),
-        sec('loyiha', 'showcase', { navLabel: 'Loyihalar', eyebrow: 'Portfolio', title: "Topshirilgan *loyihalar*", text: "Oxirgi yillardagi ishlarimizdan namunalar.", items: [
+        sec('loyiha', 'showcase', { navLabel: 'Loyihalar', eyebrow: 'Portfolio', title: "Bizning *ishlar*", text: "Oxirgi yillardagi ishlarimizdan namunalar.", items: [
           { title: 'Zamonaviy kottej, Qibray', tag: '320 m² · 2023', image: P('rieltor', 1), link: '' },
           { title: 'Turar-joy majmuasi', tag: '12 qavat · 2024', image: P('qurilish', 2), link: '' },
           { title: 'Loft uslubidagi kvartira', tag: '86 m² · 2024', image: P('rieltor', 4), link: '' },
           { title: 'Biznes markaz', tag: '8 000 m² · 2022', image: P('qurilish', 6), link: '' },
           { title: 'Oilaviy uy, Chirchiq', tag: '210 m² · 2023', image: P('rieltor', 6), link: '' }] }),
-        sec('oldin', 'compare', { eyebrow: 'Natija', title: "Oldin va *keyin*", text: "Slayderni suring: eski kvartira qanday yangi uyga aylandi.", before: P('rieltor', 3), after: P('rieltor', 2), labelBefore: 'Oldin', labelAfter: 'Keyin' }),
         sec('jarayon', 'process', { navLabel: 'Jarayon', eyebrow: 'Jarayon', title: "Ish *qanday* boradi", text: '', layout: 'stack', items: [
           { title: "O'lchov va smeta", text: "Muhandisimiz obyektga boradi, 24 soatda aniq smeta tayyorlaymiz." },
           { title: 'Shartnoma va loyiha', text: "Narx, muddat va jadvalni shartnomaga yozamiz: keyin o'zgarmaydi." },
@@ -290,13 +289,13 @@
       contacts: { phone: '+998 71 233 10 10', email: 'office@haqiqat-law.uz', address: "Toshkent, Shayxontohur tumani, Navoiy ko'chasi 5, 4-qavat", hours: 'Dush–Juma, 9:00 – 18:00', telegram: '@haqiqat_law', instagram: '@haqiqat.law' },
       footer: { text: 'Haqiqat & Hamkorlar. Maxfiylik kafolatlanadi.', links: [] },
       sections: [
-        sec('bosh', 'hero', { layout: 'cinema', badge: "Advokatlik birlashmasi · 2011 yildan", titleStart: "Huquqingiz *to'g'ri* qo'llarda", words: [], titleEnd: '', text: "Biznes, mulk, oila va jinoyat ishlari bo'yicha ishonchli himoya. Har bir mijoz uchun alohida strategiya va to'liq maxfiylik.", cta1Text: 'Maslahat olish', cta1Link: '#aloqa', cta2Text: "Yo'nalishlar", cta2Link: '#yonalish', visual: 'none', image: P('yurist', 5), trust: [{ value: '1 800+', label: 'yutilgan ish' }, { value: '14 yil', label: 'tajriba' }, { value: '96%', label: 'ijobiy natija' }] }),
+        sec('bosh', 'hero', { layout: 'cinema', badge: "Advokatlik birlashmasi · 2011 yildan", titleStart: "Huquqingiz *to'g'ri* qo'llarda", words: [], titleEnd: '', text: "Biznes, mulk, oila va jinoyat ishlari bo'yicha ishonchli himoya. Har bir mijoz uchun alohida strategiya va to'liq maxfiylik.", cta1Text: 'Maslahat olish', cta1Link: '#aloqa', cta2Text: "Yo'nalishlar", cta2Link: '#yonalish', visual: 'none', image: P('yurist', 6), trust: [{ value: '1 800+', label: 'yutilgan ish' }, { value: '14 yil', label: 'tajriba' }, { value: '96%', label: 'ijobiy natija' }] }),
         sec('lenta', 'marquee', { items: ['Korporativ huquq', 'Mulk nizolari', 'Oilaviy huquq', 'Shartnomalar', 'Soliq nizolari', 'Meros', 'Sud himoyasi'] }),
         sec('yonalish', 'services', { navLabel: "Yo'nalishlar", eyebrow: "Amaliyot yo'nalishlari", title: "Qaysi *masalada* yordam beramiz", text: '', items: [
           { title: 'Biznes va korporativ huquq', text: "Kompaniya ochish, shartnomalar, qo'shilish va yutib olish, intellektual mulk.", tags: ['3 000 000 so\'mdan'], image: P('yurist', 2), link: '#aloqa' },
           { title: 'Ko\'chmas mulk va qurilish', text: "Bitimlarni tekshirish, ro'yxatdan o'tkazish, mulk bo'yicha nizolar.", tags: ['2 000 000 so\'mdan'], image: P('yurist', 3), link: '#aloqa' },
           { title: 'Oilaviy huquq va meros', text: "Ajrim, aliment, mol-mulk bo'linishi, vasiyatnoma va meros ishlari.", tags: ['1 500 000 so\'mdan'], image: P('yurist', 4), link: '#aloqa' },
-          { title: "Sud va arbitraj", text: "Fuqarolik, iqtisodiy va ma'muriy ishlarda sudda vakillik.", tags: ['5 000 000 so\'mdan'], image: P('yurist', 1), link: '#aloqa' },
+          { title: "Sud va arbitraj", text: "Fuqarolik, iqtisodiy va ma'muriy ishlarda sudda vakillik.", tags: ['5 000 000 so\'mdan'], image: P('yurist', 5), link: '#aloqa' },
           { title: 'Soliq va litsenziya', text: "Soliq tekshiruvlari, nizolar, litsenziya va ruxsatnomalar olish.", tags: ['2 500 000 so\'mdan'], image: P('startap', 3), link: '#aloqa' }] }),
         sec('biz', 'statement', { navLabel: 'Biz haqimizda', eyebrow: 'Tamoyilimiz', text: "Biz *va'da* bermaymiz: biz ishni *tahlil qilamiz*, haqiqatni aytamiz va mijoz manfaatini oxirigacha himoya qilamiz.", author: 'Rustam Qodirov', role: 'Boshqaruvchi hamkor, advokat', image: P('odam', 2), buttonText: '', buttonLink: '#' }),
         sec('raqam', 'stats', { eyebrow: '', title: '', text: '', items: [{ value: 1800, suffix: '+', label: 'yutilgan ish' }, { value: 14, suffix: ' yil', label: 'amaliyot' }, { value: 12, suffix: '', label: 'advokat va yurist' }, { value: 96, suffix: '%', label: 'ijobiy natija' }] }),
@@ -360,7 +359,6 @@
           { title: 'Hujjat va yuklash', text: "Shartnoma, bojxona hujjatlari va yukni qadoqlab yuklaymiz." },
           { title: "Yo'lda kuzatuv", text: "GPS orqali yukning joylashuvini real vaqtda ko'rasiz." },
           { title: 'Yetkazish va topshirish', text: "Yuk qabul qilinadi, hujjatlar va akt topshiriladi." }] }),
-        sec('narx', 'contact', { navLabel: 'Narx', eyebrow: "Narx so'rovi", title: "Yuk uchun *aniq* narx oling", text: "Qayerdan qayerga va nima tashish kerakligini yozing: dispetcher 1 soat ichida javob beradi.", form: 'message', serviceOptions: [], askGuests: false, askAddress: false, payOptions: [], submitText: "Narx so'rash", mapUrl: '' }),
         sec('fikr', 'testimonials', { eyebrow: 'Sharhlar', title: "Mijozlar *fikri*", text: '', layout: 'wall', items: [
           { text: "Xitoydan konteyner aytilgan kunning o'zida keldi. Hujjatlar hammasi tartibda.", name: 'Javlon Rahimov', role: "Import kompaniyasi egasi", image: P('odam', 5), stars: 5 },
           { text: "Real vaqtdagi kuzatuv juda qulay, mijozlarimga aniq vaqt aytaman.", name: 'Sevara Ibragimova', role: "Savdo menejeri", image: P('odam', 3), stars: 5 },
@@ -371,6 +369,7 @@
           { q: "Bojxona rasmiylashtiruvini qilasizmi?", a: "Ha, hujjatlar tayyorlash va bojxona ruxsatini to'liq o'z zimmamizga olamiz." },
           { q: "Kichik yuklarni ham tashiysizmi?", a: "Ha, 50 kg dan boshlab yig'ma yuklar xizmati mavjud." }] }),
         sec('chaqiriq', 'cta', { fx: true, eyebrow: 'Yukingiz tayyormi?', title: "Birinchi yetkazishda *10% chegirma*", text: "Yangi mijozlarimiz uchun maxsus taklif.", buttonText: "Narx so'rash", buttonLink: '#narx', countdownTo: '', image: '' }),
+        sec('narx', 'contact', { navLabel: 'Narx', eyebrow: "Narx so'rovi", title: "Yuk uchun *aniq* narx oling", text: "Qayerdan qayerga va nima tashish kerakligini yozing: dispetcher 1 soat ichida javob beradi.", form: 'message', serviceOptions: [], askGuests: false, askAddress: false, payOptions: [], submitText: "Narx so'rash", mapUrl: '' }),
       ],
     }),
   });

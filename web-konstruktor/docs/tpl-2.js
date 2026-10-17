@@ -275,4 +275,116 @@
     }),
   });
 
+
+  /* =================== KAFE VA QANDOLAT (shinam, iliq) =================== */
+  add({
+    id: 'kafe', name: 'Kafe va qandolat', cat: 'Xizmat', icon: 'coffee', badge: '',
+    tags: ['kafe', 'qahva', 'qandolat', 'nonvoyxona', 'desert', 'kofe', 'кофейня', 'кафе', 'пекарня', 'coffee', 'bakery', 'cafe'],
+    look: 'luxe',
+    desc: "Qahvaxona va qandolatxona uchun: katta foto, menyu, galereya va stol bron qilish.",
+    build: () => ({
+      v: 2, template: 'kafe',
+      company: { name: 'Qahva & Non', logo: 'Q', tagline: "Yangi qovurilgan qahva va issiq pishiriqlar. Har kuni ertalab." },
+      theme: { preset: 'minimal', accent: '#a9532a', accent2: '#e0a458', look: 'luxe', motion: true, font: 'luxe', radius: 'round', bg: 'plain', heads: 'left', switcher: false },
+      nav: { style: 'pill', cta: 'Stol band qilish', ctaLink: '#bron', search: false },
+      announce: { enabled: true, text: "Har kuni 8:00 – 11:00: qahva + kruassan 35 000 so'm", link: '#menyu' },
+      orders: { enabled: false, currency: "so'm", freeShipFrom: 0, deliveryFee: 0 },
+      contacts: { phone: '+998 71 207 33 11', email: 'salom@qahvanon.uz', address: "Toshkent, Mirzo Ulug'bek tumani, Oybek ko'chasi 19", hours: 'Har kuni 8:00 – 22:00', telegram: '@qahvanon_uz', instagram: '@qahva.non' },
+      footer: { text: 'Issiq qahva, iliq suhbat.', links: [] },
+      sections: [
+        sec('bosh', 'hero', { layout: 'cinema', badge: 'Har kuni 8:00 dan 22:00 gacha', titleStart: "Ertalab *qahva*, kunni esa shirinlik bilan", words: [], titleEnd: '', text: "O'zimiz qovurgan qahva donalari, ertalab pishgan kruassan va uyda tayyorlangan shirinliklar. Ishga shoshilmang: bir piyola vaqt ajrating.", cta1Text: 'Stol band qilish', cta1Link: '#bron', cta2Text: "Menyuni ko'rish", cta2Link: '#menyu', visual: 'none', image: P('kafe', 1), trust: [{ value: '4.9', label: 'mehmonlar bahosi' }, { value: '40+', label: 'xil shirinlik' }, { value: '8 yil', label: 'sizlar bilan' }] }),
+        sec('lenta', 'marquee', { items: ['Yangi qovurilgan qahva', 'Kruassan', 'Cheesecake', 'Tiramisu', 'Matcha', 'Nonushta', 'Uy pishiriqlari'] }),
+        sec('biz', 'statement', { navLabel: 'Biz haqimizda', eyebrow: 'Hikoyamiz', text: "Biz uchun qahva — bu *kichik bayram*. Har bir piyola *mehr* va diqqat bilan, har bir pishiriq esa *ertalab* qo'lda tayyorlanadi.", author: 'Dilshod Nazarov', role: 'Barista va asoschi', image: P('odam', 2), buttonText: '', buttonLink: '#' }),
+        sec('menyu', 'menu', { navLabel: 'Menyu', eyebrow: 'Menyu', title: "Bizning *sevimlilar*", text: 'Qahva, nonushta va shirinliklar: har kuni yangi tayyorlanadi.', mode: 'none', items: [
+          mi('latte', 'Latte', 32000, 'Qahva', 'Hit', "Espresso, bug'langan sut va yumshoq ko'pik.", P('kafe', 4)),
+          mi('kapuchino', 'Kapuchino', 30000, 'Qahva', '', "Klassik retsept: espresso, sut va qalin ko'pik.", P('kafe', 5)),
+          mi('flat', 'Flat white', 34000, 'Qahva', '', "Qo'sh espresso va ipaksimon sut.", P('kafe', 1)),
+          mi('kruassan', 'Kruassan sariyog\'li', 22000, 'Pishiriqlar', 'Yangi', "Fransuz sariyog'idan, har kuni ertalab.", P('qandolat', 4)),
+          mi('maffin', "Qovoq urug'li maffin", 18000, 'Pishiriqlar', '', "Uyda pishirilgan, yengil va mazali.", P('qandolat', 6)),
+          mi('kapkeyk', "Qulupnayli kapkeyk", 26000, 'Shirinliklar', '', "Pushti krem, yengil biskvit.", P('qandolat', 5)),
+          mi('tort', "Tort «Napoleon»", 38000, 'Shirinliklar', 'Tavsiya', "Qatlama xamir va vanilli krem.", P('qandolat', 3)),
+          mi('non', "Hunarmand non", 16000, 'Pishiriqlar', '', "Tabiiy xamirturush, tandirda pishadi.", P('qandolat', 2))] }),
+        sec('joy', 'split', { eyebrow: '', title: '', text: '', items: [
+          { label: '01', title: "Donadan *piyolagacha*", text: "Qahva donalarini Efiopiya va Braziliyadan keltirib, o'zimiz qovuramiz: har hafta yangi partiya.", bullets: ["O'zimizning qovurilgan", "Alternativ usullar: V60, aeropress", "Donni uyga olib ketish"], image: P('kafe', 6), buttonText: '', buttonLink: '#' },
+          { label: '02', title: "Tadbir va *yig'ilishlar* uchun", text: "Do'stlar davrasi, tug'ilgan kun yoki biznes uchrashuv: 20 kishigacha alohida zalimiz bor.", bullets: ["Bepul Wi-Fi", "Tort buyurtma qilish", "Alohida zal"], image: P('kafe', 3), buttonText: 'Stol band qilish', buttonLink: '#bron' }] }),
+        sec('galereya', 'gallery', { navLabel: 'Galereya', eyebrow: 'Galereya', title: "Bizning *muhit*", text: '', layout: 'masonry', items: [
+          { image: P('kafe', 2), caption: '' }, { image: P('qandolat', 1), caption: '' }, { image: P('kafe', 4), caption: '' }, { image: P('qandolat', 5), caption: '' }, { image: P('kafe', 5), caption: '' }, { image: P('qandolat', 6), caption: '' }] }),
+        sec('fikr', 'testimonials', { eyebrow: 'Sharhlar', title: 'Mehmonlar *aytishicha*', text: '', layout: 'wall', items: [
+          { text: "Toshkentdagi eng yaxshi latte shu yerda. Muhit juda shinam.", name: 'Aziza Karimova', role: 'Doimiy mehmon', image: P('odam', 1), stars: 5 },
+          { text: "Kruassan har kuni yangi, ishdan oldin kelmasam bo'lmaydi.", name: 'Sanjar Umarov', role: 'Doimiy mehmon', image: P('odam', 4), stars: 5 },
+          { text: "Tug'ilgan kunga tort buyurtma qildim, hamma yoqtirdi.", name: 'Feruza Aliyeva', role: 'Mehmon', image: P('odam', 6), stars: 5 },
+          { text: "Ish uchrashuvlari uchun ideal: tinch va Wi-Fi tez.", name: 'Anvar Yusupov', role: 'Tadbirkor', image: P('odam', 5), stars: 5 }] }),
+        sec('savol', 'faq', { navLabel: '', eyebrow: 'Savollar', title: "Ko'p so'raladigan *savollar*", text: '', items: [
+          { q: "Stolni oldindan band qilish kerakmi?", a: "Dam olish kunlari tavsiya etamiz. Hafta ichida odatda bo'sh joy bo'ladi." },
+          { q: "Tort buyurtma qilsa bo'ladimi?", a: "Ha, 1 kun oldin buyurtma bering. Narxi 280 000 so'mdan boshlanadi." },
+          { q: "Sutsiz yoki glyutensiz variantlar bormi?", a: "Ha, o'simlik suti (bodom, ovsyanka) va glyutensiz desertlar mavjud." },
+          { q: "Yetkazib berish xizmati bormi?", a: "Ha, Toshkent bo'ylab Yandex Go va Express24 orqali." }] }),
+        sec('manzil', 'map', { navLabel: 'Manzil', eyebrow: 'Manzil', title: 'Bizni *toping*', text: '', query: "Toshkent, Mirzo Ulug'bek tumani, Oybek ko'chasi 19", zoom: 15 }),
+        sec('bron', 'contact', { navLabel: 'Bron', eyebrow: 'Stol band qilish', title: "Stolingiz *kutmoqda*", text: "Sana va vaqtni tanlang, tasdiqlash uchun qo'ng'iroq qilamiz.", form: 'booking', serviceOptions: ['Oddiy stol', 'Deraza oldidagi stol', 'Tadbir zali', "Tort buyurtma"], askGuests: true, askAddress: false, payOptions: [], submitText: 'Band qilish', mapUrl: '' }),
+      ],
+    }),
+  });
+
+
+  /* =================== FAST-FOOD VA YETKAZIB BERISH (jasur, energiyali) =================== */
+  add({
+    id: 'fastfood', name: 'Fast-food va yetkazib berish', cat: 'Xizmat', icon: 'truck', badge: '',
+    tags: ['fastfood', 'burger', 'pitsa', 'yetkazib berish', 'taom', 'фастфуд', 'бургер', 'пицца', 'доставка', 'delivery', 'pizza'],
+    look: 'cinema',
+    desc: "Fast-food, pitsa va yetkazib berish xizmati uchun: yorqin dizayn, savat va 30 daqiqalik yetkazish.",
+    build: () => ({
+      v: 2, template: 'fastfood',
+      company: { name: 'Burger Bro', logo: 'B', tagline: "Issiq, shirali, tez. 30 daqiqada eshigingizda." },
+      theme: { preset: 'dark', accent: '#ff4d1a', accent2: '#ffc21a', look: 'cinema', motion: true, font: 'display', radius: 'round', bg: 'plain', heads: 'left', switcher: false },
+      nav: { style: 'pill', cta: 'Buyurtma berish', ctaLink: '#menyu', search: false },
+      announce: { enabled: true, text: "2 ta burger olsangiz, kola sovg'a! Promokod: BRO2", link: '#menyu' },
+      orders: { enabled: true, currency: "so'm", freeShipFrom: 150000, deliveryFee: 12000 },
+      contacts: { phone: '+998 78 777 30 30', email: 'bro@burgerbro.uz', address: "Toshkent, Yunusobod tumani, Ahmad Donish ko'chasi 8", hours: 'Har kuni 10:00 – 03:00', telegram: '@burgerbro_uz', instagram: '@burger.bro.uz' },
+      footer: { text: 'Burger Bro. Ishtaha bilan!', links: [] },
+      sections: [
+        sec('bosh', 'hero', { layout: 'shop', badge: "30 daqiqada yetkazamiz yoki bepul", titleStart: "Ochlik? *Burger Bro* yo'lda!", words: [], titleEnd: '', text: "Qo'lda shakllangan kotlet, yangi bulochka va uy sousi. Pitsa, kombo va ichimliklar: hammasi issiq holda.", cta1Text: 'Menyuga o\'tish', cta1Link: '#menyu', cta2Text: 'Kombo to\'plamlar', cta2Link: '#kombo', visual: 'collage', image: P('fastfood', 2), collage: [
+          { image: P('fastfood', 1), title: 'Double Bro burger', price: "49 000 so'm" },
+          { image: P('fastfood', 6), title: 'Margarita pitsa', price: "69 000 so'm" },
+          { image: P('fastfood', 3), title: 'Pepperoni pitsa', price: "79 000 so'm" }], trust: [{ value: '30 daq', label: 'yetkazish' }, { value: '4.8', label: 'baho' }, { value: '10:00–03:00', label: 'ish vaqti' }] }),
+        sec('lenta', 'marquee', { items: ['Burgerlar', 'Pitsa', 'Kombo', 'Tovuq qanotlari', 'Kartoshka fri', 'Ichimliklar', '30 daqiqada', 'Tun bo\'yi ochiq'] }),
+        sec('hit', 'showcase', { eyebrow: 'Hit mahsulotlar', title: "Eng *sevimli* uchlik", text: '', items: [
+          { title: 'BBQ Grill burger', tag: "45 000 so'm", image: P('fastfood', 4), link: '#menyu' },
+          { title: 'Pitsa 4 xil pishloq', tag: "85 000 so'm", image: P('fastfood', 5), link: '#menyu' },
+          { title: 'Chizburger', tag: "35 000 so'm", image: P('fastfood', 2), link: '#menyu' },
+          { title: 'Pepperoni pitsa', tag: "79 000 so'm", image: P('fastfood', 3), link: '#menyu' }] }),
+        sec('menyu', 'menu', { navLabel: 'Menyu', eyebrow: 'Menyu', title: "Nimani *xohlaysiz*?", text: "Savatga qo'shing, manzilni yozing, qolganini bizga qo'yib bering.", mode: 'cart', items: [
+          mi('double', 'Double Bro burger', 49000, 'Burgerlar', 'Hit', "Ikki kotlet, cheddar, tuzlangan bodring, uy sousi.", ''),
+          mi('chizburger', 'Chizburger', 35000, 'Burgerlar', '', "Mol go'shti kotleti, ikki qavat pishloq.", ''),
+          mi('bbq', 'BBQ Grill burger', 45000, 'Burgerlar', 'Yangi', "Olovda pishgan kotlet, BBQ sousi, qovurilgan piyoz.", ''),
+          mi('margarita', 'Pitsa Margarita 32 sm', 69000, 'Pitsalar', '', "Pomidor sousi, mozzarella, rayhon.", ''),
+          mi('pepperoni', 'Pitsa Pepperoni 32 sm', 79000, 'Pitsalar', 'Hit', "Pepperoni, mozzarella va maxsus sous.", ''),
+          mi('sirli', 'Pitsa 4 xil pishloq 32 sm', 85000, 'Pitsalar', '', "Mozzarella, cheddar, parmezan, dor-blyu.", ''),
+          mi('kartoshka', 'Kartoshka fri', 18000, "Qo'shimcha", '', "Qarsildoq, pishloq sousi bilan.", ''),
+          mi('qanot', 'Tovuq qanotlari (8 ta)', 42000, "Qo'shimcha", 'Achchiq', "Achchiq marinadda, ranch sousi bilan.", ''))] }),
+        sec('kombo', 'bento', { navLabel: 'Kombo', eyebrow: 'Kombo to\'plamlar', title: "Kombo bilan *arzonroq*", text: '', items: [
+          { kind: 'image', size: 'w', tall: false, title: 'Bro kombo: burger + fri + kola', text: "99 000 o'rniga 79 000 so'm.", value: '', icon: 'star', image: P('fastfood', 1), link: '' },
+          { kind: 'stat', size: 's', tall: false, title: 'tejaysiz', text: '', value: '-20%', icon: 'percent', image: '', link: '' },
+          { kind: 'hl', size: 'm', tall: false, title: 'Oilaviy kombo', text: "2 pitsa + 4 ta ichimlik + kartoshka fri.", value: '199 000', icon: 'users', image: '', link: '' },
+          { kind: 'text', size: 'm', tall: false, title: 'Do\'stlar kombosi', text: "4 ta burger, 2 fri va 4 ta kola bir qutida.", value: '', icon: 'gift', image: '', link: '' },
+          { kind: 'image', size: 'm', tall: false, title: 'Pitsa kechasi', text: "Seshanba: 2-pitsa sovg'a.", value: '', icon: 'zap', image: P('fastfood', 5), link: '' }] }),
+        sec('stat', 'stats', { eyebrow: '', title: '', text: '', items: [{ value: 30, suffix: ' daq', label: "o'rtacha yetkazish" }, { value: 200, suffix: 'K+', label: 'yetkazilgan buyurtma' }, { value: 4, suffix: '.8', label: 'o\'rtacha baho' }, { value: 17, suffix: ' soat', label: 'har kuni ochiq' }] }),
+        sec('yetkazish', 'process', { navLabel: 'Yetkazish', eyebrow: 'Qanday ishlaydi', title: "Buyurtma *3 qadamda*", text: '', layout: 'grid', items: [
+          { title: 'Tanlang', text: "Menyudan burger, pitsa yoki kombo tanlab savatga soling." },
+          { title: 'Buyurtma bering', text: "Manzilni yozing, to'lov usulini tanlang." },
+          { title: 'Mazasini suring', text: "Kuryer 30 daqiqada issiq holda yetkazadi." }] }),
+        sec('fikr', 'testimonials', { eyebrow: 'Sharhlar', title: 'Ular *maqtashmoqda*', text: '', layout: 'grid', items: [
+          { text: "Burger issiq va juda sershira keldi. 25 daqiqada yetkazishdi!", name: 'Jahongir Qodirov', role: 'Mijoz', image: P('odam', 4), stars: 5 },
+          { text: "Pepperoni pitsa Toshkentdagi eng yaxshisi. Kombo ham juda hamyonbop.", name: 'Aziza Normatova', role: 'Mijoz', image: P('odam', 6), stars: 5 },
+          { text: "Kechasi soat 2 da ham ishlashadi, jonimizga oro kirdi.", name: 'Behzod Aliyev', role: 'Talaba', image: P('odam', 2), stars: 5 }] }),
+        sec('savol', 'faq', { navLabel: '', eyebrow: 'Savollar', title: "Ko'p so'raladigan *savollar*", text: '', items: [
+          { q: "Yetkazib berish qancha turadi?", a: "150 000 so'mdan ortiq buyurtmaga bepul, aks holda 12 000 so'm." },
+          { q: "30 daqiqada yetib kelmasa nima bo'ladi?", a: "Buyurtma uchun kechikkanda kola yoki fri sovg'a qilamiz." },
+          { q: "To'lov usullari qanday?", a: "Naqd, Payme, Click yoki kuryerga karta orqali." },
+          { q: "Halol mahsulotlarmi?", a: "Ha, barcha go'sht mahsulotlari halol sertifikatlangan." }] }),
+        sec('aksiya', 'cta', { fx: true, eyebrow: 'Maxsus taklif', title: "Birinchi buyurtmaga *-20%*", text: "Promokod: BRO20. Ilova yoki sayt orqali buyurtma bering.", buttonText: 'Buyurtma berish', buttonLink: '#menyu', countdownTo: '2026-12-31T23:59:00', image: '' }),
+        sec('aloqa', 'contact', { navLabel: 'Aloqa', eyebrow: 'Buyurtma', title: "Buyurtma *bering*", text: "Telefon va manzilni qoldiring, operator 2 daqiqada bog'lanadi.", form: 'order', serviceOptions: [], askGuests: false, askAddress: true, payOptions: ['Naqd pul', 'Payme', 'Click', 'Karta orqali'], submitText: 'Buyurtma berish', mapUrl: '' }),
+      ],
+    }),
+  });
+
 })();

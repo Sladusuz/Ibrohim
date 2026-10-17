@@ -266,3 +266,5 @@ html.look-cinema .briefb h2,html.look-luxe .briefb h2,html.look-cinema .cbox h2,
 .bn .big,.bn.s .big{font-size:clamp(34px,17cqw,120px);white-space:nowrap}
 html.look-cinema h2,html.look-luxe h2,html.look-cinema h1,html.look-luxe h1{overflow-wrap:break-word}
 .hs-intro{width:min(600px,82vw)}.hs-intro h2{font-size:clamp(34px,5vw,76px)!important}
+.bento{grid-auto-flow:dense}
+.pamount{font-size:clamp(26px,3vw,38px)}.pamount small{white-space:nowrap}

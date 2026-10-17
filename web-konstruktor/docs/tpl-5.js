@@ -152,16 +152,16 @@
         sec('bosh', 'hero', { layout: 'cinema', badge: '2026 mavsumi: turlar ochiq', titleStart: "Orzuingizdagi *sayohat* shu yerdan boshlanadi", words: [], titleEnd: '', text: "Dengiz, tog' va madaniy turlar: aviachiptadan mehmonxonagacha, vizadan transferga qadar hammasini biz tashkil qilamiz.", cta1Text: 'Tur tanlash', cta1Link: '#turlar', cta2Text: "Bepul maslahat", cta2Link: '#bron', visual: 'none', image: P('turizm', 4), trust: [{ value: '15 000+', label: 'sayyoh' }, { value: '40+', label: 'yo\'nalish' }, { value: '4.9', label: 'baho' }] }),
         sec('lenta', 'marquee', { items: ['Turkiya', 'BAA', 'Misr', 'Maldiv', 'Tailand', 'Gruziya', 'Qirg\'iziston', 'Malayziya'] }),
         sec('turlar', 'menu', { navLabel: 'Turlar', eyebrow: 'Turlar', title: "Mashhur *turlar*", text: "Narxlar bir kishi uchun, aviachipta bilan.", mode: 'none', items: [
-          { id: 't1', name: 'Antalya: hammasi kiritilgan', price: 6900000, category: 'Dengiz', description: "7 kecha, 5 yulduzli mehmonxona, ovqat va transfer.", tag: 'Hit', image: P('turizm', 1), active: true },
-          { id: 't2', name: 'Dubay: shahar va cho\'l', price: 8400000, category: 'Dengiz', description: "5 kecha, ekskursiyalar, safari va Burj Xalifa.", tag: '', image: P('turizm', 4), active: true },
-          { id: 't3', name: "Chimyon va Chorvoq", price: 1200000, category: "Tog'", description: "2 kunlik tog' dam olishi: transport, mehmonxona va gid.", tag: 'Yangi', image: P('turizm', 6), active: true },
-          { id: 't4', name: 'Issiqko\'l sayohati', price: 3600000, category: "Tog'", description: "4 kecha, tog' ko'llari va Qirg'iziston madaniyati.", tag: '', image: P('turizm', 2), active: true },
-          { id: 't5', name: 'Gruziya: Tbilisi va Batumi', price: 7500000, category: 'Madaniy', description: "6 kecha, vino tur va tarixiy joylar.", tag: '', image: P('turizm', 3), active: true },
-          { id: 't6', name: "Buyuk ipak yo'li", price: 2900000, category: 'Madaniy', description: "Samarqand, Buxoro va Xiva: 5 kunlik madaniy sayohat.", tag: 'Mahalliy', image: P('turizm', 5), active: true }] }),
+          { id: 't1', name: 'Antalya: hammasi kiritilgan', price: 6900000, category: '', description: "7 kecha, 5 yulduzli mehmonxona, ovqat va transfer.", tag: 'Hit', image: P('turizm', 1), active: true },
+          { id: 't2', name: 'Dubay: shahar va cho\'l', price: 8400000, category: '', description: "5 kecha, ekskursiyalar, safari va Burj Xalifa.", tag: '', image: P('turizm', 4), active: true },
+          { id: 't3', name: "Chimyon va Chorvoq", price: 1200000, category: '', description: "2 kunlik tog' dam olishi: transport, mehmonxona va gid.", tag: 'Yangi', image: P('turizm', 6), active: true },
+          { id: 't4', name: 'Issiqko\'l sayohati', price: 3600000, category: '', description: "4 kecha, tog' ko'llari va Qirg'iziston madaniyati.", tag: '', image: P('turizm', 2), active: true },
+          { id: 't5', name: 'Gruziya: Tbilisi va Batumi', price: 7500000, category: '', description: "6 kecha, vino tur va tarixiy joylar.", tag: '', image: P('turizm', 3), active: true },
+          { id: 't6', name: "Buyuk ipak yo'li", price: 2900000, category: '', description: "Samarqand, Buxoro va Xiva: 5 kunlik madaniy sayohat.", tag: 'Mahalliy', image: P('turizm', 5), active: true }] }),
         sec('yonalish', 'bento', { navLabel: "Yo'nalishlar", eyebrow: "Yo'nalishlar", title: "Qayerga *uchamiz*?", text: '', items: [
-          { kind: 'image', size: 'l', tall: true, title: 'Tropik orollar', text: "Moviy suv va oq qum", value: '', icon: 'sun', image: P('turizm', 1), link: '#bron' },
-          { kind: 'image', size: 'm', tall: false, title: "Tog'lar", text: "Toza havo va sarguzasht", value: '', icon: 'pin', image: P('turizm', 3), link: '#bron' },
+          { kind: 'image', size: 'w', tall: false, title: 'Tropik orollar', text: "Moviy suv va oq qum", value: '', icon: 'sun', image: P('turizm', 1), link: '#bron' },
           { kind: 'stat', size: 's', tall: false, title: "yo'nalish", text: '', value: '40+', icon: 'globe', image: '', link: '' },
+          { kind: 'image', size: 'm', tall: false, title: "Tog'lar", text: "Toza havo va sarguzasht", value: '', icon: 'pin', image: P('turizm', 3), link: '#bron' },
           { kind: 'hl', size: 'm', tall: false, title: 'Viza yordami', text: "Hujjatlar bizdan, xotirjamlik sizdan.", value: '100%', icon: 'shield', image: '', link: '' },
           { kind: 'image', size: 'm', tall: false, title: 'Sokin ko\'llar', text: 'Tabiat bag\'rida dam', value: '', icon: 'leaf', image: P('turizm', 6), link: '#bron' }] }),
         sec('afzallik', 'features', { eyebrow: 'Nega biz', title: "Xotirjam *sayohat* qiling", text: '', layout: 'grid', items: [
@@ -259,7 +259,7 @@
           { title: 'DJ set', tag: 'Vinil', image: P('musiqa', 5), link: '' },
           { title: 'Studiya', tag: 'Yangi treklar', image: P('musiqa', 6), link: '' }] }),
         sec('raqam', 'stats', { eyebrow: '', title: '', text: '', items: [{ value: 300, suffix: '+', label: 'chiqish' }, { value: 12, suffix: '', label: 'shahar' }, { value: 50, suffix: 'K', label: 'obunachi' }, { value: 8, suffix: ' yil', label: 'tajriba' }] }),
-        sec('xizmat', 'features', { eyebrow: 'Xizmatlar', title: "Qayerda *chalaman*", text: '', layout: 'bento', items: [
+        sec('xizmat', 'features', { eyebrow: 'Xizmatlar', title: "Qayerda *chalaman*", text: '', layout: 'grid', items: [
           { icon: 'heart', title: "To'ylar", text: "Mehmonlar yoshiga qarab musiqa va raqs dasturi." },
           { icon: 'star', title: 'Klublar', text: "Premium ovoz va yorug'lik bilan klub setlari." },
           { icon: 'users', title: 'Korporativ kechalar', text: "Brend tadbirlari va yilnoma bayramlari uchun." },
@@ -291,7 +291,7 @@
         sec('bosh', 'hero', { layout: 'aurora', fx: 'aurora', badge: 'Yangi: AI yordamchi', titleStart: "Ishlaringiz *oqimga* tushadi", words: [], titleEnd: '', text: "Flowly bilan loyihalar, vazifalar va jamoani bitta ekranda boshqaring. 14 kun bepul, karta shart emas.", cta1Text: 'Bepul boshlash', cta1Link: '#narx', cta2Text: "Imkoniyatlar", cta2Link: '#imkon', visual: 'image', image: P('elektronika', 2), trust: [{ value: '12 000+', label: 'jamoa' }, { value: '4.9', label: 'baho' }, { value: '99.9%', label: 'ish vaqti' }] }),
         sec('logo', 'logos', { title: 'Bizga yetakchi jamoalar ishonadi', items: [{ name: 'Nexora', image: '' }, { name: 'PayTech', image: '' }, { name: 'Baraka', image: '' }, { name: 'Uzum', image: '' }, { name: 'Logix', image: '' }, { name: 'Oltin Non', image: '' }, { name: 'FitZone', image: '' }] }),
         sec('imkon', 'bento', { navLabel: 'Imkoniyatlar', eyebrow: 'Imkoniyatlar', title: "Hammasi *bir* joyda", text: '', items: [
-          { kind: 'image', size: 'l', tall: true, title: 'Vazifalar taxtasi', text: "Kanban, ro'yxat va kalendar ko'rinishlari.", value: '', icon: 'layers', image: P('startap', 2), link: '' },
+          { kind: 'image', size: 'w', tall: false, title: 'Vazifalar taxtasi', text: "Kanban, ro'yxat va kalendar ko'rinishlari.", value: '', icon: 'layers', image: P('startap', 2), link: '' },
           { kind: 'stat', size: 's', tall: false, title: 'tezroq bajariladi', text: '', value: '3x', icon: 'zap', image: '', link: '' },
           { kind: 'text', size: 'm', tall: false, title: 'AI yordamchi', text: "Vazifalarni o'zi rejalaydi va xulosa yozadi.", value: '', icon: 'zap', image: '', link: '' },
           { kind: 'hl', size: 'm', tall: false, title: 'Integratsiyalar', text: "Telegram, Google, Slack va 50+ xizmat.", value: '50+', icon: 'cloud', image: '', link: '' },
@@ -338,7 +338,7 @@
       contacts: { phone: '+998 78 777 11 22', email: 'hello@yolda.uz', address: "Toshkent, Mirobod tumani, Amir Temur ko'chasi 15", hours: 'Har kuni 8:00 – 22:00', telegram: '@yolda_app', instagram: '@yolda.app' },
       footer: FT(),
       sections: [
-        sec('bosh', 'hero', { layout: 'photo', badge: "App Store va Google Play'da", titleStart: "Hamma yo'l *cho'ntagingizda*", words: [], titleEnd: '', text: "Yo'lda ilovasi bilan taksi, jamoat transporti va yo'l harakatini bir joyda kuzating. Vaqtni tejang, jonli xaritadan foydalaning.", cta1Text: 'Yuklab olish', cta1Link: '#yuklash', cta2Text: 'Imkoniyatlar', cta2Link: '#imkon', visual: 'image', image: P('ilova', 3), image2: P('ilova', 6), spinText: 'Yo\'lda • Yo\'lda • ', chips: ['4.8 reyting', '1 mln+ yuklab olish', 'Bepul'], trust: [] }),
+        sec('bosh', 'hero', { layout: 'photo', badge: "App Store va Google Play'da", titleStart: "Shahar *qo'lingizda*", words: [], titleEnd: '', text: "Yo'lda ilovasi bilan taksi, jamoat transporti va yo'l harakatini bir joyda kuzating. Vaqtni tejang, jonli xaritadan foydalaning.", cta1Text: 'Yuklab olish', cta1Link: '#yuklash', cta2Text: 'Imkoniyatlar', cta2Link: '#imkon', visual: 'image', image: P('ilova', 3), image2: P('ilova', 6), spinText: 'Yo\'lda • Yo\'lda • ', chips: ['4.8 reyting', '1 mln+ yuklab olish', 'Bepul'], trust: [] }),
         sec('lenta', 'marquee', { items: ['Jonli xarita', 'Tez taksi', 'Avtobus jadvali', 'Metro yo\'nalishi', 'Offline rejim', 'Qulay to\'lov'] }),
         sec('imkon', 'features', { navLabel: 'Imkoniyatlar', eyebrow: 'Imkoniyatlar', title: "Nega *Yo'lda*?", text: '', layout: 'bento', items: [
           { icon: 'pin', title: 'Jonli xarita', text: "Transport harakati real vaqtda ko'rinadi." },
@@ -402,7 +402,7 @@
         sec('jarayon', 'split', { navLabel: 'Fermamiz', eyebrow: 'Fermadan stolgacha', title: '', text: '', items: [
           { label: '01', title: "Tuproq va *mehnat*", text: "Mahsulotlar o'z fermamizda, kimyoviy o'g'itsiz, an'anaviy usulda yetishtiriladi.", bullets: ['Organik o\'g\'it', 'Qo\'lda yig\'ish', 'Sertifikatlangan'], image: P('organik', 3), buttonText: '', buttonLink: '#' },
           { label: '02', title: "Ertalab terib, kechqurun *yetkazamiz*", text: "Mahsulot terilgan kunning o'zida sovutgichli mashinada sizga yetib boradi.", bullets: ['24 soat ichida yetkazish', 'Sovutgichli transport', 'Yangilik kafolati'], image: P('organik', 4), buttonText: 'Buyurtma berish', buttonLink: '#katalog' }] }),
-        sec('raqam', 'stats', { eyebrow: '', title: '', text: '', items: [{ value: 3000, suffix: '+', label: 'doimiy mijoz' }, { value: 40, suffix: ' ga', label: 'ferma maydoni' }, { value: 100, suffix: '%', label: 'tabiiy' }, { value: 24, suffix: ' soat', label: 'yetkazish' }] }),
+        sec('raqam', 'stats', { eyebrow: '', title: '', text: '', items: [{ value: 3000, suffix: '+', label: 'doimiy mijoz' }, { value: 40, suffix: ' gektar', label: 'ferma maydoni' }, { value: 100, suffix: '%', label: 'tabiiy' }, { value: 24, suffix: ' soat', label: 'yetkazish' }] }),
         sec('qadam', 'process', { eyebrow: 'Qanday ishlaydi', title: "Buyurtmadan *eshikkacha*", text: '', layout: 'grid', items: [
           { title: 'Tanlang', text: "Katalogdan kerakli mahsulotlarni savatga soling." },
           { title: 'Terib olamiz', text: "Buyurtmangiz ertalab fermamizda yangi terib tayyorlanadi." },
