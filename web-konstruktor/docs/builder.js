@@ -92,7 +92,7 @@
 
   /* ---------- Narxlar va yuborish ---------- */
   async function loadPricing() {
-    try { const r = await fetch((Auth && Auth.api) + '/api/pricing'); if (r.ok) { pricing = await r.json(); return; } } catch { /* ignore */ }
+    if (window.__SERVER__ === true || (Auth && Auth.api)) try { const r = await fetch((Auth && Auth.api) + '/api/pricing'); if (r.ok) { pricing = await r.json(); return; } } catch { /* ignore */ }
     try { const r = await fetch('/pricing.json'); if (r.ok) pricing = await r.json(); } catch { /* ignore */ }
   }
   let chosenPlan = '';

@@ -91,21 +91,8 @@
       "cta2Text": "Saytni o'zim yarataman",
       "cta2Link": "/yaratish.html",
       "visual": "none",
-      "image": "/img/tpl/restoran.jpg",
-      "trust": [
-        {
-          "value": "120+",
-          "label": "loyiha"
-        },
-        {
-          "value": "8 yil",
-          "label": "tajriba"
-        },
-        {
-          "value": "4.9/5",
-          "label": "mijoz bahosi"
-        }
-      ]
+      "image": "",
+      "trust": []
     },
     {
       "id": "texno",

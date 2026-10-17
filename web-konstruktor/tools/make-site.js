@@ -15,7 +15,7 @@ d.orders = { enabled: true, currency: "so'm", freeShipFrom: 0, deliveryFee: 0 };
 d.contacts = { phone: '+998 33 623 33 13', email: 'chempme@gmail.com', address: "Toshkent, Amir Temur ko'chasi 1", hours: 'Dush–Shan, 9:00–18:00', telegram: '', instagram: '' };
 d.footer = { text: 'Barcha huquqlar himoyalangan.', links: [{ label: 'Sayt yaratish', url: '/yaratish.html' }, { label: 'Telegram bot', url: '/bot.html' }, { label: 'Kabinet', url: '/kabinet.html' }, { label: 'Oferta', url: '/offerta.html' }, { label: 'Maxfiylik', url: '/maxfiylik.html' }, { label: 'Qaytarish', url: '/qaytarish.html' }] };
 const hero = d.sections.find((s) => s.type === 'hero');
-Object.assign(hero, { image: '/img/tpl/restoran.jpg', badge: "Yangi loyihalar uchun ochiqmiz", titleStart: 'Biznesingiz uchun *kelajak* saytlari', words: [], titleEnd: '', text: "Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Xohlasangiz, saytni o'zingiz ham yarata olasiz.", cta1Text: 'Loyihani buyurtma qilish', cta1Link: '#brief-open', cta2Text: "Saytni o'zim yarataman", cta2Link: '/yaratish.html' });
+Object.assign(hero, { image: '', trust: [], badge: "Yangi loyihalar uchun ochiqmiz", titleStart: 'Biznesingiz uchun *kelajak* saytlari', words: [], titleEnd: '', text: "Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Xohlasangiz, saytni o'zingiz ham yarata olasiz.", cta1Text: 'Loyihani buyurtma qilish', cta1Link: '#brief-open', cta2Text: "Saytni o'zim yarataman", cta2Link: '/yaratish.html' });
 const out = [];
 for (const s of d.sections) {
   if (s.type === 'pricing') continue;
