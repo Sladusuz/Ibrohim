@@ -33,6 +33,8 @@ ${account ? '<script src="/auth.js"></script>' : ''}
 </body>
 </html>`;
 
+// 0) Admin panel DEMO sahifasi (namunaviy ma'lumot, serversiz ishlaydi)
+fs.writeFileSync(path.join(P, 'admin-demo.html'), rd('admin.html').replace('<title>Admin panel</title>', '<title>Admin panel (demo)</title>').replace('<script src="/admin.js"></script>', '<script src="/admin-demo.js"></script>\n<script src="/admin.js"></script>').replace('<p>Davom etish uchun parolni kiriting.</p>', '<p>Demo rejimi.</p>'));
 // 1) Shablon: konstruktor shundan tayyor sayt yasaydi (hisob va server yo'q, mustaqil)
 fs.writeFileSync(path.join(P, 'shablon.html'), page({ data: MARK, account: false }));
 // 2) Asosiy sahifa (server rejimi): ma'lumotni /api/site dan oladi
@@ -45,7 +47,7 @@ const html = page({ data: JSON.stringify(site).replace(/</g, '\\u003c'), account
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT)) { if (!['config.js', 'CNAME'].includes(f)) fs.rmSync(path.join(OUT, f), { recursive: true, force: true }); }
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
-for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'motion.css', 'icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
+for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'motion.css', 'icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
 if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'config.js'), path.join(OUT, 'config.js'));
 fs.cpSync(path.join(P, 'img'), path.join(OUT, 'img'), { recursive: true });
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
