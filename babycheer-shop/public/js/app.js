@@ -69,7 +69,7 @@
   }, true);
   const favBtn = (id) => `<button class="fav ${S.favs.includes(id) ? 'on' : ''}" data-fav="${id}" aria-label="Sevimli">${svg('heart')}</button>`;
   const card = (p) => `<article class="pcard" data-go="#/p/${p.id}">
-      <div style="position:relative">${media(p)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}${favBtn(p.id)}</div>
+      <div style="position:relative">${media(p)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}${favBtn(p.id)}${p.stock && p.stock <= 3 ? `<span class="low">Oxirgi ${p.stock} ta</span>` : ''}${p.stock ? `<button class="qa" data-quick="${p.id}" aria-label="Savatga qo'shish">+</button>` : ''}</div>
       <div class="pbody"><h3>${esc(p.title)}</h3><div class="short">${esc(p.short)}</div>
       <div class="price"><b class="num">${money(p.price)}</b>${p.old_price > p.price ? `<s class="num">${money(p.old_price)}</s>` : ''}</div></div></article>`;
 
@@ -102,9 +102,11 @@
   }
   const TABS = [['#/', 'home', 'Asosiy', 'home'], ['#/shop', 'shop', 'Katalog', 'grid'], ['#/cart', 'cart', 'Savat', 'bag'], ['#/orders', 'orders', 'Buyurtmalar', 'box'], ['#/info', 'info', "Ma'lumot", 'info']];
   let curTab = 'home';
+  let prevN = 0;
   function drawTabs() {
     const n = S.data ? cartCount() : 0;
-    $('#tabs').innerHTML = TABS.map(([h, k, label, ic]) => `<a href="${h}" class="${curTab === k ? 'on' : ''}">${svg(ic)}${label}${k === 'cart' && n ? `<span class="badge">${n}</span>` : ''}</a>`).join('');
+    const up = n > prevN; prevN = n;
+    $('#tabs').innerHTML = TABS.map(([h, k, label, ic]) => `<a href="${h}" class="${curTab === k ? 'on' : ''}">${svg(ic)}${label}${k === 'cart' && n ? `<span class="badge${up ? ' bump' : ''}">${n}</span>` : ''}</a>`).join('');
   }
   function setTop(v) {
     const top = $('#top');
@@ -128,20 +130,21 @@
   }
 
   // ---------- sahifalar ----------
+  const TINTS = ['#2b59ff', '#ff7a1a', '#12a66b', '#f0589f', '#10a5b8', '#8b5cf6'];
   const views = [];
   const route = (re, fn) => views.push([re, fn]);
 
   route(/^\/$/, () => {
     const d = S.data, sale = d.products.filter((p) => pct(p) > 0 && p.stock), hot = d.products.filter((p) => p.featured && p.stock);
-    const s = d.settings;
+    const s = d.settings, maxOff = Math.max(0, ...d.products.filter((p) => p.stock).map(pct));
     return {
       home: true, tab: 'home',
-      html: `<section class="hero"><h1>Bolalikni harakatga keltiring</h1><p>Elektromobil, kalyaska, velokalyaska va samokatlar.</p>
+      html: `<section class="hero"><span class="hero-chip">${maxOff ? `🔥 Chegirmalar −${maxOff}% gacha` : '✨ Yangi kolleksiya'}</span><h1>Bolalikni harakatga keltiring</h1><p>Elektromobil, kalyaska, velokalyaska va samokatlar.</p>
           <a class="btn" href="#/shop">Katalogni ochish</a><div class="hero-art">${window.BC.art('car', '#ffb800')}</div></section>
         <div class="perks"><div class="perk"><b>${s.warrantyMonths} oy</b>kafolat</div><div class="perk"><b>🚚</b>butun O'zbekiston</div><div class="perk"><b>${s.freeFrom >= 1e6 ? (s.freeFrom / 1e6).toLocaleString('uz-UZ', { maximumFractionDigits: 1 }) + ' mln' : Math.round(s.freeFrom / 1e3) + ' ming'}+</b>dan yetkazish bepul</div></div>
-        <section class="sec"><div class="sec-h"><h2>Kategoriyalar</h2></div><div class="cats">${d.categories.map((c) => {
-          const n = d.products.filter((p) => p.category_id === c.id).length;
-          return `<button class="cat" data-go="#/shop?cat=${c.id}"><b>${esc(c.name)}</b><small>${n} ta mahsulot</small>${window.BC.art(c.icon || 'car', '#2b59ff')}</button>`;
+        <section class="sec"><div class="sec-h"><h2>Kategoriyalar</h2></div><div class="cats">${d.categories.map((c, i) => {
+          const n = d.products.filter((p) => p.category_id === c.id).length, tint = TINTS[i % TINTS.length];
+          return `<button class="cat" style="--c:${tint}" data-go="#/shop?cat=${c.id}"><b>${esc(c.name)}</b><small>${n} ta mahsulot</small>${window.BC.art(c.icon || 'car', tint)}</button>`;
         }).join('')}</div></section>
         ${sale.length ? `<section class="sec"><div class="sec-h"><h2>🔥 Chegirmalar</h2><a href="#/shop?sort=sale">Hammasi</a></div><div class="hscroll">${sale.map(card).join('')}</div></section>` : ''}
         ${hot.length ? `<section class="sec"><div class="sec-h"><h2>⭐ Mashhur</h2><a href="#/shop">Hammasi</a></div><div class="hscroll">${hot.map(card).join('')}</div></section>` : ''}
@@ -219,10 +222,12 @@
         <div class="pt"><h1>${esc(p.title)}</h1>
           <div class="row"><span class="big num">${money(p.price)}</span>${p.old_price > p.price ? `<s class="num">${money(p.old_price)}</s><span class="pill bad">−${pct(p)}%</span>` : ''}</div>
           <div class="row">${p.stock ? `<span class="pill ok">✓ Mavjud${p.stock <= 5 ? `: ${p.stock} ta qoldi` : ''}</span>` : '<span class="pill bad">Sotuvda yo\'q</span>'}<span class="pill brand">${s.warrantyMonths} oy kafolat</span></div>
+          ${p.old_price > p.price ? `<div class="save">🎉 Tejaysiz: ${money(p.old_price - p.price)}</div>` : ''}
           <p class="hint" style="margin:12px 0 0">${esc(p.description || p.short)}</p></div>
         ${p.colors.length > 1 ? `<section class="sec"><div class="sec-h"><h2>Rang</h2><span class="hint" id="cname">${esc(st.color)}</span></div><div class="swatches">${p.colors.map((c2) => `<button class="sw ${c2.name === st.color ? 'on' : ''}" data-color="${esc(c2.name)}"><i style="background:${esc(c2.hex)}"></i>${esc(c2.name)}</button>`).join('')}</div></section>` : ''}
         ${p.stock ? `<section class="sec"><div class="sec-h"><h2>Soni</h2><div class="stepper"><button data-q="-1" aria-label="Kamaytirish">−</button><span id="qv" class="num">1</span><button data-q="1" aria-label="Ko'paytirish">+</button></div></div></section>` : ''}
         ${Object.keys(p.specs || {}).length ? `<section class="sec"><div class="sec-h"><h2>Xususiyatlar</h2></div><div class="card specs">${Object.entries(p.specs).map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div></section>` : ''}
+        <div class="trust"><div><b>🛡️</b>${s.warrantyMonths} oy<br>kafolat</div><div><b>🚚</b>Butun O'zbekiston<br>bo'ylab</div><div><b>💳</b>Qulay<br>to'lov</div></div>
         <div class="note"><span style="font-size:22px">🚚</span><div><b>Yetkazib berish</b>${money(s.freeFrom)} dan yuqori buyurtmalarda bepul, qolganida ${money(s.deliveryFee)}.</div></div>
         ${rel.length ? `<section class="sec"><div class="sec-h"><h2>O'xshash mahsulotlar</h2></div><div class="hscroll">${rel.map(card).join('')}</div></section>` : ''}`,
       mount() {
@@ -251,7 +256,7 @@
           <div class="meta">${l.color ? `<i style="background:${esc(hexOf(l.p, l.color))}"></i>${esc(l.color)}` : ''}</div>
           <div class="ctl"><div class="stepper"><button data-cq="${l.i}:-1">−</button><span class="num">${l.qty}</span><button data-cq="${l.i}:1">+</button></div><b class="num">${money(l.p.price * l.qty)}</b></div>
           <button class="del" data-cdel="${l.i}">O'chirish</button></div></div>`).join('')}
-        <div class="card free">${left ? `<b>Bepul yetkazishgacha <span class="num">${money(left)}</span> qoldi</b>` : '<b>🎉 Yetkazib berish bepul!</b>'}<div class="bar"><i style="width:${Math.min(100, (T.sub / T.freeFrom) * 100)}%"></i></div></div>
+        <div class="card free">${left ? `<b>Bepul yetkazishgacha <span class="num">${money(left)}</span> qoldi</b>` : '<b>🎉 Yetkazib berish bepul!</b>'}<div class="bar" style="--p:${Math.min(100, (T.sub / T.freeFrom) * 100)}%"><i style="width:${Math.min(100, (T.sub / T.freeFrom) * 100)}%"></i></div></div>
         <div class="card sum"><div class="r"><span class="hint">Mahsulotlar (${cartCount()} ta)</span><span class="num">${money(T.sub)}</span></div>
           <div class="r"><span class="hint">Kuryer</span><span class="num">${T.fee ? money(T.fee) : 'Bepul'}</span></div><div class="r t"><span>Jami</span><span class="num">${money(T.total)}</span></div></div>`,
       mount() { setCta({ info: ['Jami', money(T.total)], text: 'Buyurtma berish', onClick: () => (location.hash = '#/checkout') }); },
@@ -336,7 +341,7 @@
     const pay = o.payment === 'online' && !o.paid ? `<button class="btn block ok" style="margin-top:12px" data-pay="${o.id}">💳 Hozir to'lash</button>` : '';
     return {
       title: 'Buyurtma qabul qilindi', tab: 'orders', noTabs: true,
-      html: `<div class="ok-wrap"><svg class="check" viewBox="0 0 120 120" fill="none" stroke="#12a66b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><circle cx="60" cy="60" r="54"/><path d="m36 62 17 17 31-36"/></svg>
+      html: `<div class="ok-wrap"><div class="confetti" aria-hidden="true">${Array.from({ length: 18 }, (_, i) => `<i style="--i:${i}"></i>`).join('')}</div><svg class="check" viewBox="0 0 120 120" fill="none" stroke="#12a66b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><circle cx="60" cy="60" r="54"/><path d="m36 62 17 17 31-36"/></svg>
         <div class="hint">Buyurtma raqami</div><div class="ok-no num">${esc(o.no)}</div><div class="hint">Operator tez orada telefon orqali tasdiqlaydi.<br>Holat o'zgarsa bot sizga xabar yuboradi.</div></div>
         ${orderCard(o, pay)}${tr}
         <div style="display:grid;gap:10px;margin-top:16px"><a class="btn block" href="#/orders">Buyurtmalarim</a><a class="btn block ghost" href="#/shop">Xaridni davom ettirish</a></div>`,
@@ -418,6 +423,13 @@
       i >= 0 ? S.favs.splice(i, 1) : S.favs.push(id); LS.set('favs', S.favs); haptic('light');
       $$(`[data-fav="${id}"]`).forEach((b) => b.classList.toggle('on', i < 0));
       if (S.shop.fav && /^#\/shop/.test(location.hash)) render();
+      return;
+    }
+    const qa = t.closest('[data-quick]');
+    if (qa) {
+      e.stopPropagation(); e.preventDefault();
+      const p = prod(Number(qa.dataset.quick)), color = p && p.colors[0] ? p.colors[0].name : '';
+      if (p && addToCart(p.id, color, 1)) { qa.classList.add('ok'); qa.textContent = '✓'; toast(`${p.title}${color ? ` (${color})` : ''}: savatga qo'shildi ✅`); setTimeout(() => { qa.classList.remove('ok'); qa.textContent = '+'; }, 900); }
       return;
     }
     const back = t.closest('[data-back]'); if (back) return goBack(/^#\/p\//.test(location.hash) ? S.lastList : '#/');
