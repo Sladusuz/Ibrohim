@@ -193,28 +193,10 @@
       "text": "Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.",
       "items": [
         {
-          "title": "Onlayn market",
-          "tag": "Savdo",
-          "image": "/img/tpl/market.jpg",
-          "link": "/yaratish.html?t=market"
-        },
-        {
-          "title": "Portfolio: dizayner",
-          "tag": "Portfolio",
-          "image": "/img/tpl/dizayner.jpg",
-          "link": "/yaratish.html?t=dizayner"
-        },
-        {
-          "title": "Portfolio: dasturchi",
-          "tag": "Portfolio",
-          "image": "/img/tpl/dasturchi.jpg",
-          "link": "/yaratish.html?t=dasturchi"
-        },
-        {
-          "title": "Portfolio: fotograf",
-          "tag": "Portfolio",
-          "image": "/img/tpl/fotograf.jpg",
-          "link": "/yaratish.html?t=fotograf"
+          "title": "Restoran / kafe",
+          "tag": "Xizmat",
+          "image": "/img/tpl/restoran.jpg",
+          "link": "/yaratish.html?t=restoran"
         },
         {
           "title": "IT kompaniya / agentlik",
@@ -223,22 +205,76 @@
           "link": "/yaratish.html?t=kompaniya"
         },
         {
-          "title": "Restoran / kafe",
+          "title": "Onlayn market",
+          "tag": "Savdo",
+          "image": "/img/tpl/market.jpg",
+          "link": "/yaratish.html?t=market"
+        },
+        {
+          "title": "Elektronika do'koni",
+          "tag": "Savdo",
+          "image": "/img/tpl/elektronika.jpg",
+          "link": "/yaratish.html?t=elektronika"
+        },
+        {
+          "title": "Kiyim butigi",
+          "tag": "Savdo",
+          "image": "/img/tpl/kiyim.jpg",
+          "link": "/yaratish.html?t=kiyim"
+        },
+        {
+          "title": "Gul do'koni",
+          "tag": "Savdo",
+          "image": "/img/tpl/gul.jpg",
+          "link": "/yaratish.html?t=gul"
+        },
+        {
+          "title": "Mebel salon",
+          "tag": "Savdo",
+          "image": "/img/tpl/mebel.jpg",
+          "link": "/yaratish.html?t=mebel"
+        },
+        {
+          "title": "Kafe va qandolat",
           "tag": "Xizmat",
-          "image": "/img/tpl/restoran.jpg",
-          "link": "/yaratish.html?t=restoran"
+          "image": "/img/tpl/kafe.jpg",
+          "link": "/yaratish.html?t=kafe"
+        },
+        {
+          "title": "Fast-food va yetkazib berish",
+          "tag": "Xizmat",
+          "image": "/img/tpl/fastfood.jpg",
+          "link": "/yaratish.html?t=fastfood"
         },
         {
           "title": "Go'zallik saloni",
-          "tag": "Xizmat",
+          "tag": "Go'zallik va salomatlik",
           "image": "/img/tpl/salon.jpg",
           "link": "/yaratish.html?t=salon"
         },
         {
-          "title": "O'quv markaz",
-          "tag": "Ta'lim",
-          "image": "/img/tpl/talim.jpg",
-          "link": "/yaratish.html?t=talim"
+          "title": "Barbershop",
+          "tag": "Go'zallik va salomatlik",
+          "image": "/img/tpl/barber.jpg",
+          "link": "/yaratish.html?t=barber"
+        },
+        {
+          "title": "Tibbiyot markazi",
+          "tag": "Go'zallik va salomatlik",
+          "image": "/img/tpl/klinika.jpg",
+          "link": "/yaratish.html?t=klinika"
+        },
+        {
+          "title": "Stomatologiya",
+          "tag": "Go'zallik va salomatlik",
+          "image": "/img/tpl/stomatolog.jpg",
+          "link": "/yaratish.html?t=stomatolog"
+        },
+        {
+          "title": "Yoga va spa",
+          "tag": "Go'zallik va salomatlik",
+          "image": "/img/tpl/yoga.jpg",
+          "link": "/yaratish.html?t=yoga"
         }
       ]
     },
@@ -379,7 +415,7 @@
           "category": "Veb-sayt",
           "badge": "",
           "description": "5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.",
-          "image": "/img/t/kompaniya/p-start.svg",
+          "image": "/img/p/dasturchi-2.jpg",
           "stock": "",
           "active": true
         },
@@ -391,7 +427,7 @@
           "category": "Veb-sayt",
           "badge": "ENG KO'P TANLANADI",
           "description": "Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.",
-          "image": "/img/t/kompaniya/p-dokon.svg",
+          "image": "/img/p/elektronika-2.jpg",
           "stock": "",
           "active": true
         },
@@ -403,7 +439,7 @@
           "category": "Bot",
           "badge": "",
           "description": "Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.",
-          "image": "/img/t/kompaniya/p-bot.svg",
+          "image": "/img/p/ilova-3.jpg",
           "stock": "",
           "active": true
         },
@@ -415,7 +451,7 @@
           "category": "Ilova",
           "badge": "",
           "description": "iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.",
-          "image": "/img/t/kompaniya/p-ilova.svg",
+          "image": "/img/p/ilova-2.jpg",
           "stock": "",
           "active": true
         },
@@ -427,7 +463,7 @@
           "category": "Dizayn",
           "badge": "",
           "description": "Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.",
-          "image": "/img/t/kompaniya/p-dizayn.svg",
+          "image": "/img/p/dizayner-2.jpg",
           "stock": "",
           "active": true
         },
@@ -439,7 +475,7 @@
           "category": "Xizmat",
           "badge": "",
           "description": "Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.",
-          "image": "/img/t/kompaniya/p-yordam.svg",
+          "image": "/img/p/startap-2.jpg",
           "stock": "",
           "active": true
         }
@@ -628,8 +664,96 @@
       ],
       "references": [
         {
+          "name": "Restoran / kafe",
+          "image": "/img/tpl/restoran.jpg"
+        },
+        {
+          "name": "IT kompaniya / agentlik",
+          "image": "/img/tpl/kompaniya.jpg"
+        },
+        {
           "name": "Onlayn market",
           "image": "/img/tpl/market.jpg"
+        },
+        {
+          "name": "Elektronika do'koni",
+          "image": "/img/tpl/elektronika.jpg"
+        },
+        {
+          "name": "Kiyim butigi",
+          "image": "/img/tpl/kiyim.jpg"
+        },
+        {
+          "name": "Gul do'koni",
+          "image": "/img/tpl/gul.jpg"
+        },
+        {
+          "name": "Mebel salon",
+          "image": "/img/tpl/mebel.jpg"
+        },
+        {
+          "name": "Kafe va qandolat",
+          "image": "/img/tpl/kafe.jpg"
+        },
+        {
+          "name": "Fast-food va yetkazib berish",
+          "image": "/img/tpl/fastfood.jpg"
+        },
+        {
+          "name": "Go'zallik saloni",
+          "image": "/img/tpl/salon.jpg"
+        },
+        {
+          "name": "Barbershop",
+          "image": "/img/tpl/barber.jpg"
+        },
+        {
+          "name": "Tibbiyot markazi",
+          "image": "/img/tpl/klinika.jpg"
+        },
+        {
+          "name": "Stomatologiya",
+          "image": "/img/tpl/stomatolog.jpg"
+        },
+        {
+          "name": "Yoga va spa",
+          "image": "/img/tpl/yoga.jpg"
+        },
+        {
+          "name": "Fitnes klub",
+          "image": "/img/tpl/fitness.jpg"
+        },
+        {
+          "name": "Veterinariya va zoo-servis",
+          "image": "/img/tpl/hayvon.jpg"
+        },
+        {
+          "name": "O'quv markaz",
+          "image": "/img/tpl/talim.jpg"
+        },
+        {
+          "name": "Til kurslari",
+          "image": "/img/tpl/til.jpg"
+        },
+        {
+          "name": "Avtoservis",
+          "image": "/img/tpl/avtoservis.jpg"
+        },
+        {
+          "name": "Qurilish va ta'mirlash",
+          "image": "/img/tpl/qurilish.jpg"
+        },
+        {
+          "name": "Ko'chmas mulk agentligi",
+          "image": "/img/tpl/rieltor.jpg"
+        },
+        {
+          "name": "Yuridik firma",
+          "image": "/img/tpl/yurist.jpg"
+        },
+        {
+          "name": "Yuk tashish va logistika",
+          "image": "/img/tpl/logistika.jpg"
         },
         {
           "name": "Portfolio: dizayner",
@@ -644,20 +768,28 @@
           "image": "/img/tpl/fotograf.jpg"
         },
         {
-          "name": "IT kompaniya / agentlik",
-          "image": "/img/tpl/kompaniya.jpg"
+          "name": "Turagentlik",
+          "image": "/img/tpl/turizm.jpg"
         },
         {
-          "name": "Restoran / kafe",
-          "image": "/img/tpl/restoran.jpg"
+          "name": "To'y va tadbirlar",
+          "image": "/img/tpl/toy.jpg"
         },
         {
-          "name": "Go'zallik saloni",
-          "image": "/img/tpl/salon.jpg"
+          "name": "DJ va musiqachi",
+          "image": "/img/tpl/musiqa.jpg"
         },
         {
-          "name": "O'quv markaz",
-          "image": "/img/tpl/talim.jpg"
+          "name": "Startap / SaaS landing",
+          "image": "/img/tpl/startap.jpg"
+        },
+        {
+          "name": "Mobil ilova landing",
+          "image": "/img/tpl/ilova.jpg"
+        },
+        {
+          "name": "Fermer va organik mahsulotlar",
+          "image": "/img/tpl/organik.jpg"
         }
       ],
       "goals": [
