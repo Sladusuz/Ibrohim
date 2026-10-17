@@ -81,6 +81,9 @@ export default async (req) => {
     if (e instanceof shop.ShopError) return fail(e.message);
     if (e instanceof SyntaxError) return fail("Noto'g'ri so'rov");
     console.error(e);
+    // diagnostika: faqat maxfiy kalit bilan so'ralganda xato tafsiloti qaytadi
+    const dbg = process.env.WEBHOOK_SECRET;
+    if (dbg && req.headers.get('x-debug') === dbg) return json({ error: 'debug', detail: String((e && e.stack) || e).slice(0, 1500) }, 500);
     return fail('Server xatosi, birozdan keyin urinib ko\'ring', 500);
   }
 };
