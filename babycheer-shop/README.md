@@ -15,6 +15,10 @@ karta o'tkazmasi (`CARD_NUMBER` berilsa, chek rasmi botga yuboriladi, admin tasd
 **Bot:** `/start` do'konni ochadi; mijozga buyurtma va holat xabarlari; adminga yangi buyurtma, to'lov, chek va mijoz xabarlari
 tugmalar bilan (✅ Tasdiqlash, 🚚 Yo'lda, 🎉 Yetkazildi, ❌ Bekor, 💰 To'langan).
 
+**Admin panel (Mini App):** botga `/admin` yozing va «🔧 Admin panelni ochish» tugmasini bosing. Parol kerak emas, Telegram imzosi va
+`ADMIN_IDS` tekshiriladi. Ichida: buyurtmalar (holat, to'lov, mijozga avtomatik xabar), mahsulot qo'shish/tahrirlash/yashirish/o'chirish
+(rasm yuklash, ranglar, xususiyatlar), kategoriyalar, do'kon sozlamalari va statistika.
+
 **Admin buyruqlari** (`ADMIN_IDS` dagilar uchun, `/admin` ro'yxatni ko'rsatadi): `/orders`, `/stats`, `/products`,
 `/price id narx`, `/oldprice`, `/stock`, `/del`, `/addcat`, `/add` (rasm bilan), `/photo id`, `/set kalit qiymat`.
 Mahsulot qo'shish: rasm yuboring va izohga yozing:

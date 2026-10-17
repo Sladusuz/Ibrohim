@@ -299,6 +299,7 @@
     };
   });
 
+  const fmtDate = (v) => { const d = new Date(v), p = (n) => String(n).padStart(2, '0'); return `${p(d.getDate())}.${p(d.getMonth() + 1)} ${p(d.getHours())}:${p(d.getMinutes())}`; };
   const FLOW = [['new', 'Qabul qilindi'], ['confirmed', 'Tasdiqlandi'], ['shipping', "Yo'lda"], ['delivered', 'Yetkazildi']];
   const STATUS = { new: ['Yangi', 'brand'], confirmed: ['Tasdiqlandi', 'ok'], shipping: ['Yetkazilmoqda', 'warn'], delivered: ['Yetkazildi', 'ok'], cancelled: ['Bekor qilindi', 'bad'] };
   const timeline = (o) => {
@@ -307,7 +308,7 @@
     return `<div class="tl">${FLOW.map((f, i) => `<div class="${i <= idx ? 'done' : ''}"><i></i>${f[1]}</div>`).join('')}</div>`;
   };
   const orderCard = (o, extra = '') => `<div class="card ocard"><div class="ohead"><b>${esc(o.no)}</b><span class="pill ${STATUS[o.status][1]}">${STATUS[o.status][0]}</span></div>
-      <div class="hint" style="font-size:12px;margin-top:2px">${new Date(o.created_at).toLocaleString('uz-UZ', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}${o.paid ? ' · ✅ to\'langan' : ''}</div>
+      <div class="hint" style="font-size:12px;margin-top:2px">${fmtDate(o.created_at)}${o.paid ? ' · ✅ to\'langan' : ''}</div>
       ${timeline(o)}${o.items.map((i) => `<div class="oline"><span>${esc(i.title)}${i.color ? ` · ${esc(i.color)}` : ''} × ${i.qty}</span><b class="num">${money(i.price * i.qty)}</b></div>`).join('')}
       <div class="oline" style="border-top:1px dashed var(--line);margin-top:6px;padding-top:10px"><span>Jami${o.fee ? ` (yetkazish ${money(o.fee)})` : ''}</span><b class="num">${money(o.total)}</b></div>${extra}</div>`;
 

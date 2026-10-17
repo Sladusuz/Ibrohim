@@ -53,4 +53,15 @@ export async function update(key, fn, initial = null) {
   throw new Error("Ma'lumotni yozib bo'lmadi, qayta urinib ko'ring");
 }
 
-export function _resetMemory() { mem = null; }
+const memBin = new Map();
+export async function putBinary(key, bytes, contentType) {
+  if (process.env.STORE_MEMORY) { memBin.set(key, { bytes: Buffer.from(bytes), contentType }); return; }
+  store().set(key, bytes, { metadata: { contentType } });
+}
+export async function getBinary(key) {
+  if (process.env.STORE_MEMORY) return memBin.get(key) || null;
+  const r = await store().getWithMetadata(key, { type: 'arrayBuffer', consistency: 'strong' });
+  return r ? { bytes: r.data, contentType: (r.metadata && r.metadata.contentType) || 'image/jpeg' } : null;
+}
+
+export function _resetMemory() { mem = null; memBin.clear(); }

@@ -1,6 +1,7 @@
 import * as shop from './lib/shop.js';
 import { api, safe, notifyAdmins, verifyInitData, esc } from './lib/tg.js';
 import { adminOrderKb, customerOrderKb } from './lib/botui.js';
+import { adminApi } from './lib/admin.js';
 
 export const config = { path: '/api/*' };
 
@@ -18,6 +19,8 @@ export default async (req) => {
   const route = url.pathname.replace(/^\/api\/?/, '');
   const user = verifyInitData(req.headers.get('x-tg-init-data') || '');
   try {
+    if (route.startsWith('admin/')) return await adminApi(route, req, user);
+
     if (req.method === 'GET' && route === 'catalog') return json(await shop.publicCatalog());
 
     if (req.method === 'GET' && route === 'orders') {

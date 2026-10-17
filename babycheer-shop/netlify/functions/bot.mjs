@@ -138,7 +138,11 @@ async function adminCommand(cmd, arg, m, ctx) {
   const chat = m.chat.id;
   const reply = (t, extra) => send(chat, t, extra);
 
-  if (cmd === '/admin') return reply(ADMIN_HELP);
+  if (cmd === '/admin') {
+    await reply("🔧 <b>Admin panel</b>\nMahsulot qo'shish, tahrirlash, rasm yuklash, buyurtmalarni tasdiqlash va sozlamalar bitta joyda 👇",
+      { reply_markup: inlineKb([[['🔧 Admin panelni ochish', `${ctx.url}/admin.html`]]]) });
+    return reply(ADMIN_HELP);
+  }
   if (cmd === '/orders') {
     const list = await shop.recentOrders(10);
     if (!list.length) return reply("Buyurtma yo'q.");

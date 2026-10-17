@@ -1,4 +1,5 @@
 import { api, TOKEN } from './lib/tg.js';
+import * as store from './lib/store.js';
 
 export const config = { path: '/photo/*' };
 
@@ -6,6 +7,11 @@ export const config = { path: '/photo/*' };
 export default async (req) => {
   const fid = decodeURIComponent(new URL(req.url).pathname.replace(/^\/photo\//, ''));
   if (!/^[\w-]{10,200}$/.test(fid)) return new Response('Not found', { status: 404 });
+  if (fid.startsWith('img_')) { // admin panelidan yuklangan rasm (Netlify Blobs)
+    const img = await store.getBinary(fid).catch(() => null);
+    if (!img) return new Response('Not found', { status: 404 });
+    return new Response(img.bytes, { headers: { 'content-type': img.contentType, 'cache-control': 'public, max-age=31536000, immutable' } });
+  }
   try {
     const f = await api('getFile', { file_id: fid });
     const base = process.env.TELEGRAM_API_BASE || 'https://api.telegram.org';

@@ -153,6 +153,8 @@ async function restock(o, sign) {
   });
 }
 
+export const setPaid = async (id, paid) => { const o = await getOrder(id); if (!o) throw new ShopError('Buyurtma topilmadi'); o.paid = !!paid; await store.put(`order:${id}`, o); return o; };
+
 export async function markPaid(id) {
   const o = await getOrder(id);
   if (!o) throw new ShopError('Buyurtma topilmadi');
