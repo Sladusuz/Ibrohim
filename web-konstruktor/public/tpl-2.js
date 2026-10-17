@@ -360,7 +360,7 @@
           mi('pepperoni', 'Pitsa Pepperoni 32 sm', 79000, 'Pitsalar', 'Hit', "Pepperoni, mozzarella va maxsus sous.", ''),
           mi('sirli', 'Pitsa 4 xil pishloq 32 sm', 85000, 'Pitsalar', '', "Mozzarella, cheddar, parmezan, dor-blyu.", ''),
           mi('kartoshka', 'Kartoshka fri', 18000, "Qo'shimcha", '', "Qarsildoq, pishloq sousi bilan.", ''),
-          mi('qanot', 'Tovuq qanotlari (8 ta)', 42000, "Qo'shimcha", 'Achchiq', "Achchiq marinadda, ranch sousi bilan.", ''))] }),
+          mi('qanot', 'Tovuq qanotlari (8 ta)', 42000, "Qo'shimcha", 'Achchiq', "Achchiq marinadda, ranch sousi bilan.", '')] }),
         sec('kombo', 'bento', { navLabel: 'Kombo', eyebrow: 'Kombo to\'plamlar', title: "Kombo bilan *arzonroq*", text: '', items: [
           { kind: 'image', size: 'w', tall: false, title: 'Bro kombo: burger + fri + kola', text: "99 000 o'rniga 79 000 so'm.", value: '', icon: 'star', image: P('fastfood', 1), link: '' },
           { kind: 'stat', size: 's', tall: false, title: 'tejaysiz', text: '', value: '-20%', icon: 'percent', image: '', link: '' },
