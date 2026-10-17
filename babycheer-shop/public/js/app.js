@@ -20,7 +20,8 @@
   const ICON = {
     home: '<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
     grid: '<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',
-    bag: '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+    bag: '<circle cx="9" cy="20.5" r="1.4"/><circle cx="18" cy="20.5" r="1.4"/><path d="M2.5 3h2.4l2.7 11.6a2 2 0 0 0 2 1.55h8.2a2 2 0 0 0 1.95-1.55L21 7.5H6.1"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
     box: '<path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',
     info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
     search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
@@ -69,9 +70,10 @@
   }, true);
   const favBtn = (id) => `<button class="fav ${S.favs.includes(id) ? 'on' : ''}" data-fav="${id}" aria-label="Sevimli">${svg('heart')}</button>`;
   const card = (p) => `<article class="pcard" data-go="#/p/${p.id}">
-      <div style="position:relative">${media(p)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}${favBtn(p.id)}${p.stock && p.stock <= 3 ? `<span class="low">Oxirgi ${p.stock} ta</span>` : ''}${p.stock ? `<button class="qa" data-quick="${p.id}" aria-label="Savatga qo'shish">+</button>` : ''}</div>
+      <div style="position:relative">${media(p)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}${favBtn(p.id)}${p.stock && p.stock <= 3 ? `<span class="low">Oxirgi ${p.stock} ta</span>` : ''}</div>
       <div class="pbody"><h3>${esc(p.title)}</h3><div class="short">${esc(p.short)}</div>
-      <div class="price"><b class="num">${money(p.price)}</b>${p.old_price > p.price ? `<s class="num">${money(p.old_price)}</s>` : ''}</div></div></article>`;
+      <div class="price"><b class="num">${money(p.price)}</b></div>
+      <div class="pfoot"><span class="sub">${p.old_price > p.price ? `<s class="num">${money(p.old_price).replace(" so'm", '')}</s>` : p.stock ? '<em>✓ Mavjud</em>' : 'Sotuvda yo\'q'}</span>${p.stock ? `<button class="qa" data-quick="${p.id}" aria-label="Savatga qo'shish">${svg('bag')}</button>` : ''}</div></div></article>`;
 
   // ---------- savat ----------
   function lines() {
@@ -429,7 +431,7 @@
     if (qa) {
       e.stopPropagation(); e.preventDefault();
       const p = prod(Number(qa.dataset.quick)), color = p && p.colors[0] ? p.colors[0].name : '';
-      if (p && addToCart(p.id, color, 1)) { qa.classList.add('ok'); qa.textContent = '✓'; toast(`${p.title}${color ? ` (${color})` : ''}: savatga qo'shildi ✅`); setTimeout(() => { qa.classList.remove('ok'); qa.textContent = '+'; }, 900); }
+      if (p && addToCart(p.id, color, 1)) { const html = qa.innerHTML; qa.classList.add('ok'); qa.innerHTML = svg('check'); toast(`${p.title}${color ? ` (${color})` : ''}: savatga qo'shildi ✅`); setTimeout(() => { qa.classList.remove('ok'); qa.innerHTML = html; }, 900); }
       return;
     }
     const back = t.closest('[data-back]'); if (back) return goBack(/^#\/p\//.test(location.hash) ? S.lastList : '#/');
