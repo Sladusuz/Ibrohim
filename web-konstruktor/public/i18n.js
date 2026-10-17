@@ -8,7 +8,18 @@
   window.I18N = { lang, t: (s) => s };
   if (!D || lang === 'uz') return;
   const M = new Map(); for (const k of Object.keys(D)) M.set(norm(k), D[k]);
-  const tr = (s) => { const n = norm(s); if (!n) return null; const v = M.get(n); return v && v !== n ? v : null; };
+  const CUR = lang === 'ru' ? 'сум' : 'UZS', UNITS = lang === 'ru' ? { oy: 'мес.', kun: 'дн.', hafta: 'нед.', dona: 'шт.' } : { oy: 'mo', kun: 'days', hafta: 'weeks', dona: 'pcs' };
+  const PRE = lang === 'ru' ? 'от' : 'from';
+  // Raqamli naqshlar: "2 500 000 so'm dan", "1–2 oy", "Taxminan 5 mln so'm"
+  const pat = (n) => {
+    let m;
+    if ((m = /^([\d\s.,–-]+) so'm dan$/.exec(n))) return `${PRE} ${m[1]} ${CUR}`;
+    if ((m = /^([\d\s.,–-]+) so'm$/.exec(n))) return `${m[1]} ${CUR}`;
+    if ((m = /^([\d\s.,–-]+) (oy|kun|hafta|dona)$/.exec(n))) return `${m[1]} ${UNITS[m[2]]}`;
+    if ((m = /^(\d+)\s*\/\s*(\d+): (.+)$/.exec(n))) { const t = M.get(norm(m[3])); return t ? `${m[1]} / ${m[2]}: ${t}` : null; }
+    return null;
+  };
+  const tr = (s) => { const n = norm(s); if (!n) return null; const v = M.get(n) || pat(n); return v && v !== n ? v : null; };
   window.I18N.t = (s) => tr(s) || s;
   const ATTRS = ['placeholder', 'aria-label', 'title', 'alt', 'value'];
   function node(n) {
