@@ -195,7 +195,7 @@ async function adminCommand(cmd, arg, m, ctx) {
       const cat = c.categories.find((x) => x.name.toLowerCase() === catName.toLowerCase() || x.slug === catName.toLowerCase());
       if (!cat) { err = `Kategoriya topilmadi: ${catName}. Mavjud: ${c.categories.map((x) => x.name).join(', ')}`; return c; }
       const list = colors.split(',').map((x) => x.trim()).filter(Boolean).map((name) => ({ name, hex: shop.COLOR_HEX[name] || '#7d8594' }));
-      added = { id: c.nextProductId++, category_id: cat.id, title, brand: 'BabyCheer', price: num(price), old_price: num(old), stock: num(stock), badge: '', featured: false, short: desc, description: desc, specs: {}, colors: list, photo: m.photo ? m.photo.at(-1).file_id : null, active: true, sort: 100 + c.nextProductId };
+      added = { id: c.nextProductId++, category_id: cat.id, title, brand: 'BabyCheer', price: num(price), old_price: num(old), stock: num(stock), badge: '', featured: false, short: desc, description: desc, specs: {}, colors: list, photo: m.photo ? m.photo.at(-1).file_id : null, images: m.photo ? [m.photo.at(-1).file_id] : [], active: true, sort: 100 + c.nextProductId };
       c.products.push(added);
       return c;
     });
@@ -204,7 +204,7 @@ async function adminCommand(cmd, arg, m, ctx) {
   if (cmd === '/photo') {
     if (!m.photo || !num(arg)) return reply('Rasm yuboring va izohiga yozing: <code>/photo id</code>');
     let title = null;
-    await shop.updateCatalog((c) => { const p = c.products.find((x) => x.id === Number(arg) && x.active); if (p) { p.photo = m.photo.at(-1).file_id; title = p.title; } return c; });
+    await shop.updateCatalog((c) => { const p = c.products.find((x) => x.id === Number(arg) && x.active); if (p) { const fid = m.photo.at(-1).file_id; p.photo = fid; p.images = [fid, ...shop.imagesOf(p).slice(1)]; title = p.title; } return c; });
     return reply(title ? `🖼 «${esc(title)}» rasmi yangilandi` : 'Mahsulot topilmadi.');
   }
   if (cmd === '/set') {

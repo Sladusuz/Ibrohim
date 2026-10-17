@@ -49,11 +49,24 @@
   const cat = (id) => S.data.categories.find((c) => c.id === Number(id));
   const pct = (p) => (p.old_price > p.price ? Math.round((1 - p.price / p.old_price) * 100) : 0);
   const hexOf = (p, color) => (p.colors.find((c) => c.name === color) || p.colors[0] || { hex: '#2b59ff' }).hex;
-  const media = (p, color) => {
-    const hex = hexOf(p, color);
-    const inner = p.photo ? `<img src="/photo/${esc(p.photo)}" alt="${esc(p.title)}" loading="lazy" decoding="async">` : window.BC.art((cat(p.category_id) || {}).icon || 'car', hex);
-    return `<div class="media" style="--tint:${hex}">${inner}</div>`;
+  const imgsOf = (p) => (p.images && p.images.length ? p.images : p.photo ? [p.photo] : []);
+  const artOf = (p, color) => window.BC.art((cat(p.category_id) || {}).icon || 'car', hexOf(p, color));
+  const imgTag = (id, alt) => `<img src="/photo/${esc(id)}" alt="${esc(alt)}" loading="lazy" decoding="async" onload="this.classList.add('ld');this.parentNode.classList.add('done')">`;
+  const media = (p, color, idx = 0) => {
+    const hex = hexOf(p, color), im = imgsOf(p)[idx];
+    return `<div class="media${im ? ' ph' : ''}" style="--tint:${hex}" data-icon="${esc((cat(p.category_id) || {}).icon || 'car')}" data-hex="${esc(hex)}">${im ? imgTag(im, p.title) : artOf(p, color)}</div>`;
   };
+  // mahsulot sahifasi galereyasi: 2+ rasm bo'lsa surib ko'riladigan karusel
+  const gallery = (p, color) => {
+    const n = imgsOf(p).length;
+    if (n < 2) return media(p, color);
+    return `<div class="car" id="car">${imgsOf(p).map((_, i) => media(p, color, i)).join('')}</div><div class="dots" id="dots">${imgsOf(p).map((_, i) => `<i class="${i ? '' : 'on'}"></i>`).join('')}</div>`;
+  };
+  // rasm yuklanmasa (404, uzilish) illyustratsiyaga qaytadi: singan ikonka ko'rinmaydi
+  document.addEventListener('error', (e) => {
+    const im = e.target, m = im && im.tagName === 'IMG' && im.closest('.media');
+    if (m) { m.classList.remove('ph'); m.classList.add('done'); m.innerHTML = window.BC.art(m.dataset.icon || 'car', m.dataset.hex || '#2b59ff'); }
+  }, true);
   const favBtn = (id) => `<button class="fav ${S.favs.includes(id) ? 'on' : ''}" data-fav="${id}" aria-label="Sevimli">${svg('heart')}</button>`;
   const card = (p) => `<article class="pcard" data-go="#/p/${p.id}">
       <div style="position:relative">${media(p)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}${favBtn(p.id)}</div>
@@ -202,7 +215,7 @@
     };
     return {
       title: c ? c.name : 'Mahsulot', tab: 'shop', cta: true,
-      html: `<div class="gallery" id="gal">${media(p, st.color)}${favBtn(p.id)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}</div>
+      html: `<div class="gallery" id="gal">${gallery(p, st.color)}${favBtn(p.id)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}</div>
         <div class="pt"><h1>${esc(p.title)}</h1>
           <div class="row"><span class="big num">${money(p.price)}</span>${p.old_price > p.price ? `<s class="num">${money(p.old_price)}</s><span class="pill bad">−${pct(p)}%</span>` : ''}</div>
           <div class="row">${p.stock ? `<span class="pill ok">✓ Mavjud${p.stock <= 5 ? `: ${p.stock} ta qoldi` : ''}</span>` : '<span class="pill bad">Sotuvda yo\'q</span>'}<span class="pill brand">${s.warrantyMonths} oy kafolat</span></div>
@@ -214,9 +227,11 @@
         ${rel.length ? `<section class="sec"><div class="sec-h"><h2>O'xshash mahsulotlar</h2></div><div class="hscroll">${rel.map(card).join('')}</div></section>` : ''}`,
       mount() {
         drawCta();
+        const car = $('#car');
+        if (car) car.addEventListener('scroll', () => { const i = Math.round(car.scrollLeft / car.clientWidth); $$('#dots i').forEach((d, k) => d.classList.toggle('on', k === i)); }, { passive: true });
         $$('.sw').forEach((b) => b.addEventListener('click', () => {
           st.color = b.dataset.color; $$('.sw').forEach((x) => x.classList.toggle('on', x === b)); $('#cname').textContent = st.color;
-          $('#gal .media').outerHTML = media(p, st.color); haptic('light'); drawCta();
+          if (!imgsOf(p).length) $('#gal .media').outerHTML = media(p, st.color); haptic('light'); drawCta();
         }));
         $$('[data-q]').forEach((b) => b.addEventListener('click', () => {
           st.qty = Math.max(1, Math.min(p.stock, st.qty + Number(b.dataset.q))); $('#qv').textContent = st.qty; haptic('light'); drawCta();

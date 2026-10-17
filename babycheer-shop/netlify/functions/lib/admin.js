@@ -60,14 +60,16 @@ export async function adminApi(route, req, user) {
       const key = text(k, 40), val = text(v, 120);
       if (key && val) specs[key] = val;
     }
-    const photo = body.photo ? String(body.photo) : null;
-    if (photo && !/^[\w-]{10,200}$/.test(photo)) return bad("Rasm noto'g'ri");
+    const rawImages = Array.isArray(body.images) ? body.images : body.photo ? [body.photo] : [];
+    const images = [...new Set(rawImages.map(String))].slice(0, 6);
+    if (images.some((id) => !/^[\w-]{10,200}$/.test(id))) return bad("Rasm noto'g'ri");
+    const photo = images[0] || null;
     let saved = null, err = null;
     await shop.updateCatalog((c) => {
       const cat = c.categories.find((x) => x.id === Number(body.category_id));
       if (!cat) { err = 'Kategoriyani tanlang'; return c; }
       const fields = {
-        category_id: cat.id, title, price, old_price: old, stock, colors, specs, photo,
+        category_id: cat.id, title, price, old_price: old, stock, colors, specs, photo, images,
         badge: text(body.badge, 24), short: text(body.short, 160), description: text(body.description, 2000),
         featured: !!body.featured, active: body.active !== false,
       };

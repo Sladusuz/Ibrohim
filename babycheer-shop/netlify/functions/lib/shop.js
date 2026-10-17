@@ -31,6 +31,9 @@ export const normPhone = (p) => {
 
 export class ShopError extends Error {}
 
+/** Mahsulot rasmlari: yangi `images` ro'yxati yoki eski bitta `photo`. */
+export const imagesOf = (p) => (Array.isArray(p.images) && p.images.length ? p.images : p.photo ? [p.photo] : []);
+
 // ---------- katalog ----------
 export async function getCatalog() {
   let c = await store.get('catalog');
@@ -54,7 +57,7 @@ export async function publicCatalog() {
   return {
     settings: { ...c.settings, payments: paymentMethods() },
     categories: [...c.categories].sort((a, b) => a.sort - b.sort),
-    products: c.products.filter((p) => p.active).sort((a, b) => a.sort - b.sort),
+    products: c.products.filter((p) => p.active).sort((a, b) => a.sort - b.sort).map((p) => ({ ...p, images: imagesOf(p) })),
     faq: FAQ.map(([q, a]) => [q, a.replace(/\{(\w+)\}/g, (_, k) => faqFmt[k])]),
   };
 }

@@ -67,6 +67,22 @@ test('rasm yuklash va /photo orqali berish', async () => {
   assert.equal((await call('admin/upload', { method: 'POST', raw: png, type: 'image/png', id: 111 })).status, 403);
 });
 
+test('bir nechta rasm: birinchisi asosiy, 6 tadan oshmaydi, eski photo ham ishlaydi', async () => {
+  const up = async () => (await J('admin/upload', { method: 'POST', raw: Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex'), type: 'image/png' })).photo;
+  const [a, b, c] = [await up(), await up(), await up()];
+  const base = { id: 3, category_id: 1, title: '2 kishilik elektromobil', price: 3950000 };
+  let p = (await J('admin/product', { method: 'POST', body: { ...base, images: [b, a, b, c] } })).product;
+  assert.deepEqual(p.images, [b, a, c]); assert.equal(p.photo, b); // takror olib tashlanadi, birinchisi asosiy
+  assert.deepEqual((await J('catalog')).products.find((x) => x.id === 3).images, [b, a, c]);
+  p = (await J('admin/product', { method: 'POST', body: { ...base, images: Array.from({ length: 9 }, (_, i) => `img_abcdefghij${i}`) } })).product;
+  assert.equal(p.images.length, 6);
+  p = (await J('admin/product', { method: 'POST', body: { ...base, photo: a } })).product; // eski format
+  assert.deepEqual(p.images, [a]);
+  assert.equal((await call('admin/product', { method: 'POST', body: { ...base, images: ['../x'] } })).status, 400);
+  p = (await J('admin/product', { method: 'POST', body: { ...base, images: [] } })).product;
+  assert.equal(p.photo, null); assert.deepEqual((await J('catalog')).products.find((x) => x.id === 3).images, []);
+});
+
 test('kategoriya va sozlamalar', async () => {
   const c = (await J('admin/category', { method: 'POST', body: { name: "O'yinchoqlar", icon: 'trike' } })).category;
   assert.equal(c.icon, 'trike');

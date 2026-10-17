@@ -49,3 +49,15 @@ body.admin #view { padding-bottom: 24px; }
 .catrow { display: grid; grid-template-columns: 1fr 96px auto auto; gap: 6px; align-items: center; margin-bottom: 8px; }
 .catrow input, .catrow select { width: 100%; min-width: 0; border: 1.5px solid transparent; outline: 0; border-radius: 12px; background: var(--card); padding: 10px; box-shadow: var(--shadow); font-size: 14px; }
 .catrow .btn.sm { padding: 0 12px; }
+
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  .sheet-bar { background: var(--bg); }
+  .sheet-foot { background: var(--card); }
+}
+.imgs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.imgs .it { position: relative; }
+.imgs .media { aspect-ratio: 1; border-radius: 14px; }
+.imgs .it .x { position: absolute; top: 4px; right: 4px; width: 28px; height: 28px; font-size: 14px; background: rgba(15, 20, 36, .7); color: #fff; z-index: 2; }
+.imgs .it .main { position: absolute; left: 4px; bottom: 4px; z-index: 2; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--brand); color: #fff; }
+.imgs .it .mk { position: absolute; left: 4px; bottom: 4px; z-index: 2; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(15, 20, 36, .7); color: #fff; }
+.imgs .add { aspect-ratio: 1; border-radius: 14px; border: 2px dashed var(--line); display: grid; place-items: center; color: var(--hint); font-weight: 700; font-size: 13px; text-align: center; padding: 6px; }

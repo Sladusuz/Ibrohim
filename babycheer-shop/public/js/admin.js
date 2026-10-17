@@ -31,10 +31,16 @@
   const confirmBox = (msg) => new Promise((res) => (tg && tg.showConfirm ? tg.showConfirm(msg, res) : res(confirm(msg))));
 
   const cat = (id) => A.data.categories.find((c) => c.id === Number(id));
-  const media = (p) => {
-    const hex = (p.colors[0] || {}).hex || '#2b59ff';
-    return `<div class="media" style="--tint:${hex}">${p.photo ? `<img src="/photo/${esc(p.photo)}" alt="" loading="lazy">` : window.BC.art((cat(p.category_id) || {}).icon || 'car', hex)}</div>`;
+  const imgsOf = (p) => (p.images && p.images.length ? p.images : p.photo ? [p.photo] : []);
+  const imgTag = (id) => `<img src="/photo/${esc(id)}" alt="" loading="lazy" decoding="async" onload="this.classList.add('ld');this.parentNode.classList.add('done')">`;
+  const media = (p, idx = 0) => {
+    const hex = (p.colors[0] || {}).hex || '#2b59ff', icon = (cat(p.category_id) || {}).icon || 'car', im = imgsOf(p)[idx];
+    return `<div class="media${im ? ' ph' : ''}" style="--tint:${hex}" data-icon="${esc(icon)}" data-hex="${esc(hex)}">${im ? imgTag(im) : window.BC.art(icon, hex)}</div>`;
   };
+  document.addEventListener('error', (e) => { // rasm yuklanmasa illyustratsiya
+    const im = e.target, m = im && im.tagName === 'IMG' && im.closest('.media');
+    if (m) { m.classList.remove('ph'); m.classList.add('done'); m.innerHTML = window.BC.art(m.dataset.icon || 'car', m.dataset.hex || '#2b59ff'); }
+  }, true);
 
   // ---------- chizish ----------
   function draw() {
@@ -93,12 +99,12 @@
     const isNew = id === 'new';
     const p = isNew ? { category_id: A.data.categories[0] && A.data.categories[0].id, title: '', price: '', old_price: 0, stock: 1, badge: '', short: '', description: '', colors: [], specs: {}, photo: null, featured: false, active: true }
       : JSON.parse(JSON.stringify(A.data.products.find((x) => x.id === Number(id))));
-    const st = { ...p, specs: Object.entries(p.specs || {}), colors: [...(p.colors || [])] };
+    const st = { ...p, specs: Object.entries(p.specs || {}), colors: [...(p.colors || [])], images: imgsOf(p) };
     const sheet = $('#sheet'); sheet.hidden = false; document.body.style.overflow = 'hidden';
     const fld = (k, l, ex = '', tag = 'input') => `<label class="fld"><span>${l}</span><${tag} data-f="${k}" ${ex}${tag === 'input' ? ` value="${esc(st[k] ?? '')}"` : ''}>${tag === 'textarea' ? esc(st[k] || '') + '</textarea>' : ''}</label>`;
     const draw2 = () => {
       sheet.innerHTML = `<div class="sheet-bar"><button class="back" data-close aria-label="Yopish"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><h2>${isNew ? 'Yangi mahsulot' : 'Tahrirlash'}</h2></div>
-        <div class="fs" style="margin-top:6px"><h3>Rasm</h3><div class="upl">${media({ ...st, colors: st.colors })}<div class="btns"><button class="btn ghost" id="pick">📷 Rasm yuklash</button>${st.photo ? '<button class="btn bad" id="rmPhoto">Rasmni olib tashlash</button>' : ''}</div></div><input id="file" type="file" accept="image/*" hidden></div>
+        <div class="fs" style="margin-top:6px"><h3>Rasmlar (${st.images.length}/6)</h3><div class="imgs">${st.images.map((id, i) => `<div class="it"><div class="media ph" data-icon="car" data-hex="#2b59ff">${imgTag(id)}</div><button class="x" data-irm="${i}" aria-label="O'chirish">✕</button>${i === 0 ? '<span class="main">Asosiy</span>' : `<button class="mk" data-imain="${i}">Asosiy qilish</button>`}</div>`).join('')}${st.images.length < 6 ? '<button class="add" id="pick">📷<br>Rasm qo\'shish</button>' : ''}</div><input id="file" type="file" accept="image/*" multiple hidden></div>
         <div class="fs"><h3>Asosiy</h3>${fld('title', 'Nomi', 'autocomplete="off"')}<label class="fld"><span>Kategoriya</span><select data-f="category_id">${A.data.categories.map((c) => `<option value="${c.id}" ${c.id === Number(st.category_id) ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>
           <div class="row2c">${fld('price', "Narxi (so'm)", 'inputmode="numeric"')}${fld('old_price', 'Eski narx (0 = yo\'q)', 'inputmode="numeric"')}</div>
           <div class="row2c">${fld('stock', 'Omborda (ta)', 'inputmode="numeric"')}${fld('badge', 'Belgi (Yangi, Chegirma...)')}</div>
@@ -126,7 +132,8 @@
       const t = e.target.closest('button'); if (!t) return;
       if (t.dataset.close !== undefined) return close();
       if (t.id === 'pick') return $('#file').click();
-      if (t.id === 'rmPhoto') { collect(); st.photo = null; return draw2(); }
+      if (t.dataset.irm) { collect(); st.images.splice(Number(t.dataset.irm), 1); return draw2(); }
+      if (t.dataset.imain) { collect(); const [x] = st.images.splice(Number(t.dataset.imain), 1); st.images.unshift(x); return draw2(); }
       if (t.dataset.preset) { collect(); st.colors.push({ name: t.dataset.preset, hex: PALETTE[t.dataset.preset] }); return draw2(); }
       if (t.dataset.cadd !== undefined) { collect(); st.colors.push({ name: '', hex: '#2b59ff' }); return draw2(); }
       if (t.dataset.crm) { collect(); st.colors.splice(Number(t.dataset.crm), 1); return draw2(); }
@@ -142,20 +149,25 @@
         const specs = {}; st.specs.forEach(([k, v]) => { if (k.trim() && v.trim()) specs[k.trim()] = v.trim(); });
         t.disabled = true;
         try {
-          const { product } = await api('admin/product', { id: isNew ? undefined : p.id, category_id: st.category_id, title: st.title, price: st.price, old_price: st.old_price || 0, stock: st.stock || 0, badge: st.badge, short: st.short, description: st.description, colors: st.colors.filter((c) => c.name.trim()), specs, photo: st.photo, featured: st.featured, active: st.active });
+          const { product } = await api('admin/product', { id: isNew ? undefined : p.id, category_id: st.category_id, title: st.title, price: st.price, old_price: st.old_price || 0, stock: st.stock || 0, badge: st.badge, short: st.short, description: st.description, colors: st.colors.filter((c) => c.name.trim()), specs, images: st.images, featured: st.featured, active: st.active });
           const i = A.data.products.findIndex((x) => x.id === product.id); i >= 0 ? (A.data.products[i] = product) : A.data.products.push(product);
           close(); draw(); toast('Saqlandi ✅'); haptic('ok');
         } catch (err) { $('#serr').innerHTML = `<div class="alert">${esc(err.message)}</div>`; haptic('err'); t.disabled = false; }
       }
     };
     sheet.onchange = async (e) => {
-      if (e.target.id !== 'file' || !e.target.files[0]) return;
+      if (e.target.id !== 'file' || !e.target.files.length) return;
       collect();
-      try {
-        toast('Rasm yuklanmoqda...');
-        const blob = await shrink(e.target.files[0], 1200, 0.82);
-        st.photo = (await api('admin/upload', null, blob, 'image/jpeg')).photo; draw2(); toast('Rasm yuklandi ✅');
-      } catch (err) { toast(err.message, true); }
+      const files = [...e.target.files].slice(0, 6 - st.images.length);
+      let ok = 0;
+      for (const [i, f] of files.entries()) {
+        try {
+          toast(`Rasm yuklanmoqda ${i + 1}/${files.length}...`);
+          const blob = await shrink(f, 1200, 0.82);
+          st.images.push((await api('admin/upload', null, blob, 'image/jpeg')).photo); ok++;
+        } catch (err) { toast(err.message, true); }
+      }
+      if (ok) { draw2(); toast(ok > 1 ? `${ok} ta rasm yuklandi ✅` : 'Rasm yuklandi ✅'); }
     };
   }
 
