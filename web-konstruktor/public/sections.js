@@ -22,27 +22,38 @@
   const uid = () => 'i' + Math.random().toString(36).slice(2, 8);
   const define = (type, def) => { E.sections[type] = def; E.order.push(type); };
   const arr = (a) => (Array.isArray(a) ? a : []);
-  const split = (s, d) => String(s || '').split(/\s+/).filter(Boolean).map((w, i) => `<span class="w"><span style="animation-delay:${(d + i * 0.08).toFixed(2)}s">${text(w)}</span></span>`).join(' ');
-  const btn = (t, l, cls) => (t ? `<a class="btn ${cls || ''}" href="${esc(linkUrl(l) || '#')}">${text(t)}</a>` : '');
+  const split = (s, d, ins) => {
+    let i = 0; const imgs = arr(ins).filter((x) => x && imgUrl(x.image));
+    const total = String(s || '').replace(/\*/g, '').split(/\s+/).filter(Boolean).length;
+    const at = imgs.map((_, j) => Math.max(1, Math.round((total * (j + 1)) / (imgs.length + 1))));
+    const word = (w) => { const k = i++; let h = `<span class="w"><span style="animation-delay:${(d + k * 0.08).toFixed(2)}s">${text(w)}</span></span>`; const j = at.indexOf(k + 1); if (j >= 0) h += `<span class="ipill" style="--pd:${(d + k * 0.08 + 0.5).toFixed(2)}s"><img src="${esc(imgUrl(imgs[j].image))}" alt=""></span>`; return h; };
+    return String(s || '').split(/(\*[^*]+\*)/).filter(Boolean).map((seg) => { const em = /^\*[^*]+\*$/.test(seg); const t = em ? seg.slice(1, -1) : seg; const h = t.split(/\s+/).filter(Boolean).map(word).join(' '); const out = em ? `<em>${h}</em>` : h; return (!em && /^\s/.test(t) ? ' ' : '') + out + (!em && /\s$/.test(t) ? ' ' : ''); }).join('').replace(/\s+/g, ' ');
+  };
+  const btn = (t, l, cls) => (t ? `<a class="btn ${cls || ''}" href="${esc(linkUrl(l) || '#')}">${text(t)}<span class="bi">${icon('arrow')}</span></a>` : '');
 
   /* =============== HERO =============== */
   define('hero', {
     label: 'Bosh ekran', icon: 'star', desc: 'Sahifa boshidagi katta sarlavha va tugmalar',
     fields: [
-      F.sel('layout', 'Ko\'rinish', [['split', 'Matn + tasvir'], ['center', 'Markazda'], ['image', 'To\'liq rasm foni'], ['shop', 'Do\'kon (mahsulotlar kollaji)']]),
+      F.sel('layout', 'Ko\'rinish', [['aurora', 'Aurora: animatsion fon, markazda (tavsiya)'], ['cinema', 'Kinematik: to\'liq rasm yoki video'], ['photo', 'Katta foto + matn'], ['editorial', 'Muharrir: so\'zlar orasida rasmlar'], ['split', 'Matn + tasvir'], ['center', 'Markazda'], ['image', 'To\'liq rasm foni (sodda)'], ['shop', 'Do\'kon (mahsulotlar kollaji)']]),
       F.text('badge', 'Yuqoridagi yozuv', { max: 80 }), F.text('titleStart', 'Sarlavha boshi', { max: 80 }),
       F.lines('words', 'Almashib turadigan so\'zlar', { hint: 'Har bir qatorga bitta so\'z. Bo\'sh qoldirsangiz o\'chadi.' }),
       F.text('titleEnd', 'Sarlavha oxiri', { max: 80 }), F.area('text', 'Tavsif', { max: 320, rows: 3 }),
       F.text('cta1Text', '1-tugma matni', { max: 40 }), F.link('cta1Link', '1-tugma havolasi'),
       F.text('cta2Text', '2-tugma matni', { max: 40 }), F.link('cta2Link', '2-tugma havolasi'),
       F.sel('visual', 'O\'ng tomondagi tasvir', [['none', 'Yo\'q'], ['image', 'Rasm'], ['window', 'Kod oynasi'], ['collage', 'Mahsulotlar kollaji']], { show: (s) => ['split', 'center'].includes(s.layout) }),
-      F.img('image', 'Rasm', { show: (s) => s.layout === 'image' || ((s.layout === 'split' || s.layout === 'center') && s.visual === 'image') }),
+      F.sel('fx', 'Fon animatsiyasi', [['aurora', 'Nur oqimi'], ['waves', "To'lqinlar"]], { show: (s) => s.layout === 'aurora' }),
+      F.img('image', 'Rasm', { hint: 'Aurora: pastdagi katta rasm (ixtiyoriy). Kinematik: fon rasmi. Foto: asosiy foto.', show: (s) => ['image', 'cinema', 'photo', 'aurora'].includes(s.layout) || ((s.layout === 'split' || s.layout === 'center') && s.visual === 'image') }),
+      F.text('video', 'Fon videosi (mp4 havolasi)', { max: 300, hint: 'Ixtiyoriy. Yuklangan mp4 faylning manzili.', show: (s) => s.layout === 'cinema' }),
+      F.img('image2', 'Ikkinchi kichik rasm', { show: (s) => s.layout === 'photo' }),
+      F.text('spinText', 'Aylanuvchi yozuv', { max: 40, show: (s) => s.layout === 'photo' }),
+      F.list('inlineImgs', "So'zlar orasidagi rasmlar (3 tagacha)", { title: 'image', fields: [F.img('image', 'Rasm')], add: () => ({ image: '' }), max: 3 }, { show: (s) => s.layout === 'editorial' }),
       F.lines('windowLines', 'Oynadagi qatorlar', { show: (s) => s.layout === 'split' && s.visual === 'window' }),
-      F.lines('chips', 'Suzuvchi yozuvlar (3 tagacha)', { show: (s) => ['split', 'shop'].includes(s.layout) && s.visual !== 'none' }),
+      F.lines('chips', 'Suzuvchi yozuvlar (3 tagacha)', { show: (s) => s.layout === 'photo' || (['split', 'shop'].includes(s.layout) && s.visual !== 'none') }),
       F.list('collage', 'Kollaj kartochkalari', { title: 'title', fields: [F.img('image', 'Rasm'), F.text('title', 'Nomi', { max: 60 }), F.text('price', 'Narx matni', { max: 30 })], add: () => ({ image: '', title: 'Mahsulot', price: '' }), max: 3 }, { show: (s) => s.layout === 'shop' || s.visual === 'collage' }),
       F.list('trust', 'Ishonch ko\'rsatkichlari', { title: 'value', fields: [F.text('value', 'Qiymat', { max: 20 }), F.text('label', 'Yozuv', { max: 30 })], add: () => ({ value: '', label: '' }), max: 4 }),
     ],
-    defaults: () => ({ layout: 'split', badge: 'Yangi', titleStart: 'Sarlavhangizni', words: ['shu yerga'], titleEnd: 'yozing', text: 'Kompaniyangiz haqida qisqa va aniq tavsif.', cta1Text: 'Boshlash', cta1Link: '#', cta2Text: '', cta2Link: '#', visual: 'none', image: '', windowLines: [], chips: [], collage: [], trust: [] }),
+    defaults: () => ({ layout: 'aurora', fx: 'aurora', video: '', image2: '', spinText: '', inlineImgs: [], badge: 'Yangi', titleStart: 'Sarlavhangizni', words: ['shu yerga'], titleEnd: 'yozing', text: 'Kompaniyangiz haqida qisqa va aniq tavsif.', cta1Text: 'Boshlash', cta1Link: '#', cta2Text: '', cta2Link: '#', visual: 'none', image: '', windowLines: [], chips: [], collage: [], trust: [] }),
     render(sec) {
       const words = arr(sec.words).filter(Boolean), layout = sec.layout || 'split';
       const h1 = `<h1>${split(sec.titleStart, 0.1)}${words.length ? `<br><span class="grad type"><span id="tw" data-words="${esc(words.join('|'))}"></span><i class="caret"></i></span> ` : ' '}${split(sec.titleEnd, 0.45)}</h1>`;
@@ -60,6 +71,24 @@
         if (v === 'window' && layout === 'split') vis = `<div class="vis tilt"><div class="win"><div class="bar"><i></i><i></i><i></i></div><pre>${arr(sec.windowLines).slice(0, 12).map((l, i) => `<span class="l" style="animation-delay:${(1 + i * 0.3).toFixed(1)}s">${codeLine(l)}</span>`).join('')}</pre><div class="chart">${[35, 55, 42, 70, 60, 88, 100].map((x, i) => `<i style="height:${x}%;animation-delay:${(1.2 + i * 0.1).toFixed(1)}s"></i>`).join('')}</div></div>${chipH}</div>`;
         else if (v === 'image' && imgUrl(sec.image)) vis = `<div class="vis"><div class="imgwin">${E.img(sec.image, '')}</div>${layout === 'center' ? '' : chipH}</div>`;
         else if (v === 'collage' && collage.length) vis = `<div class="vis">${collageH}${chipH}</div>`;
+      }
+      const head = (cls) => `<section class="sec s-hero hero hero-${cls}" id="${esc(sec.id)}" data-sec="${esc(sec.id)}"`;
+      const h1x = (ins) => `<h1>${split(sec.titleStart, 0.1, ins)}${words.length ? `<br><span class="grad type"><span id="tw" data-words="${esc(words.join('|'))}"></span><i class="caret"></i></span> ` : ' '}${split(sec.titleEnd, 0.45)}</h1>`;
+      const bare = (ins) => `${sec.badge ? `<div class="pill"><b></b>${text(sec.badge)}</div>` : ''}${h1x(ins)}${sec.text ? `<p class="lead">${text(sec.text)}</p>` : ''}<div class="cta">${btn(sec.cta1Text, sec.cta1Link, 'mag')}${btn(sec.cta2Text, sec.cta2Link, 'ghost mag')}</div>`;
+      const trustH = trust.length ? `<div class="trust">${trust.map((t) => `<div><b>${text(t.value)}</b>${text(t.label)}</div>`).join('')}</div>` : '';
+      if (layout === 'aurora' || layout === 'editorial') {
+        const shot = layout === 'aurora' && imgUrl(sec.image) ? `<div class="hshot imr"><img data-par="0.05" src="${esc(imgUrl(sec.image))}" alt=""></div>` : '';
+        return `${head(layout)}><div class="hfx" data-fx="${sec.fx === 'waves' ? 'waves' : 'aurora'}"><div class="hveil"></div></div><div class="wrap hero-in"><div class="hcopy">${bare(layout === 'editorial' ? sec.inlineImgs : null)}${trustH}</div>${shot}</div>${shot ? '' : '<i class="hscroll"></i>'}</section>`;
+      }
+      if (layout === 'cinema') {
+        const vid = /^(https?:\/\/|\/)[^\s"'<>]+\.(mp4|webm)(\?.*)?$/i.test(sec.video || '') ? `<video src="${esc(sec.video)}" ${imgUrl(sec.image) ? `poster="${esc(imgUrl(sec.image))}"` : ''} muted loop playsinline autoplay></video>` : '';
+        return `${head('cinema')}><div class="hbg2">${vid || E.img(sec.image, '')}</div><div class="wrap hero-in"><div class="hcopy">${bare()}</div>${trustH}</div><i class="hscroll"></i></section>`;
+      }
+      if (layout === 'photo') {
+        const ch = arr(sec.chips).filter(Boolean).slice(0, 3).map((c, i) => `<div class="chip ${'abc'[i]}"><em>${icon(['star', 'zap', 'check'][i])}</em>${text(c)}</div>`).join('');
+        const spin = sec.spinText ? `<div class="spin"><svg viewBox="0 0 120 120"><defs><path id="sp${esc(sec.id)}" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs><text><textPath href="#sp${esc(sec.id)}">${text((sec.spinText + ' • ').repeat(3))}</textPath></text></svg><b>${icon('arrow')}</b></div>` : '';
+        const photo = `<div class="hphoto"><div class="frame">${imgUrl(sec.image) ? `<img data-par="0.06" src="${esc(imgUrl(sec.image))}" alt="">` : ''}</div>${spin}${ch}${imgUrl(sec.image2) ? `<div class="imgb"><img src="${esc(imgUrl(sec.image2))}" alt=""></div>` : ''}</div>`;
+        return `${head('photo')}><div class="wrap hero-in"><div class="hcopy">${bare()}${trustH}</div>${photo}</div></section>`;
       }
       if (layout === 'image') {
         return `<section class="sec s-hero hero hero-image" id="${esc(sec.id)}" data-sec="${esc(sec.id)}"><div class="hbg">${E.img(sec.image, '')}</div><div class="wrap hero-in"><div class="hcopy">${copy}</div></div></section>`;
@@ -116,10 +145,11 @@
   /* =============== PROCESS =============== */
   define('process', {
     label: 'Jarayon', icon: 'refresh', desc: 'Qanday ishlashingiz: qadamlar',
-    fields: [...HEAD, F.list('items', 'Qadamlar', { title: 'title', fields: [F.text('title', 'Nomi', { max: 60 }), F.area('text', 'Tavsif', { max: 250, rows: 2 })], add: () => ({ title: 'Yangi qadam', text: '' }), max: 8 })],
+    fields: [...HEAD, F.sel('layout', "Ko'rinish", [['grid', 'Yonma-yon kartochkalar'], ['stack', 'Ustma-ust yig\'iladigan (katta)']]), F.list('items', 'Qadamlar', { title: 'title', fields: [F.text('title', 'Nomi', { max: 60 }), F.area('text', 'Tavsif', { max: 250, rows: 2 })], add: () => ({ title: 'Yangi qadam', text: '' }), max: 8 })],
     defaults: () => ({ eyebrow: 'Jarayon', title: 'Qanday ishlaymiz', text: '', items: [{ title: 'Bog\'lanish', text: 'Arizangizni qabul qilamiz.' }, { title: 'Kelishuv', text: 'Shartlarni kelishamiz.' }, { title: 'Bajarish', text: 'Ishni o\'z vaqtida topshiramiz.' }] }),
     render(sec) {
       const it = arr(sec.items); if (!it.length) return '';
+      if (sec.layout === 'stack') return E.wrap(sec, `${E.head(sec)}<div class="steps stack">${it.map((s, i) => `<div class="step" style="--i:${i}"><div class="num">${String(i + 1).padStart(2, '0')}</div><h3>${text(s.title)}</h3><p>${text(s.text)}</p></div>`).join('')}</div>`);
       return E.wrap(sec, `${E.head(sec)}<div class="steps">${it.map((s, i) => `<div class="step rv" style="--d:${i * 0.1}s"><div class="num">${i + 1}</div><h3>${text(s.title)}</h3><p>${text(s.text)}</p></div>`).join('')}</div>`);
     },
   });
@@ -131,7 +161,7 @@
     defaults: () => ({ eyebrow: 'Biz haqimizda', title: 'Biz kimmiz', text: 'Kompaniyangiz haqida batafsil yozing: tarixi, qadriyatlari va mijozlarga nima beradi.', image: '', imageSide: 'left', points: ['Birinchi afzallik', 'Ikkinchi afzallik', 'Uchinchi afzallik'], ctaText: '', ctaLink: '#' }),
     render(sec) {
       const img = imgUrl(sec.image) ? `<div class="aimg rv">${E.img(sec.image, sec.title)}</div>` : '';
-      return E.wrap(sec, `<div class="about ${sec.imageSide === 'right' ? 'rev' : ''} ${img ? '' : 'noimg'}">${img}<div class="atx rv">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${text(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}
+      return E.wrap(sec, `<div class="about ${sec.imageSide === 'right' ? 'rev' : ''} ${img ? '' : 'noimg'}">${img}<div class="atx rv">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${E.rich(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}
         ${arr(sec.points).filter(Boolean).length ? `<ul class="pts">${arr(sec.points).filter(Boolean).map((p) => `<li>${icon('check')}<span>${text(p)}</span></li>`).join('')}</ul>` : ''}${sec.ctaText ? `<div class="ctaw">${btn(sec.ctaText, sec.ctaLink)}</div>` : ''}</div></div>`);
     },
   });
@@ -343,10 +373,16 @@
   /* =============== TESTIMONIALS =============== */
   define('testimonials', {
     label: 'Mijozlar fikri', icon: 'quote', desc: 'Sharhlar: matn, ism, rasm, reyting',
-    fields: [...HEAD, F.list('items', 'Sharhlar', { title: 'name', fields: [F.area('text', 'Sharh', { max: 400, rows: 3 }), F.text('name', 'Ism', { max: 60 }), F.text('role', 'Kim ekani', { max: 80 }), F.img('image', 'Rasm'), F.num('stars', 'Reyting (1–5)', { min: 0, max: 5 })], add: () => ({ text: '', name: 'Mijoz ismi', role: '', image: '', stars: 5 }) })],
+    fields: [...HEAD, F.sel('layout', "Ko'rinish", [['grid', 'Kartochkalar'], ['wall', 'Harakatlanuvchi devor']]), F.list('items', 'Sharhlar', { title: 'name', fields: [F.area('text', 'Sharh', { max: 400, rows: 3 }), F.text('name', 'Ism', { max: 60 }), F.text('role', 'Kim ekani', { max: 80 }), F.img('image', 'Rasm'), F.num('stars', 'Reyting (1–5)', { min: 0, max: 5 })], add: () => ({ text: '', name: 'Mijoz ismi', role: '', image: '', stars: 5 }) })],
     defaults: () => ({ eyebrow: 'Sharhlar', title: 'Mijozlar nima deydi', text: '', items: [{ text: 'Juda yoqdi! Hammasi tez va sifatli bajarildi.', name: 'Mijoz ismi', role: 'Mijoz', image: '', stars: 5 }, { text: 'Tavsiya qilaman, ishonchli jamoa.', name: 'Mijoz ismi', role: 'Mijoz', image: '', stars: 5 }, { text: 'Narx va sifat mos keldi.', name: 'Mijoz ismi', role: 'Mijoz', image: '', stars: 5 }] }),
     render(sec) {
       const it = arr(sec.items); if (!it.length) return '';
+      if (sec.layout === 'wall') {
+        const one = (t) => `<figure class="tt">${Number(t.stars) > 0 ? `<div class="stars">${Array.from({ length: Math.min(5, Number(t.stars)) }, () => icon('star')).join('')}</div>` : ''}<blockquote>${text(t.text)}</blockquote><figcaption><div class="av">${imgUrl(t.image) ? E.img(t.image, t.name) : E.initial(t.name)}</div><div><b>${text(t.name)}</b>${t.role ? `<span>${text(t.role)}</span>` : ''}</div></figcaption></figure>`;
+        const half = Math.ceil(it.length / 2), a = it.slice(0, half), b = it.slice(half).length ? it.slice(half) : it;
+        const row = (list) => `<div class="row">${list.concat(list, list, list).map(one).join('')}</div>`;
+        return `<section class="sec s-testimonials" id="${esc(sec.id)}" data-sec="${esc(sec.id)}"><div class="wrap">${E.head(sec)}</div><div class="wall">${row(a)}${row(b)}</div></section>`;
+      }
       return E.wrap(sec, `${E.head(sec)}<div class="tst">${it.map((t, i) => `<figure class="tt rv" style="--d:${(i % 3) * 0.08}s">${Number(t.stars) > 0 ? `<div class="stars" aria-label="${Number(t.stars)} yulduz">${Array.from({ length: Math.min(5, Number(t.stars)) }, () => icon('star')).join('')}</div>` : ''}<blockquote>${text(t.text)}</blockquote><figcaption><div class="av">${imgUrl(t.image) ? E.img(t.image, t.name) : E.initial(t.name)}</div><div><b>${text(t.name)}</b>${t.role ? `<span>${text(t.role)}</span>` : ''}</div></figcaption></figure>`).join('')}</div>`);
     },
   });
@@ -365,11 +401,12 @@
   /* =============== CTA =============== */
   define('cta', {
     label: 'Taklif banneri', icon: 'gift', desc: 'Chiroyli banner: aksiya, taymer va tugma',
-    fields: [F.text('eyebrow', 'Kichik yozuv', { max: 40 }), F.text('title', 'Sarlavha', { max: 120 }), F.area('text', 'Tavsif', { max: 300, rows: 2 }), F.text('buttonText', 'Tugma matni', { max: 40 }), F.link('buttonLink', 'Tugma havolasi'), F.text('countdownTo', 'Taymer tugash sanasi', { max: 30, ph: '2026-12-31', hint: 'Bo\'sh qoldirsangiz taymer ko\'rinmaydi. Format: YYYY-MM-DD' }), F.img('image', 'Rasm (ixtiyoriy)')],
-    defaults: () => ({ eyebrow: 'Maxsus taklif', title: 'Aksiya davom etmoqda', text: 'Taklifdan foydalanib qoling.', buttonText: 'Ko\'rish', buttonLink: '#', countdownTo: '', image: '' }),
+    fields: [F.text('eyebrow', 'Kichik yozuv', { max: 40 }), F.text('title', 'Sarlavha', { max: 120 }), F.area('text', 'Tavsif', { max: 300, rows: 2 }), F.text('buttonText', 'Tugma matni', { max: 40 }), F.link('buttonLink', 'Tugma havolasi'), F.text('countdownTo', 'Taymer tugash sanasi', { max: 30, ph: '2026-12-31', hint: 'Bo\'sh qoldirsangiz taymer ko\'rinmaydi. Format: YYYY-MM-DD' }), F.img('image', 'Rasm (ixtiyoriy)'), F.tog('fx', 'Animatsion nurli fon')],
+    defaults: () => ({ fx: false, eyebrow: 'Maxsus taklif', title: 'Aksiya davom etmoqda', text: 'Taklifdan foydalanib qoling.', buttonText: 'Ko\'rish', buttonLink: '#', countdownTo: '', image: '' }),
     render(sec) {
       const until = sec.countdownTo ? (/^\d{4}-\d{2}-\d{2}$/.test(sec.countdownTo) ? sec.countdownTo + 'T23:59:59' : sec.countdownTo) : '';
-      return E.wrap(sec, `<div class="ctab rv ${imgUrl(sec.image) ? 'hasimg' : ''}"><div class="ctx">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${text(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}${until ? `<div class="count" data-until="${esc(until)}"></div>` : ''}${btn(sec.buttonText, sec.buttonLink, 'mag')}</div>${imgUrl(sec.image) ? `<div class="cimg">${E.img(sec.image, '')}</div>` : ''}</div>`, 'tight');
+      if (sec.fx) return E.wrap(sec, `<div class="ctab fxb rv"><div class="hfx" data-fx="aurora"></div><div class="ctx">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${E.rich(sec.title)}</h2>${sec.text ? `<p class="sub" style="margin-inline:auto">${text(sec.text)}</p>` : ''}${until ? `<div class="count" data-until="${esc(until)}"></div>` : ''}<div style="margin-top:24px">${btn(sec.buttonText, sec.buttonLink, 'mag')}</div></div></div>`, 'tight');
+      return E.wrap(sec, `<div class="ctab rv ${imgUrl(sec.image) ? 'hasimg' : ''}"><div class="ctx">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${E.rich(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}${until ? `<div class="count" data-until="${esc(until)}"></div>` : ''}${btn(sec.buttonText, sec.buttonLink, 'mag')}</div>${imgUrl(sec.image) ? `<div class="cimg">${E.img(sec.image, '')}</div>` : ''}</div>`, 'tight');
     },
   });
 
@@ -409,7 +446,7 @@
     render(sec) {
       const usp = arr(sec.usp).filter(Boolean);
       const steps = [['edit', "Anketa to'ldirasiz", '3 daqiqa'], ['tel', "Biz aloqaga chiqamiz", sec.promise || '15–30 daqiqa'], ['check', 'Narx va muddat kelishiladi', 'Bepul maslahat'], ['zap', 'Ish boshlanadi', "Har kuni hisobot"]];
-      return E.wrap(sec, `<div class="briefb rv"><div class="bfl">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${text(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}
+      return E.wrap(sec, `<div class="briefb rv"><div class="bfl">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}<h2>${E.rich(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}
         ${usp.length ? `<ul class="pts">${usp.map((u) => `<li>${icon('check')}<span>${text(u)}</span></li>`).join('')}</ul>` : ''}
         <div class="bcta"><button class="btn mag" data-act="brief-open">${text(sec.buttonText || "Anketani to'ldirish")} ${icon('arrow')}</button>${sec.promise ? `<span class="prom">${icon('clock')} ${text(sec.promise)}</span>` : ''}</div></div>
         <div class="bsteps2">${steps.map(([i, t, d], k) => `<div class="bs2"><span class="n">${k + 1}</span><div><b>${text(t)}</b><small>${text(d)}</small></div><em>${icon(i)}</em></div>`).join('')}</div></div>`, 'tight');
@@ -433,7 +470,7 @@
       if (c.telegram) { const u = String(c.telegram).replace(/^@/, '').replace(/^https?:\/\/t\.me\//, ''); rows.push(['send', `<a href="https://t.me/${esc(u)}" target="_blank" rel="noopener">@${text(u)}</a>`, 'Telegram']); }
       if (c.instagram) { const u = String(c.instagram).replace(/^@/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, ''); rows.push(['insta', `<a href="https://instagram.com/${esc(u)}" target="_blank" rel="noopener">@${text(u)}</a>`, 'Instagram']); }
       const form = sec.form || 'message';
-      const info = `<div><span class="eyebrow">${text(sec.eyebrow)}</span><h2>${text(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}<ul class="info">${rows.map(([i, h, l]) => `<li><em>${icon(i)}</em><span><small>${l}</small>${h}</span></li>`).join('')}</ul>${linkUrl(sec.mapUrl) ? `<a class="btn ghost sm" href="${esc(linkUrl(sec.mapUrl))}" target="_blank" rel="noopener">${icon('pin')} Xaritada ko'rish</a>` : ''}</div>`;
+      const info = `<div><span class="eyebrow">${text(sec.eyebrow)}</span><h2>${E.rich(sec.title)}</h2>${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}<ul class="info">${rows.map(([i, h, l]) => `<li><em>${icon(i)}</em><span><small>${l}</small>${h}</span></li>`).join('')}</ul>${linkUrl(sec.mapUrl) ? `<a class="btn ghost sm" href="${esc(linkUrl(sec.mapUrl))}" target="_blank" rel="noopener">${icon('pin')} Xaritada ko'rish</a>` : ''}</div>`;
       const sel = (n, l, opts, label) => `<div class="fld sel"><select name="${n}" data-label="${esc(label || l)}">${opts.map((o) => `<option>${text(o)}</option>`).join('')}</select><label>${l}</label></div>`;
       const today = new Date().toISOString().slice(0, 10);
       let fields = `<div class="fld"><input name="name" placeholder=" " maxlength="100" autocomplete="name"><label>Ismingiz</label></div><div class="fld"><input name="phone" placeholder=" " maxlength="40" inputmode="tel" autocomplete="tel"><label>Telefon raqamingiz</label></div>`;

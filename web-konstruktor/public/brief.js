@@ -60,6 +60,7 @@
         ${sec.showEstimate !== false && s ? `<div class="est"><div><small>Taxminiy narx</small><b>${e ? E.fmt(e) + ' dan' : 'Kelishiladi'}</b></div><div><small>Taxminiy muddat</small><b>${text(s.days || 'Kelishiladi')}</b></div><p>Bu taxminiy hisob. Aniq narx va muddat vazifani muhokama qilgach belgilanadi.</p></div>` : ''}`;
     }
     const u = window.Auth && window.Auth.user && window.Auth.user();
+    if (u) { B.cname = B.cname || u.name || ''; B.cphone = B.cphone || u.phone || ''; }
     return `${head("Siz bilan qanday bog'lanamiz?", "Mutaxassisimiz tez orada aloqaga chiqadi va barcha savollarga javob beradi.")}
       <div class="fgrid3">${fld('cname', 'Ismingiz *', B.cname || (u && u.name) || '', { auto: 'name' })}${fld('cphone', 'Telefon raqamingiz *', B.cphone || (u && u.phone) || '', { mode: 'tel', auto: 'tel', max: 40 })}</div>
       ${fld('cemail', 'Email (ixtiyoriy)', B.cemail || (u && u.email) || '', { type: 'email', auto: 'email' })}

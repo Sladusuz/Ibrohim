@@ -7,9 +7,9 @@ const ROOT = path.join(__dirname, '..'), P = path.join(ROOT, 'public'), OUT = pa
 const MARK = '/*__DATA__*/null';
 const rd = (f) => fs.readFileSync(path.join(P, f), 'utf8');
 
-const css = rd('style.css').replace(/\[data-theme=/g, '[data-site=');
-const libs = ['icons.js', 'engine-core.js', 'sections.js', 'brief.js'].map(rd).join('\n');
-const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">';
+const css = (rd('style.css') + '\n' + rd('motion.css')).replace(/\[data-theme=/g, '[data-site=');
+const libs = ['icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'motion.js', 'brief.js'].map(rd).join('\n');
+const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">';
 
 // opts.account: config.js + auth.js ulanadi (asosiy sayt); opts.data: ma'lumot ichiga joylanadi
 const page = ({ data, account }) => `<!doctype html>
@@ -45,7 +45,7 @@ const html = page({ data: JSON.stringify(site).replace(/</g, '\\u003c'), account
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT)) { if (!['config.js', 'CNAME'].includes(f)) fs.rmSync(path.join(OUT, f), { recursive: true, force: true }); }
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
-for (const f of ['yaratish.html', 'kabinet.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'icons.js', 'engine-core.js', 'sections.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
+for (const f of ['yaratish.html', 'kabinet.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'motion.css', 'icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
 if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'config.js'), path.join(OUT, 'config.js'));
 fs.cpSync(path.join(P, 'img'), path.join(OUT, 'img'), { recursive: true });
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');

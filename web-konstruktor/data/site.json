@@ -10,11 +10,13 @@
     "preset": "dark",
     "accent": "",
     "accent2": "",
-    "font": "modern",
+    "look": "cinema",
+    "motion": true,
+    "font": "display",
     "radius": "round",
-    "bg": "full",
+    "bg": "plain",
     "heads": "left",
-    "switcher": true
+    "switcher": false
   },
   "nav": {
     "style": "pill",
@@ -60,38 +62,19 @@
       "type": "hero",
       "enabled": true,
       "navLabel": "",
-      "layout": "split",
+      "layout": "aurora",
+      "fx": "aurora",
       "badge": "Yangi loyihalar uchun ochiqmiz",
-      "titleStart": "Biznesingiz uchun",
-      "words": [
-        "veb-sayt",
-        "mobil ilova",
-        "Telegram bot",
-        "onlayn do'kon"
-      ],
-      "titleEnd": "yaratamiz",
+      "titleStart": "Biznesingiz uchun *kelajak* saytlari",
+      "words": [],
+      "titleEnd": "",
       "text": "Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Xohlasangiz, saytni o'zingiz ham yarata olasiz.",
       "cta1Text": "Loyihani buyurtma qilish",
       "cta1Link": "#brief-open",
       "cta2Text": "Saytni o'zim yarataman",
       "cta2Link": "/yaratish.html",
-      "visual": "window",
-      "image": "",
-      "windowLines": [
-        "// Sizning g'oyangiz",
-        "const loyiha = {",
-        "  mijoz: \"Sizning biznesingiz\",",
-        "  tezlik: \"2 haftada tayyor\",",
-        "  sifat: \"kafolatlangan\",",
-        "};",
-        "ishgaTushir(loyiha); // ✓ tayyor"
-      ],
-      "chips": [
-        "Savdo +240%",
-        "0.8s yuklanish",
-        "24/7 yordam"
-      ],
-      "collage": [],
+      "visual": "none",
+      "image": "/img/tpl/restoran.jpg",
       "trust": [
         {
           "value": "120+",
@@ -108,146 +91,152 @@
       ]
     },
     {
-      "id": "lenta",
+      "id": "texno",
       "type": "marquee",
       "enabled": true,
       "navLabel": "",
       "items": [
-        "Veb-saytlar",
-        "Mobil ilovalar",
-        "Telegram botlar",
-        "UI/UX dizayn",
-        "CRM tizimlar",
-        "Onlayn do'konlar"
+        "React",
+        "Node.js",
+        "Flutter",
+        "Telegram bot",
+        "Payme",
+        "Click",
+        "Figma",
+        "Python"
       ]
     },
     {
-      "id": "raqam",
-      "type": "stats",
+      "id": "biz",
+      "type": "statement",
       "enabled": true,
-      "navLabel": "",
-      "items": [
-        {
-          "value": 120,
-          "suffix": "+",
-          "label": "Bajarilgan loyiha"
-        },
-        {
-          "value": 60,
-          "suffix": "+",
-          "label": "Doimiy mijozlar"
-        },
-        {
-          "value": 8,
-          "suffix": " yil",
-          "label": "Bozordagi tajriba"
-        },
-        {
-          "value": 99,
-          "suffix": "%",
-          "label": "Mamnun mijozlar"
-        }
-      ]
+      "navLabel": "Biz haqimizda",
+      "eyebrow": "Biz haqimizda",
+      "text": "Biz oddiy *saytlar* emas, mijozlaringizni egaga aylantiradigan *raqamli tajriba* yaratamiz. Har bir piksel va har bir harakat sizning biznesingiz uchun ishlaydi.",
+      "author": "",
+      "role": "",
+      "image": "",
+      "buttonText": "",
+      "buttonLink": "#"
     },
     {
       "id": "xizmat",
-      "type": "features",
+      "type": "services",
       "enabled": true,
       "navLabel": "Xizmatlar",
       "eyebrow": "Xizmatlar",
-      "title": "Raqamli biznes uchun hamma narsa",
-      "text": "G'oyadan tayyor mahsulotgacha butun jarayonni o'z zimmamizga olamiz.",
-      "layout": "bento",
+      "title": "Biz *nima* qilamiz",
+      "text": "",
       "items": [
         {
-          "icon": "code",
-          "title": "Veb-sayt va onlayn do'kon",
-          "text": "Tezkor, qidiruv tizimlariga moslashgan, admin paneli bor saytlar. Katalog, savat va to'lov integratsiyasi bilan."
+          "title": "Veb-saytlar",
+          "text": "Vizitka, korporativ sayt va landing sahifalar: tez, chiroyli va qidiruvga tayyor.",
+          "tags": [
+            "Dizayn",
+            "Kod",
+            "SEO"
+          ],
+          "image": "/img/p/dasturchi-2.jpg",
+          "link": "#aloqa"
         },
         {
-          "icon": "phone",
-          "title": "Mobil ilovalar",
-          "text": "iOS va Android uchun zamonaviy ilovalar."
+          "title": "Onlayn do'konlar",
+          "text": "Katalog, savat, to'lov tizimlari, ombor va qulay admin panel.",
+          "tags": [
+            "Payme",
+            "Click",
+            "Admin"
+          ],
+          "image": "/img/p/elektronika-1.jpg",
+          "link": "#aloqa"
         },
         {
-          "icon": "send",
           "title": "Telegram botlar",
-          "text": "Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtiring."
+          "text": "Buyurtma, bron va to'lovlarni avtomatlashtiring, mijozlar bilan 24/7 muloqot.",
+          "tags": [
+            "Bot",
+            "CRM"
+          ],
+          "image": "/img/p/ilova-1.jpg",
+          "link": "#aloqa"
         },
         {
-          "icon": "design",
+          "title": "Mobil ilovalar",
+          "text": "iOS va Android uchun zamonaviy, tez va qulay ilovalar.",
+          "tags": [
+            "Flutter",
+            "iOS",
+            "Android"
+          ],
+          "image": "/img/p/ilova-2.jpg",
+          "link": "#aloqa"
+        },
+        {
           "title": "UI/UX dizayn",
-          "text": "Ko'rinishi chiroyli, ishlatishi oson interfeyslar."
-        },
-        {
-          "icon": "shield",
-          "title": "Xavfsizlik va hosting",
-          "text": "Barqaror server va ma'lumotlar himoyasi."
+          "text": "Foydalanuvchi sevadigan interfeys, prototip va dizayn tizimi.",
+          "tags": [
+            "Figma",
+            "Brend"
+          ],
+          "image": "/img/p/dizayner-1.jpg",
+          "link": "#aloqa"
         }
       ]
     },
     {
       "id": "shablon",
-      "type": "cards",
+      "type": "showcase",
       "enabled": true,
       "navLabel": "Shablonlar",
       "eyebrow": "Tayyor shablonlar",
-      "title": "Kasbingizga mos sayt, bir necha daqiqada",
+      "title": "Kasbingizga mos sayt, *bir necha daqiqada*",
       "text": "Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.",
       "items": [
         {
           "title": "Onlayn market",
-          "badge": "Eng ommabop",
-          "text": "Do'kon va market uchun: katalog, qidiruv, chegirmalar, savat va yetkazib berish.",
+          "tag": "Savdo",
           "image": "/img/tpl/market.jpg",
           "link": "/yaratish.html?t=market"
         },
         {
           "title": "Portfolio: dizayner",
-          "badge": "Portfolio",
-          "text": "Grafik dizayner, rassom va ijodkorlar uchun: katta tipografiya va loyihalar galereyasi.",
+          "tag": "Portfolio",
           "image": "/img/tpl/dizayner.jpg",
           "link": "/yaratish.html?t=dizayner"
         },
         {
           "title": "Portfolio: dasturchi",
-          "badge": "Portfolio",
-          "text": "Dasturchi va IT mutaxassislar uchun: kod oynasi, ko'nikmalar, loyihalar va tajriba.",
+          "tag": "Portfolio",
           "image": "/img/tpl/dasturchi.jpg",
           "link": "/yaratish.html?t=dasturchi"
         },
         {
           "title": "Portfolio: fotograf",
-          "badge": "Portfolio",
-          "text": "Fotograf, videograf va ijodiy studiyalar uchun: to'liq ekran rasm, galereya, tariflar va bron.",
+          "tag": "Portfolio",
           "image": "/img/tpl/fotograf.jpg",
           "link": "/yaratish.html?t=fotograf"
         },
         {
           "title": "IT kompaniya / agentlik",
-          "badge": "Biznes",
-          "text": "Xizmat ko'rsatuvchi kompaniya uchun: xizmatlar, jarayon, tariflar, savol-javob va aloqa.",
+          "tag": "Biznes",
           "image": "/img/tpl/kompaniya.jpg",
           "link": "/yaratish.html?t=kompaniya"
         },
         {
           "title": "Restoran / kafe",
-          "badge": "Yangi",
-          "text": "Restoran va kafe uchun: menyu kategoriyalar bilan, galereya va stol bron qilish.",
+          "tag": "Xizmat",
           "image": "/img/tpl/restoran.jpg",
           "link": "/yaratish.html?t=restoran"
         },
         {
           "title": "Go'zallik saloni",
-          "badge": "Yangi",
-          "text": "Salon, barbershop va spa uchun: xizmatlar narxi, ustalar, galereya va onlayn yozilish.",
+          "tag": "Xizmat",
           "image": "/img/tpl/salon.jpg",
           "link": "/yaratish.html?t=salon"
         },
         {
           "title": "O'quv markaz",
-          "badge": "Yangi",
-          "text": "Kurs va o'quv markazlari uchun: kurslar, o'qituvchilar, natijalar va ro'yxatdan o'tish.",
+          "tag": "Ta'lim",
           "image": "/img/tpl/talim.jpg",
           "link": "/yaratish.html?t=talim"
         }
@@ -256,10 +245,11 @@
     {
       "id": "yaratish",
       "type": "cta",
+      "fx": true,
       "enabled": true,
       "navLabel": "Sayt yaratish",
       "eyebrow": "Sayt konstruktori",
-      "title": "Saytingizni o'zingiz yarating",
+      "title": "Saytingizni *o'zingiz* yarating",
       "text": "Hisob oching, shablonni tanlang va tahrirlang. Saytlaringiz hisobingizda saqlanadi, istalgan qurilmadan davom ettirasiz.",
       "buttonText": "Yaratishni boshlash",
       "buttonLink": "/yaratish.html",
@@ -267,29 +257,102 @@
       "image": ""
     },
     {
+      "id": "ishlar",
+      "type": "showcase",
+      "enabled": false,
+      "navLabel": "Ishlar",
+      "eyebrow": "Portfolio",
+      "title": "Tanlangan *ishlar*",
+      "text": "Oxirgi loyihalarimizdan namunalar.",
+      "items": [
+        {
+          "title": "Baraka Market",
+          "tag": "Onlayn do'kon",
+          "image": "/img/p/market-1.jpg",
+          "link": ""
+        },
+        {
+          "title": "Oltin Non",
+          "tag": "Telegram bot",
+          "image": "/img/p/qandolat-1.jpg",
+          "link": ""
+        },
+        {
+          "title": "FitZone",
+          "tag": "Mobil ilova",
+          "image": "/img/p/fitness-1.jpg",
+          "link": ""
+        },
+        {
+          "title": "Sifat Auto",
+          "tag": "Korporativ sayt",
+          "image": "/img/p/avtoservis-1.jpg",
+          "link": ""
+        },
+        {
+          "title": "Nur Clinic",
+          "tag": "Bron tizimi",
+          "image": "/img/p/klinika-1.jpg",
+          "link": ""
+        }
+      ]
+    },
+    {
+      "id": "raqam",
+      "type": "stats",
+      "enabled": true,
+      "navLabel": "",
+      "eyebrow": "",
+      "title": "",
+      "text": "",
+      "items": [
+        {
+          "value": 120,
+          "suffix": "+",
+          "label": "bajarilgan loyiha"
+        },
+        {
+          "value": 8,
+          "suffix": " yil",
+          "label": "bozorda"
+        },
+        {
+          "value": 45,
+          "suffix": "+",
+          "label": "jamoa a'zosi"
+        },
+        {
+          "value": 98,
+          "suffix": "%",
+          "label": "mamnun mijoz"
+        }
+      ]
+    },
+    {
       "id": "jarayon",
       "type": "process",
       "enabled": true,
       "navLabel": "Jarayon",
       "eyebrow": "Jarayon",
-      "title": "Qanday ishlaymiz",
-      "text": "To'rt oddiy qadam, har bosqichda siz bilan aloqadamiz.",
+      "title": "Qanday *ishlaymiz*",
+      "text": "",
+      "layout": "stack",
       "items": [
         {
-          "title": "Bog'lanish",
-          "text": "Talabingizni eshitamiz va aniq reja tuzamiz."
+          "title": "Tahlil va maqsad",
+          "text": "Biznesingiz, auditoriya va raqobatchilarni o'rganib, aniq reja tuzamiz."
         },
         {
-          "title": "Dizayn",
-          "text": "Ko'rinishni tayyorlab, sizga tasdiqlatamiz."
+          "title": "Dizayn va prototip",
+          "text": "Kod yozishdan oldin ko'rinish va foydalanuvchi yo'lini tasdiqlaymiz."
         },
         {
           "title": "Ishlab chiqish",
-          "text": "Tez va xatosiz quramiz, har kuni hisobot."
+          "text": "Tez, xavfsiz va kengayadigan kod. Har hafta natijani ko'rsatamiz."
         },
         {
-          "title": "Ishga tushirish",
-          "text": "Joylashtiramiz va doimiy qo'llab-quvvatlaymiz."
+          "title": "Ishga tushirish va yordam",
+          "text": "Testdan o'tkazib, joylaymiz va keyin ham yonida bo'lamiz."
         }
       ]
     },
@@ -653,31 +716,39 @@
     {
       "id": "fikr",
       "type": "testimonials",
-      "enabled": true,
+      "enabled": false,
       "navLabel": "",
       "eyebrow": "Sharhlar",
-      "title": "Mijozlar fikri",
+      "title": "Mijozlar *nima* deydi",
       "text": "",
+      "layout": "wall",
       "items": [
         {
-          "text": "Saytimiz 2 haftada tayyor bo'ldi, buyurtmalar ikki baravar oshdi.",
-          "name": "Akmal R.",
-          "role": "Do'kon egasi",
-          "image": "/img/t/kompaniya/a1.svg",
+          "text": "Do'konimiz savdosi uch oyda 2.4 barobar oshdi. Jamoa juda professional.",
+          "name": "Aziz Karimov",
+          "role": "Baraka Market, direktor",
+          "image": "/img/p/odam-1.jpg",
           "stars": 5
         },
         {
-          "text": "Telegram bot ishimizni ancha yengillashtirdi. Jamoa juda mas'uliyatli.",
-          "name": "Gulnora S.",
-          "role": "Restoran menejeri",
-          "image": "/img/t/kompaniya/a2.svg",
+          "text": "Telegram bot buyurtmalarni o'zi qabul qiladi, menejerlar yukdan qutuldi.",
+          "name": "Dilnoza Rahimova",
+          "role": "Oltin Non, asoschi",
+          "image": "/img/p/odam-2.jpg",
           "stars": 5
         },
         {
-          "text": "Hamma narsa aniq va shaffof. Muddat va narx so'zsiz bajarildi.",
-          "name": "Rustam K.",
-          "role": "Direktor",
-          "image": "/img/t/kompaniya/a3.svg",
+          "text": "Muddatga aniq amal qilishdi, har bosqichda aloqada bo'lishdi.",
+          "name": "Jasur Tursunov",
+          "role": "FitZone, hammuassis",
+          "image": "/img/p/odam-3.jpg",
+          "stars": 5
+        },
+        {
+          "text": "Dizayn bizni raqobatchilardan ajratib turadi. Mijozlar maqtashmoqda.",
+          "name": "Madina Qodirova",
+          "role": "Nur Clinic, marketing",
+          "image": "/img/p/odam-4.jpg",
           "stars": 5
         }
       ]
@@ -688,22 +759,40 @@
       "enabled": true,
       "navLabel": "",
       "eyebrow": "Savollar",
-      "title": "Ko'p so'raladigan savollar",
+      "title": "Ko'p so'raladigan *savollar*",
       "text": "",
       "items": [
         {
-          "q": "Sayt qancha vaqtda tayyor bo'ladi?",
-          "a": "Vizitka sayt 3–5 kun, onlayn do'kon 2–3 hafta ichida tayyor bo'ladi."
+          "q": "Loyiha qancha vaqtda tayyor bo'ladi?",
+          "a": "Vizitka sayt 1–2 hafta, onlayn do'kon 3–5 hafta, mobil ilova 2–3 oy. Aniq muddat suhbatdan keyin shartnomada belgilanadi."
         },
         {
-          "q": "Tayyor saytni o'zim tahrirlay olamimi?",
-          "a": "Ha, admin panel orqali matn, narx va rasmlarni o'zingiz o'zgartirasiz."
+          "q": "Narx qanday hisoblanadi?",
+          "a": "Loyiha hajmiga qarab. Anketani to'ldirsangiz, 1 kun ichida aniq narx va muddat bilan taklif yuboramiz."
         },
         {
-          "q": "Domen va hostingni siz olib berasizmi?",
-          "a": "Ha, domen va hostingni ulab beramiz. Xohlasangiz o'zingiznikini ham ishlatamiz."
+          "q": "Tayyor saytga kafolat berasizmi?",
+          "a": "Ha, 6 oy bepul texnik yordam va xatolarni tuzatish kafolati beramiz."
+        },
+        {
+          "q": "Mavjud saytni yangilab bera olasizmi?",
+          "a": "Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz."
         }
       ]
+    },
+    {
+      "id": "chaqiriq",
+      "type": "cta",
+      "enabled": true,
+      "navLabel": "",
+      "fx": true,
+      "eyebrow": "Boshlaymizmi?",
+      "title": "G'oyangizni *birga* ishga tushiramiz",
+      "text": "Bepul maslahat oling: 15 daqiqada javob beramiz.",
+      "buttonText": "Loyihani boshlash",
+      "buttonLink": "#aloqa",
+      "countdownTo": "",
+      "image": ""
     },
     {
       "id": "aloqa",

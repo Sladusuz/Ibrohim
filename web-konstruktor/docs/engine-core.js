@@ -26,7 +26,8 @@
     gold: { label: 'Premium oltin', dark: true, sw: ['#0d0c0a', '#d4a64a'] },
     ocean: { label: 'Dengiz ko\'k', dark: false, sw: ['#f0f7fc', '#0b78d1'] },
   };
-  E.fonts = { modern: 'Zamonaviy', editorial: 'Klassik (serif)', geometric: 'Geometrik', soft: 'Yumshoq', mono: 'Texnik' };
+  E.fonts = { modern: 'Zamonaviy', display: "Ko'rkam (sarlavha)", luxe: 'Hashamatli (nafis serif)', wide: 'Keng (zamonaviy)', editorial: 'Klassik (serif)', geometric: 'Geometrik', soft: 'Yumshoq', mono: 'Texnik' };
+  E.looks = { classic: 'Klassik (sodda)', cinema: 'Kinematik (animatsiyali)', luxe: 'Hashamatli (nafis)' };
   E.radii = { sharp: 'Qirrali', soft: 'Yumshoq', round: 'Yumaloq' };
   E.navStyles = { pill: 'Suzuvchi', bar: 'Klassik panel', minimal: 'Minimal' };
   E.bgs = { full: "To'liq (animatsiyali)", aurora: 'Yumshoq nur', plain: 'Sodda' };
@@ -39,7 +40,7 @@
   E.normalize = function (d) {
     d = d && typeof d === 'object' ? d : {};
     d.company = Object.assign({ name: 'Sayt', logo: '' }, d.company);
-    d.theme = Object.assign({ preset: 'dark', accent: '', accent2: '', font: 'modern', radius: 'soft', bg: 'full', heads: 'left', switcher: false }, d.theme);
+    d.theme = Object.assign({ preset: 'dark', accent: '', accent2: '', font: 'modern', radius: 'soft', bg: 'full', heads: 'left', switcher: false, look: 'classic', motion: true }, d.theme);
     d.nav = Object.assign({ style: 'pill', cta: '', ctaLink: '#', search: false }, d.nav);
     d.announce = Object.assign({ enabled: false, text: '', link: '' }, d.announce);
     d.orders = Object.assign({ enabled: true, currency: "so'm", freeShipFrom: 0, deliveryFee: 0 }, d.orders);
@@ -65,7 +66,11 @@
     for (const [k, v] of [['--acc', t.accent], ['--acc2', t.accent2]]) { if (hex.test(v || '')) root.style.setProperty(k, v); else root.style.removeProperty(k); }
     if (hex.test(t.accent || '') && !hex.test(t.accent2 || '')) root.style.setProperty('--acc2', t.accent);
     if (hex.test(t.accent || '')) root.style.setProperty('--on', lum(t.accent) > 0.58 ? '#0b1220' : '#ffffff'); else root.style.removeProperty('--on');
-    root.className = `font-${E.fonts[t.font] ? t.font : 'modern'} rad-${E.radii[t.radius] ? t.radius : 'soft'} bg-${E.bgs[t.bg] ? t.bg : 'full'} heads-${t.heads === 'center' ? 'center' : 'left'}${isPreview ? ' preview' : ''}`;
+    const look = E.looks[t.look] ? t.look : 'classic', mo = t.motion !== false;
+    let seen = false; try { seen = sessionStorage.getItem('intro') === '1'; } catch { /* ignore */ }
+    const intro = !isPreview && mo && look !== 'classic' && !seen && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    root.className = `font-${E.fonts[t.font] ? t.font : 'modern'} rad-${E.radii[t.radius] ? t.radius : 'soft'} bg-${E.bgs[t.bg] ? t.bg : 'full'} heads-${t.heads === 'center' ? 'center' : 'left'} look-${look}${mo ? ' mo-on' : ''}${intro ? ' intro-on' : ''}${isPreview ? ' preview' : ''}`;
+    if (intro) setTimeout(() => root.classList.remove('intro-on'), 3200);
   }
   function setMeta() {
     document.title = S.company.name || 'Sayt';
@@ -151,7 +156,8 @@
 
   /* ---------- Yordamchi: bo'lim qobig'i va sarlavha ---------- */
   E.wrap = (sec, inner, cls) => `<section class="sec s-${esc(sec.type)} ${cls || ''}" id="${esc(sec.id)}" data-sec="${esc(sec.id)}"><div class="wrap">${inner}</div></section>`;
-  E.head = (sec, extra) => (sec.title || sec.eyebrow || sec.text) ? `<div class="sh rv">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}${sec.title ? `<h2>${text(sec.title)}</h2>` : ''}${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}${extra || ''}</div>` : '';
+  E.rich = (v) => text(v).replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+  E.head = (sec, extra) => (sec.title || sec.eyebrow || sec.text) ? `<div class="sh rv">${sec.eyebrow ? `<span class="eyebrow">${text(sec.eyebrow)}</span>` : ''}${sec.title ? `<h2>${E.rich(sec.title)}</h2>` : ''}${sec.text ? `<p class="sub">${text(sec.text)}</p>` : ''}${extra || ''}</div>` : '';
   E.price = (p) => {
     const price = Number(p.price) || 0, old = Number(p.oldPrice) || 0;
     if (!price) return '<span class="amount na">Narxi kelishiladi</span>';
@@ -203,7 +209,7 @@
     return `<footer><div class="wrap fgrid"><div class="fbrand"><a class="logo" href="#top"><span class="mark">${text((S.company.logo || (S.company.name || 'S')[0]).slice(0, 2))}</span><span class="lname">${text(S.company.name)}</span></a>${S.company.tagline ? `<p>${text(S.company.tagline)}</p>` : ''}</div>
       ${links.length ? `<div class="flinks">${links.map((l) => `<a href="${esc(linkUrl(l.url))}">${text(l.label)}</a>`).join('')}</div>` : ''}
       ${soc.length ? `<div class="fsoc">${soc.join('')}</div>` : ''}</div>
-      <div class="wrap fcopy"><span>© ${new Date().getFullYear()} ${text(S.company.name)}. ${text(f.text)}</span></div></footer>`;
+      <div class="fmark" aria-hidden="true">${text(S.company.name)}</div><div class="wrap fcopy"><span>© ${new Date().getFullYear()} ${text(S.company.name)}. ${text(f.text)}</span></div></footer>`;
   }
   function chromeEnd() {
     const drawer = E.cartable() ? `<div class="shade" id="shade" data-act="cart-close"></div><aside class="drawer" id="drawer" aria-label="Savat"><div class="dh"><h3>Savat</h3><button class="icon-btn" data-act="cart-close" aria-label="Yopish">${icon('x')}</button></div><div class="items" id="cartList"></div><div id="cartFoot"></div></aside>` : '';

@@ -9,9 +9,18 @@
 <style>
 html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden}
 .gal-wrap{flex:1;overflow:auto;padding:0 0 60px}
-.hero2{max-width:1100px;margin:0 auto;padding:44px 24px 10px}.hero2 h1{font-size:clamp(28px,4vw,44px);letter-spacing:-.03em;line-height:1.1}.hero2 p{color:var(--muted);font-size:17px;margin-top:10px;max-width:640px}
+.hero2{position:relative;overflow:hidden;color:#fff;background:#070a18;padding:56px 24px 64px;text-align:center}
+.hero2:before,.hero2:after{content:'';position:absolute;width:60vw;height:60vw;border-radius:50%;filter:blur(90px);opacity:.55;animation:hf 18s ease-in-out infinite}
+.hero2:before{background:#6d4cff;left:-12vw;top:-30vw}.hero2:after{background:#14b8d4;right:-14vw;top:-26vw;animation-delay:-8s;opacity:.4}
+@keyframes hf{50%{transform:translate(6vw,5vw) scale(1.12)}}
+.hero2>*{position:relative;z-index:1}.hero2 h1{font-size:clamp(34px,6vw,72px);letter-spacing:-.045em;line-height:.98;max-width:900px;margin:0 auto}.hero2 h1 em{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-style:italic;letter-spacing:-.02em}
+.hero2 p{color:#b6bfdc;font-size:clamp(15px,1.6vw,19px);margin:16px auto 0;max-width:620px}
+.srch{display:flex;align-items:center;gap:10px;max-width:520px;margin:28px auto 0;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:99px;padding:0 20px;backdrop-filter:blur(14px)}.srch svg{width:20px;height:20px;flex:none;opacity:.8}.srch input{flex:1;background:transparent;border:0;color:#fff;padding:16px 0;font-size:16px;outline:0}.srch input::placeholder{color:#a9b3d6}
+.hstats{display:flex;gap:34px;justify-content:center;margin-top:26px;color:#b6bfdc;font-size:13px;flex-wrap:wrap}.hstats b{display:block;color:#fff;font-size:24px;letter-spacing:-.02em}
+.cnt{max-width:1100px;margin:14px auto 0;padding:0 24px;color:var(--muted);font-size:13.5px}
+.noRes{max-width:1100px;margin:30px auto;padding:50px 24px;text-align:center;color:var(--muted);background:#fff;border:1px dashed var(--line);border-radius:16px}
 .resume{max-width:1100px;margin:18px auto 0;padding:0 24px}.rbox{background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #d9d6fb;border-radius:16px;padding:16px 20px}.rbox.flex{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap}.rbox b{font-size:15px}.rbox span{color:var(--muted);font-size:13px;display:block}.mine{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}.pcard2{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;gap:10px;align-items:center}.pcard2 .row{display:flex;gap:6px}
-.cats{max-width:1100px;margin:22px auto 0;padding:0 24px;display:flex;gap:8px;flex-wrap:wrap}.cats button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:8px 16px;font-weight:600;font-size:13px;color:var(--muted)}.cats button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.cats{max-width:1100px;margin:26px auto 0;padding:0 24px;display:flex;gap:8px;flex-wrap:wrap}.cats button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:8px 16px;font-weight:600;font-size:13px;color:var(--muted)}.cats button small{opacity:.65;margin-left:5px;font-weight:600}.cats button.on{background:var(--acc);border-color:var(--acc);color:#fff}
 .tgrid{max-width:1100px;margin:20px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px}
 .tc{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;transition:.3s;box-shadow:0 1px 2px #0f172a0a}.tc:hover{transform:translateY(-5px);box-shadow:0 22px 50px #1e293b22;border-color:#c7c3f5}
 .tci{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,#e0e7ff,#fce7f3);overflow:hidden}.tci img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}.tci .bd{position:absolute;top:12px;left:12px;background:#0f172a;color:#fff;border-radius:99px;padding:4px 12px;font-size:11px;font-weight:700;letter-spacing:.05em}
@@ -29,9 +38,11 @@ html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden
 <div class="tb" id="gbar"><a class="b g s" href="/">← Bosh sahifa</a></div></header>
 
 <div class="gal-wrap" id="gallery">
-  <div class="hero2"><h1>Saytingizni o'zingiz yarating</h1><p>Kasbingizga mos shablonni tanlang. Matn, rasm, narx va ranglarni o'zgartiring, natijani darrov ko'ring va tayyor saytni yuklab oling.</p></div>
+  <div class="hero2"><h1>Saytingizni <em>o'zingiz</em> yarating</h1><p>Kasbingizga mos shablonni tanlang. Matn, rasm, narx va ranglarni o'zgartiring, natijani darrov ko'ring va tayyor saytni yuklab oling.</p>
+    <label class="srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="tq" type="search" placeholder="Kasbingizni yozing: restoran, salon, portfolio, do'kon…" autocomplete="off"></label>
+    <div class="hstats"><div><b id="nT">30+</b>shablon</div><div><b>100%</b>tahrirlanadi</div><div><b>0 so'm</b>boshlash uchun</div></div></div>
   <div class="resume" id="resume" hidden></div>
-  <div class="cats" id="cats"></div>
+  <div class="cats" id="cats"></div><div class="cnt" id="cnt"></div>
   <div class="tgrid" id="tgrid"></div>
 </div>
 
@@ -45,7 +56,13 @@ html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden
 <script src="/auth.js"></script>
 <script src="/engine-core.js"></script>
 <script src="/sections.js"></script>
+<script src="/sections2.js"></script>
 <script src="/templates.js"></script>
+<script src="/tpl-1.js"></script>
+<script src="/tpl-2.js"></script>
+<script src="/tpl-3.js"></script>
+<script src="/tpl-4.js"></script>
+<script src="/tpl-5.js"></script>
 <script src="/editor.js"></script>
 <script src="/builder.js"></script>
 </body>

@@ -1,0 +1,1718 @@
+{
+ "market": [
+  {
+   "file": "market-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Bananas stacked on a supermarket shelf",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "market-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Outdoor fresh fruit and vegetable market stalls",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "market-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Red chili peppers and ginger at a produce stand",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "market-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Colorful fruit display at a market",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "market-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Customer buying fruit at a market scale",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "market-6.jpg",
+   "w": 960,
+   "h": 639,
+   "alt": "Berries and fruit on rustic market crates",
+   "tone": "warm",
+   "hero": false
+  }
+ ],
+ "elektronika": [
+  {
+   "file": "elektronika-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Laptop, phone and camera on a wooden desk from above",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "elektronika-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Laptop with code and smartphone on a white desk",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "elektronika-3.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Laptop, smartphone and notebook on a desk",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "elektronika-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Smartphone next to a laptop showing code",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "elektronika-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "White smartphone and notebook on a light surface",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "elektronika-6.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Stack of laptops and tablets",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "kiyim": [
+  {
+   "file": "kiyim-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Clothes on racks in a boutique window",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "kiyim-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Blurred street view past a clothing rack",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "kiyim-3.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Stylish boutique interior with shelves and clothes",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "kiyim-4.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Bright clothing store with hanging garments",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "kiyim-5.jpg",
+   "w": 960,
+   "h": 1440,
+   "alt": "Folded dress shirts on a wooden counter",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "kiyim-6.jpg",
+   "w": 960,
+   "h": 540,
+   "alt": "Woman browsing clothes on a rack",
+   "tone": "warm",
+   "hero": false
+  }
+ ],
+ "gul": [
+  {
+   "file": "gul-1.jpg",
+   "w": 960,
+   "h": 631,
+   "alt": "Buckets of fresh flowers at a flower shop",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "gul-2.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Pink and red peonies bouquet",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "gul-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman holding a large colorful bouquet",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "gul-4.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Flower shop display on a street",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "gul-5.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Pink tulips in a window",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "gul-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "White flower bouquets with ribbons",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "mebel": [
+  {
+   "file": "mebel-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Bright living room with white sofas",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "mebel-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Cozy gray sofa in a sunny living room",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "mebel-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Orange patterned armchair in a bright room",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "mebel-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Loft living room with brick wall and sofa",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "mebel-5.jpg",
+   "w": 960,
+   "h": 540,
+   "alt": "Classic living room with bookshelves and striped sofas",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "mebel-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Covered terrace lounge with sofa and garden view",
+   "tone": "warm",
+   "hero": true
+  }
+ ],
+ "restoran": [
+  {
+   "file": "restoran-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Elegant restaurant table with wine glasses",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "restoran-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Classic restaurant interior with warm lighting",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "restoran-3.jpg",
+   "w": 960,
+   "h": 721,
+   "alt": "Pendant filament lights in a restaurant",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "restoran-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Eggs benedict with asparagus on a plate",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "restoran-5.jpg",
+   "w": 960,
+   "h": 1449,
+   "alt": "Gourmet duck dish with sauce",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "restoran-6.jpg",
+   "w": 960,
+   "h": 1440,
+   "alt": "Chef plating steak dishes in a kitchen",
+   "tone": "dark",
+   "hero": false
+  }
+ ],
+ "kafe": [
+  {
+   "file": "kafe-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Latte art coffee on a rustic table next to a laptop",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "kafe-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Modern cafe interior with bicycles and menu board",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "kafe-3.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Customer in a bright cafe by the window",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "kafe-4.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Latte and croissant on a wooden table",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "kafe-5.jpg",
+   "w": 960,
+   "h": 493,
+   "alt": "Cappuccino cup on coffee beans",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "kafe-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Busy cafe counter with baristas",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "fastfood": [
+  {
+   "file": "fastfood-1.jpg",
+   "w": 960,
+   "h": 721,
+   "alt": "Juicy burger on a plate with bokeh lights",
+   "tone": "dark",
+   "hero": false
+  },
+  {
+   "file": "fastfood-2.jpg",
+   "w": 960,
+   "h": 639,
+   "alt": "Close-up of a cheeseburger",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "fastfood-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Pepperoni pizza being sliced",
+   "tone": "dark",
+   "hero": false
+  },
+  {
+   "file": "fastfood-4.jpg",
+   "w": 960,
+   "h": 564,
+   "alt": "Burger patties grilling over flames",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "fastfood-5.jpg",
+   "w": 960,
+   "h": 643,
+   "alt": "Pizza in a box on a dark table",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "fastfood-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Cheese pizza on a wooden table",
+   "tone": "warm",
+   "hero": true
+  }
+ ],
+ "qandolat": [
+  {
+   "file": "qandolat-1.jpg",
+   "w": 960,
+   "h": 711,
+   "alt": "Bakery counter with breads and bakers",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "qandolat-2.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Rustic bakery shelves with bread baskets",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "qandolat-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Cakes and pastries at a cafe counter",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "qandolat-4.jpg",
+   "w": 960,
+   "h": 606,
+   "alt": "Baguettes and bread on a floured dark surface",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "qandolat-5.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Pink frosted cupcakes",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "qandolat-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Basket of pumpkin seed muffins",
+   "tone": "warm",
+   "hero": true
+  }
+ ],
+ "salon": [
+  {
+   "file": "salon-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Modern salon with styling chairs and mirrors",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "salon-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman with a colorful bob haircut in a salon",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "salon-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Manicurist painting nails with pink gloves",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "salon-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hair in curlers",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "salon-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman applying lip balm, manicured nails",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "salon-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Braided pigtails hairstyle from behind",
+   "tone": "cool",
+   "hero": false
+  }
+ ],
+ "barber": [
+  {
+   "file": "barber-1.jpg",
+   "w": 960,
+   "h": 637,
+   "alt": "Vintage barber chair and station",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "barber-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Shaving brush, razors and clippers on a towel",
+   "tone": "dark",
+   "hero": false
+  },
+  {
+   "file": "barber-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Barber scissors hanging on a wooden wall",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "barber-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Close-up of a beard being shaved",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "barber-5.jpg",
+   "w": 960,
+   "h": 1200,
+   "alt": "Barber trimming a beard and hair",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "barber-6.jpg",
+   "w": 960,
+   "h": 1440,
+   "alt": "Customer in a barber chair in a dim shop",
+   "tone": "dark",
+   "hero": false
+  }
+ ],
+ "fitness": [
+  {
+   "file": "fitness-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Bright modern gym with bikes and squat rack",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "fitness-2.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Athlete training with battle ropes",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "fitness-3.jpg",
+   "w": 960,
+   "h": 540,
+   "alt": "Woman lifting dumbbells in a gym",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "fitness-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman exercising with dumbbells in a loft studio",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "fitness-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Barbell on a wooden floor",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "fitness-6.jpg",
+   "w": 960,
+   "h": 637,
+   "alt": "Fit woman seen from behind in a dark gym",
+   "tone": "dark",
+   "hero": false
+  }
+ ],
+ "klinika": [
+  {
+   "file": "klinika-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Team of doctors and nurses discussing a chart",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "klinika-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Doctor consulting a patient in a clinic office",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "klinika-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Doctor holding a tablet",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "klinika-4.jpg",
+   "w": 960,
+   "h": 613,
+   "alt": "Blue stethoscope next to a laptop",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "klinika-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Stethoscope and smartphone on white",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "klinika-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Doctor with tablet talking to a patient",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "stomatolog": [
+  {
+   "file": "stomatolog-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Bright dental treatment room with chair",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "stomatolog-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Dental chair and instruments in a white clinic",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "stomatolog-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Dental chair and tools from above",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "stomatolog-4.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Red dental chair in a clinic",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "stomatolog-5.jpg",
+   "w": 960,
+   "h": 636,
+   "alt": "Dentist examining a child patient",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "stomatolog-6.jpg",
+   "w": 960,
+   "h": 636,
+   "alt": "Dentist treating a patient with a curing light",
+   "tone": "warm",
+   "hero": false
+  }
+ ],
+ "talim": [
+  {
+   "file": "talim-1.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Quiet library with tall bookshelves and readers",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "talim-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Students collaborating around a table",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "talim-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Group of students drawing together",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "talim-4.jpg",
+   "w": 960,
+   "h": 721,
+   "alt": "Open books on a desk with bookshelf",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "talim-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Student writing in a spiral notebook",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "talim-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hand writing notes at a desk",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "til": [
+  {
+   "file": "til-1.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Curved library bookshelves with glass roof",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "til-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Grand historic library hall",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "til-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Open book, laptop and coffee on a dark desk",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "til-4.jpg",
+   "w": 960,
+   "h": 721,
+   "alt": "Open books with a bookshelf behind",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "til-5.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Pages of a book fanned open",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "til-6.jpg",
+   "w": 960,
+   "h": 636,
+   "alt": "Wooden shelves full of books",
+   "tone": "light",
+   "hero": true
+  }
+ ],
+ "avtoservis": [
+  {
+   "file": "avtoservis-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Auto repair workshop interior",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "avtoservis-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Mechanic working under a classic car",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "avtoservis-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Chrome car engine in black and white",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "avtoservis-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hand working on red car bodywork",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "avtoservis-5.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Car battery jumper cables under the hood",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "avtoservis-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Engine cylinder head from above",
+   "tone": "dark",
+   "hero": false
+  }
+ ],
+ "rieltor": [
+  {
+   "file": "rieltor-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Modern wood and glass house with balconies in the sun",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "rieltor-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Bright modern kitchen with island",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "rieltor-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Cozy living room with a tufted sofa",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "rieltor-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Loft apartment with brick wall",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "rieltor-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Modern house roofline against blue sky",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "rieltor-6.jpg",
+   "w": 960,
+   "h": 624,
+   "alt": "Red brick apartment buildings under blue sky",
+   "tone": "cool",
+   "hero": true
+  }
+ ],
+ "turizm": [
+  {
+   "file": "turizm-1.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Turquoise tropical bay and beach viewpoint",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "turizm-2.jpg",
+   "w": 960,
+   "h": 578,
+   "alt": "Snowy mountain lake with reflections",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "turizm-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hiker standing on a mountain ridge",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "turizm-4.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Palm tree at sunset on the beach",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "turizm-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Travel map, compass, camera and toy plane flat lay",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "turizm-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Bench overlooking a mountain lake in the forest",
+   "tone": "warm",
+   "hero": true
+  }
+ ],
+ "qurilish": [
+  {
+   "file": "qurilish-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Tower cranes against a blue sky",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "qurilish-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Cranes over a building under construction",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "qurilish-3.jpg",
+   "w": 960,
+   "h": 540,
+   "alt": "Construction cranes silhouetted at sunset",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "qurilish-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Construction worker in a safety vest and helmet",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "qurilish-5.jpg",
+   "w": 960,
+   "h": 639,
+   "alt": "Engineer with blueprints in front of a new house",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "qurilish-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Downtown skyscrapers seen from below",
+   "tone": "cool",
+   "hero": true
+  }
+ ],
+ "fotograf": [
+  {
+   "file": "fotograf-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Photographer shooting over a city skyline",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "fotograf-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Photographer in a forest and rocky landscape",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "fotograf-3.jpg",
+   "w": 960,
+   "h": 636,
+   "alt": "Compact camera on a black leather strap",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "fotograf-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "DSLR camera on a cafe table",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "fotograf-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Vintage rangefinder camera lens close-up",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "fotograf-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman with a red beanie taking a photo",
+   "tone": "cool",
+   "hero": false
+  }
+ ],
+ "yurist": [
+  {
+   "file": "yurist-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Signed legal document on a desk with pen",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "yurist-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Handshake over a white table after a consultation",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "yurist-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Person signing a document at a desk",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "yurist-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Handshake between two people",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "yurist-5.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Stone columns of a courthouse",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "yurist-6.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Man in a suit adjusting his tie",
+   "tone": "dark",
+   "hero": false
+  }
+ ],
+ "dizayner": [
+  {
+   "file": "dizayner-1.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Designer sketching app wireframes on a desk",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "dizayner-2.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Fan of colorful Pantone swatches",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "dizayner-3.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Dark desk setup with iMac and lamp",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "dizayner-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Creative studio desk with speakers and retro wallpaper",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "dizayner-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Desk with notebook, pencil and coffee",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "dizayner-6.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Architect working on plans with a laptop",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "dasturchi": [
+  {
+   "file": "dasturchi-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Close-up of code on a screen",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "dasturchi-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Laptop with code and smartphone",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "dasturchi-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Code on laptop with coffee cup",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "dasturchi-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Developer coding on a laptop",
+   "tone": "dark",
+   "hero": false
+  },
+  {
+   "file": "dasturchi-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hands typing on a laptop at a desk",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "dasturchi-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Developer working in a bright office",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "startap": [
+  {
+   "file": "startap-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Team meeting in a bright modern office",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "startap-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Whiteboard with project sprint plan and sticky notes",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "startap-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Two women talking at a round table by a window",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "startap-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Two colleagues discussing over a laptop",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "startap-5.jpg",
+   "w": 960,
+   "h": 636,
+   "alt": "Team brainstorming with sticky notes",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "startap-6.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Team planning with laptops and notes",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "ilova": [
+  {
+   "file": "ilova-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hand holding a smartphone along a railway track",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "ilova-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman looking at a phone at a table",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "ilova-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hand holding a smartphone with app icons",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "ilova-4.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Hand holding a phone with purple lock screen",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "ilova-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hand holding a phone next to a laptop",
+   "tone": "dark",
+   "hero": false
+  },
+  {
+   "file": "ilova-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hand holding phone with camera app",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "musiqa": [
+  {
+   "file": "musiqa-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Concert crowd with stage lights",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "musiqa-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Singer on stage with blue spotlights",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "musiqa-3.jpg",
+   "w": 960,
+   "h": 636,
+   "alt": "Crowd at a blue-lit live show",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "musiqa-4.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Concert crowd with a raised hand and glowing light",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "musiqa-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "DJ hand on turntable with purple lights",
+   "tone": "dark",
+   "hero": false
+  },
+  {
+   "file": "musiqa-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Studio mixing console faders",
+   "tone": "dark",
+   "hero": false
+  }
+ ],
+ "yoga": [
+  {
+   "file": "yoga-1.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Woman meditating by the sea",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "yoga-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman doing yoga on a seaside cliff",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "yoga-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Yoga class in a bright loft studio",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "yoga-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Yoga pose on a boardwalk among palms",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "yoga-5.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Spa stones, candles and towels",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "yoga-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman relaxing during a massage",
+   "tone": "warm",
+   "hero": false
+  }
+ ],
+ "hayvon": [
+  {
+   "file": "hayvon-1.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Sleepy pug lying on a wooden floor",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "hayvon-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Golden retriever yawning",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "hayvon-3.jpg",
+   "w": 960,
+   "h": 565,
+   "alt": "Cat and dog playing in the grass",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "hayvon-4.jpg",
+   "w": 960,
+   "h": 639,
+   "alt": "Close-up of a ginger cat",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "hayvon-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Two cats leaping in play",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "hayvon-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Pug wrapped in a blanket in the woods",
+   "tone": "warm",
+   "hero": false
+  }
+ ],
+ "organik": [
+  {
+   "file": "organik-1.jpg",
+   "w": 960,
+   "h": 315,
+   "alt": "Green farmland with a dirt road under blue sky",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "organik-2.jpg",
+   "w": 960,
+   "h": 638,
+   "alt": "Cornfield under blue sky with clouds",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "organik-3.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Old tractor in a green field",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "organik-4.jpg",
+   "w": 960,
+   "h": 686,
+   "alt": "Basket of corn in a golden harvest field",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "organik-5.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Bowl of fresh red apples on wood",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "organik-6.jpg",
+   "w": 960,
+   "h": 677,
+   "alt": "Fresh oranges with leaves",
+   "tone": "warm",
+   "hero": false
+  }
+ ],
+ "abstrakt": [
+  {
+   "file": "abstrakt-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Dark blue and red blurred light gradient",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "abstrakt-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Soft purple blurred gradient",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "abstrakt-3.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Sunset gradient from yellow to deep purple",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "abstrakt-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Blue blurred bokeh background",
+   "tone": "cool",
+   "hero": true
+  },
+  {
+   "file": "abstrakt-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Hexagonal steel structure in monochrome",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "abstrakt-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Dark roof structure with hanging lights",
+   "tone": "dark",
+   "hero": true
+  }
+ ],
+ "odam": [
+  {
+   "file": "odam-1.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Smiling woman portrait",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "odam-2.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Bearded man holding a coffee",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "odam-3.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Blond woman with glasses at a desk",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "odam-4.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Smiling man in a red sweater",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "odam-5.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Smiling man at a desk",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "odam-6.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Woman with curly hair in orange jacket",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "odam-7.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Senior doctor with a tablet",
+   "tone": "light",
+   "hero": false
+  },
+  {
+   "file": "odam-8.jpg",
+   "w": 400,
+   "h": 400,
+   "alt": "Smiling woman in red top",
+   "tone": "warm",
+   "hero": false
+  }
+ ],
+ "toy": [
+  {
+   "file": "toy-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Elegant wedding hall with chairs and flowers",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "toy-2.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Couple sitting by a lake at sunset",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "toy-3.jpg",
+   "w": 960,
+   "h": 641,
+   "alt": "Wedding couple on a bench in a sunlit garden",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "toy-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Party tent with bunting decoration",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "toy-5.jpg",
+   "w": 960,
+   "h": 1344,
+   "alt": "Waiter carrying champagne glasses on a tray",
+   "tone": "warm",
+   "hero": false
+  },
+  {
+   "file": "toy-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Bride and groom exchanging rings",
+   "tone": "light",
+   "hero": false
+  }
+ ],
+ "logistika": [
+  {
+   "file": "logistika-1.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Semi truck on a highway under stormy mountains",
+   "tone": "dark",
+   "hero": true
+  },
+  {
+   "file": "logistika-2.jpg",
+   "w": 960,
+   "h": 720,
+   "alt": "Stacked blue and red shipping containers",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "logistika-3.jpg",
+   "w": 960,
+   "h": 636,
+   "alt": "Vintage orange delivery truck",
+   "tone": "warm",
+   "hero": true
+  },
+  {
+   "file": "logistika-4.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Red cargo ship at a port",
+   "tone": "light",
+   "hero": true
+  },
+  {
+   "file": "logistika-5.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Wheel loader at a warehouse",
+   "tone": "cool",
+   "hero": false
+  },
+  {
+   "file": "logistika-6.jpg",
+   "w": 960,
+   "h": 640,
+   "alt": "Woman checking a parcel with a tablet",
+   "tone": "light",
+   "hero": false
+  }
+ ]
+}

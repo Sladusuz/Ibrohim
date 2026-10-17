@@ -269,7 +269,12 @@
   });
 
   /* ---------- API ---------- */
-  const T_BY = Object.fromEntries(T.map((t) => [t.id, t]));
-  window.TEMPLATES = T.map((t) => ({ id: t.id, name: t.name, cat: t.cat, icon: t.icon, desc: t.desc, badge: t.badge || '', thumb: `/img/tpl/${t.id}.jpg` }));
+  // Boshqa fayllar (tpl-*.js) TplKit.add orqali o'z shablonlarini qo'shadi; bir xil id eskisini almashtiradi.
+  const T_BY = {};
+  window.TEMPLATES = [];
+  const rebuild = () => { window.TEMPLATES.length = 0; T.forEach((t) => { T_BY[t.id] = t; window.TEMPLATES.push({ id: t.id, name: t.name, cat: t.cat, icon: t.icon, desc: t.desc, badge: t.badge || '', tags: t.tags || [], look: t.look || '', thumb: `/img/tpl/${t.id}.jpg` }); }); };
+  const reg = (t) => { const i = T.findIndex((x) => x.id === t.id); if (i >= 0) T[i] = t; else T.push(t); rebuild(); };
+  rebuild();
+  window.TplKit = { add: reg, sec, remove: (id) => { const i = T.findIndex((x) => x.id === id); if (i >= 0) { T.splice(i, 1); rebuild(); } }, P: (topic, n) => `/img/p/${topic}-${n}.jpg` };
   window.getTemplate = (id) => { const t = T_BY[id]; return t ? t.build() : null; };
 })();

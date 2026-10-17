@@ -1,0 +1,2626 @@
+[
+ {
+  "type": "hero",
+  "label": "Bosh ekran",
+  "desc": "Sahifa boshidagi katta sarlavha va tugmalar",
+  "fields": [
+   {
+    "k": "layout",
+    "type": "sel",
+    "label": "Ko'rinish",
+    "options": [
+     "aurora",
+     "cinema",
+     "photo",
+     "editorial",
+     "split",
+     "center",
+     "image",
+     "shop"
+    ]
+   },
+   {
+    "k": "badge",
+    "type": "text",
+    "label": "Yuqoridagi yozuv"
+   },
+   {
+    "k": "titleStart",
+    "type": "text",
+    "label": "Sarlavha boshi"
+   },
+   {
+    "k": "words",
+    "type": "lines",
+    "label": "Almashib turadigan so'zlar"
+   },
+   {
+    "k": "titleEnd",
+    "type": "text",
+    "label": "Sarlavha oxiri"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "cta1Text",
+    "type": "text",
+    "label": "1-tugma matni"
+   },
+   {
+    "k": "cta1Link",
+    "type": "link",
+    "label": "1-tugma havolasi"
+   },
+   {
+    "k": "cta2Text",
+    "type": "text",
+    "label": "2-tugma matni"
+   },
+   {
+    "k": "cta2Link",
+    "type": "link",
+    "label": "2-tugma havolasi"
+   },
+   {
+    "k": "visual",
+    "type": "sel",
+    "label": "O'ng tomondagi tasvir",
+    "options": [
+     "none",
+     "image",
+     "window",
+     "collage"
+    ]
+   },
+   {
+    "k": "fx",
+    "type": "sel",
+    "label": "Fon animatsiyasi",
+    "options": [
+     "aurora",
+     "waves"
+    ]
+   },
+   {
+    "k": "image",
+    "type": "img",
+    "label": "Rasm"
+   },
+   {
+    "k": "video",
+    "type": "text",
+    "label": "Fon videosi (mp4 havolasi)"
+   },
+   {
+    "k": "image2",
+    "type": "img",
+    "label": "Ikkinchi kichik rasm"
+   },
+   {
+    "k": "spinText",
+    "type": "text",
+    "label": "Aylanuvchi yozuv"
+   },
+   {
+    "k": "inlineImgs",
+    "type": "list",
+    "label": "So'zlar orasidagi rasmlar (3 tagacha)",
+    "item": {
+     "fields": [
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      }
+     ],
+     "max": 3
+    }
+   },
+   {
+    "k": "windowLines",
+    "type": "lines",
+    "label": "Oynadagi qatorlar"
+   },
+   {
+    "k": "chips",
+    "type": "lines",
+    "label": "Suzuvchi yozuvlar (3 tagacha)"
+   },
+   {
+    "k": "collage",
+    "type": "list",
+    "label": "Kollaj kartochkalari",
+    "item": {
+     "fields": [
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "price",
+       "type": "text",
+       "label": "Narx matni"
+      }
+     ],
+     "max": 3
+    }
+   },
+   {
+    "k": "trust",
+    "type": "list",
+    "label": "Ishonch ko'rsatkichlari",
+    "item": {
+     "fields": [
+      {
+       "k": "value",
+       "type": "text",
+       "label": "Qiymat"
+      },
+      {
+       "k": "label",
+       "type": "text",
+       "label": "Yozuv"
+      }
+     ],
+     "max": 4
+    }
+   }
+  ],
+  "defaults": {
+   "layout": "aurora",
+   "fx": "aurora",
+   "video": "",
+   "image2": "",
+   "spinText": "",
+   "inlineImgs": [],
+   "badge": "Yangi",
+   "titleStart": "Sarlavhangizni",
+   "words": [
+    "shu yerga"
+   ],
+   "titleEnd": "yozing",
+   "text": "Kompaniyangiz haqida qisqa va aniq tavsif.",
+   "cta1Text": "Boshlash",
+   "cta1Link": "#",
+   "cta2Text": "",
+   "cta2Link": "#",
+   "visual": "none",
+   "image": "",
+   "windowLines": [],
+   "chips": [],
+   "collage": [],
+   "trust": []
+  }
+ },
+ {
+  "type": "marquee",
+  "label": "Yuguruvchi lenta",
+  "desc": "Xizmat yoki brend nomlari lentasi",
+  "fields": [
+   {
+    "k": "items",
+    "type": "lines",
+    "label": "Lentadagi so'zlar"
+   }
+  ],
+  "defaults": {
+   "items": [
+    "Birinchi",
+    "Ikkinchi",
+    "Uchinchi"
+   ]
+  }
+ },
+ {
+  "type": "stats",
+  "label": "Raqamlar",
+  "desc": "Animatsiyali ko'rsatkichlar",
+  "fields": [
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Ko'rsatkichlar",
+    "item": {
+     "fields": [
+      {
+       "k": "value",
+       "type": "num",
+       "label": "Son"
+      },
+      {
+       "k": "suffix",
+       "type": "text",
+       "label": "Qo'shimcha (+, %)"
+      },
+      {
+       "k": "label",
+       "type": "text",
+       "label": "Yozuv"
+      }
+     ],
+     "max": 6
+    }
+   }
+  ],
+  "defaults": {
+   "items": [
+    {
+     "value": 100,
+     "suffix": "+",
+     "label": "Mijoz"
+    },
+    {
+     "value": 5,
+     "suffix": " yil",
+     "label": "Tajriba"
+    },
+    {
+     "value": 24,
+     "suffix": "/7",
+     "label": "Aloqa"
+    }
+   ]
+  }
+ },
+ {
+  "type": "features",
+  "label": "Xizmatlar / afzalliklar",
+  "desc": "Ikonkali kartochkalar: xizmat, afzallik yoki shartlar",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "layout",
+    "type": "sel",
+    "label": "Joylashuv",
+    "options": [
+     "bento",
+     "grid",
+     "strip"
+    ]
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Kartochkalar",
+    "item": {
+     "fields": [
+      {
+       "k": "icon",
+       "type": "icon",
+       "label": "Ikonka"
+      },
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Tavsif"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Xizmatlar",
+   "title": "Biz nima qilamiz",
+   "text": "",
+   "layout": "grid",
+   "items": [
+    {
+     "icon": "star",
+     "title": "Birinchi xizmat",
+     "text": "Qisqa tavsif."
+    },
+    {
+     "icon": "zap",
+     "title": "Ikkinchi xizmat",
+     "text": "Qisqa tavsif."
+    },
+    {
+     "icon": "shield",
+     "title": "Uchinchi xizmat",
+     "text": "Qisqa tavsif."
+    }
+   ]
+  }
+ },
+ {
+  "type": "process",
+  "label": "Jarayon",
+  "desc": "Qanday ishlashingiz: qadamlar",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "layout",
+    "type": "sel",
+    "label": "Ko'rinish",
+    "options": [
+     "grid",
+     "stack"
+    ]
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Qadamlar",
+    "item": {
+     "fields": [
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Tavsif"
+      }
+     ],
+     "max": 8
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Jarayon",
+   "title": "Qanday ishlaymiz",
+   "text": "",
+   "items": [
+    {
+     "title": "Bog'lanish",
+     "text": "Arizangizni qabul qilamiz."
+    },
+    {
+     "title": "Kelishuv",
+     "text": "Shartlarni kelishamiz."
+    },
+    {
+     "title": "Bajarish",
+     "text": "Ishni o'z vaqtida topshiramiz."
+    }
+   ]
+  }
+ },
+ {
+  "type": "about",
+  "label": "Biz haqimizda",
+  "desc": "Rasm, matn va afzalliklar ro'yxati",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "image",
+    "type": "img",
+    "label": "Rasm"
+   },
+   {
+    "k": "imageSide",
+    "type": "sel",
+    "label": "Rasm joylashuvi",
+    "options": [
+     "left",
+     "right"
+    ]
+   },
+   {
+    "k": "points",
+    "type": "lines",
+    "label": "Ro'yxat (har qatorga bittadan)"
+   },
+   {
+    "k": "ctaText",
+    "type": "text",
+    "label": "Tugma matni"
+   },
+   {
+    "k": "ctaLink",
+    "type": "link",
+    "label": "Tugma havolasi"
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Biz haqimizda",
+   "title": "Biz kimmiz",
+   "text": "Kompaniyangiz haqida batafsil yozing: tarixi, qadriyatlari va mijozlarga nima beradi.",
+   "image": "",
+   "imageSide": "left",
+   "points": [
+    "Birinchi afzallik",
+    "Ikkinchi afzallik",
+    "Uchinchi afzallik"
+   ],
+   "ctaText": "",
+   "ctaLink": "#"
+  }
+ },
+ {
+  "type": "products",
+  "label": "Mahsulotlar / katalog",
+  "desc": "Do'kon: qidiruv, kategoriya, savat. Kurs va paketlar uchun ham",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "mode",
+    "type": "sel",
+    "label": "Tugma vazifasi",
+    "options": [
+     "cart",
+     "inquiry",
+     "brief"
+    ]
+   },
+   {
+    "k": "buttonText",
+    "type": "text",
+    "label": "Tugma matni"
+   },
+   {
+    "k": "columns",
+    "type": "sel",
+    "label": "Ustunlar",
+    "options": [
+     "3",
+     "4",
+     "2"
+    ]
+   },
+   {
+    "k": "search",
+    "type": "tog",
+    "label": "Qidiruv"
+   },
+   {
+    "k": "filters",
+    "type": "tog",
+    "label": "Kategoriya tugmalari"
+   },
+   {
+    "k": "sort",
+    "type": "tog",
+    "label": "Saralash"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Mahsulotlar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "price",
+       "type": "num",
+       "label": "Narxi"
+      },
+      {
+       "k": "oldPrice",
+       "type": "num",
+       "label": "Eski narx (chegirma uchun)"
+      },
+      {
+       "k": "category",
+       "type": "text",
+       "label": "Kategoriya"
+      },
+      {
+       "k": "badge",
+       "type": "text",
+       "label": "Belgi (ixtiyoriy)"
+      },
+      {
+       "k": "description",
+       "type": "area",
+       "label": "Tavsif"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "stock",
+       "type": "num",
+       "label": "Ombordagi soni"
+      },
+      {
+       "k": "active",
+       "type": "tog",
+       "label": "Saytda ko'rsatish"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Katalog",
+   "title": "Mahsulotlar",
+   "text": "Tanlang va buyurtma bering.",
+   "mode": "cart",
+   "buttonText": "",
+   "columns": "3",
+   "search": true,
+   "filters": true,
+   "sort": true,
+   "items": [
+    {
+     "id": "ia1wc4g",
+     "name": "Birinchi mahsulot",
+     "price": 100000,
+     "oldPrice": 0,
+     "category": "Asosiy",
+     "badge": "YANGI",
+     "description": "Mahsulot haqida qisqa tavsif.",
+     "image": "",
+     "stock": "",
+     "active": true
+    },
+    {
+     "id": "i5bqwtn",
+     "name": "Ikkinchi mahsulot",
+     "price": 250000,
+     "oldPrice": 300000,
+     "category": "Asosiy",
+     "badge": "",
+     "description": "Mahsulot haqida qisqa tavsif.",
+     "image": "",
+     "stock": "",
+     "active": true
+    },
+    {
+     "id": "ioghueo",
+     "name": "Uchinchi mahsulot",
+     "price": 0,
+     "oldPrice": 0,
+     "category": "Qo'shimcha",
+     "badge": "",
+     "description": "Narxi kelishiladi.",
+     "image": "",
+     "stock": "",
+     "active": true
+    }
+   ]
+  }
+ },
+ {
+  "type": "categories",
+  "label": "Kategoriya kartochkalari",
+  "desc": "Rasmli kategoriyalar: bosilsa katalog filtrlanadi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Kategoriyalar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Kategoriya nomi (katalogdagi bilan bir xil)"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      }
+     ],
+     "max": 8
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "",
+   "title": "Kategoriyalar",
+   "text": "",
+   "items": [
+    {
+     "name": "Asosiy",
+     "image": ""
+    },
+    {
+     "name": "Qo'shimcha",
+     "image": ""
+    }
+   ]
+  }
+ },
+ {
+  "type": "menu",
+  "label": "Menyu / narxlar ro'yxati",
+  "desc": "Restoran menyusi yoki salon xizmatlari narxi, kategoriya bo'yicha",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "mode",
+    "type": "sel",
+    "label": "Tugma vazifasi",
+    "options": [
+     "cart",
+     "none"
+    ]
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Pozitsiyalar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "price",
+       "type": "num",
+       "label": "Narxi"
+      },
+      {
+       "k": "category",
+       "type": "text",
+       "label": "Kategoriya"
+      },
+      {
+       "k": "description",
+       "type": "area",
+       "label": "Tavsif (tarkibi, davomiyligi)"
+      },
+      {
+       "k": "tag",
+       "type": "text",
+       "label": "Belgi (ixtiyoriy)"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "active",
+       "type": "tog",
+       "label": "Ko'rsatish"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Menyu",
+   "title": "Bizning menyu",
+   "text": "",
+   "mode": "none",
+   "items": [
+    {
+     "id": "ilkmu8p",
+     "name": "Birinchi taom",
+     "price": 40000,
+     "category": "Asosiy",
+     "description": "Tarkibi: ...",
+     "tag": "",
+     "image": "",
+     "active": true
+    },
+    {
+     "id": "ip1fpk6",
+     "name": "Ikkinchi taom",
+     "price": 55000,
+     "category": "Asosiy",
+     "description": "Tarkibi: ...",
+     "tag": "Yangi",
+     "image": "",
+     "active": true
+    }
+   ]
+  }
+ },
+ {
+  "type": "gallery",
+  "label": "Galereya",
+  "desc": "Rasmlar: bosilsa kattalashadi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "layout",
+    "type": "sel",
+    "label": "Ko'rinish",
+    "options": [
+     "masonry",
+     "grid"
+    ]
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Rasmlar",
+    "item": {
+     "fields": [
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "caption",
+       "type": "text",
+       "label": "Izoh"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Galereya",
+   "title": "Ishlarimizdan namunalar",
+   "text": "",
+   "layout": "masonry",
+   "items": [
+    {
+     "image": "",
+     "caption": "Birinchi rasm"
+    },
+    {
+     "image": "",
+     "caption": "Ikkinchi rasm"
+    },
+    {
+     "image": "",
+     "caption": "Uchinchi rasm"
+    }
+   ]
+  }
+ },
+ {
+  "type": "projects",
+  "label": "Loyihalar (portfolio)",
+  "desc": "Ishlaringiz: rasm, teglar, batafsil oyna",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "layout",
+    "type": "sel",
+    "label": "Ko'rinish",
+    "options": [
+     "grid",
+     "masonry"
+    ]
+   },
+   {
+    "k": "filters",
+    "type": "tog",
+    "label": "Teg bo'yicha filtr"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Loyihalar",
+    "item": {
+     "fields": [
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "tags",
+       "type": "text",
+       "label": "Teglar (vergul bilan)"
+      },
+      {
+       "k": "year",
+       "type": "text",
+       "label": "Yil"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "description",
+       "type": "area",
+       "label": "Tavsif"
+      },
+      {
+       "k": "link",
+       "type": "text",
+       "label": "Havola"
+      },
+      {
+       "k": "linkText",
+       "type": "text",
+       "label": "Havola matni"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Portfolio",
+   "title": "Tanlangan loyihalar",
+   "text": "",
+   "layout": "grid",
+   "filters": true,
+   "items": [
+    {
+     "title": "Birinchi loyiha",
+     "tags": "Veb",
+     "year": "2025",
+     "image": "",
+     "description": "Loyiha haqida: vazifa, yechim va natija.",
+     "link": "",
+     "linkText": ""
+    },
+    {
+     "title": "Ikkinchi loyiha",
+     "tags": "Dizayn",
+     "year": "2025",
+     "image": "",
+     "description": "Loyiha haqida: vazifa, yechim va natija.",
+     "link": "",
+     "linkText": ""
+    }
+   ]
+  }
+ },
+ {
+  "type": "skills",
+  "label": "Ko'nikmalar",
+  "desc": "Ko'nikma darajalari: chiziqlar yoki teglar",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "layout",
+    "type": "sel",
+    "label": "Ko'rinish",
+    "options": [
+     "bars",
+     "tags"
+    ]
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Ko'nikmalar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "level",
+       "type": "num",
+       "label": "Daraja (0â€“100)"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Ko'nikmalar",
+   "title": "Nimalarni bilaman",
+   "text": "",
+   "layout": "bars",
+   "items": [
+    {
+     "name": "Birinchi",
+     "level": 90
+    },
+    {
+     "name": "Ikkinchi",
+     "level": 80
+    },
+    {
+     "name": "Uchinchi",
+     "level": 70
+    }
+   ]
+  }
+ },
+ {
+  "type": "timeline",
+  "label": "Tajriba / vaqt chizig'i",
+  "desc": "Ish tajribasi, ta'lim yoki kompaniya tarixi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Bosqichlar",
+    "item": {
+     "fields": [
+      {
+       "k": "period",
+       "type": "text",
+       "label": "Davr"
+      },
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Lavozim / nomi"
+      },
+      {
+       "k": "place",
+       "type": "text",
+       "label": "Joy"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Tavsif"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Tajriba",
+   "title": "Yo'lim",
+   "text": "",
+   "items": [
+    {
+     "period": "2023 â€“ hozir",
+     "title": "Lavozim",
+     "place": "Kompaniya",
+     "text": "Nima bilan shug'ullandim."
+    },
+    {
+     "period": "2020 â€“ 2023",
+     "title": "Oldingi lavozim",
+     "place": "Kompaniya",
+     "text": "Nima bilan shug'ullandim."
+    }
+   ]
+  }
+ },
+ {
+  "type": "team",
+  "label": "Jamoa / ustalar",
+  "desc": "Odamlar: rasm, lavozim, qisqa tavsif",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Odamlar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Ism"
+      },
+      {
+       "k": "role",
+       "type": "text",
+       "label": "Lavozim"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Qisqa tavsif"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Jamoa",
+   "title": "Bizning jamoa",
+   "text": "",
+   "items": [
+    {
+     "name": "Ism Familiya",
+     "role": "Lavozim",
+     "image": "",
+     "text": ""
+    },
+    {
+     "name": "Ism Familiya",
+     "role": "Lavozim",
+     "image": "",
+     "text": ""
+    },
+    {
+     "name": "Ism Familiya",
+     "role": "Lavozim",
+     "image": "",
+     "text": ""
+    }
+   ]
+  }
+ },
+ {
+  "type": "pricing",
+  "label": "Tariflar",
+  "desc": "Narx rejalari: xizmat paketlari, tanlansa so'rov formasi ochiladi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Tariflar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "price",
+       "type": "text",
+       "label": "Narx"
+      },
+      {
+       "k": "period",
+       "type": "text",
+       "label": "Davr"
+      },
+      {
+       "k": "features",
+       "type": "lines",
+       "label": "Nimalar kiradi (har qatorga bittadan)"
+      },
+      {
+       "k": "popular",
+       "type": "tog",
+       "label": "Tavsiya etiladi"
+      },
+      {
+       "k": "cta",
+       "type": "text",
+       "label": "Tugma matni"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Narxlar",
+   "title": "Tariflar",
+   "text": "",
+   "items": [
+    {
+     "name": "Start",
+     "price": "500 000 so'm",
+     "period": "",
+     "features": [
+      "Birinchi imkoniyat",
+      "Ikkinchi imkoniyat"
+     ],
+     "popular": false,
+     "cta": "Tanlash"
+    },
+    {
+     "name": "Standart",
+     "price": "1 000 000 so'm",
+     "period": "",
+     "features": [
+      "Hammasi Start dagidek",
+      "Qo'shimcha imkoniyat"
+     ],
+     "popular": true,
+     "cta": "Tanlash"
+    },
+    {
+     "name": "Premium",
+     "price": "2 000 000 so'm",
+     "period": "",
+     "features": [
+      "Hammasi Standart dagidek",
+      "Shaxsiy menejer"
+     ],
+     "popular": false,
+     "cta": "Tanlash"
+    }
+   ]
+  }
+ },
+ {
+  "type": "testimonials",
+  "label": "Mijozlar fikri",
+  "desc": "Sharhlar: matn, ism, rasm, reyting",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "layout",
+    "type": "sel",
+    "label": "Ko'rinish",
+    "options": [
+     "grid",
+     "wall"
+    ]
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Sharhlar",
+    "item": {
+     "fields": [
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Sharh"
+      },
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Ism"
+      },
+      {
+       "k": "role",
+       "type": "text",
+       "label": "Kim ekani"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "stars",
+       "type": "num",
+       "label": "Reyting (1â€“5)"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Sharhlar",
+   "title": "Mijozlar nima deydi",
+   "text": "",
+   "items": [
+    {
+     "text": "Juda yoqdi! Hammasi tez va sifatli bajarildi.",
+     "name": "Mijoz ismi",
+     "role": "Mijoz",
+     "image": "",
+     "stars": 5
+    },
+    {
+     "text": "Tavsiya qilaman, ishonchli jamoa.",
+     "name": "Mijoz ismi",
+     "role": "Mijoz",
+     "image": "",
+     "stars": 5
+    },
+    {
+     "text": "Narx va sifat mos keldi.",
+     "name": "Mijoz ismi",
+     "role": "Mijoz",
+     "image": "",
+     "stars": 5
+    }
+   ]
+  }
+ },
+ {
+  "type": "faq",
+  "label": "Savol-javoblar",
+  "desc": "Ko'p so'raladigan savollar",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Savollar",
+    "item": {
+     "fields": [
+      {
+       "k": "q",
+       "type": "text",
+       "label": "Savol"
+      },
+      {
+       "k": "a",
+       "type": "area",
+       "label": "Javob"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Savollar",
+   "title": "Ko'p so'raladigan savollar",
+   "text": "",
+   "items": [
+    {
+     "q": "Birinchi savol?",
+     "a": "Javob shu yerda."
+    },
+    {
+     "q": "Ikkinchi savol?",
+     "a": "Javob shu yerda."
+    }
+   ]
+  }
+ },
+ {
+  "type": "cta",
+  "label": "Taklif banneri",
+  "desc": "Chiroyli banner: aksiya, taymer va tugma",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "buttonText",
+    "type": "text",
+    "label": "Tugma matni"
+   },
+   {
+    "k": "buttonLink",
+    "type": "link",
+    "label": "Tugma havolasi"
+   },
+   {
+    "k": "countdownTo",
+    "type": "text",
+    "label": "Taymer tugash sanasi"
+   },
+   {
+    "k": "image",
+    "type": "img",
+    "label": "Rasm (ixtiyoriy)"
+   },
+   {
+    "k": "fx",
+    "type": "tog",
+    "label": "Animatsion nurli fon"
+   }
+  ],
+  "defaults": {
+   "fx": false,
+   "eyebrow": "Maxsus taklif",
+   "title": "Aksiya davom etmoqda",
+   "text": "Taklifdan foydalanib qoling.",
+   "buttonText": "Ko'rish",
+   "buttonLink": "#",
+   "countdownTo": "",
+   "image": ""
+  }
+ },
+ {
+  "type": "cards",
+  "label": "Havolali kartochkalar",
+  "desc": "Rasmli kartochkalar: bosilsa havolaga o'tadi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Kartochkalar",
+    "item": {
+     "fields": [
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "badge",
+       "type": "text",
+       "label": "Belgi"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Tavsif"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "link",
+       "type": "link",
+       "label": "Havola"
+      }
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "",
+   "title": "Tanlang",
+   "text": "",
+   "items": [
+    {
+     "title": "Birinchi",
+     "badge": "",
+     "text": "",
+     "image": "",
+     "link": "#"
+    },
+    {
+     "title": "Ikkinchi",
+     "badge": "",
+     "text": "",
+     "image": "",
+     "link": "#"
+    }
+   ]
+  }
+ },
+ {
+  "type": "brief",
+  "label": "Buyurtma anketasi",
+  "desc": "Mijozning xohishlarini bosqichma-bosqich so'raydigan anketa: xizmat, imkoniyatlar, dizayn, byudjet va aloqa",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "buttonText",
+    "type": "text",
+    "label": "Tugma matni"
+   },
+   {
+    "k": "promise",
+    "type": "text",
+    "label": "Va'da (tugma ostida)"
+   },
+   {
+    "k": "usp",
+    "type": "lines",
+    "label": "Afzalliklar (har qatorga bittadan)"
+   },
+   {
+    "k": "showEstimate",
+    "type": "tog",
+    "label": "Taxminiy narxni ko'rsatish"
+   },
+   {
+    "k": "services",
+    "type": "list",
+    "label": "Xizmat turlari",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "desc",
+       "type": "text",
+       "label": "Qisqa tavsif"
+      },
+      {
+       "k": "icon",
+       "type": "icon",
+       "label": "Ikonka"
+      },
+      {
+       "k": "price",
+       "type": "num",
+       "label": "Boshlang'ich narx"
+      },
+      {
+       "k": "days",
+       "type": "text",
+       "label": "Muddat"
+      }
+     ]
+    }
+   },
+   {
+    "k": "features",
+    "type": "list",
+    "label": "Qo'shimcha imkoniyatlar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "price",
+       "type": "num",
+       "label": "Qo'shimcha narx"
+      },
+      {
+       "k": "types",
+       "type": "text",
+       "label": "Qaysi xizmatlar uchun (id lar, vergul bilan)"
+      }
+     ]
+    }
+   },
+   {
+    "k": "styles",
+    "type": "list",
+    "label": "Dizayn uslublari",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "desc",
+       "type": "text",
+       "label": "Tavsif"
+      },
+      {
+       "k": "c1",
+       "type": "text",
+       "label": "1-rang"
+      },
+      {
+       "k": "c2",
+       "type": "text",
+       "label": "2-rang"
+      }
+     ]
+    }
+   },
+   {
+    "k": "references",
+    "type": "list",
+    "label": "Namuna saytlar (rasm bilan)",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      }
+     ]
+    }
+   },
+   {
+    "k": "goals",
+    "type": "lines",
+    "label": "Maqsadlar"
+   },
+   {
+    "k": "budgets",
+    "type": "lines",
+    "label": "Byudjet variantlari"
+   },
+   {
+    "k": "deadlines",
+    "type": "lines",
+    "label": "Muddat variantlari"
+   },
+   {
+    "k": "languages",
+    "type": "lines",
+    "label": "Sayt tillari"
+   },
+   {
+    "k": "methods",
+    "type": "lines",
+    "label": "Aloqa usullari"
+   },
+   {
+    "k": "times",
+    "type": "lines",
+    "label": "Qulay vaqtlar"
+   },
+   {
+    "k": "fieldsList",
+    "type": "lines",
+    "label": "Faoliyat sohalari (tavsiyalar)"
+   },
+   {
+    "k": "successTitle",
+    "type": "text",
+    "label": "Muvaffaqiyat sarlavhasi"
+   },
+   {
+    "k": "successText",
+    "type": "area",
+    "label": "Muvaffaqiyat matni"
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Loyihani boshlang",
+   "title": "Xohishlaringizni ayting, biz amalga oshiramiz",
+   "text": "3 daqiqalik anketa: nima kerakligini, qanday ko'rinishni va qancha byudjetni tanlaysiz. Qolganini biz hal qilamiz.",
+   "buttonText": "Anketani to'ldirish",
+   "promise": "15 daqiqada aloqaga chiqamiz",
+   "showEstimate": true,
+   "usp": [
+    "Aniq narx va muddat: suhbatdan keyin shartnoma",
+    "Bepul maslahat va g'oyalar",
+    "Natijaga kafolat"
+   ],
+   "services": [
+    {
+     "id": "sayt",
+     "name": "Veb-sayt",
+     "desc": "Vizitka, korporativ yoki landing sahifa",
+     "icon": "globe",
+     "price": 2500000,
+     "days": "5â€“10 kun"
+    },
+    {
+     "id": "dokon",
+     "name": "Onlayn do'kon",
+     "desc": "Katalog, savat va to'lov bilan",
+     "icon": "cart",
+     "price": 6900000,
+     "days": "2â€“3 hafta"
+    },
+    {
+     "id": "bot",
+     "name": "Telegram bot",
+     "desc": "Buyurtma va aloqani avtomatlashtirish",
+     "icon": "send",
+     "price": 3200000,
+     "days": "1â€“2 hafta"
+    }
+   ],
+   "features": [
+    {
+     "name": "Admin panel",
+     "price": 800000,
+     "types": ""
+    },
+    {
+     "name": "Ko'p tillilik",
+     "price": 500000,
+     "types": ""
+    },
+    {
+     "name": "SEO sozlash",
+     "price": 400000,
+     "types": "sayt,dokon"
+    }
+   ],
+   "styles": [
+    {
+     "name": "Zamonaviy",
+     "desc": "Toza va yorqin",
+     "c1": "#4f46e5",
+     "c2": "#06b6d4"
+    },
+    {
+     "name": "Minimal",
+     "desc": "Oq-qora, aniq",
+     "c1": "#111111",
+     "c2": "#e8452c"
+    },
+    {
+     "name": "Premium",
+     "desc": "Qora va oltin",
+     "c1": "#d4a64a",
+     "c2": "#17110a"
+    }
+   ],
+   "references": [],
+   "goals": [
+    "Ko'proq mijoz jalb qilish",
+    "Onlayn sotuvni yo'lga qo'yish",
+    "Brend va ishonchni oshirish",
+    "Jarayonlarni avtomatlashtirish"
+   ],
+   "budgets": [
+    "1â€“3 mln so'm",
+    "3â€“7 mln so'm",
+    "7â€“15 mln so'm",
+    "15 mln so'mdan ko'p",
+    "Maslahat kerak"
+   ],
+   "deadlines": [
+    "Shoshilinch (1 hafta)",
+    "2â€“3 hafta",
+    "1 oy",
+    "Shoshilmayman"
+   ],
+   "languages": [
+    "O'zbekcha",
+    "Ruscha",
+    "Inglizcha"
+   ],
+   "methods": [
+    "Telefon",
+    "Telegram",
+    "WhatsApp",
+    "Email"
+   ],
+   "times": [
+    "9:00â€“12:00",
+    "12:00â€“17:00",
+    "17:00â€“20:00",
+    "Istalgan vaqt"
+   ],
+   "fieldsList": [
+    "Savdo",
+    "Restoran / kafe",
+    "Ta'lim",
+    "Tibbiyot",
+    "Go'zallik",
+    "Qurilish",
+    "Transport",
+    "Xizmat ko'rsatish",
+    "IT"
+   ],
+   "successTitle": "So'rovingiz qabul qilindi!",
+   "successText": "Mutaxassisimiz ish vaqtida 15â€“30 daqiqa ichida, boshqa vaqtda keyingi ish kuni ertalab siz bilan bog'lanadi."
+  }
+ },
+ {
+  "type": "contact",
+  "label": "Aloqa va forma",
+  "desc": "Aloqa ma'lumotlari va xabar / bron / buyurtma formasi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "form",
+    "type": "sel",
+    "label": "Forma turi",
+    "options": [
+     "message",
+     "booking",
+     "order",
+     "none"
+    ]
+   },
+   {
+    "k": "serviceOptions",
+    "type": "lines",
+    "label": "Xizmat ro'yxati (bron uchun)"
+   },
+   {
+    "k": "askGuests",
+    "type": "tog",
+    "label": "Mehmonlar sonini so'rash"
+   },
+   {
+    "k": "askAddress",
+    "type": "tog",
+    "label": "Yetkazib berish manzilini so'rash"
+   },
+   {
+    "k": "payOptions",
+    "type": "lines",
+    "label": "To'lov usullari"
+   },
+   {
+    "k": "submitText",
+    "type": "text",
+    "label": "Tugma matni"
+   },
+   {
+    "k": "mapUrl",
+    "type": "text",
+    "label": "Xarita havolasi"
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Aloqa",
+   "title": "Biz bilan bog'laning",
+   "text": "Raqamingizni qoldiring, tez orada aloqaga chiqamiz.",
+   "form": "message",
+   "serviceOptions": [],
+   "askGuests": false,
+   "askAddress": true,
+   "payOptions": [
+    "Naqd pul",
+    "Karta orqali"
+   ],
+   "submitText": "",
+   "mapUrl": ""
+  }
+ },
+ {
+  "type": "statement",
+  "label": "Katta bayonot",
+  "desc": "Katta matn: sahifa aylantirilganda so'zlar birma-bir yonadi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Matn"
+   },
+   {
+    "k": "author",
+    "type": "text",
+    "label": "Muallif (ixtiyoriy)"
+   },
+   {
+    "k": "role",
+    "type": "text",
+    "label": "Lavozimi"
+   },
+   {
+    "k": "image",
+    "type": "img",
+    "label": "Muallif rasmi"
+   },
+   {
+    "k": "buttonText",
+    "type": "text",
+    "label": "Tugma matni"
+   },
+   {
+    "k": "buttonLink",
+    "type": "link",
+    "label": "Tugma havolasi"
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Biz haqimizda",
+   "text": "Biz oddiy *saytlar* emas, mijozlaringizni egaga aylantiradigan *raqamli tajriba* yaratamiz.",
+   "author": "",
+   "role": "",
+   "image": "",
+   "buttonText": "",
+   "buttonLink": "#"
+  }
+ },
+ {
+  "type": "bento",
+  "label": "Bento to'r",
+  "desc": "Turli o'lchamli zamonaviy kartochkalar: matn, rasm, katta raqam",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Kartochkalar",
+    "item": {
+     "fields": [
+      {
+       "k": "kind",
+       "type": "sel",
+       "label": "Turi",
+       "options": [
+        "text",
+        "image",
+        "stat",
+        "hl"
+       ]
+      },
+      {
+       "k": "size",
+       "type": "sel",
+       "label": "O'lcham",
+       "options": [
+        "s",
+        "m",
+        "l",
+        "w",
+        "f"
+       ]
+      },
+      {
+       "k": "tall",
+       "type": "tog",
+       "label": "Balandroq (2 qator)"
+      },
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Sarlavha"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Matn"
+      },
+      {
+       "k": "value",
+       "type": "text",
+       "label": "Katta raqam / so'z"
+      },
+      {
+       "k": "icon",
+       "type": "icon",
+       "label": "Ikonka"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "link",
+       "type": "link",
+       "label": "Havola (ixtiyoriy)"
+      }
+     ],
+     "max": 12
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Imkoniyatlar",
+   "title": "Hammasi *bir joyda*",
+   "text": "",
+   "items": [
+    {
+     "kind": "image",
+     "size": "w",
+     "tall": false,
+     "title": "Birinchi imkoniyat",
+     "text": "Qisqa tavsif",
+     "value": "",
+     "icon": "star",
+     "image": "",
+     "link": ""
+    },
+    {
+     "kind": "stat",
+     "size": "s",
+     "tall": false,
+     "title": "mamnun mijoz",
+     "text": "",
+     "value": "500+",
+     "icon": "star",
+     "image": "",
+     "link": ""
+    },
+    {
+     "kind": "text",
+     "size": "m",
+     "tall": false,
+     "title": "Tez va sifatli",
+     "text": "Qisqa tavsif",
+     "value": "",
+     "icon": "zap",
+     "image": "",
+     "link": ""
+    },
+    {
+     "kind": "hl",
+     "size": "m",
+     "tall": false,
+     "title": "Maxsus taklif",
+     "text": "Qisqa tavsif",
+     "value": "24/7",
+     "icon": "shield",
+     "image": "",
+     "link": ""
+    }
+   ]
+  }
+ },
+ {
+  "type": "services",
+  "label": "Xizmatlar ro'yxati",
+  "desc": "Katta raqamlangan ro'yxat: ustiga borilsa rasm paydo bo'ladi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Xizmatlar",
+    "item": {
+     "fields": [
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Tavsif"
+      },
+      {
+       "k": "tags",
+       "type": "lines",
+       "label": "Teglar"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Ustiga borilganda ko'rinadigan rasm"
+      },
+      {
+       "k": "link",
+       "type": "link",
+       "label": "Havola (ixtiyoriy)"
+      }
+     ],
+     "max": 10
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Xizmatlar",
+   "title": "Biz *nima* qilamiz",
+   "text": "",
+   "items": [
+    {
+     "title": "Birinchi xizmat",
+     "text": "Qisqa tavsif.",
+     "tags": [
+      "Teg"
+     ],
+     "image": "",
+     "link": ""
+    },
+    {
+     "title": "Ikkinchi xizmat",
+     "text": "Qisqa tavsif.",
+     "tags": [],
+     "image": "",
+     "link": ""
+    },
+    {
+     "title": "Uchinchi xizmat",
+     "text": "Qisqa tavsif.",
+     "tags": [],
+     "image": "",
+     "link": ""
+    }
+   ]
+  }
+ },
+ {
+  "type": "showcase",
+  "label": "Gorizontal vitrina",
+  "desc": "Sahifa aylantirilganda yonga siljiydigan katta kartochkalar (ishlar, mahsulotlar)",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Kartochkalar",
+    "item": {
+     "fields": [
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "tag",
+       "type": "text",
+       "label": "Kichik yozuv"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "link",
+       "type": "link",
+       "label": "Havola (ixtiyoriy)"
+      }
+     ],
+     "max": 12
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Portfolio",
+   "title": "Tanlangan *ishlar*",
+   "text": "",
+   "items": [
+    {
+     "title": "Birinchi ish",
+     "tag": "Kategoriya",
+     "image": "",
+     "link": ""
+    },
+    {
+     "title": "Ikkinchi ish",
+     "tag": "Kategoriya",
+     "image": "",
+     "link": ""
+    },
+    {
+     "title": "Uchinchi ish",
+     "tag": "Kategoriya",
+     "image": "",
+     "link": ""
+    }
+   ]
+  }
+ },
+ {
+  "type": "logos",
+  "label": "Hamkorlar lentasi",
+  "desc": "Mijoz va hamkor nomlari yoki logolari: yuguruvchi lenta",
+  "fields": [
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Kichik sarlavha"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Hamkorlar",
+    "item": {
+     "fields": [
+      {
+       "k": "name",
+       "type": "text",
+       "label": "Nomi"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Logo (ixtiyoriy)"
+      }
+     ],
+     "max": 16
+    }
+   }
+  ],
+  "defaults": {
+   "title": "Bizga ishonishadi",
+   "items": [
+    {
+     "name": "Brend A",
+     "image": ""
+    },
+    {
+     "name": "Brend B",
+     "image": ""
+    },
+    {
+     "name": "Brend C",
+     "image": ""
+    },
+    {
+     "name": "Brend D",
+     "image": ""
+    }
+   ]
+  }
+ },
+ {
+  "type": "split",
+  "label": "Rasm + matn qatorlari",
+  "desc": "Navbat bilan chap/o'ngda katta rasm va matn; rasm sekin ochiladi",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "items",
+    "type": "list",
+    "label": "Qatorlar",
+    "item": {
+     "fields": [
+      {
+       "k": "label",
+       "type": "text",
+       "label": "Kichik yozuv"
+      },
+      {
+       "k": "title",
+       "type": "text",
+       "label": "Sarlavha"
+      },
+      {
+       "k": "text",
+       "type": "area",
+       "label": "Matn"
+      },
+      {
+       "k": "bullets",
+       "type": "lines",
+       "label": "Punktlar"
+      },
+      {
+       "k": "image",
+       "type": "img",
+       "label": "Rasm"
+      },
+      {
+       "k": "buttonText",
+       "type": "text",
+       "label": "Tugma matni"
+      },
+      {
+       "k": "buttonLink",
+       "type": "link",
+       "label": "Tugma havolasi"
+      }
+     ],
+     "max": 8
+    }
+   }
+  ],
+  "defaults": {
+   "eyebrow": "",
+   "title": "",
+   "text": "",
+   "items": [
+    {
+     "label": "01",
+     "title": "Birinchi *afzallik*",
+     "text": "Batafsil tavsif.",
+     "bullets": [
+      "Birinchi punkt",
+      "Ikkinchi punkt"
+     ],
+     "image": "",
+     "buttonText": "",
+     "buttonLink": "#"
+    },
+    {
+     "label": "02",
+     "title": "Ikkinchi afzallik",
+     "text": "Batafsil tavsif.",
+     "bullets": [],
+     "image": "",
+     "buttonText": "",
+     "buttonLink": "#"
+    }
+   ]
+  }
+ },
+ {
+  "type": "video",
+  "label": "Video",
+  "desc": "Katta video oynasi: YouTube, Vimeo yoki o'zingiz yuklagan mp4",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "url",
+    "type": "text",
+    "label": "Video havolasi"
+   },
+   {
+    "k": "poster",
+    "type": "img",
+    "label": "Muqova rasmi"
+   },
+   {
+    "k": "caption",
+    "type": "text",
+    "label": "Video ustidagi yozuv"
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Video",
+   "title": "Ish jarayonimizni *ko'ring*",
+   "text": "",
+   "url": "",
+   "poster": "",
+   "caption": "Ko'rish"
+  }
+ },
+ {
+  "type": "map",
+  "label": "Xarita va manzil",
+  "desc": "Google xaritasi, manzil, ish vaqti va telefon kartochkalari",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "query",
+    "type": "text",
+    "label": "Xarita qidiruvi"
+   },
+   {
+    "k": "zoom",
+    "type": "num",
+    "label": "Masshtab (10â€“18)"
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Manzil",
+   "title": "Bizni *toping*",
+   "text": "",
+   "query": "",
+   "zoom": 15
+  }
+ },
+ {
+  "type": "compare",
+  "label": "Oldin / keyin",
+  "desc": "Ikki rasm: slayder bilan solishtiriladi (natijalar, ta'mir, go'zallik)",
+  "fields": [
+   {
+    "k": "eyebrow",
+    "type": "text",
+    "label": "Kichik yozuv"
+   },
+   {
+    "k": "title",
+    "type": "text",
+    "label": "Sarlavha"
+   },
+   {
+    "k": "text",
+    "type": "area",
+    "label": "Tavsif"
+   },
+   {
+    "k": "before",
+    "type": "img",
+    "label": "Oldin (rasm)"
+   },
+   {
+    "k": "after",
+    "type": "img",
+    "label": "Keyin (rasm)"
+   },
+   {
+    "k": "labelBefore",
+    "type": "text",
+    "label": "Chap yozuv"
+   },
+   {
+    "k": "labelAfter",
+    "type": "text",
+    "label": "O'ng yozuv"
+   }
+  ],
+  "defaults": {
+   "eyebrow": "Natija",
+   "title": "Oldin va *keyin*",
+   "text": "",
+   "before": "",
+   "after": "",
+   "labelBefore": "Oldin",
+   "labelAfter": "Keyin"
+  }
+ }
+]
