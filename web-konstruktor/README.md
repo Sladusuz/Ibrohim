@@ -16,6 +16,14 @@ Fotolar `public/img/p/` da (CC0, StockSnap manbasidan; `tools/fetch-photos.js`).
 ## Dizayn tizimi
 `public/motion.js` va `public/motion.css`: WebGL nurli fon, so'zma-so'z ochiladigan sarlavhalar, parallax, gorizontal vitrina, maxsus kursor, kirish animatsiyasi. Sayt sozlamalarida "Umumiy uslub" (Klassik / Kinematik / Hashamatli) va "Animatsiyalar" yoqish-o'chirish bor. Hero ko'rinishlari: aurora, kinematik (foto/video), katta foto, muharrir. Yangi bo'limlar: bayonot, bento, xizmatlar ro'yxati, vitrina, hamkorlar, rasm+matn, video, xarita, oldin/keyin.
 
+## Sotuv, joylash va to'lov (server rejimida)
+- **Shablon sotuvi:** mijoz shablonni bepul sozlaydi, tayyor sayt **$10** (admin *Narxlar* da o'zgartiriladi). To'lovdan keyin: tayyor sayt (mustaqil .html) yuklab olinadi yoki **nomi.sizning-domeningiz** manzilida joylanadi, o'z domeni ulanadi.
+- **To'lov:** Payme va Click (webhooklar `/api/pay/payme`, `/api/pay/click`) yoki qo'lda tasdiqlash (admin *Mijoz saytlari* → «To'langan deb belgilash»). Kalitlar admin *Sozlamalar* da. Sandbox'da avval sinang.
+- **Subdomenlar:** `ROOT_DOMAIN` + DNS'da `*` A yozuvi; Caddy sertifikatni talab bo'yicha oladi (`/_ask` faqat bizning domenlarga ruxsat beradi).
+- **Joylangan saytda:** SEO teglari, `robots.txt`, `sitemap.xml`, PWA (telefonga ilova kabi o'rnatiladi), tashrif/buyurtma statistikasi, kelgan buyurtmalar mijoz kabinetida («Sayt buyurtmalari»).
+- **AI yordamchi:** biznes tavsifidan shablon tanlaydi va matnlarni yozadi (Claude API kaliti kerak; kalitsiz faqat shablon tanlaydi).
+- Statik nashrda (GitHub Pages) hisob, to'lov va joylash ishlamaydi: tayyor sayt faqat to'lovdan keyin beriladi, shuning uchun savdo uchun server kerak.
+
 ## Ishga tushirish (to'liq imkoniyatlar bilan)
 1. **Node.js 18+** o'rnating.
 2. `node server.js`  (Windows: `start.bat`)
@@ -43,7 +51,7 @@ Ma'lumotlar `DATA_DIR` ichidagi JSON fayllarda (`users.json`, `orders.json`, `pr
 - `node tools/gen-images.js`: namunaviy rasmlarni yaratadi
 - `node tools/shoot-thumbs.js [id...]`: shablon rasmlarini suratga oladi (Playwright kerak)
 - `node tools/check-template.js <id>`: shablonni to'liq tekshiradi (xatolar, siniq rasmlar, mobil)
-- `node tools/e2e.js`: butun platformani sinaydi (hisob, anketa, admin, konstruktor)
+- `node tools/e2e.js`, `e2e-features.js`, `e2e-ui.js`: butun platformani sinaydi (hisob, anketa, admin, konstruktor; sotuv, subdomen, Payme/Click, AI)
 - `node tools/build-static.js`: `public/shablon.html`, `public/index.html` va `docs/` ni yig'adi. **`public/` dagi dvigatel fayllari o'zgargach shuni ishga tushiring.**
 
 ## Tuzilma

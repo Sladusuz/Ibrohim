@@ -9,3 +9,5 @@ data/uploads/*
 !data/uploads/.gitkeep
 public/_*
 node_modules/
+data/payments.json
+data/stats.json
