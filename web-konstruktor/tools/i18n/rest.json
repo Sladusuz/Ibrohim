@@ -1,0 +1,398 @@
+{
+ "loyiha": {
+  "ru": "проект",
+  "en": "project"
+ },
+ "tajriba": {
+  "ru": "опыт",
+  "en": "experience"
+ },
+ "Hammasi": {
+  "ru": "Все",
+  "en": "All"
+ },
+ "Tezkor ko'rish": {
+  "ru": "Быстрый просмотр",
+  "en": "Quick view"
+ },
+ "Hech narsa topilmadi": {
+  "ru": "Ничего не найдено",
+  "en": "Nothing found"
+ },
+ "Boshqa so'z yoki kategoriyani sinab ko'ring.": {
+  "ru": "Попробуйте другое слово или категорию.",
+  "en": "Try another word or category."
+ },
+ "Anketa to'ldirasiz": {
+  "ru": "Вы заполняете анкету",
+  "en": "You fill out a form"
+ },
+ "3 daqiqa": {
+  "ru": "3 минуты",
+  "en": "3 minutes"
+ },
+ "Biz aloqaga chiqamiz": {
+  "ru": "Мы свяжемся с вами",
+  "en": "We get in touch"
+ },
+ "Narx va muddat kelishiladi": {
+  "ru": "Цена и сроки согласовываются",
+  "en": "Price and timeline are agreed"
+ },
+ "Bepul maslahat": {
+  "ru": "Бесплатная консультация",
+  "en": "Free consultation"
+ },
+ "Ish boshlanadi": {
+  "ru": "Начинается работа",
+  "en": "Work begins"
+ },
+ "Har kuni hisobot": {
+  "ru": "Ежедневный отчет",
+  "en": "Daily report"
+ },
+ "Telefon": {
+  "ru": "Телефон",
+  "en": "Phone"
+ },
+ "Manzil": {
+  "ru": "Адрес",
+  "en": "Address"
+ },
+ "Ish vaqti": {
+  "ru": "Часы работы",
+  "en": "Working hours"
+ },
+ "Ismingiz": {
+  "ru": "Ваше имя",
+  "en": "Your name"
+ },
+ "Telefon raqamingiz": {
+  "ru": "Ваш номер телефона",
+  "en": "Your phone number"
+ },
+ "Xabaringiz": {
+  "ru": "Ваше сообщение",
+  "en": "Your message"
+ },
+ "Menyu": {
+  "ru": "Меню",
+  "en": "Menu"
+ },
+ "Qo'ng'iroq": {
+  "ru": "Звонок",
+  "en": "Call"
+ },
+ "Loyiha anketasi": {
+  "ru": "Анкета проекта",
+  "en": "Project form"
+ },
+ "Xizmat": {
+  "ru": "Услуга",
+  "en": "Service"
+ },
+ "Biznes": {
+  "ru": "Бизнес",
+  "en": "Business"
+ },
+ "Imkoniyatlar": {
+  "ru": "Возможности",
+  "en": "Features"
+ },
+ "Dizayn": {
+  "ru": "Дизайн",
+  "en": "Design"
+ },
+ "Muddat": {
+  "ru": "Сроки",
+  "en": "Timeline"
+ },
+ "Aloqa": {
+  "ru": "Контакты",
+  "en": "Contact"
+ },
+ "Xizmat turini tanlang, xulosa shu yerda paydo bo'ladi.": {
+  "ru": "Выберите тип услуги, итог появится здесь.",
+  "en": "Choose a service type, the summary will appear here."
+ },
+ "1 / 6: Xizmat": {
+  "ru": "1 / 6: Услуга",
+  "en": "1 / 6: Service"
+ },
+ "Qanday loyiha kerak?": {
+  "ru": "Какой проект нужен?",
+  "en": "What project do you need?"
+ },
+ "Xizmat turini tanlang. Keyingi bosqichlarda tafsilotlarni aniqlaymiz.": {
+  "ru": "Выберите тип услуги. Детали уточним на следующих шагах.",
+  "en": "Choose a service type. We will clarify details in the next steps."
+ },
+ "Orqaga": {
+  "ru": "Назад",
+  "en": "Back"
+ },
+ "Davom etish": {
+  "ru": "Продолжить",
+  "en": "Continue"
+ },
+ "Buyurtma anketasi": {
+  "ru": "Анкета заказа",
+  "en": "Order form"
+ },
+ "Yopish": {
+  "ru": "Закрыть",
+  "en": "Close"
+ },
+ "Taxminiy narx": {
+  "ru": "Ориентировочная цена",
+  "en": "Estimated price"
+ },
+ "2 / 6: Biznes": {
+  "ru": "2 / 6: Бизнес",
+  "en": "2 / 6: Business"
+ },
+ "Biznesingiz haqida": {
+  "ru": "О вашем бизнесе",
+  "en": "About your business"
+ },
+ "Bu bizga sizga mos yechim va dizayn tanlashga yordam beradi.": {
+  "ru": "Это поможет нам подобрать подходящее решение и дизайн.",
+  "en": "This helps us choose a suitable solution and design."
+ },
+ "Kompaniya yoki brend nomi *": {
+  "ru": "Название компании или бренда *",
+  "en": "Company or brand name *"
+ },
+ "Faoliyat sohasi": {
+  "ru": "Сфера деятельности",
+  "en": "Business field"
+ },
+ "Biznesingiz haqida qisqacha (nima qilasiz, kimlarga?)": {
+  "ru": "Кратко о вашем бизнесе (чем занимаетесь, для кого?)",
+  "en": "Briefly about your business (what you do, for whom?)"
+ },
+ "Mavjud sayt yoki Instagram / Telegram havolasi (bo'lsa)": {
+  "ru": "Ссылка на сайт или Instagram / Telegram (если есть)",
+  "en": "Link to existing site or Instagram / Telegram (if any)"
+ },
+ "Loyihadan asosiy maqsadingiz": {
+  "ru": "Главная цель проекта",
+  "en": "Your main goal for the project"
+ },
+ "(bir nechtasini tanlash mumkin)": {
+  "ru": "(можно выбрать несколько)",
+  "en": "(you can select several)"
+ },
+ "Kompaniya yoki brend nomini kiriting": {
+  "ru": "Введите название компании или бренда",
+  "en": "Enter company or brand name"
+ },
+ "Taxminan": {
+  "ru": "Примерно",
+  "en": "Approximately"
+ },
+ "KeyingiImpro IT": {
+  "ru": "ДалееImpro IT",
+  "en": "NextImpro IT"
+ },
+ "Test Biznes": {
+  "ru": "Тестовый бизнес",
+  "en": "Test Business"
+ },
+ "Keyingi": {
+  "ru": "Далее",
+  "en": "Next"
+ },
+ "3 / 6: Imkoniyatlar": {
+  "ru": "3 / 6: Возможности",
+  "en": "3 / 6: Features"
+ },
+ "Qanday imkoniyatlar kerak?": {
+  "ru": "Какие возможности нужны?",
+  "en": "What features do you need?"
+ },
+ "Kerakli imkoniyatlarni belgilang. Narx avtomatik hisoblanadi.": {
+  "ru": "Отметьте нужные возможности. Цена рассчитывается автоматически.",
+  "en": "Select the features you need. The price is calculated automatically."
+ },
+ "Boshqa istaklaringiz yoki aytmoqchi bo'lgan narsalar": {
+  "ru": "Другие пожелания или то, что хотите сообщить",
+  "en": "Other wishes or anything you want to tell us"
+ },
+ "4 / 6: Dizayn": {
+  "ru": "4 / 6: Дизайн",
+  "en": "4 / 6: Design"
+ },
+ "Qanday ko'rinish yoqadi?": {
+  "ru": "Какой вид вам нравится?",
+  "en": "What look do you like?"
+ },
+ "Uslub, ranglar va yoqqan namunalarni tanlang. Hech biri yoqmasa, o'tkazib yuboring.": {
+  "ru": "Выберите стиль, цвета и понравившиеся примеры. Если ничего не нравится, пропустите.",
+  "en": "Choose a style, colors and samples you like. If none appeal to you, skip."
+ },
+ "Dizayn uslubi": {
+  "ru": "Стиль дизайна",
+  "en": "Design style"
+ },
+ "Ranglar": {
+  "ru": "Цвета",
+  "en": "Colors"
+ },
+ "Logotipimdagi ranglar": {
+  "ru": "Цвета моего логотипа",
+  "en": "Colors from my logo"
+ },
+ "Maslahat bering": {
+  "ru": "Посоветуйте",
+  "en": "Advise me"
+ },
+ "Yoqqan namunalar": {
+  "ru": "Понравившиеся примеры",
+  "en": "Samples you like"
+ },
+ "(3 tagacha)": {
+  "ru": "(до 3)",
+  "en": "(up to 3)"
+ },
+ "Yoqqan saytlar havolasi": {
+  "ru": "Ссылки на понравившиеся сайты",
+  "en": "Links to sites you like"
+ },
+ "(ixtiyoriy)": {
+  "ru": "(необязательно)",
+  "en": "(optional)"
+ },
+ "1-sayt havolasi": {
+  "ru": "Ссылка на сайт 1",
+  "en": "Site 1 link"
+ },
+ "2-sayt havolasi": {
+  "ru": "Ссылка на сайт 2",
+  "en": "Site 2 link"
+ },
+ "3-sayt havolasi": {
+  "ru": "Ссылка на сайт 3",
+  "en": "Site 3 link"
+ },
+ "Sayt tili": {
+  "ru": "Язык сайта",
+  "en": "Site language"
+ },
+ "Ranglar 1": {
+  "ru": "Цвета 1",
+  "en": "Colors 1"
+ },
+ "Ranglar 2": {
+  "ru": "Цвета 2",
+  "en": "Colors 2"
+ },
+ "Ranglar 3": {
+  "ru": "Цвета 3",
+  "en": "Colors 3"
+ },
+ "Ranglar 4": {
+  "ru": "Цвета 4",
+  "en": "Colors 4"
+ },
+ "Ranglar 5": {
+  "ru": "Цвета 5",
+  "en": "Colors 5"
+ },
+ "Ranglar 6": {
+  "ru": "Цвета 6",
+  "en": "Colors 6"
+ },
+ "5 / 6: Muddat": {
+  "ru": "5 / 6: Сроки",
+  "en": "5 / 6: Timeline"
+ },
+ "Muddat va byudjet": {
+  "ru": "Сроки и бюджет",
+  "en": "Timeline and budget"
+ },
+ "Taxminiy ma'lumot ham yetadi. Aniq narxni suhbatdan keyin kelishamiz.": {
+  "ru": "Достаточно и примерных данных. Точную цену согласуем после беседы.",
+  "en": "Approximate info is enough. We will agree on the exact price after a conversation."
+ },
+ "Byudjetingiz": {
+  "ru": "Ваш бюджет",
+  "en": "Your budget"
+ },
+ "Qachon tayyor bo'lishi kerak?": {
+  "ru": "Когда должно быть готово?",
+  "en": "When should it be ready?"
+ },
+ "Qo'shimcha izoh": {
+  "ru": "Дополнительный комментарий",
+  "en": "Additional comment"
+ },
+ "Taxminiy muddat": {
+  "ru": "Ориентировочный срок",
+  "en": "Estimated timeline"
+ },
+ "Bu taxminiy hisob. Aniq narx va muddat vazifani muhokama qilgach belgilanadi.": {
+  "ru": "Это приблизительный расчет. Точная цена и сроки определяются после обсуждения задачи.",
+  "en": "This is an estimate. The exact price and timeline are set after discussing the task."
+ },
+ "6 / 6: Aloqa": {
+  "ru": "6 / 6: Контакты",
+  "en": "6 / 6: Contact"
+ },
+ "Siz bilan qanday bog'lanamiz?": {
+  "ru": "Как с вами связаться?",
+  "en": "How should we contact you?"
+ },
+ "Mutaxassisimiz tez orada aloqaga chiqadi va barcha savollarga javob beradi.": {
+  "ru": "Наш специалист скоро свяжется с вами и ответит на все вопросы.",
+  "en": "Our specialist will contact you soon and answer all your questions."
+ },
+ "Ismingiz *": {
+  "ru": "Ваше имя *",
+  "en": "Your name *"
+ },
+ "Telefon raqamingiz *": {
+  "ru": "Ваш номер телефона *",
+  "en": "Your phone number *"
+ },
+ "Email (ixtiyoriy)": {
+  "ru": "Email (необязательно)",
+  "en": "Email (optional)"
+ },
+ "Qanday bog'lanish qulay?": {
+  "ru": "Как удобнее связаться?",
+  "en": "How do you prefer to be contacted?"
+ },
+ "Qulay vaqt": {
+  "ru": "Удобное время",
+  "en": "Convenient time"
+ },
+ "Ma'lumotlarim so'rovni ko'rib chiqish uchun ishlatilishiga roziman": {
+  "ru": "Согласен на использование моих данных для рассмотрения заявки",
+  "en": "I agree to my data being used to process the request"
+ },
+ "So'rovni yuborish": {
+  "ru": "Отправить заявку",
+  "en": "Send request"
+ },
+ "Deyarli tayyor!": {
+  "ru": "Почти готово!",
+  "en": "Almost done!"
+ },
+ "Pochta ilovangiz ochildi. Xabarni yuborishni unutmang, shundan keyin biz siz bilan bog'lanamiz.": {
+  "ru": "Ваше почтовое приложение открыто. Не забудьте отправить сообщение, после этого мы свяжемся с вами.",
+  "en": "Your mail app has opened. Don't forget to send the message, then we will contact you."
+ },
+ "Muhokama": {
+  "ru": "Обсуждение",
+  "en": "Discussion"
+ },
+ "Vazifa, narx va muddat kelishiladi": {
+  "ru": "Задача, цена и сроки согласовываются",
+  "en": "Task, price and timeline are agreed"
+ },
+ "Har kuni hisobot beramiz": {
+  "ru": "Ежедневно предоставляем отчет",
+  "en": "We report every day"
+ }
+}

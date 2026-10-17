@@ -229,7 +229,7 @@
     const list = all.filter((t) => (!catFilter || t.cat === catFilter) && hit(t));
     if ($('#nT')) $('#nT').textContent = all.length + '';
     $('#cnt').textContent = list.length ? `${list.length} ta shablon` : '';
-    $('#tgrid').innerHTML = list.length ? list.map((t) => `<article class="tc"><div class="tci"><img src="${esc(t.thumb)}" alt="${esc(t.name)}" loading="lazy" onerror="this.remove()">${t.badge ? `<span class="bd">${esc(t.badge)}</span>` : ''}</div><div class="tcb"><small>${esc(t.cat)}</small><h3>${esc(t.name)}</h3><p>${esc(t.desc)}</p><div class="row"><button class="b g" data-prev="${t.id}">${icon('eye')} Ko'rish</button><button class="b" data-pick="${t.id}">Tanlash</button></div></div></article>`).join('') : `<div class="noRes" style="grid-column:1/-1"><b>Hech narsa topilmadi</b><p style="margin-top:6px">Boshqa so'z bilan qidirib ko'ring yoki <a href="#" data-cat="" style="color:var(--acc);font-weight:600">hammasini ko'rsating</a>.</p></div>`;
+    $('#tgrid').innerHTML = list.length ? list.map((t) => `<article class="tc" data-id="${t.id}"><div class="tci" style="cursor:pointer"><img src="${esc(t.thumb)}" alt="${esc(t.name)}" loading="lazy" onerror="this.remove()">${t.badge ? `<span class="bd">${esc(t.badge)}</span>` : ''}</div><div class="tcb"><small>${esc(t.cat)}</small><h3>${esc(t.name)}</h3><p>${esc(t.desc)}</p><div class="row"><button class="b w" data-pick="${t.id}">Tanlash</button></div></div></article>`).join('') : `<div class="noRes" style="grid-column:1/-1"><b>Hech narsa topilmadi</b><p style="margin-top:6px">Boshqa so'z bilan qidirib ko'ring yoki <a href="#" data-cat="" style="color:var(--acc);font-weight:600">hammasini ko'rsating</a>.</p></div>`;
     // davom ettirish / mening saytlarim
     const r = $('#resume'); r.hidden = true; r.innerHTML = '';
     if (useAcc && myProjects.length) {
@@ -253,15 +253,6 @@
       });
     } else ed.setTab('sections');
     sendPreview();
-  }
-  function previewModal(id) {
-    const d = window.getTemplate(id), t = window.TEMPLATES.find((x) => x.id === id);
-    const w = document.createElement('div'); w.className = 'modalx';
-    w.innerHTML = `<div class="mx wide"><div class="pvh"><b>${esc(t.name)}</b><div style="display:flex;gap:8px"><button class="b" data-pick="${id}">Shu shablonni tanlash</button><button class="b g" data-closep>Yopish</button></div></div><iframe src="/shablon.html?preview=1" title="Ko'rish"></iframe></div>`;
-    document.body.appendChild(w);
-    const f = w.querySelector('iframe'), onmsg = (e) => { if (e.source === f.contentWindow && e.data && e.data.type === 'ready') f.contentWindow.postMessage({ type: 'site', data: d }, '*'); };
-    addEventListener('message', onmsg); f.addEventListener('load', () => f.contentWindow.postMessage({ type: 'site', data: d }, '*'));
-    w.addEventListener('click', (e) => { if (e.target.closest('[data-closep]') || e.target === w) { removeEventListener('message', onmsg); w.remove(); } if (e.target.closest('[data-pick]')) { removeEventListener('message', onmsg); w.remove(); pick(id); } });
   }
 
   /* ---------- Loyiha yaratish / ochish ---------- */
@@ -346,9 +337,9 @@
   document.addEventListener('click', (e) => { if (e.target.closest('#aiGo')) runAI(); });
   document.addEventListener('keydown', (e) => { if (e.target.id === 'aiq' && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) runAI(); });
   document.addEventListener('click', async (e) => {
+    const ci = e.target.closest('.tci'); if (ci && ci.closest('.tc')) { pick(ci.closest('.tc').dataset.id); return; }
     const t = e.target.closest('button,a'); if (!t) return;
     if (t.dataset.cat !== undefined) { e.preventDefault(); catFilter = t.dataset.cat; if (!t.closest('#cats')) { query = ''; const q = $('#tq'); if (q) q.value = ''; } drawGallery(); }
-    if (t.dataset.prev) previewModal(t.dataset.prev);
     if (t.dataset.pick && !t.closest('.modalx')) pick(t.dataset.pick);
     if (t.dataset.open) openProject(t.dataset.open);
     if (t.dataset.resume) { try { const s = JSON.parse(ls.get()); await openData(E.normalize(s.D), s.tplId, null); } catch { toast('Ochib bo\'lmadi'); } }
