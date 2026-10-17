@@ -16,7 +16,8 @@
     "radius": "round",
     "bg": "plain",
     "heads": "left",
-    "switcher": false
+    "switcher": false,
+    "fab": true
   },
   "nav": {
     "style": "pill",
@@ -51,8 +52,24 @@
         "url": "/yaratish.html"
       },
       {
+        "label": "Telegram bot",
+        "url": "/bot.html"
+      },
+      {
         "label": "Kabinet",
         "url": "/kabinet.html"
+      },
+      {
+        "label": "Oferta",
+        "url": "/offerta.html"
+      },
+      {
+        "label": "Maxfiylik",
+        "url": "/maxfiylik.html"
+      },
+      {
+        "label": "Qaytarish",
+        "url": "/qaytarish.html"
       }
     ]
   },
@@ -280,31 +297,40 @@
     },
     {
       "id": "yaratish",
-      "type": "cta",
-      "fx": true,
+      "type": "bento",
       "enabled": true,
       "navLabel": "",
-      "eyebrow": "Sayt konstruktori",
-      "title": "Saytingizni *o'zingiz* yarating",
-      "text": "Hisob oching, shablonni tanlang va tahrirlang. Saytlaringiz hisobingizda saqlanadi, istalgan qurilmadan davom ettirasiz.",
-      "buttonText": "Yaratishni boshlash",
-      "buttonLink": "/yaratish.html",
-      "countdownTo": "",
-      "image": ""
-    },
-    {
-      "id": "botsec",
-      "type": "cta",
-      "fx": true,
-      "enabled": true,
-      "navLabel": "Telegram bot",
-      "eyebrow": "Bot konstruktori",
-      "title": "Telegram *botingizni* o'zingiz yarating",
-      "text": "Token kiriting: bot darrov ishlaydi. Katalog, savat, buyurtmalar va Telegram ichidagi mini do'kon. Kod yozish shart emas.",
-      "buttonText": "Bot yaratishni boshlash",
-      "buttonLink": "/bot.html",
-      "countdownTo": "",
-      "image": ""
+      "eyebrow": "O'zingiz yarating",
+      "title": "Saytingiz va botingizni *o'zingiz* yarating",
+      "text": "Kod yozish shart emas: shablonni tanlang, tahrirlang va tayyor mahsulotni oling.",
+      "items": [
+        {
+          "title": "Sayt konstruktori",
+          "text": "32 ta shablon, jonli tahrirlash, $10 ga tayyor sayt: yuklab oling yoki o'z subdomeningizda e'lon qiling.",
+          "image": "/img/tpl/restoran.jpg",
+          "link": "/yaratish.html",
+          "kind": "image",
+          "size": "l",
+          "tall": true
+        },
+        {
+          "title": "Telegram bot konstruktori",
+          "text": "Token kiriting: bot va mini do'kon darrov ishlaydi.",
+          "image": "/img/tpl/dokon.jpg",
+          "link": "/bot.html",
+          "kind": "image",
+          "size": "w"
+        },
+        {
+          "title": "Narx: $10",
+          "text": "Tayyor sayt uchun bir martalik to'lov.",
+          "value": "$10",
+          "kind": "hl",
+          "size": "m",
+          "icon": "zap",
+          "link": "/yaratish.html"
+        }
+      ]
     },
     {
       "id": "ishlar",
@@ -350,7 +376,7 @@
     {
       "id": "raqam",
       "type": "stats",
-      "enabled": true,
+      "enabled": false,
       "navLabel": "",
       "eyebrow": "",
       "title": "",

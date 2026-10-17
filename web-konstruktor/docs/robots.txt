@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /kabinet
+Disallow: /api/
+Sitemap: https://improuzbekiston.uz/sitemap.xml

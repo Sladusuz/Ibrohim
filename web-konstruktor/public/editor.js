@@ -55,6 +55,7 @@
         { k: 'style', t: 'sel', label: 'Menyu ko\'rinishi', options: Object.entries(E.navStyles) }, { k: 'cta', t: 'text', label: 'Menyudagi tugma matni', max: 30, hint: "Bo'sh qoldirsangiz tugma ko'rinmaydi" },
         { k: 'ctaLink', t: 'link', label: 'Tugma havolasi' }, { k: 'search', t: 'tog', label: 'Menyuda qidiruv', hint: 'Katalog bo\'lsa, mahsulot qidirish maydoni' },
       ];
+      const ANA_F = [{ k: 'ga', t: 'text', label: 'Google Analytics (G-XXXXXXXXXX)', max: 20 }, { k: 'ym', t: 'text', label: 'Yandex Metrika raqami', max: 14 }, { k: 'fb', t: 'text', label: 'Meta Pixel ID', max: 20 }];
       const ANN_F = [{ k: 'enabled', t: 'tog', label: "Yuqori e'lon qatori", hint: 'Aksiya yoki muhim xabar uchun' }, { k: 'text', t: 'text', label: "E'lon matni", max: 140 }, { k: 'link', t: 'link', label: 'Havola (ixtiyoriy)' }];
       const ACC_F = [{ k: 'enabled', t: 'tog', label: "Mijoz hisobi (kirish / ro'yxatdan o'tish)", hint: "Faqat server ulangan bo'lsa ishlaydi. Mijoz ma'lumotlari bazada saqlanadi." }, { k: 'requireOrder', t: 'tog', label: 'Buyurtma uchun hisob talab qilish' }, { k: 'requireBooking', t: 'tog', label: "Bron / yozilish uchun hisob talab qilish" }];
       const FOOT_F = [{ k: 'text', t: 'text', label: 'Pastki yozuv', max: 140 }, { k: 'links', t: 'list', label: 'Pastki havolalar', item: { title: 'label', fields: [{ k: 'label', t: 'text', label: 'Nomi', max: 30 }, { k: 'url', t: 'link', label: 'Havola' }], add: () => ({ label: 'Havola', url: '#' }) }, max: 6 }];
@@ -71,7 +72,7 @@
 
       function tabSite() {
         const d = D();
-        return `<h4>Sayt</h4>${fields(SITE_F, 'company', d.company || (d.company = {}))}<h4>Menyu</h4>${fields(NAV_F, 'nav', d.nav || (d.nav = {}))}<h4>E'lon qatori</h4>${fields(ANN_F, 'announce', d.announce || (d.announce = {}))}${opts.account ? `<h4>Mijoz hisobi</h4>${fields(ACC_F, 'account', d.account || (d.account = {}))}` : ''}<h4>Pastki qism</h4>${fields(FOOT_F, 'footer', d.footer || (d.footer = {}))}`;
+        return `<h4>Sayt</h4>${fields(SITE_F, 'company', d.company || (d.company = {}))}<h4>Menyu</h4>${fields(NAV_F, 'nav', d.nav || (d.nav = {}))}<h4>Statistika (ixtiyoriy)</h4>${fields(ANA_F, 'analytics', d.analytics || (d.analytics = {}))}<h4>E'lon qatori</h4>${fields(ANN_F, 'announce', d.announce || (d.announce = {}))}${opts.account ? `<h4>Mijoz hisobi</h4>${fields(ACC_F, 'account', d.account || (d.account = {}))}` : ''}<h4>Pastki qism</h4>${fields(FOOT_F, 'footer', d.footer || (d.footer = {}))}`;
       }
       function tabDesign() {
         const t = D().theme || (D().theme = {});
@@ -79,7 +80,7 @@
         return `<h4>Rang mavzusi</h4><div class="th">${sw}</div>
           <label class="f">Maxsus rang (ixtiyoriy)</label><div class="colors"><label><input type="color" data-p="theme.accent" data-color value="${esc(t.accent || '#4f46e5')}"> Asosiy</label><label><input type="color" data-p="theme.accent2" data-color value="${esc(t.accent2 || '#06b6d4')}"> Qo'shimcha</label><button class="b g s" data-act="resetColors">Standart</button></div>
           <h4>Shrift va shakl</h4>${fields([{ k: 'font', t: 'sel', label: 'Shrift uslubi', options: Object.entries(E.fonts) }, { k: 'radius', t: 'sel', label: 'Burchaklar', options: Object.entries(E.radii) }, { k: 'heads', t: 'sel', label: 'Sarlavhalar joylashuvi', options: [['left', 'Chapda'], ['center', 'Markazda']] }], 'theme', t)}
-          <h4>Fon va effektlar</h4>${fields([{ k: 'look', t: 'sel', label: 'Umumiy uslub', options: Object.entries(E.looks), hint: 'Kinematik: katta sarlavhalar, animatsiyalar, nurli fon, maxsus kursor' }, { k: 'motion', t: 'tog', label: 'Animatsiyalar yoqilgan' }, { k: 'bg', t: 'sel', label: 'Fon uslubi', options: Object.entries(E.bgs) }, { k: 'switcher', t: 'tog', label: 'Mavzu almashtirgich', hint: 'Mehmon qorong\'i/yorug\' rangni o\'zi tanlay oladi' }], 'theme', t)}`;
+          <h4>Fon va effektlar</h4>${fields([{ k: 'look', t: 'sel', label: 'Umumiy uslub', options: Object.entries(E.looks), hint: 'Kinematik: katta sarlavhalar, animatsiyalar, nurli fon, maxsus kursor' }, { k: 'motion', t: 'tog', label: 'Animatsiyalar yoqilgan' }, { k: 'fab', t: 'tog', label: 'Suzuvchi aloqa tugmalari', hint: "Telefon, Telegram va 'Bepul maslahat' tugmalari ekranning pastida doim ko'rinadi" }, { k: 'bg', t: 'sel', label: 'Fon uslubi', options: Object.entries(E.bgs) }, { k: 'switcher', t: 'tog', label: 'Mavzu almashtirgich', hint: 'Mehmon qorong\'i/yorug\' rangni o\'zi tanlay oladi' }], 'theme', t)}`;
       }
       function tabContacts() { const d = D(); return `<h4>Aloqa ma'lumotlari</h4>${fields(CONTACT_F, 'contacts', d.contacts || (d.contacts = {}))}`; }
       function tabOrders() { const d = D(); return `<h4>Savat va yetkazish</h4>${fields(ORD_F, 'orders', d.orders || (d.orders = {}))}`; }

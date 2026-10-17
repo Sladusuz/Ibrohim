@@ -8,12 +8,12 @@ for (const f of fs.readdirSync(path.join(__dirname, '..', 'public')).filter((x) 
 const d = window.getTemplate('kompaniya');
 d.template = 'impro';
 d.company = { name: 'Impro IT', logo: 'I', tagline: 'Veb-sayt, mobil ilova va Telegram botlar. Tez, sifatli, kafolat bilan.' };
-d.theme = Object.assign(d.theme, { preset: 'dark', font: 'display', radius: 'round', bg: 'plain', look: 'cinema', motion: true, switcher: false });
+d.theme = Object.assign(d.theme, { preset: 'dark', font: 'display', radius: 'round', bg: 'plain', look: 'cinema', motion: true, switcher: false, fab: true });
 d.nav = { style: 'pill', cta: 'Bepul maslahat', ctaLink: '#brief-open', search: false };
 d.account = { enabled: true, requireOrder: true, requireBooking: false };
 d.orders = { enabled: true, currency: "so'm", freeShipFrom: 0, deliveryFee: 0 };
 d.contacts = { phone: '+998 33 623 33 13', email: 'chempme@gmail.com', address: "Toshkent, Amir Temur ko'chasi 1", hours: 'Dush–Shan, 9:00–18:00', telegram: '', instagram: '' };
-d.footer = { text: 'Barcha huquqlar himoyalangan.', links: [{ label: 'Sayt yaratish', url: '/yaratish.html' }, { label: 'Kabinet', url: '/kabinet.html' }] };
+d.footer = { text: 'Barcha huquqlar himoyalangan.', links: [{ label: 'Sayt yaratish', url: '/yaratish.html' }, { label: 'Telegram bot', url: '/bot.html' }, { label: 'Kabinet', url: '/kabinet.html' }, { label: 'Oferta', url: '/offerta.html' }, { label: 'Maxfiylik', url: '/maxfiylik.html' }, { label: 'Qaytarish', url: '/qaytarish.html' }] };
 const hero = d.sections.find((s) => s.type === 'hero');
 Object.assign(hero, { image: '/img/tpl/restoran.jpg', badge: "Yangi loyihalar uchun ochiqmiz", titleStart: 'Biznesingiz uchun *kelajak* saytlari', words: [], titleEnd: '', text: "Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Xohlasangiz, saytni o'zingiz ham yarata olasiz.", cta1Text: 'Loyihani buyurtma qilish', cta1Link: '#brief-open', cta2Text: "Saytni o'zim yarataman", cta2Link: '/yaratish.html' });
 const out = [];
@@ -24,8 +24,12 @@ for (const s of d.sections) {
     const tb = (s.items || []).find((x) => /Telegram bot/i.test(x.title)); if (tb) { tb.link = '/bot.html'; tb.text = "Buyurtma, bron va to'lovlarni avtomatlashtiring. O'zingiz ham bot yaratishingiz mumkin: katalog va mini do'kon bilan."; }
     out.push({ id: 'shablon', type: 'showcase', enabled: true, navLabel: 'Shablonlar', eyebrow: 'Tayyor shablonlar', title: "Kasbingizga mos sayt, *bir necha daqiqada*", text: "Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.",
       items: window.TEMPLATES.slice(0, 14).map((t) => ({ title: t.name, tag: t.cat, image: t.thumb, link: `/yaratish.html?t=${t.id}` })) });
-    out.push({ id: 'yaratish', type: 'cta', fx: true, enabled: true, navLabel: 'Sayt yaratish', eyebrow: 'Sayt konstruktori', title: "Saytingizni *o'zingiz* yarating", text: "Hisob oching, shablonni tanlang va tahrirlang. Saytlaringiz hisobingizda saqlanadi, istalgan qurilmadan davom ettirasiz.", buttonText: 'Yaratishni boshlash', buttonLink: '/yaratish.html', countdownTo: '', image: '' });
-    out.push({ id: 'botsec', type: 'cta', fx: true, enabled: true, navLabel: 'Telegram bot', eyebrow: 'Bot konstruktori', title: "Telegram *botingizni* o'zingiz yarating", text: "Token kiriting: bot darrov ishlaydi. Katalog, savat, buyurtmalar va Telegram ichidagi mini do'kon. Kod yozish shart emas.", buttonText: 'Bot yaratishni boshlash', buttonLink: '/bot.html', countdownTo: '', image: '' });
+    out.push({ id: 'yaratish', type: 'bento', enabled: true, navLabel: 'Sayt yaratish', eyebrow: "O'zingiz yarating", title: "Saytingiz va botingizni *o'zingiz* yarating", text: "Kod yozish shart emas: shablonni tanlang, tahrirlang va tayyor mahsulotni oling.",
+      items: [
+        { title: "Sayt konstruktori", text: "32 ta shablon, jonli tahrirlash, $10 ga tayyor sayt: yuklab oling yoki o'z subdomeningizda e'lon qiling.", image: '/img/tpl/restoran.jpg', link: '/yaratish.html', kind: 'image', size: 'l', tall: true },
+        { title: 'Telegram bot konstruktori', text: "Token kiriting: bot va mini do'kon darrov ishlaydi.", image: '/img/tpl/dokon.jpg', link: '/bot.html', kind: 'image', size: 'w' },
+        { title: 'Narx: $10', text: 'Tayyor sayt uchun bir martalik to\'lov.', value: '$10', kind: 'hl', size: 'm', icon: 'zap', link: '/yaratish.html' },
+      ] });
   }
   if (s.id === 'jarayon') {
     out.push({ id: 'narx', type: 'products', enabled: true, navLabel: 'Narxlar', eyebrow: 'Narxlar', title: 'Tayyor paketlar', text: 'Narxlar oldindan aniq. Tanlang va buyurtma bering.', mode: 'brief', buttonText: 'Buyurtma', columns: '3', search: false, filters: true, sort: false, items: [
@@ -76,6 +80,6 @@ d.sections = out;
 Object.assign(d.sections.find((s) => s.type === 'contact'), { form: 'message', askAddress: false, payOptions: [], submitText: 'Yuborish', title: 'Savolingiz bormi?', text: "Qisqa savol bo'lsa, shu yerga yozing. Loyiha buyurtma qilmoqchi bo'lsangiz, yuqoridagi anketani to'ldiring." });
 for (const id of ['biz', 'yaratish']) { const x = d.sections.find((q) => q.id === id); if (x) x.navLabel = ''; } // menyu 7 tadan oshmasin
 // Namunaviy (to'qima) portfolio va sharhlar haqiqiy ma'lumot kiritilguncha o'chirib qo'yiladi (admin paneldan yoqiladi)
-for (const id of ['ishlar', 'fikr']) { const x = d.sections.find((q) => q.id === id); if (x) x.enabled = false; }
+for (const id of ['ishlar', 'fikr', 'raqam']) { const x = d.sections.find((q) => q.id === id); if (x) x.enabled = false; }
 fs.writeFileSync(path.join(__dirname, '..', 'data', 'site.json'), JSON.stringify(d, null, 2));
 console.log('data/site.json yaratildi:', d.sections.map((s) => s.id).join(', '));

@@ -268,3 +268,20 @@ html.look-cinema h2,html.look-luxe h2,html.look-cinema h1,html.look-luxe h1{over
 .hs-intro{width:min(600px,82vw)}.hs-intro h2{font-size:clamp(34px,5vw,76px)!important}
 .bento{grid-auto-flow:dense}
 .pamount{font-size:clamp(26px,3vw,38px)}.pamount small{white-space:nowrap}
+
+/* ===== Suzuvchi aloqa tugmalari ===== */
+.fab{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:max(16px,env(safe-area-inset-bottom,0px));z-index:80;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.fb-b{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:50px;min-width:50px;border-radius:99px;background:var(--acc);color:var(--on);font-weight:700;font-size:14.5px;box-shadow:0 10px 30px color-mix(in srgb,var(--bg) 40%,#000),0 0 0 1px color-mix(in srgb,var(--on) 12%,transparent) inset;transition:transform .3s var(--ease)}
+.fb-b:hover{transform:translateY(-3px) scale(1.04)}.fb-b svg{width:21px;height:21px}.fb-b.main{padding:0 20px 0 16px}
+.fb-b.tg{background:#229ed9;color:#fff}.fb-b.ph{background:#16a34a;color:#fff}
+.sw ~ .fab,.fab ~ .sw{display:flex}
+@media(max-width:560px){.fb-b.main span{display:none}.fb-b.main{padding:0}.fab{gap:8px}}
+html.cur-on .fb-b{cursor:none}
+/* hero matn kontrasti */
+.hero-aurora .lead,.hero-editorial .lead{color:color-mix(in srgb,var(--ink) 80%,transparent)}
+.hero-aurora .trust{color:color-mix(in srgb,var(--ink) 72%,transparent)}
+body:has(.sw) .fab{bottom:78px}
+.langsw{display:inline-flex;gap:2px;padding:3px;border-radius:99px;background:rgba(127,127,160,.14);font-size:12px;font-weight:700;letter-spacing:.04em}
+.langsw a{padding:5px 9px;border-radius:99px;color:inherit;opacity:.65;text-decoration:none;transition:.2s}
+.langsw a:hover{opacity:1}.langsw a.on{background:var(--brand,#22d3ee);color:#04101c;opacity:1}
+@media(max-width:640px){.langsw{font-size:11px}.langsw a{padding:4px 7px}}

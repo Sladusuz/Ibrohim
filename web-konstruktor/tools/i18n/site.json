@@ -1,0 +1,910 @@
+{
+ "Yangi loyihalar uchun ochiqmiz": {
+  "ru": "Открыты для новых проектов",
+  "en": "Open for new projects"
+ },
+ "Biznesingiz uchun *kelajak* saytlari": {
+  "ru": "*Сайты* будущего для вашего бизнеса",
+  "en": "*Websites* of the future for your business"
+ },
+ "Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Xohlasangiz, saytni o'zingiz ham yarata olasiz.": {
+  "ru": "Impro IT: быстро, качественно и с гарантией делаем сайты, мобильные приложения и Telegram-боты: от идеи до запуска. А если хотите, можете создать сайт и сами.",
+  "en": "Impro IT builds websites, mobile apps and Telegram bots from idea to launch: fast, high-quality and guaranteed. Prefer to do it yourself? You can build your own site too."
+ },
+ "Loyihani buyurtma qilish": {
+  "ru": "Заказать проект",
+  "en": "Order a project"
+ },
+ "Saytni o'zim yarataman": {
+  "ru": "Создам сайт сам",
+  "en": "Build it myself"
+ },
+ "8 yil": {
+  "ru": "8 лет",
+  "en": "8 years"
+ },
+ "mijoz bahosi": {
+  "ru": "оценка клиентов",
+  "en": "client rating"
+ },
+ "React": {
+  "ru": "React",
+  "en": "React"
+ },
+ "Node.js": {
+  "ru": "Node.js",
+  "en": "Node.js"
+ },
+ "Flutter": {
+  "ru": "Flutter",
+  "en": "Flutter"
+ },
+ "Telegram bot": {
+  "ru": "Telegram-бот",
+  "en": "Telegram bot"
+ },
+ "Payme": {
+  "ru": "Payme",
+  "en": "Payme"
+ },
+ "Click": {
+  "ru": "Click",
+  "en": "Click"
+ },
+ "Figma": {
+  "ru": "Figma",
+  "en": "Figma"
+ },
+ "Python": {
+  "ru": "Python",
+  "en": "Python"
+ },
+ "Biz haqimizda": {
+  "ru": "О нас",
+  "en": "About us"
+ },
+ "Biz oddiy *saytlar* emas, mijozlaringizni egaga aylantiradigan *raqamli tajriba* yaratamiz. Har bir piksel va har bir harakat sizning biznesingiz uchun ishlaydi.": {
+  "ru": "Мы создаём не просто *сайты*, а *цифровой опыт*, который превращает посетителей в постоянных клиентов. Каждый пиксель и каждое движение работают на ваш бизнес.",
+  "en": "We don't just build *websites*. We craft a *digital experience* that turns visitors into loyal customers. Every pixel and every interaction works for your business."
+ },
+ "Xizmatlar": {
+  "ru": "Услуги",
+  "en": "Services"
+ },
+ "Biz *nima* qilamiz": {
+  "ru": "Что *мы* делаем",
+  "en": "What *we* do"
+ },
+ "Veb-saytlar": {
+  "ru": "Веб-сайты",
+  "en": "Websites"
+ },
+ "Vizitka, korporativ sayt va landing sahifalar: tez, chiroyli va qidiruvga tayyor.": {
+  "ru": "Сайты-визитки, корпоративные сайты и лендинги: быстрые, красивые и готовые к поиску.",
+  "en": "Business card sites, corporate websites and landing pages: fast, beautiful and search-ready."
+ },
+ "Dizayn": {
+  "ru": "Дизайн",
+  "en": "Design"
+ },
+ "Kod": {
+  "ru": "Код",
+  "en": "Code"
+ },
+ "SEO": {
+  "ru": "SEO",
+  "en": "SEO"
+ },
+ "Onlayn do'konlar": {
+  "ru": "Интернет-магазины",
+  "en": "Online stores"
+ },
+ "Katalog, savat, to'lov tizimlari, ombor va qulay admin panel.": {
+  "ru": "Каталог, корзина, платёжные системы, склад и удобная админ-панель.",
+  "en": "Catalog, cart, payment systems, inventory and a handy admin panel."
+ },
+ "Admin": {
+  "ru": "Админка",
+  "en": "Admin"
+ },
+ "Telegram botlar": {
+  "ru": "Telegram-боты",
+  "en": "Telegram bots"
+ },
+ "Buyurtma, bron va to'lovlarni avtomatlashtiring. O'zingiz ham bot yaratishingiz mumkin: katalog va mini do'kon bilan.": {
+  "ru": "Автоматизируйте заказы, бронирования и платежи. Бота можно создать и самостоятельно: с каталогом и мини-магазином.",
+  "en": "Automate orders, bookings and payments. You can also build a bot yourself, complete with a catalog and mini store."
+ },
+ "Bot": {
+  "ru": "Бот",
+  "en": "Bot"
+ },
+ "CRM": {
+  "ru": "CRM",
+  "en": "CRM"
+ },
+ "Mobil ilovalar": {
+  "ru": "Мобильные приложения",
+  "en": "Mobile apps"
+ },
+ "iOS va Android uchun zamonaviy, tez va qulay ilovalar.": {
+  "ru": "Современные, быстрые и удобные приложения для iOS и Android.",
+  "en": "Modern, fast and user-friendly apps for iOS and Android."
+ },
+ "iOS": {
+  "ru": "iOS",
+  "en": "iOS"
+ },
+ "Android": {
+  "ru": "Android",
+  "en": "Android"
+ },
+ "UI/UX dizayn": {
+  "ru": "UI/UX-дизайн",
+  "en": "UI/UX design"
+ },
+ "Foydalanuvchi sevadigan interfeys, prototip va dizayn tizimi.": {
+  "ru": "Интерфейсы, которые полюбят пользователи, плюс прототип и дизайн-система.",
+  "en": "Interfaces users will love, plus a prototype and design system."
+ },
+ "Brend": {
+  "ru": "Бренд",
+  "en": "Brand"
+ },
+ "Shablonlar": {
+  "ru": "Шаблоны",
+  "en": "Templates"
+ },
+ "Tayyor shablonlar": {
+  "ru": "Готовые шаблоны",
+  "en": "Ready-made templates"
+ },
+ "Kasbingizga mos sayt, *bir necha daqiqada*": {
+  "ru": "Сайт под вашу профессию *за считаные минуты*",
+  "en": "A site for your profession, *in just minutes*"
+ },
+ "Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.": {
+  "ru": "Выберите шаблон, введите свои данные и скачайте готовый сайт. Всё на узбекском языке.",
+  "en": "Pick a template, enter your details and download a finished site. Everything in Uzbek."
+ },
+ "Restoran / kafe": {
+  "ru": "Ресторан / кафе",
+  "en": "Restaurant / cafe"
+ },
+ "Xizmat": {
+  "ru": "Услуги",
+  "en": "Services"
+ },
+ "IT kompaniya / agentlik": {
+  "ru": "IT-компания / агентство",
+  "en": "IT company / agency"
+ },
+ "Biznes": {
+  "ru": "Бизнес",
+  "en": "Business"
+ },
+ "Onlayn market": {
+  "ru": "Онлайн-маркет",
+  "en": "Online market"
+ },
+ "Savdo": {
+  "ru": "Торговля",
+  "en": "Retail"
+ },
+ "Elektronika do'koni": {
+  "ru": "Магазин электроники",
+  "en": "Electronics store"
+ },
+ "Kiyim butigi": {
+  "ru": "Бутик одежды",
+  "en": "Clothing boutique"
+ },
+ "Gul do'koni": {
+  "ru": "Цветочный магазин",
+  "en": "Flower shop"
+ },
+ "Mebel salon": {
+  "ru": "Мебельный салон",
+  "en": "Furniture showroom"
+ },
+ "Kafe va qandolat": {
+  "ru": "Кафе и кондитерская",
+  "en": "Cafe and bakery"
+ },
+ "Fast-food va yetkazib berish": {
+  "ru": "Фастфуд и доставка",
+  "en": "Fast food and delivery"
+ },
+ "Go'zallik saloni": {
+  "ru": "Салон красоты",
+  "en": "Beauty salon"
+ },
+ "Go'zallik va salomatlik": {
+  "ru": "Красота и здоровье",
+  "en": "Beauty and health"
+ },
+ "Barbershop": {
+  "ru": "Барбершоп",
+  "en": "Barbershop"
+ },
+ "Tibbiyot markazi": {
+  "ru": "Медицинский центр",
+  "en": "Medical center"
+ },
+ "Stomatologiya": {
+  "ru": "Стоматология",
+  "en": "Dentistry"
+ },
+ "Yoga va spa": {
+  "ru": "Йога и спа",
+  "en": "Yoga and spa"
+ },
+ "O'zingiz yarating": {
+  "ru": "Создайте сами",
+  "en": "Create it yourself"
+ },
+ "Saytingiz va botingizni *o'zingiz* yarating": {
+  "ru": "Создайте *свой* сайт и бота самостоятельно",
+  "en": "Build your site and bot *yourself*"
+ },
+ "Kod yozish shart emas: shablonni tanlang, tahrirlang va tayyor mahsulotni oling.": {
+  "ru": "Писать код не нужно: выберите шаблон, отредактируйте и получите готовый продукт.",
+  "en": "No coding needed: pick a template, edit it and get a finished product."
+ },
+ "Sayt konstruktori": {
+  "ru": "Конструктор сайтов",
+  "en": "Site builder"
+ },
+ "32 ta shablon, jonli tahrirlash, $10 ga tayyor sayt: yuklab oling yoki o'z subdomeningizda e'lon qiling.": {
+  "ru": "32 шаблона, редактирование вживую, готовый сайт за $10: скачайте или опубликуйте на своём поддомене.",
+  "en": "32 templates, live editing, a ready site for $10: download it or publish on your own subdomain."
+ },
+ "Telegram bot konstruktori": {
+  "ru": "Конструктор Telegram-ботов",
+  "en": "Telegram bot builder"
+ },
+ "Token kiriting: bot va mini do'kon darrov ishlaydi.": {
+  "ru": "Введите токен: бот и мини-магазин заработают сразу.",
+  "en": "Enter your token and your bot and mini store go live instantly."
+ },
+ "Narx: $10": {
+  "ru": "Цена: $10",
+  "en": "Price: $10"
+ },
+ "Tayyor sayt uchun bir martalik to'lov.": {
+  "ru": "Разовый платёж за готовый сайт.",
+  "en": "One-time payment for a ready-made site."
+ },
+ "Jarayon": {
+  "ru": "Процесс",
+  "en": "Process"
+ },
+ "Qanday *ishlaymiz*": {
+  "ru": "Как мы *работаем*",
+  "en": "How we *work*"
+ },
+ "Tahlil va maqsad": {
+  "ru": "Анализ и цели",
+  "en": "Analysis and goals"
+ },
+ "Biznesingiz, auditoriya va raqobatchilarni o'rganib, aniq reja tuzamiz.": {
+  "ru": "Изучаем ваш бизнес, аудиторию и конкурентов и составляем чёткий план.",
+  "en": "We study your business, audience and competitors, then build a clear plan."
+ },
+ "Dizayn va prototip": {
+  "ru": "Дизайн и прототип",
+  "en": "Design and prototype"
+ },
+ "Kod yozishdan oldin ko'rinish va foydalanuvchi yo'lini tasdiqlaymiz.": {
+  "ru": "До написания кода согласовываем внешний вид и пользовательский путь.",
+  "en": "Before writing code, we approve the look and the user journey."
+ },
+ "Ishlab chiqish": {
+  "ru": "Разработка",
+  "en": "Development"
+ },
+ "Tez, xavfsiz va kengayadigan kod. Har hafta natijani ko'rsatamiz.": {
+  "ru": "Быстрый, безопасный и масштабируемый код. Каждую неделю показываем результат.",
+  "en": "Fast, secure and scalable code. We show results every week."
+ },
+ "Ishga tushirish va yordam": {
+  "ru": "Запуск и поддержка",
+  "en": "Launch and support"
+ },
+ "Testdan o'tkazib, joylaymiz va keyin ham yonida bo'lamiz.": {
+  "ru": "Тестируем, запускаем и остаёмся рядом после релиза.",
+  "en": "We test, launch and stay by your side afterwards."
+ },
+ "Narxlar": {
+  "ru": "Цены",
+  "en": "Pricing"
+ },
+ "Tayyor paketlar": {
+  "ru": "Готовые пакеты",
+  "en": "Ready-made packages"
+ },
+ "Narxlar oldindan aniq. Tanlang va buyurtma bering.": {
+  "ru": "Цены известны заранее. Выбирайте и заказывайте.",
+  "en": "Prices are clear upfront. Choose and order."
+ },
+ "Buyurtma": {
+  "ru": "Заказать",
+  "en": "Order"
+ },
+ "Start sayt": {
+  "ru": "Стартовый сайт",
+  "en": "Start site"
+ },
+ "Veb-sayt": {
+  "ru": "Веб-сайт",
+  "en": "Website"
+ },
+ "5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.": {
+  "ru": "Сайт-визитка до 5 страниц, адаптивный, с формой обратной связи.",
+  "en": "Business card site up to 5 pages, mobile-friendly, with a contact form."
+ },
+ "Onlayn do'kon": {
+  "ru": "Интернет-магазин",
+  "en": "Online store"
+ },
+ "ENG KO'P TANLANADI": {
+  "ru": "ВЫБИРАЮТ ЧАЩЕ ВСЕГО",
+  "en": "MOST POPULAR"
+ },
+ "Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.": {
+  "ru": "Полноценный магазин с каталогом, корзиной, админ-панелью и уведомлениями в Telegram.",
+  "en": "A full store with catalog, cart, admin panel and Telegram notifications."
+ },
+ "Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.": {
+  "ru": "Готовый бот для приёма заказов и заявок с уведомлениями для администратора.",
+  "en": "A ready bot for taking orders and requests, with admin notifications."
+ },
+ "Mobil ilova": {
+  "ru": "Мобильное приложение",
+  "en": "Mobile app"
+ },
+ "Ilova": {
+  "ru": "Приложение",
+  "en": "App"
+ },
+ "iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.": {
+  "ru": "Приложение для iOS и Android: дизайн, разработка и публикация.",
+  "en": "An app for iOS and Android: design, development and publishing."
+ },
+ "Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.": {
+  "ru": "Современный дизайн интерфейса и прототип для сайта или приложения.",
+  "en": "Modern interface design and a prototype for a site or app."
+ },
+ "Oylik texnik yordam": {
+  "ru": "Ежемесячная техподдержка",
+  "en": "Monthly tech support"
+ },
+ "Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.": {
+  "ru": "Обновления, безопасность, резервные копии и оперативные исправления.",
+  "en": "Updates, security, backups and quick fixes."
+ },
+ "Loyihani boshlang": {
+  "ru": "Начните проект",
+  "en": "Start your project"
+ },
+ "Xohishlaringizni ayting, biz amalga oshiramiz": {
+  "ru": "Расскажите, чего хотите, а мы это воплотим",
+  "en": "Tell us what you want, and we'll make it happen"
+ },
+ "3 daqiqalik anketa: nima kerakligini, qanday ko'rinish yoqishini va qancha byudjet borligini aytasiz. Qolganini biz hal qilamiz va tez orada aloqaga chiqamiz.": {
+  "ru": "Анкета на 3 минуты: что нужно, какой стиль нравится и какой бюджет. Остальное берём на себя и скоро свяжемся с вами.",
+  "en": "A 3-minute questionnaire: what you need, what style you like and your budget. We'll handle the rest and contact you soon."
+ },
+ "Anketani to'ldirish": {
+  "ru": "Заполнить анкету",
+  "en": "Fill out the form"
+ },
+ "15 daqiqada aloqaga chiqamiz": {
+  "ru": "Свяжемся через 15 минут",
+  "en": "We'll contact you in 15 minutes"
+ },
+ "Bepul maslahat va g'oyalar: mutaxassis sizga eng mos yechimni tanlab beradi": {
+  "ru": "Бесплатная консультация и идеи: специалист подберёт оптимальное решение",
+  "en": "Free consultation and ideas: a specialist will pick the best solution for you"
+ },
+ "Aniq narx va muddat suhbatdan keyin, shartnoma bilan": {
+  "ru": "Точная цена и сроки после беседы, по договору",
+  "en": "Exact price and timeline after we talk, in a contract"
+ },
+ "Natijaga kafolat va ishga tushgandan keyin ham yordam": {
+  "ru": "Гарантия результата и поддержка после запуска",
+  "en": "Guaranteed results and support after launch"
+ },
+ "Vizitka / korporativ sayt": {
+  "ru": "Сайт-визитка / корпоративный сайт",
+  "en": "Business card / corporate site"
+ },
+ "Kompaniyangiz yoki xizmatingizni tanishtiruvchi 5 sahifagacha sayt": {
+  "ru": "Сайт до 5 страниц, представляющий вашу компанию или услугу",
+  "en": "A site of up to 5 pages presenting your company or service"
+ },
+ "5–10 kun": {
+  "ru": "5–10 дней",
+  "en": "5–10 days"
+ },
+ "Katalog, savat, buyurtma va admin panel bilan to'liq do'kon": {
+  "ru": "Полноценный магазин с каталогом, корзиной, заказами и админ-панелью",
+  "en": "A full store with catalog, cart, orders and admin panel"
+ },
+ "2–3 hafta": {
+  "ru": "2–3 недели",
+  "en": "2–3 weeks"
+ },
+ "Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtirish": {
+  "ru": "Автоматизация заказов, оплаты и общения с клиентами",
+  "en": "Automate orders, payments and customer communication"
+ },
+ "1–2 hafta": {
+  "ru": "1–2 недели",
+  "en": "1–2 weeks"
+ },
+ "iOS va Android uchun ilova: dizayn, ishlab chiqish, e'lon qilish": {
+  "ru": "Приложение для iOS и Android: дизайн, разработка, публикация",
+  "en": "An app for iOS and Android: design, development, publishing"
+ },
+ "Sayt yoki ilova uchun zamonaviy interfeys va prototip": {
+  "ru": "Современный интерфейс и прототип для сайта или приложения",
+  "en": "Modern interface and prototype for a site or app"
+ },
+ "Texnik yordam": {
+  "ru": "Техподдержка",
+  "en": "Tech support"
+ },
+ "Mavjud saytni yangilash, xavfsizlik va tezkor tuzatishlar": {
+  "ru": "Обновление существующего сайта, безопасность и оперативные исправления",
+  "en": "Updating your existing site, security and quick fixes"
+ },
+ "Oyiga": {
+  "ru": "В месяц",
+  "en": "Per month"
+ },
+ "Admin panel": {
+  "ru": "Админ-панель",
+  "en": "Admin panel"
+ },
+ "start,dokon,bot": {
+  "ru": "start,dokon,bot",
+  "en": "start,dokon,bot"
+ },
+ "Ko'p tillilik (uz/ru/en)": {
+  "ru": "Мультиязычность (uz/ru/en)",
+  "en": "Multilingual (uz/ru/en)"
+ },
+ "start,dokon,ilova": {
+  "ru": "start,dokon,ilova",
+  "en": "start,dokon,ilova"
+ },
+ "SEO sozlash va Google ro'yxati": {
+  "ru": "SEO-настройка и регистрация в Google",
+  "en": "SEO setup and Google listing"
+ },
+ "start,dokon": {
+  "ru": "start,dokon",
+  "en": "start,dokon"
+ },
+ "Onlayn to'lov (Click, Payme)": {
+  "ru": "Онлайн-оплата (Click, Payme)",
+  "en": "Online payments (Click, Payme)"
+ },
+ "dokon,bot,ilova": {
+  "ru": "dokon,bot,ilova",
+  "en": "dokon,bot,ilova"
+ },
+ "Telegram xabarnoma": {
+  "ru": "Уведомления в Telegram",
+  "en": "Telegram notifications"
+ },
+ "Mijozlar hisobi (login/ro'yxat)": {
+  "ru": "Аккаунты клиентов (вход/регистрация)",
+  "en": "Customer accounts (login/sign-up)"
+ },
+ "dokon,ilova": {
+  "ru": "dokon,ilova",
+  "en": "dokon,ilova"
+ },
+ "Blog va yangiliklar": {
+  "ru": "Блог и новости",
+  "en": "Blog and news"
+ },
+ "Onlayn bron / yozilish": {
+  "ru": "Онлайн-бронирование / запись",
+  "en": "Online booking / appointments"
+ },
+ "start,bot,ilova": {
+  "ru": "start,bot,ilova",
+  "en": "start,bot,ilova"
+ },
+ "Chat va qo'ng'iroq tugmalari": {
+  "ru": "Кнопки чата и звонка",
+  "en": "Chat and call buttons"
+ },
+ "Analitika (Google, Meta Pixel)": {
+  "ru": "Аналитика (Google, Meta Pixel)",
+  "en": "Analytics (Google, Meta Pixel)"
+ },
+ "Mahsulotlarni Excel'dan yuklash": {
+  "ru": "Загрузка товаров из Excel",
+  "en": "Import products from Excel"
+ },
+ "Push-xabarnomalar": {
+  "ru": "Push-уведомления",
+  "en": "Push notifications"
+ },
+ "Logotip va brend uslubi": {
+  "ru": "Логотип и фирменный стиль",
+  "en": "Logo and brand style"
+ },
+ "Domen va hosting 1 yil": {
+  "ru": "Домен и хостинг на 1 год",
+  "en": "Domain and hosting for 1 year"
+ },
+ "Matn va rasmlarni tayyorlash": {
+  "ru": "Подготовка текстов и изображений",
+  "en": "Text and image preparation"
+ },
+ "Zamonaviy neon": {
+  "ru": "Современный неон",
+  "en": "Modern neon"
+ },
+ "Qorong'i, animatsiyali": {
+  "ru": "Тёмный, с анимацией",
+  "en": "Dark, animated"
+ },
+ "Toza va yorug'": {
+  "ru": "Чистый и светлый",
+  "en": "Clean and bright"
+ },
+ "Oq fon, aniq": {
+  "ru": "Белый фон, чёткий",
+  "en": "White background, crisp"
+ },
+ "Minimal": {
+  "ru": "Минимализм",
+  "en": "Minimal"
+ },
+ "Oq-qora, tipografiya": {
+  "ru": "Чёрно-белый, типографика",
+  "en": "Black and white, typography"
+ },
+ "Premium": {
+  "ru": "Премиум",
+  "en": "Premium"
+ },
+ "Qora va oltin": {
+  "ru": "Чёрный и золотой",
+  "en": "Black and gold"
+ },
+ "Tabiiy yashil": {
+  "ru": "Природный зелёный",
+  "en": "Natural green"
+ },
+ "Yangi va samimiy": {
+  "ru": "Свежий и дружелюбный",
+  "en": "Fresh and friendly"
+ },
+ "Iliq va mayin": {
+  "ru": "Тёплый и мягкий",
+  "en": "Warm and soft"
+ },
+ "Pastel ranglar": {
+  "ru": "Пастельные тона",
+  "en": "Pastel colors"
+ },
+ "Fitnes klub": {
+  "ru": "Фитнес-клуб",
+  "en": "Fitness club"
+ },
+ "Veterinariya va zoo-servis": {
+  "ru": "Ветеринария и зоосервис",
+  "en": "Veterinary and pet care"
+ },
+ "O'quv markaz": {
+  "ru": "Учебный центр",
+  "en": "Learning center"
+ },
+ "Til kurslari": {
+  "ru": "Языковые курсы",
+  "en": "Language courses"
+ },
+ "Avtoservis": {
+  "ru": "Автосервис",
+  "en": "Auto service"
+ },
+ "Qurilish va ta'mirlash": {
+  "ru": "Строительство и ремонт",
+  "en": "Construction and renovation"
+ },
+ "Ko'chmas mulk agentligi": {
+  "ru": "Агентство недвижимости",
+  "en": "Real estate agency"
+ },
+ "Yuridik firma": {
+  "ru": "Юридическая фирма",
+  "en": "Law firm"
+ },
+ "Yuk tashish va logistika": {
+  "ru": "Грузоперевозки и логистика",
+  "en": "Freight and logistics"
+ },
+ "Portfolio: dizayner": {
+  "ru": "Портфолио: дизайнер",
+  "en": "Portfolio: designer"
+ },
+ "Portfolio: dasturchi": {
+  "ru": "Портфолио: разработчик",
+  "en": "Portfolio: developer"
+ },
+ "Portfolio: fotograf": {
+  "ru": "Портфолио: фотограф",
+  "en": "Portfolio: photographer"
+ },
+ "Turagentlik": {
+  "ru": "Турагентство",
+  "en": "Travel agency"
+ },
+ "To'y va tadbirlar": {
+  "ru": "Свадьбы и мероприятия",
+  "en": "Weddings and events"
+ },
+ "DJ va musiqachi": {
+  "ru": "DJ и музыкант",
+  "en": "DJ and musician"
+ },
+ "Startap / SaaS landing": {
+  "ru": "Лендинг для стартапа / SaaS",
+  "en": "Startup / SaaS landing page"
+ },
+ "Mobil ilova landing": {
+  "ru": "Лендинг мобильного приложения",
+  "en": "Mobile app landing page"
+ },
+ "Fermer va organik mahsulotlar": {
+  "ru": "Фермер и органические продукты",
+  "en": "Farmer and organic products"
+ },
+ "Ko'proq mijoz jalb qilish": {
+  "ru": "Привлекать больше клиентов",
+  "en": "Attract more customers"
+ },
+ "Onlayn sotuvni yo'lga qo'yish": {
+  "ru": "Наладить онлайн-продажи",
+  "en": "Launch online sales"
+ },
+ "Brend va ishonchni oshirish": {
+  "ru": "Укрепить бренд и доверие",
+  "en": "Strengthen brand and trust"
+ },
+ "Jarayonlarni avtomatlashtirish": {
+  "ru": "Автоматизировать процессы",
+  "en": "Automate processes"
+ },
+ "Raqobatchilardan ajralib turish": {
+  "ru": "Выделиться среди конкурентов",
+  "en": "Stand out from competitors"
+ },
+ "1–3 mln so'm": {
+  "ru": "1–3 млн сум",
+  "en": "1–3 mln UZS"
+ },
+ "3–7 mln so'm": {
+  "ru": "3–7 млн сум",
+  "en": "3–7 mln UZS"
+ },
+ "7–15 mln so'm": {
+  "ru": "7–15 млн сум",
+  "en": "7–15 mln UZS"
+ },
+ "15 mln so'mdan ko'p": {
+  "ru": "Более 15 млн сум",
+  "en": "Over 15 mln UZS"
+ },
+ "Maslahat kerak": {
+  "ru": "Нужна консультация",
+  "en": "Need advice"
+ },
+ "Shoshilinch (1 hafta)": {
+  "ru": "Срочно (1 неделя)",
+  "en": "Urgent (1 week)"
+ },
+ "Shoshilmayman": {
+  "ru": "Не спешу",
+  "en": "No rush"
+ },
+ "O'zbekcha": {
+  "ru": "На узбекском",
+  "en": "Uzbek"
+ },
+ "Ruscha": {
+  "ru": "На русском",
+  "en": "Russian"
+ },
+ "Inglizcha": {
+  "ru": "На английском",
+  "en": "English"
+ },
+ "Telefon": {
+  "ru": "Телефон",
+  "en": "Phone"
+ },
+ "Telegram": {
+  "ru": "Telegram",
+  "en": "Telegram"
+ },
+ "WhatsApp": {
+  "ru": "WhatsApp",
+  "en": "WhatsApp"
+ },
+ "Email": {
+  "ru": "Email",
+  "en": "Email"
+ },
+ "Istalgan vaqt": {
+  "ru": "В любое время",
+  "en": "Anytime"
+ },
+ "Ta'lim": {
+  "ru": "Образование",
+  "en": "Education"
+ },
+ "Tibbiyot": {
+  "ru": "Медицина",
+  "en": "Healthcare"
+ },
+ "Go'zallik": {
+  "ru": "Красота",
+  "en": "Beauty"
+ },
+ "Qurilish": {
+  "ru": "Строительство",
+  "en": "Construction"
+ },
+ "Transport": {
+  "ru": "Транспорт",
+  "en": "Transport"
+ },
+ "Xizmat ko'rsatish": {
+  "ru": "Сфера услуг",
+  "en": "Services"
+ },
+ "Ishlab chiqarish": {
+  "ru": "Производство",
+  "en": "Manufacturing"
+ },
+ "Ko'chmas mulk": {
+  "ru": "Недвижимость",
+  "en": "Real estate"
+ },
+ "So'rovingiz qabul qilindi!": {
+  "ru": "Ваша заявка принята!",
+  "en": "Your request has been received!"
+ },
+ "Mutaxassisimiz ish vaqtida 15–30 daqiqa ichida, boshqa vaqtda keyingi ish kuni ertalab siz bilan bog'lanadi. Ko'rishguncha!": {
+  "ru": "Наш специалист свяжется с вами в течение 15–30 минут в рабочее время, в остальное время утром следующего рабочего дня. До встречи!",
+  "en": "Our specialist will contact you within 15–30 minutes during working hours, or the next business morning otherwise. Talk soon!"
+ },
+ "Savollar": {
+  "ru": "Вопросы",
+  "en": "FAQ"
+ },
+ "Ko'p so'raladigan *savollar*": {
+  "ru": "Частые *вопросы*",
+  "en": "Frequently asked *questions*"
+ },
+ "Loyiha qancha vaqtda tayyor bo'ladi?": {
+  "ru": "Как быстро будет готов проект?",
+  "en": "How long does a project take?"
+ },
+ "Vizitka sayt 1–2 hafta, onlayn do'kon 3–5 hafta, mobil ilova 2–3 oy. Aniq muddat suhbatdan keyin shartnomada belgilanadi.": {
+  "ru": "Сайт-визитка: 1–2 недели, интернет-магазин: 3–5 недель, мобильное приложение: 2–3 месяца. Точные сроки фиксируются в договоре после беседы.",
+  "en": "A business card site takes 1–2 weeks, an online store 3–5 weeks, a mobile app 2–3 months. Exact timelines are set in the contract after we talk."
+ },
+ "Narx qanday hisoblanadi?": {
+  "ru": "Как рассчитывается цена?",
+  "en": "How is the price calculated?"
+ },
+ "Loyiha hajmiga qarab. Anketani to'ldirsangiz, 1 kun ichida aniq narx va muddat bilan taklif yuboramiz.": {
+  "ru": "Зависит от объёма проекта. Заполните анкету, и в течение 1 дня мы пришлём предложение с точной ценой и сроками.",
+  "en": "It depends on the project scope. Fill out the form and within 1 day we'll send an offer with an exact price and timeline."
+ },
+ "Tayyor saytga kafolat berasizmi?": {
+  "ru": "Даёте ли вы гарантию на готовый сайт?",
+  "en": "Do you guarantee the finished site?"
+ },
+ "Ha, 6 oy bepul texnik yordam va xatolarni tuzatish kafolati beramiz.": {
+  "ru": "Да, мы даём гарантию: 6 месяцев бесплатной техподдержки и исправления ошибок.",
+  "en": "Yes, we offer 6 months of free tech support and a bug-fix guarantee."
+ },
+ "Mavjud saytni yangilab bera olasizmi?": {
+  "ru": "Можете ли вы обновить существующий сайт?",
+  "en": "Can you update an existing site?"
+ },
+ "Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz.": {
+  "ru": "Конечно: обновим дизайн, ускорим сайт и добавим новые функции.",
+  "en": "Of course: we'll refresh the design, speed it up and add new features."
+ },
+ "Boshlaymizmi?": {
+  "ru": "Начнём?",
+  "en": "Shall we start?"
+ },
+ "G'oyangizni *birga* ishga tushiramiz": {
+  "ru": "Запустим вашу идею *вместе*",
+  "en": "Let's launch your idea *together*"
+ },
+ "Bepul maslahat oling: 15 daqiqada javob beramiz.": {
+  "ru": "Получите бесплатную консультацию: ответим за 15 минут.",
+  "en": "Get a free consultation: we'll reply within 15 minutes."
+ },
+ "Loyihani boshlash": {
+  "ru": "Начать проект",
+  "en": "Start a project"
+ },
+ "Aloqa": {
+  "ru": "Контакты",
+  "en": "Contact"
+ },
+ "Savolingiz bormi?": {
+  "ru": "Есть вопрос?",
+  "en": "Have a question?"
+ },
+ "Qisqa savol bo'lsa, shu yerga yozing. Loyiha buyurtma qilmoqchi bo'lsangiz, yuqoridagi anketani to'ldiring.": {
+  "ru": "Если вопрос короткий, напишите сюда. Чтобы заказать проект, заполните анкету выше.",
+  "en": "For a quick question, write here. To order a project, fill out the form above."
+ },
+ "Yuborish": {
+  "ru": "Отправить",
+  "en": "Send"
+ },
+ "Bepul maslahat": {
+  "ru": "Бесплатная консультация",
+  "en": "Free consultation"
+ },
+ "Barcha huquqlar himoyalangan.": {
+  "ru": "Все права защищены.",
+  "en": "All rights reserved."
+ },
+ "Sayt yaratish": {
+  "ru": "Создать сайт",
+  "en": "Create a site"
+ },
+ "Kabinet": {
+  "ru": "Кабинет",
+  "en": "Account"
+ },
+ "Oferta": {
+  "ru": "Оферта",
+  "en": "Terms of offer"
+ },
+ "Maxfiylik": {
+  "ru": "Конфиденциальность",
+  "en": "Privacy"
+ },
+ "Qaytarish": {
+  "ru": "Возврат",
+  "en": "Refunds"
+ },
+ "Impro IT": {
+  "ru": "Impro IT",
+  "en": "Impro IT"
+ },
+ "Veb-sayt, mobil ilova va Telegram botlar. Tez, sifatli, kafolat bilan.": {
+  "ru": "Веб-сайты, мобильные приложения и Telegram-боты. Быстро, качественно, с гарантией.",
+  "en": "Websites, mobile apps and Telegram bots. Fast, high-quality, guaranteed."
+ },
+ "chempme@gmail.com": {
+  "ru": "chempme@gmail.com",
+  "en": "chempme@gmail.com"
+ },
+ "Toshkent, Amir Temur ko'chasi 1": {
+  "ru": "Ташкент, ул. Амира Темура, 1",
+  "en": "Tashkent, Amir Temur Street 1"
+ },
+ "Dush–Shan, 9:00–18:00": {
+  "ru": "Пн–Сб, 9:00–18:00",
+  "en": "Mon–Sat, 9:00–18:00"
+ }
+}

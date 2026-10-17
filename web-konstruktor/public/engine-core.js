@@ -40,12 +40,13 @@
   E.normalize = function (d) {
     d = d && typeof d === 'object' ? d : {};
     d.company = Object.assign({ name: 'Sayt', logo: '' }, d.company);
-    d.theme = Object.assign({ preset: 'dark', accent: '', accent2: '', font: 'modern', radius: 'soft', bg: 'full', heads: 'left', switcher: false, look: 'classic', motion: true }, d.theme);
+    d.theme = Object.assign({ preset: 'dark', accent: '', accent2: '', font: 'modern', radius: 'soft', bg: 'full', heads: 'left', switcher: false, look: 'classic', motion: true, fab: false }, d.theme);
     d.nav = Object.assign({ style: 'pill', cta: '', ctaLink: '#', search: false }, d.nav);
     d.announce = Object.assign({ enabled: false, text: '', link: '' }, d.announce);
     d.orders = Object.assign({ enabled: true, currency: "so'm", freeShipFrom: 0, deliveryFee: 0 }, d.orders);
     d.account = Object.assign({ enabled: false, requireOrder: true, requireBooking: false }, d.account);
     d.contacts = d.contacts || {};
+    d.analytics = Object.assign({ ga: '', ym: '', fb: '' }, d.analytics);
     d.footer = Object.assign({ text: '', links: [] }, d.footer);
     d.sections = (Array.isArray(d.sections) ? d.sections : []).filter((s) => s && typeof s === 'object' && s.type);
     return d;
@@ -77,6 +78,8 @@
     const m = $('meta[name=description]');
     const hero = S.sections.find((s) => s.type === 'hero');
     if (m) m.content = (hero && hero.text) || S.company.tagline || '';
+    const og = (k, v) => { if (!v) return; let t = document.querySelector(`meta[property="${k}"]`); if (!t) { t = document.createElement('meta'); t.setAttribute('property', k); document.head.appendChild(t); } t.content = v; };
+    og('og:title', S.company.name || 'Sayt'); og('og:description', (hero && hero.text) || S.company.tagline || ''); og('og:type', 'website');
     const acc = getComputedStyle(document.documentElement).getPropertyValue('--acc').trim() || '#4f46e5';
     const letter = esc((S.company.logo || (S.company.name || 'S')[0] || 'S').slice(0, 2));
     const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='${acc}'/><text x='32' y='44' font-size='34' font-weight='800' text-anchor='middle' fill='#fff' font-family='Arial'>${letter}</text></svg>`;
@@ -192,11 +195,12 @@
     const search = S.nav.search && hasShop ? `<label class="nsearch">${icon('search')}<input id="navSearch" data-inp="navsearch" type="search" placeholder="Mahsulot qidirish…" autocomplete="off"></label>` : '';
     const cartBtn = E.cartable() ? `<button class="icon-btn" data-act="cart-open" aria-label="Savat">${icon('cart')}<span class="n" id="cartN" data-v="${cartCount()}">${cartCount() || ''}</span></button>` : '';
     const acc = accountBtn();
+    const LG = window.__LANGS__, lang = LG ? `<div class="langsw">${LG.list.map((l) => `<a href="${l.u}"${l.c === LG.cur ? ' class="on" aria-current="true"' : ''} hreflang="${l.c}">${l.c.toUpperCase()}</a>`).join('')}</div>` : '';
     const cta = S.nav.cta ? `<a class="btn sm" href="${esc(linkUrl(S.nav.ctaLink) || '#')}">${text(S.nav.cta)}</a>` : '';
     const logo = S.company.logoImage && imgUrl(S.company.logoImage) ? `<img class="mimg" src="${esc(imgUrl(S.company.logoImage))}" alt="">` : `<span class="mark">${text((S.company.logo || (S.company.name || 'S')[0]).slice(0, 2))}</span>`;
     return `<header class="nav nav-${esc(S.nav.style)}" id="nav"><a class="logo" href="#top">${logo}<span class="lname">${text(S.company.name)}</span></a>
       <nav class="links" id="links">${links.join('')}</nav>
-      <div class="nav-r">${search}${cartBtn}${acc}${cta}<button class="icon-btn burger" data-act="burger" aria-label="Menyu">${icon('menu')}</button></div></header>`;
+      <div class="nav-r">${search}${lang}${cartBtn}${acc}${cta}<button class="icon-btn burger" data-act="burger" aria-label="Menyu">${icon('menu')}</button></div></header>`;
   }
   function footerHtml() {
     const c = S.contacts, f = S.footer;
@@ -226,8 +230,31 @@
     $('#app').innerHTML = `${announceHtml()}${navHtml()}<main id="top">${body}</main>${footerHtml()}${chromeEnd()}`;
     $('#app').dataset.nav = S.nav.style;
     document.body.classList.toggle('has-announce', !!$('.announce'));
-    renderCart(); initEffects(); fillUser(); if (E.hooks.afterRender) E.hooks.afterRender();
+    renderCart(); initEffects(); fillUser(); initAnalytics(); renderFab(); if (E.hooks.afterRender) E.hooks.afterRender();
   };
+
+  /* ---------- Statistika (Google Analytics, Yandex Metrika, Meta Pixel): faqat haqiqiy sahifada ---------- */
+  let analyticsDone = false;
+  function initAnalytics() {
+    if (analyticsDone || isPreview) return; const a = S.analytics || {};
+    const add = (code) => { const s = document.createElement('script'); s.textContent = code; document.head.appendChild(s); };
+    const ga = String(a.ga || '').trim(), ym = String(a.ym || '').trim(), fb = String(a.fb || '').trim();
+    if (/^G-[A-Z0-9]{4,14}$/.test(ga)) { const s = document.createElement('script'); s.async = true; s.src = `https://www.googletagmanager.com/gtag/js?id=${ga}`; document.head.appendChild(s); add(`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${ga}');`); }
+    if (/^\d{5,12}$/.test(ym)) add(`(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');ym(${ym},'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:false});`);
+    if (/^\d{8,20}$/.test(fb)) add(`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src='https://connect.facebook.net/en_US/fbevents.js';s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script');fbq('init','${fb}');fbq('track','PageView');`);
+    analyticsDone = true;
+  }
+  /* ---------- Suzuvchi aloqa tugmalari ---------- */
+  function renderFab() {
+    const old = $('#fab'); if (old) old.remove(); if (!S.theme.fab || isPreview && false) return;
+    const c = S.contacts || {}, L = [];
+    const brief = !!E.actions['brief-open'] && S.sections.some((s) => on(s) && s.type === 'brief');
+    if (brief) L.push(`<a class="fb-b main" href="#brief-open" aria-label="Bepul maslahat">${icon('edit')}<span>Bepul maslahat</span></a>`);
+    if (c.telegram) { const u = String(c.telegram).replace(/^@/, '').replace(/^https?:\/\/t\.me\//, ''); L.push(`<a class="fb-b tg" href="https://t.me/${esc(u)}" target="_blank" rel="noopener" aria-label="Telegram">${icon('send')}</a>`); }
+    if (c.phone) L.push(`<a class="fb-b ph" href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}" aria-label="Qo'ng'iroq">${icon('tel')}</a>`);
+    if (!L.length) return;
+    const d = document.createElement('div'); d.id = 'fab'; d.className = 'fab'; d.innerHTML = L.join(''); document.body.appendChild(d);
+  }
 
   /* ---------- Formalar ---------- */
   E.prefill = function (msg) {

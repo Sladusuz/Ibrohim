@@ -607,7 +607,7 @@ function serveFile(res, file, cache) {
     fs.createReadStream(file).pipe(res);
   });
 }
-const PAGES = { '/': 'index.html', '/yaratish': 'yaratish.html', '/kabinet': 'kabinet.html', '/admin': 'admin.html', '/bot': 'bot.html' };
+const PAGES = { '/': 'index.html', '/yaratish': 'yaratish.html', '/kabinet': 'kabinet.html', '/admin': 'admin.html', '/bot': 'bot.html', '/ru': 'ru/index.html', '/ru/': 'ru/index.html', '/en': 'en/index.html', '/en/': 'en/index.html' };
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost'); let p;

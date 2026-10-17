@@ -1,0 +1,1674 @@
+{
+ "-sayt havolasi": {
+  "ru": "Ссылка на сайт",
+  "en": "Site link"
+ },
+ "1-tugma havolasi": {
+  "ru": "Ссылка кнопки 1",
+  "en": "Button 1 link"
+ },
+ "1-tugma matni": {
+  "ru": "Текст кнопки 1",
+  "en": "Button 1 text"
+ },
+ "15 daqiqada aloqaga chiqamiz": {
+  "ru": "Свяжемся в течение 15 минут",
+  "en": "We'll get in touch within 15 minutes"
+ },
+ "15 mln so'mdan ko'p": {
+  "ru": "Более 15 млн сум",
+  "en": "Over 15 mln UZS"
+ },
+ "15–30 daqiqa": {
+  "ru": "15–30 минут",
+  "en": "15–30 minutes"
+ },
+ "1–2 hafta": {
+  "ru": "1–2 недели",
+  "en": "1–2 weeks"
+ },
+ "1–3 mln so'm": {
+  "ru": "1–3 млн сум",
+  "en": "1–3 mln UZS"
+ },
+ "2-tugma havolasi": {
+  "ru": "Ссылка кнопки 2",
+  "en": "Button 2 link"
+ },
+ "2-tugma matni": {
+  "ru": "Текст кнопки 2",
+  "en": "Button 2 text"
+ },
+ "2022 – hozir": {
+  "ru": "2022 – настоящее время",
+  "en": "2022 – present"
+ },
+ "2023 – hozir": {
+  "ru": "2023 – настоящее время",
+  "en": "2023 – present"
+ },
+ "2–3 hafta": {
+  "ru": "2–3 недели",
+  "en": "2–3 weeks"
+ },
+ "3 daqiqa": {
+  "ru": "3 минуты",
+  "en": "3 minutes"
+ },
+ "3 daqiqalik anketa: nima kerakligini, qanday ko'rinishni va qancha byudjetni tanlaysiz. Qolganini biz hal qilamiz.": {
+  "ru": "Анкета на 3 минуты: вы выбираете, что нужно, какой вид и какой бюджет. Остальное мы берём на себя.",
+  "en": "A 3-minute questionnaire: choose what you need, the look and the budget. We'll handle the rest."
+ },
+ "3–7 mln so'm": {
+  "ru": "3–7 млн сум",
+  "en": "3–7 mln UZS"
+ },
+ "5–10 kun": {
+  "ru": "5–10 дней",
+  "en": "5–10 days"
+ },
+ "7–15 mln so'm": {
+  "ru": "7–15 млн сум",
+  "en": "7–15 mln UZS"
+ },
+ "Achchiq, Yangi, 60 daqiqa": {
+  "ru": "Острое, Новинка, 60 минут",
+  "en": "Spicy, New, 60 minutes"
+ },
+ "Admin panel": {
+  "ru": "Панель администратора",
+  "en": "Admin panel"
+ },
+ "Afsuski, mahsulot tugagan": {
+  "ru": "К сожалению, товар закончился",
+  "en": "Sorry, this product is out of stock"
+ },
+ "Aksiya davom etmoqda": {
+  "ru": "Акция продолжается",
+  "en": "The promotion is ongoing"
+ },
+ "Almashib turadigan so'zlar": {
+  "ru": "Сменяющиеся слова",
+  "en": "Rotating words"
+ },
+ "Aloqa ma'lumotlari va xabar / bron / buyurtma formasi": {
+  "ru": "Контактные данные и форма сообщения / брони / заказа",
+  "en": "Contact details and message / booking / order form"
+ },
+ "Aloqa usuli": {
+  "ru": "Способ связи",
+  "en": "Contact method"
+ },
+ "Aloqa usullari": {
+  "ru": "Способы связи",
+  "en": "Contact methods"
+ },
+ "Aloqa va forma": {
+  "ru": "Контакты и форма",
+  "en": "Contact and form"
+ },
+ "Animatsion nurli fon": {
+  "ru": "Анимированный световой фон",
+  "en": "Animated light background"
+ },
+ "Animatsiyali ko'rsatkichlar": {
+  "ru": "Анимированные показатели",
+  "en": "Animated counters"
+ },
+ "Aniq narx va muddat: suhbatdan keyin shartnoma": {
+  "ru": "Точная цена и сроки: договор после беседы",
+  "en": "Exact price and timeline: contract after a conversation"
+ },
+ "Anketa hozircha mavjud emas": {
+  "ru": "Анкета пока недоступна",
+  "en": "The questionnaire is not available yet"
+ },
+ "Anketa to'ldirasiz": {
+  "ru": "Вы заполняете анкету",
+  "en": "You fill in the questionnaire"
+ },
+ "Anketada xizmatlar kiritilmagan": {
+  "ru": "В анкете не указаны услуги",
+  "en": "No services have been added to the questionnaire"
+ },
+ "Anketani to'ldirish": {
+  "ru": "Заполнить анкету",
+  "en": "Fill in the questionnaire"
+ },
+ "Arizangizni qabul qilamiz.": {
+  "ru": "Мы примем вашу заявку.",
+  "en": "We'll accept your application."
+ },
+ "Aylanuvchi yozuv": {
+  "ru": "Вращающаяся надпись",
+  "en": "Rotating text"
+ },
+ "Batafsil tavsif.": {
+  "ru": "Подробное описание.",
+  "en": "Detailed description."
+ },
+ "Bento to'r": {
+  "ru": "Сетка Bento",
+  "en": "Bento grid"
+ },
+ "Bepul maslahat": {
+  "ru": "Бесплатная консультация",
+  "en": "Free consultation"
+ },
+ "Bepul maslahat va g'oyalar": {
+  "ru": "Бесплатная консультация и идеи",
+  "en": "Free consultation and ideas"
+ },
+ "Bepul yetkazib berish!": {
+  "ru": "Бесплатная доставка!",
+  "en": "Free delivery!"
+ },
+ "Birinchi *afzallik*": {
+  "ru": "Первое *преимущество*",
+  "en": "First *advantage*"
+ },
+ "Birinchi afzallik": {
+  "ru": "Первое преимущество",
+  "en": "First advantage"
+ },
+ "Birinchi imkoniyat": {
+  "ru": "Первая возможность",
+  "en": "First feature"
+ },
+ "Birinchi ish": {
+  "ru": "Первая работа",
+  "en": "First work"
+ },
+ "Birinchi loyiha": {
+  "ru": "Первый проект",
+  "en": "First project"
+ },
+ "Birinchi mahsulot": {
+  "ru": "Первый товар",
+  "en": "First product"
+ },
+ "Birinchi punkt": {
+  "ru": "Первый пункт",
+  "en": "First item"
+ },
+ "Birinchi rasm": {
+  "ru": "Первое изображение",
+  "en": "First image"
+ },
+ "Birinchi savol?": {
+  "ru": "Первый вопрос?",
+  "en": "First question?"
+ },
+ "Birinchi taom": {
+  "ru": "Первое блюдо",
+  "en": "First dish"
+ },
+ "Birinchi xizmat": {
+  "ru": "Первая услуга",
+  "en": "First service"
+ },
+ "Biz *nima* qilamiz": {
+  "ru": "Что *мы* делаем",
+  "en": "What *we* do"
+ },
+ "Biz aloqaga chiqamiz": {
+  "ru": "Мы свяжемся с вами",
+  "en": "We'll get in touch"
+ },
+ "Biz bilan bog'laning": {
+  "ru": "Свяжитесь с нами",
+  "en": "Contact us"
+ },
+ "Biz haqimizda": {
+  "ru": "О нас",
+  "en": "About us"
+ },
+ "Biz kimmiz": {
+  "ru": "Кто мы",
+  "en": "Who we are"
+ },
+ "Biz nima qilamiz": {
+  "ru": "Что мы делаем",
+  "en": "What we do"
+ },
+ "Biz oddiy *saytlar* emas, mijozlaringizni egaga aylantiradigan *raqamli tajriba* yaratamiz.": {
+  "ru": "Мы создаём не просто *сайты*, а *цифровой опыт*, который превращает ваших клиентов в постоянных покупателей.",
+  "en": "We don't just build *websites*; we create a *digital experience* that turns your customers into loyal owners."
+ },
+ "Bizga ishonishadi": {
+  "ru": "Нам доверяют",
+  "en": "They trust us"
+ },
+ "Biznes haqida": {
+  "ru": "О бизнесе",
+  "en": "About the business"
+ },
+ "Biznes nomi": {
+  "ru": "Название бизнеса",
+  "en": "Business name"
+ },
+ "Biznesingiz haqida": {
+  "ru": "О вашем бизнесе",
+  "en": "About your business"
+ },
+ "Bizni *toping*": {
+  "ru": "*Найдите* нас",
+  "en": "*Find* us"
+ },
+ "Bizning jamoa": {
+  "ru": "Наша команда",
+  "en": "Our team"
+ },
+ "Bizning menyu": {
+  "ru": "Наше меню",
+  "en": "Our menu"
+ },
+ "Bo'sh qoldirsangiz hammasi uchun ko'rinadi": {
+  "ru": "Если оставить пустым, будет видно всем",
+  "en": "If left empty, it is visible to everyone"
+ },
+ "Bo'sh qoldirsangiz taymer ko'rinmaydi. Format: YYYY-MM-DD": {
+  "ru": "Если оставить пустым, таймер не отображается. Формат: YYYY-MM-DD",
+  "en": "If left empty, the timer is hidden. Format: YYYY-MM-DD"
+ },
+ "Bog'lanish": {
+  "ru": "Связаться",
+  "en": "Contact"
+ },
+ "Bosh ekran": {
+  "ru": "Главный экран",
+  "en": "Hero screen"
+ },
+ "Boshlang'ich narx": {
+  "ru": "Начальная цена",
+  "en": "Starting price"
+ },
+ "Boshqa istaklar": {
+  "ru": "Другие пожелания",
+  "en": "Other requests"
+ },
+ "Boshqa istaklaringiz yoki aytmoqchi bo'lgan narsalar": {
+  "ru": "Другие пожелания или то, что хотите сообщить",
+  "en": "Other wishes or anything you'd like to add"
+ },
+ "Boshqa so'z yoki kategoriyani sinab ko'ring.": {
+  "ru": "Попробуйте другое слово или категорию.",
+  "en": "Try another word or category."
+ },
+ "Brend A": {
+  "ru": "Бренд A",
+  "en": "Brand A"
+ },
+ "Brend B": {
+  "ru": "Бренд B",
+  "en": "Brand B"
+ },
+ "Brend C": {
+  "ru": "Бренд C",
+  "en": "Brand C"
+ },
+ "Brend D": {
+  "ru": "Бренд D",
+  "en": "Brand D"
+ },
+ "Brend va ishonchni oshirish": {
+  "ru": "Укрепить бренд и доверие",
+  "en": "Strengthen brand and trust"
+ },
+ "Brending, Veb, Logo": {
+  "ru": "Брендинг, Веб, Логотип",
+  "en": "Branding, Web, Logo"
+ },
+ "Bu bizga sizga mos yechim va dizayn tanlashga yordam beradi.": {
+  "ru": "Это поможет нам подобрать подходящее решение и дизайн.",
+  "en": "This helps us choose the right solution and design for you."
+ },
+ "Bu taxminiy hisob. Aniq narx va muddat vazifani muhokama qilgach belgilanadi.": {
+  "ru": "Это приблизительный расчёт. Точная цена и сроки определяются после обсуждения задачи.",
+  "en": "This is an estimate. The exact price and timeline are set after discussing the task."
+ },
+ "Buyurtma anketasi": {
+  "ru": "Анкета заказа",
+  "en": "Order questionnaire"
+ },
+ "Buyurtma berish": {
+  "ru": "Оформить заказ",
+  "en": "Place order"
+ },
+ "Buyurtma berish uchun kiring": {
+  "ru": "Войдите, чтобы сделать заказ",
+  "en": "Log in to place an order"
+ },
+ "Buyurtma formasi yoqilmagan": {
+  "ru": "Форма заказа не включена",
+  "en": "The order form is not enabled"
+ },
+ "Buyurtma uchun hisob kerak. Kiring yoki ro'yxatdan o'ting.": {
+  "ru": "Для заказа нужен аккаунт. Войдите или зарегистрируйтесь.",
+  "en": "An account is required to order. Log in or sign up."
+ },
+ "Buyurtma va aloqani avtomatlashtirish": {
+  "ru": "Автоматизация заказов и связи",
+  "en": "Automate orders and communication"
+ },
+ "Buyurtmani rasmiylashtirish": {
+  "ru": "Оформление заказа",
+  "en": "Checkout"
+ },
+ "Byudjet variantlari": {
+  "ru": "Варианты бюджета",
+  "en": "Budget options"
+ },
+ "Chap yozuv": {
+  "ru": "Надпись слева",
+  "en": "Left text"
+ },
+ "Chiroyli banner: aksiya, taymer va tugma": {
+  "ru": "Красивый баннер: акция, таймер и кнопка",
+  "en": "Nice banner: promotion, timer and button"
+ },
+ "Davom etish uchun rozilikni belgilang": {
+  "ru": "Отметьте согласие, чтобы продолжить",
+  "en": "Check the consent box to continue"
+ },
+ "Dengiz ko'k": {
+  "ru": "Морской синий",
+  "en": "Sea blue"
+ },
+ "Deyarli tayyor!": {
+  "ru": "Почти готово!",
+  "en": "Almost done!"
+ },
+ "Dizayn uslubi": {
+  "ru": "Стиль дизайна",
+  "en": "Design style"
+ },
+ "Dizayn uslublari": {
+  "ru": "Стили дизайна",
+  "en": "Design styles"
+ },
+ "Do'kon: qidiruv, kategoriya, savat. Kurs va paketlar uchun ham": {
+  "ru": "Магазин: поиск, категории, корзина. Подходит и для курсов и пакетов",
+  "en": "Shop: search, categories, cart. Also for courses and packages"
+ },
+ "Email noto'g'ri": {
+  "ru": "Неверный email",
+  "en": "Invalid email"
+ },
+ "Eng ko'pi bilan 3 ta namuna tanlash mumkin": {
+  "ru": "Можно выбрать не более 3 образцов",
+  "en": "You can choose up to 3 samples"
+ },
+ "Faoliyat sohasi": {
+  "ru": "Сфера деятельности",
+  "en": "Field of activity"
+ },
+ "Faqat ko'rsatish": {
+  "ru": "Только показ",
+  "en": "Display only"
+ },
+ "Fon animatsiyasi": {
+  "ru": "Анимация фона",
+  "en": "Background animation"
+ },
+ "Forma turi": {
+  "ru": "Тип формы",
+  "en": "Form type"
+ },
+ "Go'zallik": {
+  "ru": "Красота",
+  "en": "Beauty"
+ },
+ "Google xaritasi, manzil, ish vaqti va telefon kartochkalari": {
+  "ru": "Карта Google, адрес, часы работы и карточки с телефоном",
+  "en": "Google map, address, working hours and phone cards"
+ },
+ "Gorizontal vitrina": {
+  "ru": "Горизонтальная витрина",
+  "en": "Horizontal showcase"
+ },
+ "Hamkorlar lentasi": {
+  "ru": "Лента партнёров",
+  "en": "Partners ribbon"
+ },
+ "Hammasi *bir joyda*": {
+  "ru": "Всё *в одном месте*",
+  "en": "Everything *in one place*"
+ },
+ "Hammasi Standart dagidek": {
+  "ru": "Всё как в Стандарте",
+  "en": "Same as Standard"
+ },
+ "Hammasi Start dagidek": {
+  "ru": "Всё как в Старте",
+  "en": "Same as Start"
+ },
+ "Har bir qatorga bitta so'z. Bo'sh qoldirsangiz o'chadi.": {
+  "ru": "По одному слову в строке. Если оставить пустым, отключится.",
+  "en": "One word per line. If left empty, it is turned off."
+ },
+ "Har bir qatorga bitta xizmat": {
+  "ru": "По одной услуге в строке",
+  "en": "One service per line"
+ },
+ "Har bir qatorga bittadan": {
+  "ru": "По одному в строке",
+  "en": "One per line"
+ },
+ "Har kuni hisobot": {
+  "ru": "Ежедневный отчёт",
+  "en": "Daily report"
+ },
+ "Har qatorga bittadan": {
+  "ru": "По одному в строке",
+  "en": "One per line"
+ },
+ "Harakatlanuvchi devor": {
+  "ru": "Движущаяся стена",
+  "en": "Moving wall"
+ },
+ "Havola matni": {
+  "ru": "Текст ссылки",
+  "en": "Link text"
+ },
+ "Havolali kartochkalar": {
+  "ru": "Карточки со ссылками",
+  "en": "Link cards"
+ },
+ "Hech narsa topilmadi": {
+  "ru": "Ничего не найдено",
+  "en": "Nothing found"
+ },
+ "Hisob ochib, ma'lumotlaringizni xavfsiz saqlang. Istalgan qurilmadan kira olasiz.": {
+  "ru": "Создайте аккаунт и храните данные в безопасности. Входите с любого устройства.",
+  "en": "Create an account and keep your data safe. Log in from any device."
+ },
+ "Hisobingiz bo'lmasa, ro'yxatdan o'ting. Buyurtmalaringiz hisobingizda saqlanadi.": {
+  "ru": "Если у вас нет аккаунта, зарегистрируйтесь. Ваши заказы сохранятся в аккаунте.",
+  "en": "If you don't have an account, sign up. Your orders will be saved in your account."
+ },
+ "Hisobingiz bo'lmasa, ro'yxatdan o'ting. So'rovingiz va uning holati hisobingizda saqlanadi.": {
+  "ru": "Если у вас нет аккаунта, зарегистрируйтесь. Ваша заявка и её статус сохранятся в аккаунте.",
+  "en": "If you don't have an account, sign up. Your request and its status will be saved in your account."
+ },
+ "Hisobingizga kiring": {
+  "ru": "Войдите в аккаунт",
+  "en": "Log in to your account"
+ },
+ "Ikkinchi afzallik": {
+  "ru": "Второе преимущество",
+  "en": "Second advantage"
+ },
+ "Ikkinchi imkoniyat": {
+  "ru": "Вторая возможность",
+  "en": "Second feature"
+ },
+ "Ikkinchi ish": {
+  "ru": "Вторая работа",
+  "en": "Second work"
+ },
+ "Ikkinchi kichik rasm": {
+  "ru": "Второе маленькое изображение",
+  "en": "Second small image"
+ },
+ "Ikkinchi loyiha": {
+  "ru": "Второй проект",
+  "en": "Second project"
+ },
+ "Ikkinchi mahsulot": {
+  "ru": "Второй товар",
+  "en": "Second product"
+ },
+ "Ikkinchi punkt": {
+  "ru": "Второй пункт",
+  "en": "Second item"
+ },
+ "Ikkinchi rasm": {
+  "ru": "Второе изображение",
+  "en": "Second image"
+ },
+ "Ikkinchi savol?": {
+  "ru": "Второй вопрос?",
+  "en": "Second question?"
+ },
+ "Ikkinchi taom": {
+  "ru": "Второе блюдо",
+  "en": "Second dish"
+ },
+ "Ikkinchi xizmat": {
+  "ru": "Вторая услуга",
+  "en": "Second service"
+ },
+ "Ikonka + matn": {
+  "ru": "Иконка + текст",
+  "en": "Icon + text"
+ },
+ "Ikonkali kartochkalar: xizmat, afzallik yoki shartlar": {
+  "ru": "Карточки с иконками: услуги, преимущества или условия",
+  "en": "Icon cards: services, advantages or terms"
+ },
+ "Iltimos, birozdan so'ng qayta urinib ko'ring.": {
+  "ru": "Пожалуйста, повторите попытку чуть позже.",
+  "en": "Please try again in a moment."
+ },
+ "Iltimos, xizmat turini tanlang": {
+  "ru": "Пожалуйста, выберите тип услуги",
+  "en": "Please select a service type"
+ },
+ "Imkoniyatlarni suhbatda birgalikda aniqlaymiz.": {
+  "ru": "Возможности определим вместе в беседе.",
+  "en": "We'll define the features together in a conversation."
+ },
+ "Ish boshlanadi": {
+  "ru": "Работа начинается",
+  "en": "Work begins"
+ },
+ "Ish jarayonimizni *ko'ring*": {
+  "ru": "*Посмотрите*, как мы работаем",
+  "en": "*See* how we work"
+ },
+ "Ish tajribasi, ta'lim yoki kompaniya tarixi": {
+  "ru": "Опыт работы, образование или история компании",
+  "en": "Work experience, education or company history"
+ },
+ "Ish vaqti": {
+  "ru": "Часы работы",
+  "en": "Working hours"
+ },
+ "Ishlarimizdan namunalar": {
+  "ru": "Примеры наших работ",
+  "en": "Samples of our work"
+ },
+ "Ishlaringiz: rasm, teglar, batafsil oyna": {
+  "ru": "Ваши работы: изображение, теги, окно с подробностями",
+  "en": "Your works: image, tags, details window"
+ },
+ "Ishni o'z vaqtida topshiramiz.": {
+  "ru": "Сдаём работу в срок.",
+  "en": "We deliver on time."
+ },
+ "Ishonch ko'rsatkichlari": {
+  "ru": "Показатели доверия",
+  "en": "Trust indicators"
+ },
+ "Ism Familiya": {
+  "ru": "Имя Фамилия",
+  "en": "Full name"
+ },
+ "Ismingiz *": {
+  "ru": "Ваше имя *",
+  "en": "Your name *"
+ },
+ "Ismingizni kiriting": {
+  "ru": "Введите ваше имя",
+  "en": "Enter your name"
+ },
+ "Issiq amber": {
+  "ru": "Тёплый янтарь",
+  "en": "Warm amber"
+ },
+ "Istalgan vaqt": {
+  "ru": "В любое время",
+  "en": "Anytime"
+ },
+ "Ixtiyoriy. Yuklangan mp4 faylning manzili.": {
+  "ru": "Необязательно. Адрес загруженного файла mp4.",
+  "en": "Optional. URL of an uploaded mp4 file."
+ },
+ "Jamoa / ustalar": {
+  "ru": "Команда / мастера",
+  "en": "Team / specialists"
+ },
+ "Jarayonlarni avtomatlashtirish": {
+  "ru": "Автоматизация процессов",
+  "en": "Process automation"
+ },
+ "Javob shu yerda.": {
+  "ru": "Ответ здесь.",
+  "en": "The answer is here."
+ },
+ "Juda yoqdi! Hammasi tez va sifatli bajarildi.": {
+  "ru": "Очень понравилось! Всё сделано быстро и качественно.",
+  "en": "Loved it! Everything was done quickly and with quality."
+ },
+ "Karta orqali": {
+  "ru": "Картой",
+  "en": "By card"
+ },
+ "Katalog, savat va to'lov bilan": {
+  "ru": "С каталогом, корзиной и оплатой",
+  "en": "With catalog, cart and payment"
+ },
+ "Kategoriya kartochkalari": {
+  "ru": "Карточки категорий",
+  "en": "Category cards"
+ },
+ "Kategoriya tugmalari": {
+  "ru": "Кнопки категорий",
+  "en": "Category buttons"
+ },
+ "Katta + kichik kartochkalar": {
+  "ru": "Большие + маленькие карточки",
+  "en": "Large + small cards"
+ },
+ "Katta bayonot": {
+  "ru": "Крупное заявление",
+  "en": "Big statement"
+ },
+ "Katta foto + matn": {
+  "ru": "Большое фото + текст",
+  "en": "Large photo + text"
+ },
+ "Katta matn: sahifa aylantirilganda so'zlar birma-bir yonadi": {
+  "ru": "Крупный текст: при прокрутке слова подсвечиваются по очереди",
+  "en": "Large text: words light up one by one as you scroll"
+ },
+ "Katta raqam": {
+  "ru": "Крупная цифра",
+  "en": "Big number"
+ },
+ "Katta raqam / so'z": {
+  "ru": "Крупная цифра / слово",
+  "en": "Big number / word"
+ },
+ "Katta raqamlangan ro'yxat: ustiga borilsa rasm paydo bo'ladi": {
+  "ru": "Крупный нумерованный список: при наведении появляется изображение",
+  "en": "Large numbered list: an image appears on hover"
+ },
+ "Katta video oynasi: YouTube, Vimeo yoki o'zingiz yuklagan mp4": {
+  "ru": "Большое окно видео: YouTube, Vimeo или загруженный вами mp4",
+  "en": "Large video window: YouTube, Vimeo or your own uploaded mp4"
+ },
+ "Kerakli imkoniyatlarni belgilang. Narx avtomatik hisoblanadi.": {
+  "ru": "Отметьте нужные возможности. Цена рассчитывается автоматически.",
+  "en": "Select the features you need. The price is calculated automatically."
+ },
+ "Kichik sarlavha": {
+  "ru": "Подзаголовок",
+  "en": "Subheading"
+ },
+ "Kichik yozuv": {
+  "ru": "Мелкая надпись",
+  "en": "Small text"
+ },
+ "Kim ekani": {
+  "ru": "Кто это",
+  "en": "Who it is"
+ },
+ "Kinematik: to'liq rasm yoki video": {
+  "ru": "Кинематографичный: полное изображение или видео",
+  "en": "Cinematic: full image or video"
+ },
+ "Klassik panel": {
+  "ru": "Классическая панель",
+  "en": "Classic panel"
+ },
+ "Ko'p tillilik": {
+  "ru": "Многоязычность",
+  "en": "Multilingual"
+ },
+ "Ko'paytirish": {
+  "ru": "Дублировать",
+  "en": "Duplicate"
+ },
+ "Ko'proq mijoz jalb qilish": {
+  "ru": "Привлечь больше клиентов",
+  "en": "Attract more customers"
+ },
+ "Ko'rinish": {
+  "ru": "Вид",
+  "en": "View"
+ },
+ "Ko'rinish rejimi: so'rov yuborilmaydi": {
+  "ru": "Режим просмотра: заявка не отправляется",
+  "en": "View mode: no request is sent"
+ },
+ "Ko'rinish rejimi: xabar yuborilmaydi.": {
+  "ru": "Режим просмотра: сообщение не отправляется.",
+  "en": "View mode: no message is sent."
+ },
+ "Ko'nikma darajalari: chiziqlar yoki teglar": {
+  "ru": "Уровни навыков: полосы или теги",
+  "en": "Skill levels: bars or tags"
+ },
+ "Ko'nikmalar": {
+  "ru": "Навыки",
+  "en": "Skills"
+ },
+ "Ko'p so'raladigan savollar": {
+  "ru": "Частые вопросы",
+  "en": "FAQ"
+ },
+ "Ko'rish": {
+  "ru": "Смотреть",
+  "en": "View"
+ },
+ "Ko'rsatish": {
+  "ru": "Показать",
+  "en": "Show"
+ },
+ "Ko'rsatkichlar": {
+  "ru": "Показатели",
+  "en": "Stats"
+ },
+ "Kod oynasi": {
+  "ru": "Окно кода",
+  "en": "Code window"
+ },
+ "Kollaj kartochkalari": {
+  "ru": "Карточки-коллаж",
+  "en": "Collage cards"
+ },
+ "Kompaniya yoki brend nomi *": {
+  "ru": "Название компании или бренда *",
+  "en": "Company or brand name *"
+ },
+ "Kompaniya yoki brend nomini kiriting": {
+  "ru": "Введите название компании или бренда",
+  "en": "Enter the company or brand name"
+ },
+ "Kompaniyangiz haqida batafsil yozing: tarixi, qadriyatlari va mijozlarga nima beradi.": {
+  "ru": "Расскажите о вашей компании подробнее: история, ценности и что она даёт клиентам.",
+  "en": "Write about your company in detail: history, values and what it offers customers."
+ },
+ "Kompaniyangiz haqida qisqa va aniq tavsif.": {
+  "ru": "Краткое и чёткое описание вашей компании.",
+  "en": "A short and clear description of your company."
+ },
+ "Lavozim / nomi": {
+  "ru": "Должность / название",
+  "en": "Position / name"
+ },
+ "Lentadagi so'zlar": {
+  "ru": "Слова в ленте",
+  "en": "Ribbon words"
+ },
+ "Logotipdagi ranglar": {
+  "ru": "Цвета логотипа",
+  "en": "Logo colors"
+ },
+ "Loyiha haqida: vazifa, yechim va natija.": {
+  "ru": "О проекте: задача, решение и результат.",
+  "en": "About the project: task, solution and result."
+ },
+ "Loyihadan asosiy maqsadingiz": {
+  "ru": "Ваша главная цель проекта",
+  "en": "Your main goal for the project"
+ },
+ "Loyihani boshlang": {
+  "ru": "Начните проект",
+  "en": "Start the project"
+ },
+ "Mahsulot haqida qisqa tavsif.": {
+  "ru": "Краткое описание товара.",
+  "en": "A short product description."
+ },
+ "Mahsulotlar / katalog": {
+  "ru": "Товары / каталог",
+  "en": "Products / catalog"
+ },
+ "Mahsulotlar kollaji": {
+  "ru": "Коллаж товаров",
+  "en": "Product collage"
+ },
+ "Manzil kiritilmagan": {
+  "ru": "Адрес не указан",
+  "en": "Address not provided"
+ },
+ "Maslahat kerak": {
+  "ru": "Нужна консультация",
+  "en": "Need advice"
+ },
+ "Matn + tasvir": {
+  "ru": "Текст + изображение",
+  "en": "Text + image"
+ },
+ "Mavjud sayt": {
+  "ru": "Существующий сайт",
+  "en": "Existing website"
+ },
+ "Maxsus taklif": {
+  "ru": "Специальное предложение",
+  "en": "Special offer"
+ },
+ "Mehmonlar sonini so'rash": {
+  "ru": "Запрашивать количество гостей",
+  "en": "Ask for number of guests"
+ },
+ "Menyu / narxlar ro'yxati": {
+  "ru": "Меню / прайс-лист",
+  "en": "Menu / price list"
+ },
+ "Mijoz ismi": {
+  "ru": "Имя клиента",
+  "en": "Customer name"
+ },
+ "Mijoz va hamkor nomlari yoki logolari: yuguruvchi lenta": {
+  "ru": "Названия или логотипы клиентов и партнёров: бегущая лента",
+  "en": "Client and partner names or logos: scrolling ticker"
+ },
+ "Mijozlar fikri": {
+  "ru": "Отзывы клиентов",
+  "en": "Customer reviews"
+ },
+ "Mijozlar nima deydi": {
+  "ru": "Что говорят клиенты",
+  "en": "What customers say"
+ },
+ "Mijozning xohishlarini bosqichma-bosqich so'raydigan anketa: xizmat, imkoniyatlar, dizayn, byudjet va aloqa": {
+  "ru": "Анкета, пошагово выясняющая пожелания клиента: услуга, возможности, дизайн, бюджет и контакты",
+  "en": "A step-by-step questionnaire about the customer's wishes: service, features, design, budget and contact"
+ },
+ "Minimal oq-qora": {
+  "ru": "Минимализм чёрно-белый",
+  "en": "Minimal black and white"
+ },
+ "Muallif rasmi": {
+  "ru": "Фото автора",
+  "en": "Author photo"
+ },
+ "Muddat va byudjet": {
+  "ru": "Сроки и бюджет",
+  "en": "Timeline and budget"
+ },
+ "Muddat variantlari": {
+  "ru": "Варианты сроков",
+  "en": "Timeline options"
+ },
+ "Muharrir: so'zlar orasida rasmlar": {
+  "ru": "Редакторский: изображения между словами",
+  "en": "Editorial: images between words"
+ },
+ "Muqova rasmi": {
+  "ru": "Изображение обложки",
+  "en": "Cover image"
+ },
+ "Murojaat raqami:": {
+  "ru": "Номер обращения:",
+  "en": "Request number:"
+ },
+ "Mutaxassisimiz ish vaqtida 15–30 daqiqa ichida, boshqa vaqtda keyingi ish kuni ertalab siz bilan bog'lanadi.": {
+  "ru": "Наш специалист свяжется с вами в течение 15–30 минут в рабочее время, в другое время — утром следующего рабочего дня.",
+  "en": "Our specialist will contact you within 15–30 minutes during working hours, otherwise on the morning of the next business day."
+ },
+ "Mutaxassisimiz tez orada aloqaga chiqadi va barcha savollarga javob beradi.": {
+  "ru": "Наш специалист скоро свяжется с вами и ответит на все вопросы.",
+  "en": "Our specialist will contact you shortly and answer all your questions."
+ },
+ "Muvaffaqiyat matni": {
+  "ru": "Текст об успехе",
+  "en": "Success text"
+ },
+ "Muvaffaqiyat sarlavhasi": {
+  "ru": "Заголовок об успехе",
+  "en": "Success title"
+ },
+ "Nafis atirgul": {
+  "ru": "Нежная роза",
+  "en": "Elegant rose"
+ },
+ "Naqd pul": {
+  "ru": "Наличными",
+  "en": "Cash"
+ },
+ "Narx matni": {
+  "ru": "Текст цены",
+  "en": "Price text"
+ },
+ "Narx rejalari: xizmat paketlari, tanlansa so'rov formasi ochiladi": {
+  "ru": "Тарифы: пакеты услуг, при выборе открывается форма заявки",
+  "en": "Pricing plans: service packages, request form opens when selected"
+ },
+ "Narx va muddat kelishiladi": {
+  "ru": "Цена и сроки по договорённости",
+  "en": "Price and timeline to be agreed"
+ },
+ "Narx va sifat mos keldi.": {
+  "ru": "Цена и качество подошли.",
+  "en": "Price and quality were a good match."
+ },
+ "Narxdan katta bo'lsa chegirma foizi ko'rinadi": {
+  "ru": "Если больше цены, отображается процент скидки",
+  "en": "If greater than the price, the discount percentage is shown"
+ },
+ "Narxi kelishiladi": {
+  "ru": "Цена по договорённости",
+  "en": "Price negotiable"
+ },
+ "Narxi kelishiladi.": {
+  "ru": "Цена по договорённости.",
+  "en": "Price negotiable."
+ },
+ "Natijaga kafolat": {
+  "ru": "Гарантия результата",
+  "en": "Result guarantee"
+ },
+ "Nima bilan shug'ullandim.": {
+  "ru": "Чем я занимался.",
+  "en": "What I worked on."
+ },
+ "Nimalarni bilaman": {
+  "ru": "Что я умею",
+  "en": "What I know"
+ },
+ "Nomi bo'yicha": {
+  "ru": "По названию",
+  "en": "By name"
+ },
+ "Nur oqimi": {
+  "ru": "Поток света",
+  "en": "Light stream"
+ },
+ "O'chirish": {
+  "ru": "Удалить",
+  "en": "Delete"
+ },
+ "O'lcham": {
+  "ru": "Размер",
+  "en": "Size"
+ },
+ "O'ng yozuv": {
+  "ru": "Надпись справа",
+  "en": "Right text"
+ },
+ "O'rta": {
+  "ru": "Средний",
+  "en": "Medium"
+ },
+ "O'zbekcha": {
+  "ru": "Узбекский",
+  "en": "Uzbek"
+ },
+ "O'ng tomondagi tasvir": {
+  "ru": "Изображение справа",
+  "en": "Image on the right"
+ },
+ "O'ngda": {
+  "ru": "Справа",
+  "en": "On the right"
+ },
+ "Odamlar: rasm, lavozim, qisqa tavsif": {
+  "ru": "Люди: фото, должность, краткое описание",
+  "en": "People: photo, position, short description"
+ },
+ "Oddiy xabar": {
+  "ru": "Обычное сообщение",
+  "en": "Simple message"
+ },
+ "Oldin / keyin": {
+  "ru": "До / после",
+  "en": "Before / after"
+ },
+ "Oldin va *keyin*": {
+  "ru": "До и *после*",
+  "en": "Before and *after*"
+ },
+ "Oldingi lavozim": {
+  "ru": "Предыдущая должность",
+  "en": "Previous position"
+ },
+ "Olib ketish": {
+  "ru": "Самовывоз",
+  "en": "Pickup"
+ },
+ "Omborda faqat": {
+  "ru": "На складе только",
+  "en": "Only in stock:"
+ },
+ "Ombordagi soni": {
+  "ru": "Количество на складе",
+  "en": "Stock quantity"
+ },
+ "Onlayn do'kon": {
+  "ru": "Интернет-магазин",
+  "en": "Online store"
+ },
+ "Onlayn sotuvni yo'lga qo'yish": {
+  "ru": "Наладить онлайн-продажи",
+  "en": "Set up online sales"
+ },
+ "Oq-qora, aniq": {
+  "ru": "Чёрно-белый, чёткий",
+  "en": "Black and white, crisp"
+ },
+ "Oynadagi qatorlar": {
+  "ru": "Строки в окне",
+  "en": "Window lines"
+ },
+ "Parol kamida 6 belgi bo'lsin": {
+  "ru": "Пароль должен содержать не менее 6 символов",
+  "en": "Password must be at least 6 characters"
+ },
+ "Pochta ilovangiz ochiladi. Xabarni yuborishni unutmang yoki qo'ng'iroq qiling.": {
+  "ru": "Откроется ваше почтовое приложение. Не забудьте отправить сообщение или позвоните.",
+  "en": "Your mail app will open. Don't forget to send the message, or call us."
+ },
+ "Pochta ilovangiz ochildi. Xabarni yuborishni unutmang, shundan keyin biz siz bilan bog'lanamiz.": {
+  "ru": "Ваше почтовое приложение открыто. Не забудьте отправить сообщение, после этого мы свяжемся с вами.",
+  "en": "Your mail app has opened. Don't forget to send the message, then we'll contact you."
+ },
+ "Premium oltin": {
+  "ru": "Премиум золото",
+  "en": "Premium gold"
+ },
+ "Qabul qilish usuli": {
+  "ru": "Способ получения",
+  "en": "Receiving method"
+ },
+ "Qachon tayyor bo'lishi kerak?": {
+  "ru": "Когда должно быть готово?",
+  "en": "When should it be ready?"
+ },
+ "Qanday bog'lanish qulay?": {
+  "ru": "Как удобнее связаться?",
+  "en": "What is the best way to contact you?"
+ },
+ "Qanday imkoniyatlar kerak?": {
+  "ru": "Какие возможности нужны?",
+  "en": "What features do you need?"
+ },
+ "Qanday ishlashingiz: qadamlar": {
+  "ru": "Как вы работаете: шаги",
+  "en": "How you work: steps"
+ },
+ "Qanday ishlaymiz": {
+  "ru": "Как мы работаем",
+  "en": "How we work"
+ },
+ "Qanday ko'rinish yoqadi?": {
+  "ru": "Какой вид вам нравится?",
+  "en": "What look do you like?"
+ },
+ "Qisqa tavsif": {
+  "ru": "Краткое описание",
+  "en": "Short description"
+ },
+ "Qisqa tavsif.": {
+  "ru": "Краткое описание.",
+  "en": "Short description."
+ },
+ "Qo'shimcha izoh": {
+  "ru": "Дополнительный комментарий",
+  "en": "Additional comment"
+ },
+ "Qo'shimcha narx": {
+  "ru": "Дополнительная цена",
+  "en": "Additional price"
+ },
+ "Qo'shildi": {
+  "ru": "Добавлено",
+  "en": "Added"
+ },
+ "Qo'shimcha": {
+  "ru": "Дополнительно",
+  "en": "Extra"
+ },
+ "Qo'shimcha imkoniyat": {
+  "ru": "Дополнительная возможность",
+  "en": "Additional feature"
+ },
+ "Qo'shimcha imkoniyatlar": {
+  "ru": "Дополнительные возможности",
+  "en": "Additional features"
+ },
+ "Qora va oltin": {
+  "ru": "Чёрный и золотой",
+  "en": "Black and gold"
+ },
+ "Qorong'i neon": {
+  "ru": "Тёмный неон",
+  "en": "Dark neon"
+ },
+ "Qulay vaqt": {
+  "ru": "Удобное время",
+  "en": "Convenient time"
+ },
+ "Qulay vaqtlar": {
+  "ru": "Удобное время",
+  "en": "Convenient times"
+ },
+ "Rangli ajratilgan": {
+  "ru": "Цветное разделение",
+  "en": "Color-separated"
+ },
+ "Raqamingizni qoldiring, tez orada aloqaga chiqamiz.": {
+  "ru": "Оставьте свой номер, мы скоро свяжемся с вами.",
+  "en": "Leave your number and we'll get in touch soon."
+ },
+ "Rasm + matn qatorlari": {
+  "ru": "Строки изображение + текст",
+  "en": "Image + text rows"
+ },
+ "Rasm fonida": {
+  "ru": "На фоне изображения",
+  "en": "On image background"
+ },
+ "Rasm joylashuvi": {
+  "ru": "Расположение изображения",
+  "en": "Image position"
+ },
+ "Rasm, matn va afzalliklar ro'yxati": {
+  "ru": "Изображение, текст и список преимуществ",
+  "en": "Image, text and list of advantages"
+ },
+ "Rasmlar: bosilsa kattalashadi": {
+  "ru": "Изображения: увеличиваются по клику",
+  "en": "Images: enlarge on click"
+ },
+ "Rasmli kartochkalar: bosilsa havolaga o'tadi": {
+  "ru": "Карточки с изображениями: по клику переход по ссылке",
+  "en": "Image cards: click to follow the link"
+ },
+ "Rasmli kategoriyalar: bosilsa katalog filtrlanadi": {
+  "ru": "Категории с изображениями: по клику фильтруется каталог",
+  "en": "Image categories: click to filter the catalog"
+ },
+ "Restoran / kafe": {
+  "ru": "Ресторан / кафе",
+  "en": "Restaurant / cafe"
+ },
+ "Restoran menyusi yoki salon xizmatlari narxi, kategoriya bo'yicha": {
+  "ru": "Меню ресторана или цены на услуги салона по категориям",
+  "en": "Restaurant menu or salon service prices, by category"
+ },
+ "Ro'yxatdan o'ting": {
+  "ru": "Зарегистрируйтесь",
+  "en": "Sign up"
+ },
+ "Ro'yxatdan o'tish": {
+  "ru": "Регистрация",
+  "en": "Sign up"
+ },
+ "SEO sozlash": {
+  "ru": "Настройка SEO",
+  "en": "SEO setup"
+ },
+ "Sahifa boshidagi katta sarlavha va tugmalar": {
+  "ru": "Большой заголовок и кнопки в начале страницы",
+  "en": "Large heading and buttons at the top of the page"
+ },
+ "Sarlavha boshi": {
+  "ru": "Начало заголовка",
+  "en": "Heading start"
+ },
+ "Sarlavha oxiri": {
+  "ru": "Конец заголовка",
+  "en": "Heading end"
+ },
+ "Savat bo'sh. Mahsulotni tanlab, savatga qo'shing yoki xabar qoldiring.": {
+  "ru": "Корзина пуста. Выберите товар и добавьте в корзину или оставьте сообщение.",
+  "en": "Your cart is empty. Choose a product and add it to the cart, or leave a message."
+ },
+ "Savatga qo'shish": {
+  "ru": "В корзину",
+  "en": "Add to cart"
+ },
+ "Savatga qo'shildi": {
+  "ru": "Добавлено в корзину",
+  "en": "Added to cart"
+ },
+ "Sayt tili": {
+  "ru": "Язык сайта",
+  "en": "Site language"
+ },
+ "Sayt tillari": {
+  "ru": "Языки сайта",
+  "en": "Site languages"
+ },
+ "Sayt vaqtincha ishlamayapti": {
+  "ru": "Сайт временно не работает",
+  "en": "The site is temporarily unavailable"
+ },
+ "Saytda ko'rsatish": {
+  "ru": "Показывать на сайте",
+  "en": "Show on site"
+ },
+ "Saytni ochish": {
+  "ru": "Открыть сайт",
+  "en": "Open site"
+ },
+ "Seans tugagan. Qayta urinib, hisobga kiring.": {
+  "ru": "Сеанс истёк. Повторите попытку и войдите в аккаунт.",
+  "en": "Session expired. Try again and log in."
+ },
+ "Serverga ulanib bo'lmadi. Internetni tekshiring.": {
+  "ru": "Не удалось подключиться к серверу. Проверьте интернет.",
+  "en": "Could not connect to the server. Check your internet connection."
+ },
+ "Sharhlar: matn, ism, rasm, reyting": {
+  "ru": "Отзывы: текст, имя, фото, рейтинг",
+  "en": "Reviews: text, name, photo, rating"
+ },
+ "Shartlarni kelishamiz.": {
+  "ru": "Договоримся об условиях.",
+  "en": "We'll agree on the terms."
+ },
+ "Shaxsiy menejer": {
+  "ru": "Персональный менеджер",
+  "en": "Personal manager"
+ },
+ "Siz bilan qanday bog'lanamiz?": {
+  "ru": "Как нам с вами связаться?",
+  "en": "How should we contact you?"
+ },
+ "So'rovingiz qabul qilindi!": {
+  "ru": "Ваша заявка принята!",
+  "en": "Your request has been received!"
+ },
+ "So'rovni yuborish": {
+  "ru": "Отправить заявку",
+  "en": "Submit request"
+ },
+ "So'zni *yulduzcha* ichiga olsangiz, nafis kursiv bo'ladi.": {
+  "ru": "Если заключить слово в *звёздочки*, оно станет изящным курсивом.",
+  "en": "Wrap a word in *asterisks* to make it elegant italics."
+ },
+ "So'rovni yuborish uchun kiring": {
+  "ru": "Войдите, чтобы отправить заявку",
+  "en": "Log in to submit the request"
+ },
+ "Ta'lim": {
+  "ru": "Образование",
+  "en": "Education"
+ },
+ "Tajriba / vaqt chizig'i": {
+  "ru": "Опыт / хронология",
+  "en": "Experience / timeline"
+ },
+ "Taklif banneri": {
+  "ru": "Баннер предложения",
+  "en": "Offer banner"
+ },
+ "Taklifdan foydalanib qoling.": {
+  "ru": "Воспользуйтесь предложением.",
+  "en": "Take advantage of the offer."
+ },
+ "Tanlang va buyurtma bering.": {
+  "ru": "Выберите и закажите.",
+  "en": "Choose and order."
+ },
+ "Tanlangan *ishlar*": {
+  "ru": "Избранные *работы*",
+  "en": "Selected *works*"
+ },
+ "Tanlangan loyihalar": {
+  "ru": "Избранные проекты",
+  "en": "Selected projects"
+ },
+ "Tarkibi: ...": {
+  "ru": "Состав: ...",
+  "en": "Ingredients: ..."
+ },
+ "Tavsiya etiladi": {
+  "ru": "Рекомендуется",
+  "en": "Recommended"
+ },
+ "Tavsiya qilaman, ishonchli jamoa.": {
+  "ru": "Рекомендую, надёжная команда.",
+  "en": "Highly recommend, a reliable team."
+ },
+ "Taxminiy ma'lumot ham yetadi. Aniq narxni suhbatdan keyin kelishamiz.": {
+  "ru": "Достаточно и приблизительных данных. Точную цену согласуем после беседы.",
+  "en": "Approximate information is enough. We'll agree on the exact price after a conversation."
+ },
+ "Taxminiy muddat": {
+  "ru": "Примерный срок",
+  "en": "Estimated timeline"
+ },
+ "Taxminiy narx": {
+  "ru": "Примерная цена",
+  "en": "Estimated price"
+ },
+ "Taxminiy narx hisobi uchun": {
+  "ru": "Для расчёта примерной цены",
+  "en": "For a price estimate"
+ },
+ "Taxminiy narxni ko'rsatish": {
+  "ru": "Показывать примерную цену",
+  "en": "Show estimated price"
+ },
+ "Taymer tugash sanasi": {
+  "ru": "Дата окончания таймера",
+  "en": "Timer end date"
+ },
+ "Teg bo'yicha filtr": {
+  "ru": "Фильтр по тегу",
+  "en": "Filter by tag"
+ },
+ "Telefon raqam": {
+  "ru": "Номер телефона",
+  "en": "Phone number"
+ },
+ "Telefon raqam yoki email va parolingizni kiriting.": {
+  "ru": "Введите номер телефона или email и пароль.",
+  "en": "Enter your phone number or email and password."
+ },
+ "Telefon raqamingiz": {
+  "ru": "Ваш номер телефона",
+  "en": "Your phone number"
+ },
+ "Telefon raqamingiz *": {
+  "ru": "Ваш номер телефона *",
+  "en": "Your phone number *"
+ },
+ "Telefon raqamini to'g'ri kiriting": {
+  "ru": "Введите номер телефона правильно",
+  "en": "Enter a valid phone number"
+ },
+ "Telefon yoki email": {
+  "ru": "Телефон или email",
+  "en": "Phone or email"
+ },
+ "Telefon yoki emailni kiriting": {
+  "ru": "Введите телефон или email",
+  "en": "Enter phone or email"
+ },
+ "Telegram bot": {
+  "ru": "Telegram-бот",
+  "en": "Telegram bot"
+ },
+ "Teng kartochkalar": {
+  "ru": "Равные карточки",
+  "en": "Equal cards"
+ },
+ "Teng kvadratlar": {
+  "ru": "Равные квадраты",
+  "en": "Equal squares"
+ },
+ "Tez orada qo'ng'iroq qilamiz": {
+  "ru": "Скоро позвоним",
+  "en": "We'll call you soon"
+ },
+ "Tez orada siz bilan bog'lanamiz.": {
+  "ru": "Мы скоро свяжемся с вами.",
+  "en": "We'll contact you soon."
+ },
+ "Tez va sifatli": {
+  "ru": "Быстро и качественно",
+  "en": "Fast and high quality"
+ },
+ "To'liq qator": {
+  "ru": "Вся строка",
+  "en": "Full row"
+ },
+ "To'lqinlar": {
+  "ru": "Волны",
+  "en": "Waves"
+ },
+ "To'lov usullari": {
+  "ru": "Способы оплаты",
+  "en": "Payment methods"
+ },
+ "Toshkent, Amir Temur ko'chasi 1": {
+  "ru": "Ташкент, улица Амира Темура, 1",
+  "en": "Tashkent, Amir Temur Street 1"
+ },
+ "Toza va yorqin": {
+  "ru": "Чистый и яркий",
+  "en": "Clean and bright"
+ },
+ "Tugma havolasi": {
+  "ru": "Ссылка кнопки",
+  "en": "Button link"
+ },
+ "Tugma matni": {
+  "ru": "Текст кнопки",
+  "en": "Button text"
+ },
+ "Tugma vazifasi": {
+  "ru": "Назначение кнопки",
+  "en": "Button action"
+ },
+ "Turli o'lchamli zamonaviy kartochkalar: matn, rasm, katta raqam": {
+  "ru": "Современные карточки разных размеров: текст, изображение, крупная цифра",
+  "en": "Modern cards of different sizes: text, image, big number"
+ },
+ "Turli o'lchamli": {
+  "ru": "Разных размеров",
+  "en": "Mixed sizes"
+ },
+ "Uchinchi afzallik": {
+  "ru": "Третье преимущество",
+  "en": "Third advantage"
+ },
+ "Uchinchi ish": {
+  "ru": "Третья работа",
+  "en": "Third work"
+ },
+ "Uchinchi mahsulot": {
+  "ru": "Третий товар",
+  "en": "Third product"
+ },
+ "Uchinchi rasm": {
+  "ru": "Третье изображение",
+  "en": "Third image"
+ },
+ "Uchinchi xizmat": {
+  "ru": "Третья услуга",
+  "en": "Third service"
+ },
+ "Uslub, ranglar va yoqqan namunalarni tanlang. Hech biri yoqmasa, o'tkazib yuboring.": {
+  "ru": "Выберите стиль, цвета и понравившиеся образцы. Если ничего не нравится, пропустите.",
+  "en": "Choose a style, colors and samples you like. If none appeal, skip this step."
+ },
+ "Ustiga borilganda ko'rinadigan rasm": {
+  "ru": "Изображение, появляющееся при наведении",
+  "en": "Image shown on hover"
+ },
+ "Video havolasi": {
+  "ru": "Ссылка на видео",
+  "en": "Video link"
+ },
+ "Video ustidagi yozuv": {
+  "ru": "Надпись поверх видео",
+  "en": "Text over video"
+ },
+ "Vizitka, korporativ yoki landing sahifa": {
+  "ru": "Визитка, корпоративный сайт или лендинг",
+  "en": "Business card, corporate or landing page"
+ },
+ "Xabar yuborilmadi. Iltimos, telefon orqali bog'laning.": {
+  "ru": "Сообщение не отправлено. Пожалуйста, свяжитесь по телефону.",
+  "en": "The message was not sent. Please contact us by phone."
+ },
+ "Xarita havolasi": {
+  "ru": "Ссылка на карту",
+  "en": "Map link"
+ },
+ "Xarita qidiruvi": {
+  "ru": "Поиск по карте",
+  "en": "Map search"
+ },
+ "Xarita va manzil": {
+  "ru": "Карта и адрес",
+  "en": "Map and address"
+ },
+ "Xatolik yuz berdi": {
+  "ru": "Произошла ошибка",
+  "en": "An error occurred"
+ },
+ "Xatolik yuz berdi. Qayta urinib ko'ring.": {
+  "ru": "Произошла ошибка. Попробуйте ещё раз.",
+  "en": "An error occurred. Please try again."
+ },
+ "Xizmat ko'rsatish": {
+  "ru": "Обслуживание",
+  "en": "Service"
+ },
+ "Xizmat turini tanlang, xulosa shu yerda paydo bo'ladi.": {
+  "ru": "Выберите тип услуги, итог появится здесь.",
+  "en": "Choose a service type, the summary will appear here."
+ },
+ "Xizmat turlari": {
+  "ru": "Виды услуг",
+  "en": "Service types"
+ },
+ "Xizmat yoki brend nomlari lentasi": {
+  "ru": "Лента названий услуг или брендов",
+  "en": "Ribbon of service or brand names"
+ },
+ "Xizmatlar / afzalliklar": {
+  "ru": "Услуги / преимущества",
+  "en": "Services / advantages"
+ },
+ "Xizmatlar ro'yxati": {
+  "ru": "Список услуг",
+  "en": "Services list"
+ },
+ "Xohishlaringizni ayting, biz amalga oshiramiz": {
+  "ru": "Расскажите о своих пожеланиях, мы их воплотим",
+  "en": "Tell us your wishes and we'll make them happen"
+ },
+ "YANGI, CHEGIRMA, TOP": {
+  "ru": "НОВИНКА, СКИДКА, ТОП",
+  "en": "NEW, SALE, TOP"
+ },
+ "Yangi ariza:": {
+  "ru": "Новая заявка:",
+  "en": "New application:"
+ },
+ "Yangi bosqich": {
+  "ru": "Новый этап",
+  "en": "New stage"
+ },
+ "Yangi buyurtma:": {
+  "ru": "Новый заказ:",
+  "en": "New order:"
+ },
+ "Yangi imkoniyat": {
+  "ru": "Новая возможность",
+  "en": "New feature"
+ },
+ "Yangi kartochka": {
+  "ru": "Новая карточка",
+  "en": "New card"
+ },
+ "Yangi kategoriya": {
+  "ru": "Новая категория",
+  "en": "New category"
+ },
+ "Yangi ko'nikma": {
+  "ru": "Новый навык",
+  "en": "New skill"
+ },
+ "Yangi ko'rsatkich": {
+  "ru": "Новый показатель",
+  "en": "New stat"
+ },
+ "Yangi loyiha": {
+  "ru": "Новый проект",
+  "en": "New project"
+ },
+ "Yangi mahsulot": {
+  "ru": "Новый товар",
+  "en": "New product"
+ },
+ "Yangi pozitsiya": {
+  "ru": "Новая позиция",
+  "en": "New item"
+ },
+ "Yangi qadam": {
+  "ru": "Новый шаг",
+  "en": "New step"
+ },
+ "Yangi qator": {
+  "ru": "Новая строка",
+  "en": "New row"
+ },
+ "Yangi savol?": {
+  "ru": "Новый вопрос?",
+  "en": "New question?"
+ },
+ "Yangi tarif": {
+  "ru": "Новый тариф",
+  "en": "New plan"
+ },
+ "Yangi uslub": {
+  "ru": "Новый стиль",
+  "en": "New style"
+ },
+ "Yangi xabar:": {
+  "ru": "Новое сообщение:",
+  "en": "New message:"
+ },
+ "Yangi xizmat": {
+  "ru": "Новая услуга",
+  "en": "New service"
+ },
+ "Yangi xodim": {
+  "ru": "Новый сотрудник",
+  "en": "New team member"
+ },
+ "Yangi yashil": {
+  "ru": "Новый зелёный",
+  "en": "Fresh green"
+ },
+ "Yetkazib berish": {
+  "ru": "Доставка",
+  "en": "Delivery"
+ },
+ "Yetkazib berish manzilini kiriting": {
+  "ru": "Введите адрес доставки",
+  "en": "Enter the delivery address"
+ },
+ "Yetkazib berish manzilini so'rash": {
+  "ru": "Запрашивать адрес доставки",
+  "en": "Ask for delivery address"
+ },
+ "Yo'lim": {
+  "ru": "Мой путь",
+  "en": "My path"
+ },
+ "Yonma-yon kartochkalar": {
+  "ru": "Карточки рядом",
+  "en": "Side-by-side cards"
+ },
+ "Yoqqan namunalar": {
+  "ru": "Понравившиеся образцы",
+  "en": "Samples you like"
+ },
+ "Yoqqan saytlar": {
+  "ru": "Понравившиеся сайты",
+  "en": "Websites you like"
+ },
+ "Yorug' indigo": {
+  "ru": "Светлый индиго",
+  "en": "Light indigo"
+ },
+ "YouTube, Vimeo yoki .mp4 fayl manzili": {
+  "ru": "Адрес YouTube, Vimeo или файла .mp4",
+  "en": "YouTube, Vimeo or .mp4 file URL"
+ },
+ "Yozilish uchun kiring": {
+  "ru": "Войдите, чтобы записаться",
+  "en": "Log in to book"
+ },
+ "Yuborish uchun hisobga kirish kerak": {
+  "ru": "Для отправки нужно войти в аккаунт",
+  "en": "You need to log in to submit"
+ },
+ "Yuguruvchi lenta": {
+  "ru": "Бегущая лента",
+  "en": "Scrolling ticker"
+ },
+ "Yumshoq nur": {
+  "ru": "Мягкий свет",
+  "en": "Soft light"
+ },
+ "Yuqoridagi yozuv": {
+  "ru": "Надпись сверху",
+  "en": "Top text"
+ },
+ "mamnun mijoz": {
+  "ru": "довольный клиент",
+  "en": "satisfied customer"
+ },
+ "o'zgartirish": {
+  "ru": "изменить",
+  "en": "change"
+ },
+ "oyiga, bir martalik": {
+  "ru": "в месяц, разовый",
+  "en": "per month, one-time"
+ }
+}
