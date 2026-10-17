@@ -24,6 +24,9 @@ Fotolar `public/img/p/` da (CC0, StockSnap manbasidan; `tools/fetch-photos.js`).
 - **AI yordamchi:** biznes tavsifidan shablon tanlaydi va matnlarni yozadi (Claude API kaliti kerak; kalitsiz faqat shablon tanlaydi).
 - Statik nashrda (GitHub Pages) hisob, to'lov va joylash ishlamaydi: tayyor sayt faqat to'lovdan keyin beriladi, shuning uchun savdo uchun server kerak.
 
+## Telegram bot konstruktori (`/bot.html`)
+Mijoz @BotFather'dan token olib kiritadi, bot platformada ishlaydi (webhook). Imkoniyatlar: menyu tugmalari, katalog va savat, buyurtma (telefon, manzil), avto-javoblar, obunachilarga xabar, egasi uchun /stats /orders /broadcast, va **mini ilova**: Telegram ichida ochiladigan do'kon (`/app/<bot-id>`, initData imzosi tekshiriladi, narxlar serverda hisoblanadi). Buyurtmalar bot egasining Telegramiga va kabinetga keladi. Token faqat serverda saqlanadi. Webhook uchun HTTPS domen kerak. Testlar: `tools/e2e-bot.js`, `tools/e2e-bot-ui.js`.
+
 ## Ishga tushirish (to'liq imkoniyatlar bilan)
 1. **Node.js 18+** o'rnating.
 2. `node server.js`  (Windows: `start.bat`)

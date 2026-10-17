@@ -110,7 +110,7 @@
       "id": "biz",
       "type": "statement",
       "enabled": true,
-      "navLabel": "Biz haqimizda",
+      "navLabel": "",
       "eyebrow": "Biz haqimizda",
       "text": "Biz oddiy *saytlar* emas, mijozlaringizni egaga aylantiradigan *raqamli tajriba* yaratamiz. Har bir piksel va har bir harakat sizning biznesingiz uchun ishlaydi.",
       "author": "",
@@ -152,13 +152,13 @@
         },
         {
           "title": "Telegram botlar",
-          "text": "Buyurtma, bron va to'lovlarni avtomatlashtiring, mijozlar bilan 24/7 muloqot.",
+          "text": "Buyurtma, bron va to'lovlarni avtomatlashtiring. O'zingiz ham bot yaratishingiz mumkin: katalog va mini do'kon bilan.",
           "tags": [
             "Bot",
             "CRM"
           ],
           "image": "/img/p/ilova-1.jpg",
-          "link": "#aloqa"
+          "link": "/bot.html"
         },
         {
           "title": "Mobil ilovalar",
@@ -283,12 +283,26 @@
       "type": "cta",
       "fx": true,
       "enabled": true,
-      "navLabel": "Sayt yaratish",
+      "navLabel": "",
       "eyebrow": "Sayt konstruktori",
       "title": "Saytingizni *o'zingiz* yarating",
       "text": "Hisob oching, shablonni tanlang va tahrirlang. Saytlaringiz hisobingizda saqlanadi, istalgan qurilmadan davom ettirasiz.",
       "buttonText": "Yaratishni boshlash",
       "buttonLink": "/yaratish.html",
+      "countdownTo": "",
+      "image": ""
+    },
+    {
+      "id": "botsec",
+      "type": "cta",
+      "fx": true,
+      "enabled": true,
+      "navLabel": "Telegram bot",
+      "eyebrow": "Bot konstruktori",
+      "title": "Telegram *botingizni* o'zingiz yarating",
+      "text": "Token kiriting: bot darrov ishlaydi. Katalog, savat, buyurtmalar va Telegram ichidagi mini do'kon. Kod yozish shart emas.",
+      "buttonText": "Bot yaratishni boshlash",
+      "buttonLink": "/bot.html",
       "countdownTo": "",
       "image": ""
     },

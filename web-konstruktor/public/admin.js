@@ -29,7 +29,7 @@
   $('#out').addEventListener('click', async () => { await api('POST', '/api/admin/logout', {}).catch(() => {}); st.siteDirty = false; location.reload(); });
 
   /* ---------- Menyu ---------- */
-  const NAV = [['dash', 'Boshqaruv', 'chart'], ['orders', 'Buyurtmalar', 'inbox'], ['projects', 'Mijoz saytlari', 'globe'], ['users', 'Mijozlar', 'users'], ['prices', 'Narxlar', 'dollar'], ['site', 'Sayt', 'edit'], ['settings', 'Sozlamalar', 'settings']];
+  const NAV = [['dash', 'Boshqaruv', 'chart'], ['orders', 'Buyurtmalar', 'inbox'], ['projects', 'Mijoz saytlari', 'globe'], ['users', 'Mijozlar', 'users'], ['bots', 'Telegram botlar', 'send'], ['prices', 'Narxlar', 'dollar'], ['site', 'Sayt', 'edit'], ['settings', 'Sozlamalar', 'settings']];
   function drawNav() {
     const s = st.stats; const bd = { orders: s ? s.orders.new : 0, projects: s ? s.projects.submitted : 0 };
     $('#nav').innerHTML = NAV.map(([k, l, i]) => `<button class="ni ${st.page === k ? 'on' : ''}" data-go="${k}">${icon(i)}<span>${l}</span>${bd[k] ? `<span class="bd">${bd[k]}</span>` : ''}</button>`).join('');
@@ -116,6 +116,16 @@
       list() {
         const q = st.uq.toLowerCase(), l = st.users.filter((u) => !q || `${u.name} ${u.phone} ${u.email}`.toLowerCase().includes(q));
         $('#ulist').innerHTML = l.length ? `<table class="tbl"><thead><tr><th>Ism</th><th>Telefon</th><th>Email</th><th>Ro'yxatdan o'tgan</th><th>Saytlar</th><th>Buyurtma</th><th></th></tr></thead><tbody>${l.map((u) => `<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.phone)}</td><td>${esc(u.email || '-')}</td><td>${esc(fdate(u.createdAt))}</td><td>${u.projects}</td><td>${u.orders}</td><td><button class="b g s" data-uopen="${esc(u.id)}">Ochish</button></td></tr>`).join('')}</tbody></table>` : '<div class="empty2" style="border:0">Mijoz topilmadi</div>';
+      },
+    },
+
+    /* =============== TELEGRAM BOTLAR =============== */
+    bots: {
+      title: 'Telegram botlar',
+      async load() { st.bots = await api('GET', '/api/admin/bots'); },
+      render() {
+        const l = st.bots || [];
+        pg.innerHTML = l.length ? `<div class="card" style="padding:6px 10px"><table class="tbl"><thead><tr><th>Bot</th><th>Egasi</th><th>Obunachi</th><th>Buyurtma</th><th>Holat</th><th>Yaratilgan</th><th></th></tr></thead><tbody>${l.map((b) => `<tr><td><b>${esc(b.name)}</b><div class="meta" style="color:var(--muted);font-size:12px">@${esc(b.username)}${b.miniApp ? ' · mini ilova' : ''}</div></td><td>${esc(b.owner || '-')}<div class="meta" style="color:var(--muted);font-size:12px">${esc(b.phone || '')}</div></td><td>${b.subscribers}</td><td>${b.orders}</td><td><span class="pill ${b.webhook ? 's-joylandi' : 's-yuborilgan'}">${b.webhook ? 'Ishlayapti' : 'Ulanmagan'}</span></td><td>${esc(fdate(b.createdAt))}</td><td><button class="b d s" data-bdel="${esc(b.id)}">O'chirish</button></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty2">Hali bot ulanmagan</div>';
       },
     },
 
@@ -226,6 +236,7 @@
     document.body.appendChild(w);
     w.addEventListener('click', async (e) => {
       if (e.target === w || e.target.closest('[data-close]')) w.remove();
+      const bd = e.target.closest('[data-bdel]'); if (bd && confirm("Bot platformadan o'chiriladi (webhook uziladi). Davom etasizmi?")) { try { await api('DELETE', '/api/admin/bots/' + bd.dataset.bdel); st.bots = st.bots.filter((b) => b.id !== bd.dataset.bdel); P.bots.render(); toast("O'chirildi"); } catch (er) { toast(er.message); } return; }
       const d = e.target.closest('[data-udel]'); if (d && confirm("Hisob va uning barcha saytlari o'chiriladi. Davom etasizmi?")) { try { await api('DELETE', '/api/admin/users/' + d.dataset.udel); w.remove(); toast("O'chirildi"); go('users'); } catch (er) { toast(er.message); } }
     });
   }

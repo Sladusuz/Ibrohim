@@ -362,7 +362,7 @@
   /* ---------- Boshlash ---------- */
   async function userBar() {
     const u = Auth && Auth.user(); const g = $('#gbar');
-    g.innerHTML = (u ? `<a class="b g s" href="/kabinet.html">${icon('user')} ${esc(String(u.name).split(' ')[0])}</a><button class="b g s" id="btnOut">Chiqish</button>` : '') + '<a class="b g s" href="/">← Bosh sahifa</a>';
+    g.innerHTML = (u ? `<a class="b g s" href="/kabinet.html">${icon('user')} ${esc(String(u.name).split(' ')[0])}</a><button class="b g s" id="btnOut">Chiqish</button>` : '') + '<a class="b g s" href="/bot.html">Telegram bot</a><a class="b g s" href="/">← Bosh sahifa</a>';
   }
   (async function init() {
     await loadPricing();

@@ -116,6 +116,8 @@ const pay = require('./lib/pay')({
   },
 });
 const ai = require('./lib/ai')({ getSettings: () => db.settings() });
+let lastOrigin = '';
+const bots = require('./lib/bot')({ F, readJSON, writeJSON, newId, getOrders: () => db.orders(), saveOrders: (v) => db.saveOrders(v), baseUrl: () => String(process.env.PUBLIC_URL || (rootDomains()[0] ? 'https://' + rootDomains()[0] : lastOrigin)).replace(/\/$/, '') });
 
 /* ---------- Subdomenlar, o'z domeni va statistika ---------- */
 const RESERVED = new Set(['www', 'mail', 'api', 'app', 'admin', 'kabinet', 'yaratish', 'ftp', 'smtp', 'imap', 'pop', 'ns1', 'ns2', 'static', 'cdn', 'help', 'support', 'blog', 'shop', 'test', 'demo', 'root', 'dashboard', 'login', 'impro', 'status']);
@@ -270,6 +272,34 @@ async function api(req, res, url) {
     return send(res, 200, { ok: true, id: order.id });
   }
 
+  /* --- Telegram bot webhook va mini ilova --- */
+  const tw = /^\/api\/tg\/([a-f0-9]{6,24})\/([a-f0-9]{16,64})$/.exec(pn);
+  if (tw && req.method === 'POST') {
+    const bot = bots.find(tw[1]);
+    if (!bot || !eq(bot.secret, tw[2]) || (req.headers['x-telegram-bot-api-secret-token'] && !eq(req.headers['x-telegram-bot-api-secret-token'], bot.secret))) return send(res, 403, { error: 'Ruxsat yo\'q' });
+    const upd = await readBody(req, 256 * 1024);
+    try { await bots.handle(bot, upd); } catch (e) { console.error('bot xatosi', bot.id, e.message); }
+    return send(res, 200, { ok: true });
+  }
+  const ap2 = /^\/api\/app\/([a-f0-9]{6,24})\/(config|order)$/.exec(pn);
+  if (ap2) {
+    const bot = bots.find(ap2[1]); if (!bot || bot.status !== 'faol') return send(res, 404, { error: 'Do\'kon topilmadi' });
+    if (ap2[2] === 'config' && req.method === 'GET') return send(res, 200, bots.publicConfig(bot));
+    if (ap2[2] === 'order' && req.method === 'POST') {
+      if (limited(ip, 'apporder' + bot.id, 12, 600e3)) return send(res, 429, { error: "Juda ko'p so'rov. Birozdan so'ng urinib ko'ring." });
+      const b = await readBody(req, 64 * 1024), user = bots.verifyInitData(bot, b.initData);
+      if (!user) return send(res, 401, { error: "Buyurtma berish uchun do'konni Telegram ichida oching" });
+      const name = str(b.name, 100), phone = str(b.phone, 40);
+      if (name.length < 2) return send(res, 400, { error: 'Ismingizni kiriting' });
+      if (!goodPhone(phone)) return send(res, 400, { error: "Telefon raqamini to'g'ri kiriting" });
+      try {
+        const o = bots.placeOrder(bot, { items: b.items, name, phone, note: str(b.note, 500), tgUser: user });
+        bots.tg(bot.token, 'sendMessage', { chat_id: user.id, text: `✅ Buyurtmangiz qabul qilindi! #${o.id}\nJami: ${o.total} ${bot.config.currency}\nTez orada siz bilan bog'lanamiz.` }).catch(() => {});
+        return send(res, 200, { ok: true, id: o.id, total: o.total });
+      } catch (e) { return send(res, 400, { error: e.message }); }
+    }
+  }
+
   /* --- to'lov tizimlari webhooklari --- */
   if (route === 'POST /api/pay/payme') {
     const raw = await readRaw(req); let body = {}; try { body = JSON.parse(raw || '{}'); } catch { /* ignore */ }
@@ -293,7 +323,7 @@ async function api(req, res, url) {
   /* --- mijozning shaxsiy ma'lumotlari --- */
   if (pn.startsWith('/api/my/')) {
     if (!me) return send(res, 401, { error: 'Kirish talab qilinadi' });
-    if (route === 'GET /api/my/orders') return send(res, 200, db.orders().filter((o) => o.userId === me.id && !o.tenant).slice(0, 200));
+    if (route === 'GET /api/my/orders') return send(res, 200, db.orders().filter((o) => o.userId === me.id && !o.tenant && !o.bot).slice(0, 200));
     if (route === 'GET /api/my/leads') {
       const mine = new Map(db.projects().filter((p) => p.userId === me.id).map((p) => [p.id, p.name]));
       return send(res, 200, db.orders().filter((o) => o.tenant && mine.has(o.tenant)).slice(0, 500).map((o) => ({ ...o, site: mine.get(o.tenant) })));
@@ -309,6 +339,42 @@ async function api(req, res, url) {
       const meta = { id, userId: me.id, name: str(b.name || (b.data.company && b.data.company.name), 80) || 'Yangi sayt', template: str(b.template || b.data.template, 30), status: 'qoralama', plan: '', price: '', note: '', adminNote: '', createdAt: now, updatedAt: now, submittedAt: '', size: json.length };
       const all = db.projects(); all.unshift(meta); db.saveProjects(all);
       return send(res, 200, { project: meta });
+    }
+    if (route === 'POST /api/my/upload') {
+      if (limited(me.id, 'myupload', 80, 3600e3)) return send(res, 429, { error: "Juda ko'p rasm yuklandi. Keyinroq urinib ko'ring." });
+      const b = await readBody(req, 5 * 1024 * 1024);
+      const m = /^data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ''));
+      if (!m) return send(res, 400, { error: 'Faqat PNG, JPG, WEBP yoki GIF rasm yuklang' });
+      const buf = Buffer.from(m[2], 'base64'); if (buf.length > 3 * 1024 * 1024) return send(res, 413, { error: 'Rasm 3 MB dan oshmasin' });
+      const name = `${Date.now()}-${newId(3)}${IMG_EXT[m[1]]}`; fs.writeFileSync(path.join(UPLOADS, name), buf);
+      return send(res, 200, { url: `/uploads/${name}` });
+    }
+    /* --- Telegram botlarim --- */
+    if (route === 'GET /api/my/bots') { const os = db.orders(); return send(res, 200, bots.list().filter((x) => x.userId === me.id).map((x) => ({ ...bots.pub(x), subscribers: bots.subscribers(x.id), orders: os.filter((o) => o.bot === x.id).length }))); }
+    if (route === 'POST /api/my/bots') {
+      if (limited(me.id, 'botcreate', 10, 3600e3)) return send(res, 429, { error: "Juda ko'p urinish. Keyinroq urinib ko'ring." });
+      if (bots.list().filter((x) => x.userId === me.id).length >= 5) return send(res, 400, { error: "Botlar soni chegarasi (5)" });
+      const b = await readBody(req, 4096);
+      try { return send(res, 200, await bots.create(me.id, b.token, str(b.name, 60))); } catch (e) { return send(res, 400, { error: e.message }); }
+    }
+    const bm = /^\/api\/my\/bots\/([a-f0-9]{6,24})(?:\/(connect|broadcast|orders))?$/.exec(pn);
+    if (bm) {
+      const bot = bots.find(bm[1]); if (!bot || bot.userId !== me.id) return send(res, 404, { error: 'Bot topilmadi' });
+      const act = bm[2] || '';
+      if (!act && req.method === 'GET') return send(res, 200, { ...bots.pub(bot), subscribers: bots.subscribers(bot.id) });
+      if (!act && req.method === 'PUT') {
+        const b = await readBody(req, 1024 * 1024), x = bots.update(bot, b.config);
+        let r = { webhook: !!x.webhookOk }; try { r = await bots.reconnect(x); } catch (e) { r = { webhook: false, warn: e.message }; }
+        return send(res, 200, { ...bots.pub(bots.find(bot.id)), ...r });
+      }
+      if (!act && req.method === 'DELETE') { await bots.remove(bot); return send(res, 200, { ok: true }); }
+      if (act === 'connect' && req.method === 'POST') { try { return send(res, 200, { ...(await bots.reconnect(bot)), bot: bots.pub(bots.find(bot.id)) }); } catch (e) { return send(res, 400, { error: 'Ulanmadi: ' + e.message }); } }
+      if (act === 'broadcast' && req.method === 'POST') {
+        if (limited(me.id, 'broadcast', 6, 3600e3)) return send(res, 429, { error: "Soatiga 6 ta xabar yuborish mumkin" });
+        const b = await readBody(req, 8192), text = str(b.text, 3000); if (text.length < 2) return send(res, 400, { error: 'Xabar matnini yozing' });
+        const n = bots.subscribers(bot.id); bots.broadcast(bot, text).catch(() => {}); return send(res, 200, { ok: true, total: n });
+      }
+      if (act === 'orders' && req.method === 'GET') return send(res, 200, db.orders().filter((o) => o.bot === bot.id).slice(0, 300));
     }
     const pm = /^\/api\/my\/projects\/([a-f0-9]{6,24})(\/(?:submit|checkout|export|publish|domain|stats))?$/.exec(pn);
     if (pm) {
@@ -404,7 +470,7 @@ async function api(req, res, url) {
       const name = `${Date.now()}-${newId(3)}${IMG_EXT[m[1]]}`; fs.writeFileSync(path.join(UPLOADS, name), buf);
       return send(res, 200, { url: `/uploads/${name}` });
     }
-    if (route === 'GET /api/admin/orders') { const users = Object.fromEntries(db.users().map((u) => [u.id, u])); return send(res, 200, db.orders().filter((o) => !o.tenant).map((o) => ({ ...o, userName: o.userId && users[o.userId] ? users[o.userId].name : '' }))); }
+    if (route === 'GET /api/admin/orders') { const users = Object.fromEntries(db.users().map((u) => [u.id, u])); return send(res, 200, db.orders().filter((o) => !o.tenant && !o.bot).map((o) => ({ ...o, userName: o.userId && users[o.userId] ? users[o.userId].name : '' }))); }
     if (route === 'PUT /api/admin/orders') {
       const b = await readBody(req, 8192), orders = db.orders(), o = orders.find((x) => x.id === b.id); if (!o) return send(res, 404, { error: 'Topilmadi' });
       if (['yangi', 'jarayonda', 'bajarildi', 'bekor'].includes(b.status)) o.status = b.status; if (typeof b.note === 'string') o.note = str(b.note, 1000);
@@ -437,6 +503,12 @@ async function api(req, res, url) {
       }
       if (req.method === 'DELETE') { try { fs.unlinkSync(projFile(meta.id)); } catch { /* ignore */ } db.saveProjects(all.filter((p) => p.id !== meta.id)); return send(res, 200, { ok: true }); }
     }
+    if (route === 'GET /api/admin/bots') {
+      const users = Object.fromEntries(db.users().map((u) => [u.id, u])), os = db.orders();
+      return send(res, 200, bots.list().map((x) => ({ id: x.id, name: x.name, username: x.username, status: x.status, owner: users[x.userId] ? users[x.userId].name : '', phone: users[x.userId] ? users[x.userId].phone : '', subscribers: bots.subscribers(x.id), orders: os.filter((o) => o.bot === x.id).length, webhook: !!x.webhookOk, miniApp: !!x.config.miniApp.enabled, createdAt: x.createdAt })));
+    }
+    const adb = /^\/api\/admin\/bots\/([a-f0-9]{6,24})$/.exec(pn);
+    if (adb && req.method === 'DELETE') { const bot = bots.find(adb[1]); if (!bot) return send(res, 404, { error: 'Topilmadi' }); await bots.remove(bot); return send(res, 200, { ok: true }); }
     if (route === 'GET /api/admin/payments') {
       const users = Object.fromEntries(db.users().map((u) => [u.id, u])), prj = Object.fromEntries(db.projects().map((x) => [x.id, x]));
       return send(res, 200, pay.list().map((x) => ({ id: x.id, projectId: x.projectId, project: prj[x.projectId] ? prj[x.projectId].name : '', user: users[x.userId] ? users[x.userId].name : '', phone: users[x.userId] ? users[x.userId].phone : '', usd: x.usd, uzs: x.uzs, method: x.method, state: x.state, createdAt: x.createdAt, paidAt: x.paidAt || '' })));
@@ -507,7 +579,7 @@ function serveFile(res, file, cache) {
     fs.createReadStream(file).pipe(res);
   });
 }
-const PAGES = { '/': 'index.html', '/yaratish': 'yaratish.html', '/kabinet': 'kabinet.html', '/admin': 'admin.html' };
+const PAGES = { '/': 'index.html', '/yaratish': 'yaratish.html', '/kabinet': 'kabinet.html', '/admin': 'admin.html', '/bot': 'bot.html' };
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost'); let p;
@@ -520,6 +592,7 @@ const server = http.createServer(async (req, res) => {
       return send(res, isMainHost(d) && rootDomains().some((r) => d === r || d === 'www.' + r) || (t && !t.missing) ? 200 : 404, 'ok');
     }
     const tenant = tenantOf(hostOf(req));
+    if (!tenant) lastOrigin = originOf(req);
     if (tenant) {
       if (tenant.missing) return send(res, 404, '<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Sayt topilmadi</title><body style="font-family:system-ui;display:grid;place-items:center;min-height:90vh;text-align:center;color:#334"><div><h1>Sayt topilmadi</h1><p>Bu manzilda hozircha sayt joylanmagan.</p></div>', { 'Content-Type': 'text/html; charset=utf-8' });
       req.tenant = tenant;
@@ -542,6 +615,12 @@ const server = http.createServer(async (req, res) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, "Ruxsat yo'q");
     if (p === '/config.js') return send(res, 200, "window.__API__='';window.__SERVER__=true;", { 'Content-Type': 'application/javascript; charset=utf-8', 'Cache-Control': 'no-cache' });
     if (p === '/admin.html') return send(res, 404, 'Sahifa topilmadi');
+    const am = /^\/app\/([a-f0-9]{6,24})\/?$/.exec(p);
+    if (am) {
+      const bot = bots.find(am[1]); if (!bot || bot.status !== 'faol') return send(res, 404, "Do'kon topilmadi");
+      let html; try { html = fs.readFileSync(path.join(PUBLIC, 'miniapp.html'), 'utf8'); } catch { return send(res, 404, 'Topilmadi'); }
+      return send(res, 200, html.replace('/*__BOT__*/', `window.__BOT__=${JSON.stringify(bot.id)};`), { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' });
+    }
     if (p.startsWith('/uploads/')) return serveFile(res, path.join(UPLOADS, path.basename(p)), true);
     if (p === '/pricing.json') return send(res, 200, db.pricing());
     if (PAGES[p]) p = '/' + PAGES[p];

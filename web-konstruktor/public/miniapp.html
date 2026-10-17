@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>Do'kon</title>
+<meta name="robots" content="noindex">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--acc:#2f80ed;--bg:var(--tg-theme-bg-color,#fff);--ink:var(--tg-theme-text-color,#0f172a);--muted:var(--tg-theme-hint-color,#64748b);--card:var(--tg-theme-secondary-bg-color,#f1f5f9);--on:#fff;--line:color-mix(in srgb,var(--ink) 12%,transparent)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer;border:0}
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:14px 16px 8px;border-bottom:1px solid var(--line)}
+h1{font-size:20px;letter-spacing:-.02em}.sub{color:var(--muted);font-size:13px;margin-top:2px}
+.search{margin-top:10px;display:flex;align-items:center;gap:8px;background:var(--card);border-radius:12px;padding:0 12px}.search input{flex:1;background:none;border:0;outline:0;padding:11px 0}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:7px 14px;border-radius:99px;background:var(--card);color:var(--ink);font-size:13.5px;font-weight:600}.chip.on{background:var(--acc);color:var(--on)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px}
+.pc{background:var(--card);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;animation:in .4s both}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+.pi{aspect-ratio:1;background:linear-gradient(135deg,color-mix(in srgb,var(--acc) 22%,var(--card)),var(--card));display:grid;place-items:center;font-size:38px;color:color-mix(in srgb,var(--acc) 60%,var(--ink))}.pi img{width:100%;height:100%;object-fit:cover}
+.pb{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px;flex:1}.pn{font-weight:600;font-size:14px;line-height:1.25}.pd{color:var(--muted);font-size:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pp{font-weight:800;font-size:15px;margin-top:auto;padding-top:6px}
+.add{margin-top:8px;width:100%;background:var(--acc);color:var(--on);border-radius:12px;padding:10px;font-weight:700;font-size:14px}
+.qty{margin-top:8px;display:flex;align-items:center;justify-content:space-between;background:color-mix(in srgb,var(--acc) 14%,var(--card));border-radius:12px;padding:3px}.qty button{width:36px;height:34px;border-radius:10px;background:var(--acc);color:var(--on);font-size:20px;font-weight:700}.qty b{min-width:30px;text-align:center}
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.bar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30}
+.bar button{width:100%;background:var(--acc);color:var(--on);border-radius:16px;padding:15px 18px;font-weight:800;font-size:16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 12px 30px color-mix(in srgb,var(--acc) 45%,transparent)}
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;animation:fd .25s}@keyframes fd{from{opacity:0}}
+.sh{background:var(--bg);width:100%;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px));animation:up .3s cubic-bezier(.2,.8,.2,1)}@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sh h2{font-size:19px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}.x{background:var(--card);width:34px;height:34px;border-radius:50%;font-size:16px}
+.ln{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}.ln .t{flex:1;min-width:0}.ln .t b{display:block;font-size:14px}.ln .t span{color:var(--muted);font-size:12.5px}
+.tot{display:flex;justify-content:space-between;font-size:17px;font-weight:800;padding:14px 0}
+label{display:block;font-size:12.5px;color:var(--muted);margin:10px 0 4px;font-weight:600}
+input,textarea{width:100%;background:var(--card);border:1.5px solid transparent;border-radius:12px;padding:12px 14px;outline:0}input:focus,textarea:focus{border-color:var(--acc)}
+.go{margin-top:14px;width:100%;background:var(--acc);color:var(--on);border-radius:14px;padding:15px;font-weight:800;font-size:16px}.go:disabled{opacity:.6}
+.err{color:#e11d48;font-size:13px;margin-top:8px;min-height:18px}
+.ok{text-align:center;padding:30px 10px}.ok i{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;background:var(--acc);color:var(--on);font-size:34px;margin:0 auto 14px;font-style:normal}.ok h2{justify-content:center}
+.info{padding:6px 16px 16px;color:var(--muted);font-size:13.5px;white-space:pre-line}
+.pv{background:#f59e0b;color:#fff;text-align:center;font-size:12px;padding:4px}
+</style>
+</head>
+<body>
+<div id="app"><div class="empty">Yuklanmoqda…</div></div>
+<script>
+/*__BOT__*/
+(function () {
+  'use strict';
+  const tg = window.Telegram && window.Telegram.WebApp; if (tg) { try { tg.ready(); tg.expand(); } catch (e) {} }
+  const BOT = window.__BOT__ || ''; const $ = (s) => document.querySelector(s);
+  const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const money = (n) => Number(n || 0).toLocaleString('ru-RU').replace(/ /g, ' ');
+  const preview = new URLSearchParams(location.search).has('preview') || !(tg && tg.initData);
+  let C = null, cart = {}, cat = '', q = '';
+  const KEY = 'cart_' + BOT; try { cart = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { cart = {}; }
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(cart)); } catch (e) {} };
+  const count = () => Object.values(cart).reduce((a, b) => a + b, 0);
+  const sum = () => C.products.reduce((a, p) => a + (cart[p.id] || 0) * p.price, 0);
+  const haptic = () => { try { tg.HapticFeedback.impactOccurred('light'); } catch (e) {} };
+
+  function draw() {
+    const cats = [...new Set(C.products.map((p) => p.category || ''))].filter(Boolean);
+    const list = C.products.filter((p) => (!cat || (p.category || '') === cat) && (!q || (p.name + ' ' + p.description).toLowerCase().includes(q)));
+    $('#app').innerHTML = `${preview && !(tg && tg.initData) ? '<div class="pv">Ko\'rish rejimi: buyurtma faqat Telegram ichida beriladi</div>' : ''}<header><h1>${esc(C.title)}</h1>${C.about ? `<div class="sub">${esc(C.about.slice(0, 90))}</div>` : ''}<label class="search" style="margin-bottom:0"><span>🔍</span><input id="q" type="search" placeholder="Qidirish…" value="${esc(q)}"></label>${cats.length ? `<div class="chips"><button class="chip ${cat ? '' : 'on'}" data-c="">Hammasi</button>${cats.map((c) => `<button class="chip ${cat === c ? 'on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>` : ''}</header>
+      ${list.length ? `<div class="grid">${list.map((p, i) => `<div class="pc" style="animation-delay:${Math.min(i, 8) * 0.04}s"><div class="pi">${p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : '🛍'}</div><div class="pb"><div class="pn">${esc(p.name)}</div>${p.description ? `<div class="pd">${esc(p.description)}</div>` : ''}<div class="pp">${money(p.price)} ${esc(C.currency)}</div>${cart[p.id] ? `<div class="qty"><button data-m="${esc(p.id)}">−</button><b>${cart[p.id]}</b><button data-p="${esc(p.id)}">+</button></div>` : `<button class="add" data-p="${esc(p.id)}">Savatga</button>`}</div></div>`).join('')}</div>` : '<div class="empty">Hech narsa topilmadi</div>'}
+      ${(C.contact.phone || C.contact.address || C.contact.hours) ? `<div class="info">${esc([C.contact.phone && '📞 ' + C.contact.phone, C.contact.address && '📍 ' + C.contact.address, C.contact.hours && '🕒 ' + C.contact.hours].filter(Boolean).join('\n'))}</div>` : ''}
+      ${count() ? `<div class="bar"><button data-cart><span>🧺 Savat · ${count()} ta</span><span>${money(sum())} ${esc(C.currency)}</span></button></div>` : ''}`;
+    const qi = $('#q'); if (qi) qi.addEventListener('input', (e) => { q = e.target.value.toLowerCase(); const pos = e.target.selectionStart; draw(); const n = $('#q'); n.focus(); n.setSelectionRange(pos, pos); });
+  }
+  function openCart() {
+    const lines = C.products.filter((p) => cart[p.id]);
+    if (!lines.length) return;
+    const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
+    const s = document.createElement('div'); s.className = 'sheet'; s.id = 'sheet';
+    s.innerHTML = `<div class="sh"><h2>Savat <button class="x" data-close>✕</button></h2>${lines.map((p) => `<div class="ln"><div class="t"><b>${esc(p.name)}</b><span>${money(p.price)} × ${cart[p.id]}</span></div><div class="qty" style="margin:0;min-width:104px"><button data-m="${esc(p.id)}" data-in>−</button><b>${cart[p.id]}</b><button data-p="${esc(p.id)}" data-in>+</button></div></div>`).join('')}<div class="tot"><span>Jami</span><span>${money(sum())} ${esc(C.currency)}</span></div>
+      <label>Ismingiz</label><input id="fn" value="${esc([user.first_name, user.last_name].filter(Boolean).join(' '))}" maxlength="80" autocomplete="name"><label>Telefon</label><input id="fp" type="tel" placeholder="+998 90 123 45 67" maxlength="30" autocomplete="tel"><label>Manzil yoki izoh (ixtiyoriy)</label><textarea id="fnote" rows="2" maxlength="400"></textarea><div class="err" id="err"></div><button class="go" id="send">Buyurtma berish</button></div>`;
+    document.body.appendChild(s);
+  }
+  async function send() {
+    const b = $('#send'), er = $('#err'); er.textContent = '';
+    const name = $('#fn').value.trim(), phone = $('#fp').value.trim();
+    if (name.length < 2) { er.textContent = 'Ismingizni kiriting'; return; }
+    if (!/^[+\d][\d\s()\-]{6,}$/.test(phone)) { er.textContent = "Telefon raqamini to'g'ri kiriting"; return; }
+    b.disabled = true; b.textContent = 'Yuborilmoqda…';
+    try {
+      const r = await fetch('/api/app/' + BOT + '/order', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ initData: (tg && tg.initData) || '', name, phone, note: $('#fnote').value, items: Object.keys(cart).map((id) => ({ id, qty: cart[id] })) }) });
+      const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'Xatolik yuz berdi');
+      cart = {}; save(); try { tg.HapticFeedback.notificationOccurred('success'); } catch (e) {}
+      $('.sh').innerHTML = `<div class="ok"><i>✓</i><h2>Buyurtma qabul qilindi!</h2><p style="color:var(--muted)">#${esc(j.id)} · ${money(j.total)} ${esc(C.currency)}<br>Tez orada siz bilan bog'lanamiz.</p><button class="go" data-done>Yopish</button></div>`;
+    } catch (e) { er.textContent = e.message; b.disabled = false; b.textContent = 'Buyurtma berish'; }
+  }
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('button'); if (!t || !C) return;
+    if (t.dataset.c !== undefined && t.classList.contains('chip')) { cat = t.dataset.c; draw(); return; }
+    const refresh = () => { save(); const inSheet = $('#sheet'); draw(); if (inSheet) { inSheet.remove(); if (count()) openCart(); } haptic(); };
+    if (t.dataset.p) { cart[t.dataset.p] = Math.min(99, (cart[t.dataset.p] || 0) + 1); refresh(); return; }
+    if (t.dataset.m) { cart[t.dataset.m] = (cart[t.dataset.m] || 0) - 1; if (cart[t.dataset.m] <= 0) delete cart[t.dataset.m]; refresh(); return; }
+    if (t.hasAttribute('data-cart')) { openCart(); return; }
+    if (t.hasAttribute('data-close')) { $('#sheet').remove(); return; }
+    if (t.hasAttribute('data-done')) { $('#sheet').remove(); draw(); return; }
+    if (t.id === 'send') send();
+  });
+  fetch('/api/app/' + BOT + '/config').then((r) => { if (!r.ok) throw 0; return r.json(); }).then((c) => {
+    C = c; document.title = c.title; document.documentElement.style.setProperty('--acc', c.accent || '#2f80ed');
+    const known = new Set(c.products.map((p) => p.id)); for (const id of Object.keys(cart)) if (!known.has(id)) delete cart[id];
+    try { if (tg) { tg.setHeaderColor('bg_color'); } } catch (e) {}
+    draw();
+  }).catch(() => { $('#app').innerHTML = '<div class="empty">Do\'kon topilmadi</div>'; });
+})();
+</script>
+</body>
+</html>

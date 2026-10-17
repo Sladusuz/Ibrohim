@@ -45,7 +45,7 @@ const html = page({ data: JSON.stringify(site).replace(/</g, '\\u003c'), account
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT)) { if (!['config.js', 'CNAME'].includes(f)) fs.rmSync(path.join(OUT, f), { recursive: true, force: true }); }
 fs.writeFileSync(path.join(OUT, 'index.html'), html);
-for (const f of ['yaratish.html', 'kabinet.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'motion.css', 'icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
+for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'motion.css', 'icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
 if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'config.js'), path.join(OUT, 'config.js'));
 fs.cpSync(path.join(P, 'img'), path.join(OUT, 'img'), { recursive: true });
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
