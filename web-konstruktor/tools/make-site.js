@@ -26,9 +26,10 @@ for (const s of d.sections) {
       items: window.TEMPLATES.slice(0, 14).map((t) => ({ title: t.name, tag: t.cat, image: t.thumb, link: `/yaratish.html?t=${t.id}` })) });
     out.push({ id: 'yaratish', type: 'bento', enabled: true, navLabel: 'Sayt yaratish', eyebrow: "O'zingiz yarating", title: "Saytingiz va botingizni *o'zingiz* yarating", text: "Kod yozish shart emas: shablonni tanlang, tahrirlang va tayyor mahsulotni oling.",
       items: [
-        { title: "Sayt konstruktori", text: "32 ta shablon, jonli tahrirlash, $10 ga tayyor sayt: yuklab oling yoki o'z subdomeningizda e'lon qiling.", image: '/img/tpl/restoran.jpg', link: '/yaratish.html', kind: 'image', size: 'l', tall: true },
-        { title: 'Telegram bot konstruktori', text: "Token kiriting: bot va mini do'kon darrov ishlaydi.", image: '/img/tpl/dokon.jpg', link: '/bot.html', kind: 'image', size: 'w' },
-        { title: 'Narx: $10', text: 'Tayyor sayt uchun bir martalik to\'lov.', value: '$10', kind: 'hl', size: 'm', icon: 'zap', link: '/yaratish.html' },
+        { title: 'Sayt konstruktori', text: "32 ta shablon, jonli tahrirlash. Tayyor saytni yuklab oling yoki o'z subdomeningizda e'lon qiling.", value: '32 shablon', kind: 'hl', size: 'l', icon: 'globe', link: '/yaratish.html' },
+        { title: 'Telegram bot konstruktori', text: "Token kiriting: bot va mini do'kon darrov ishlaydi.", value: "Mini do'kon", kind: 'hl', size: 'l', icon: 'send', link: '/bot.html' },
+        { title: 'Tayyor sayt narxi', text: "Bir martalik to'lov, yashirin to'lovlarsiz.", value: '$10', kind: 'stat', size: 'l', link: '/yaratish.html' },
+        { title: "Kod yozish shart emas", text: "Hamma narsani brauzerda, o'zbek tilida sozlaysiz.", kind: 'text', size: 'l', icon: 'zap' },
       ] });
   }
   if (s.id === 'jarayon') {

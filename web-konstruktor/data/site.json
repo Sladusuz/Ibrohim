@@ -306,29 +306,36 @@
       "items": [
         {
           "title": "Sayt konstruktori",
-          "text": "32 ta shablon, jonli tahrirlash, $10 ga tayyor sayt: yuklab oling yoki o'z subdomeningizda e'lon qiling.",
-          "image": "/img/tpl/restoran.jpg",
-          "link": "/yaratish.html",
-          "kind": "image",
+          "text": "32 ta shablon, jonli tahrirlash. Tayyor saytni yuklab oling yoki o'z subdomeningizda e'lon qiling.",
+          "value": "32 shablon",
+          "kind": "hl",
           "size": "l",
-          "tall": true
+          "icon": "globe",
+          "link": "/yaratish.html"
         },
         {
           "title": "Telegram bot konstruktori",
           "text": "Token kiriting: bot va mini do'kon darrov ishlaydi.",
-          "image": "/img/tpl/dokon.jpg",
-          "link": "/bot.html",
-          "kind": "image",
-          "size": "w"
+          "value": "Mini do'kon",
+          "kind": "hl",
+          "size": "l",
+          "icon": "send",
+          "link": "/bot.html"
         },
         {
-          "title": "Narx: $10",
-          "text": "Tayyor sayt uchun bir martalik to'lov.",
+          "title": "Tayyor sayt narxi",
+          "text": "Bir martalik to'lov, yashirin to'lovlarsiz.",
           "value": "$10",
-          "kind": "hl",
-          "size": "m",
-          "icon": "zap",
+          "kind": "stat",
+          "size": "l",
           "link": "/yaratish.html"
+        },
+        {
+          "title": "Kod yozish shart emas",
+          "text": "Hamma narsani brauzerda, o'zbek tilida sozlaysiz.",
+          "kind": "text",
+          "size": "l",
+          "icon": "zap"
         }
       ]
     },
