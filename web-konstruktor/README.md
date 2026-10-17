@@ -27,6 +27,9 @@ Fotolar `public/img/p/` da (CC0, StockSnap manbasidan; `tools/fetch-photos.js`).
 ## Telegram bot konstruktori (`/bot.html`)
 Mijoz @BotFather'dan token olib kiritadi, bot platformada ishlaydi (webhook). Imkoniyatlar: menyu tugmalari, katalog va savat, buyurtma (telefon, manzil), avto-javoblar, obunachilarga xabar, egasi uchun /stats /orders /broadcast, va **mini ilova**: Telegram ichida ochiladigan do'kon (`/app/<bot-id>`, initData imzosi tekshiriladi, narxlar serverda hisoblanadi). Buyurtmalar bot egasining Telegramiga va kabinetga keladi. Token faqat serverda saqlanadi. Webhook uchun HTTPS domen kerak. Testlar: `tools/e2e-bot.js`, `tools/e2e-bot-ui.js`.
 
+## Admin Telegram bot va mini ilova
+`TELEGRAM_BOT_TOKEN` berilsa (yoki admin panel → Sozlamalar), bot server ishga tushganda webhook'ga ulanadi. `/login PAROL` bilan kirgan chatlar: `/stats`, `/orders`, `/projects`, `/payments`, `/narx`, `/mijoz`, `/panel`. Yangi buyurtma, so'rov va to'lov adminga tugmalar bilan keladi (holatni o'zgartirish, to'lovni tasdiqlash). **Admin panel mini ilovasi** Telegram ichida parolsiz ochiladi (initData imzosi va kirgan chat tekshiriladi). O'chirish amallari botda yo'q. Test: `tools/e2e-adminbot.js`.
+
 ## Ishga tushirish (to'liq imkoniyatlar bilan)
 1. **Node.js 18+** o'rnating.
 2. `node server.js`  (Windows: `start.bat`)

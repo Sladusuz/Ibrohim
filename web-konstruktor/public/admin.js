@@ -171,6 +171,10 @@
         const s = st.settings;
         pg.innerHTML = `<div class="form1"><div class="card"><h3>Telegram xabarnoma</h3><p class="hint" style="margin:-6px 0 4px">Yangi buyurtma, ariza, sayt so'rovi va yangi mijoz haqida Telegramga xabar keladi. @BotFather orqali bot yarating.</p><div class="fx"><label>Bot tokeni</label><input type="text" id="tgt" value="${esc((s.notify || {}).telegramBotToken || '')}" maxlength="120"></div><div class="fx"><label>Chat ID</label><input type="text" id="tgc" value="${esc((s.notify || {}).telegramChatId || '')}" maxlength="40"></div></div>
           <div class="card"><h3>Boshqa domenlardagi saytlar</h3><p class="hint" style="margin:-6px 0 4px">Sayt boshqa joyda (masalan, GitHub Pages) turgan bo'lsa, uning manzilini shu yerga yozing (har qatorga bittadan). Shunda o'sha sayt hisob va buyurtmalar uchun shu serverdan foydalanadi.</p><textarea id="ao" rows="3" placeholder="https://kicksport.uz">${esc((s.allowedOrigins || []).join('\n'))}</textarea>${s.envAllowed ? `<div class="hint">Muhit sozlamasidan: ${esc(s.envAllowed)}</div>` : ''}<div class="fx"><label>Statik saytdagi config.js shunday bo'lsin:</label><div class="code">window.__API__ = '${esc(location.origin)}';</div></div></div>
+          <div class="card"><h3>Telegram admin bot va mini ilova</h3><p class="hint" style="margin:-6px 0 4px">Admin panelni Telegramdan boshqaring: buyurtmalar tugmalar bilan keladi, holatni o'zgartirasiz, to'lovni tasdiqlaysiz, <b>Admin panel</b> mini ilovasi telefonda ochiladi. Yuqoridagi bot tokeni ishlatiladi. Token serverda <code>TELEGRAM_BOT_TOKEN</code> sifatida ham berilishi mumkin; HTTPS domen bo'lsa bot server ishga tushganda o'zi ulanadi.</p>
+            <div class="chk ${(s.adminBot || {}).connected ? 'ok' : 'w'}" style="display:flex;gap:8px;font-size:13px"><span>${(s.adminBot || {}).connected ? '✓' : '!'}</span><span>${(s.adminBot || {}).connected ? 'Bot ulangan. Telegramda botingizni oching va <b>/login PAROL</b> yozing (xabar darrov o\'chiriladi).' : (s.adminBot || {}).hasToken ? 'Token bor, lekin bot hali ulanmagan. «Botni ulash» ni bosing.' : 'Avval yuqorida bot tokenini kiriting va saqlang.'}</span></div>
+            ${((s.adminBot || {}).chats || []).length ? `<div style="margin-top:8px">${s.adminBot.chats.map((c) => `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line)"><span><b>${esc(c.name || c.id)}</b> <span class="meta" style="color:var(--muted);font-size:12px">${esc(fdate(c.at))}</span></span><button class="b d s" data-abrev="${esc(c.id)}">Uzish</button></div>`).join('')}</div>` : ''}
+            <div style="margin-top:10px"><button class="b" id="abConnect" ${(s.adminBot || {}).hasToken ? '' : 'disabled'}>Botni ulash</button></div><div class="mx2" id="abm"></div></div>
           <div class="card"><h3>Domen va joylash</h3><p class="hint" style="margin:-6px 0 4px">Mijozlar saytlari <b>nomi.sizning-domeningiz</b> manzilida chiqadi. Domenni shu yerga yozing (har qatorga bittadan) va DNS'da <b>*</b> (yulduzcha) A yozuvini server IP'siga yo'naltiring.${s.envDomain ? ` Muhit sozlamasidan: <b>${esc(s.envDomain)}</b>` : ''}</p><textarea id="sdom" rows="2" placeholder="improuzbekiston.uz">${esc((s.domains || []).join('\n'))}</textarea><div class="fx"><label>Qo'lda to'lov uchun ko'rsatma (karta raqami, Telegram...)</label><textarea id="smp" rows="2" maxlength="600" placeholder="Karta: 8600 ... (Ism Familiya). To'lovdan keyin chekni Telegramga yuboring.">${esc(s.manualPay || '')}</textarea></div></div>
           <div class="card"><h3>Onlayn to'lov: Payme</h3><p class="hint" style="margin:-6px 0 4px">merchant.paycom.uz da kassa oching. «Endpoint URL» ga quyidagini yozing: <b>${esc((s.webhooks || {}).payme || '')}</b> (to'lov hisobi maydoni: <b>order_id</b>).</p><div class="fx"><label>Merchant ID</label><input type="text" id="pmid" value="${esc(s.payments.payme.merchantId)}"></div><div class="fx"><label>Kalit (KEY)</label><input type="password" id="pmkey" autocomplete="new-password" placeholder="${s.payments.payme.hasKey ? '•••••• saqlangan (o\'zgartirish uchun yangisini yozing)' : 'Kalit'}"></div></div>
           <div class="card"><h3>Onlayn to'lov: Click</h3><p class="hint" style="margin:-6px 0 4px">merchant.click.uz da xizmat oching. Prepare va Complete URL: <b>${esc((s.webhooks || {}).click || '')}</b></p><div class="fx"><label>Service ID</label><input type="text" id="ckser" value="${esc(s.payments.click.serviceId)}"></div><div class="fx"><label>Merchant ID</label><input type="text" id="ckmer" value="${esc(s.payments.click.merchantId)}"></div><div class="fx"><label>Secret key</label><input type="password" id="cksec" autocomplete="new-password" placeholder="${s.payments.click.hasSecret ? '•••••• saqlangan (o\'zgartirish uchun yangisini yozing)' : 'Secret key'}"></div></div>
@@ -236,7 +240,6 @@
     document.body.appendChild(w);
     w.addEventListener('click', async (e) => {
       if (e.target === w || e.target.closest('[data-close]')) w.remove();
-      const bd = e.target.closest('[data-bdel]'); if (bd && confirm("Bot platformadan o'chiriladi (webhook uziladi). Davom etasizmi?")) { try { await api('DELETE', '/api/admin/bots/' + bd.dataset.bdel); st.bots = st.bots.filter((b) => b.id !== bd.dataset.bdel); P.bots.render(); toast("O'chirildi"); } catch (er) { toast(er.message); } return; }
       const d = e.target.closest('[data-udel]'); if (d && confirm("Hisob va uning barcha saytlari o'chiriladi. Davom etasizmi?")) { try { await api('DELETE', '/api/admin/users/' + d.dataset.udel); w.remove(); toast("O'chirildi"); go('users'); } catch (er) { toast(er.message); } }
     });
   }
@@ -244,6 +247,9 @@
   /* ---------- Hodisalar ---------- */
   pg.addEventListener('click', async (e) => {
     const t = e.target.closest('button,a'); if (!t) return;
+    const ar = e.target.closest('[data-abrev]'); if (ar && confirm('Bu qurilma admin botdan uziladi. Davom etasizmi?')) { try { const j = await api('POST', '/api/admin/adminbot/revoke', { id: ar.dataset.abrev }); st.settings.adminBot = j.status; P.settings.render(); toast('Uzildi'); } catch (er) { toast(er.message); } return; }
+    if (e.target.closest('#abConnect')) { const m = $('#abm'); m.className = 'mx2'; m.textContent = 'Ulanmoqda…'; try { const j = await api('POST', '/api/admin/adminbot/connect', {}); st.settings.adminBot = j.status; P.settings.render(); toast('Bot ulandi'); } catch (er) { m.className = 'mx2 bad'; m.textContent = er.message; } return; }
+    const bd = e.target.closest('[data-bdel]'); if (bd && confirm("Bot platformadan o'chiriladi (webhook uziladi). Davom etasizmi?")) { try { await api('DELETE', '/api/admin/bots/' + bd.dataset.bdel); st.bots = st.bots.filter((b) => b.id !== bd.dataset.bdel); P.bots.render(); toast("O'chirildi"); } catch (er) { toast(er.message); } return; }
     try {
       if (t.dataset.go2) return go(t.dataset.go2);
       if (t.dataset.of !== undefined) { st.of.s = t.dataset.of; return P.orders.render(); }
@@ -292,5 +298,11 @@
   });
 
   async function start() { $('#app').hidden = false; await refreshStats(); await go(st.page); setInterval(refreshStats, 60000); }
-  api('GET', '/api/admin/stats').then(() => start()).catch(() => showLogin());
+  const tgApp = window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData ? window.Telegram.WebApp : null;
+  if (tgApp) { try { tgApp.ready(); tgApp.expand(); document.documentElement.classList.add('tgapp'); } catch (e) { /* ignore */ } }
+  api('GET', '/api/admin/stats').then(() => start()).catch(async () => {
+    if (!tgApp) return showLogin();
+    try { await fetch('/api/adminbot/session', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ initData: tgApp.initData }) }).then(async (r) => { if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Kirish rad etildi'); }); $('#login').hidden = true; await start(); }
+    catch (er) { showLogin(); $('#le').textContent = er.message + '. Yoki parolni kiriting.'; }
+  });
 })();

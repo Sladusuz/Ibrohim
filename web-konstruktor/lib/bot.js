@@ -90,14 +90,14 @@ module.exports = function makeBots({ F, readJSON, writeJSON, newId, getOrders, s
   }
 
   /* ---------- Mini ilova: initData tekshiruvi ---------- */
-  function verifyInitData(b, initData) {
+  function verifyInitData(b, initData, maxAge) {
     try {
       const p = new URLSearchParams(String(initData || '')); const hash = p.get('hash'); if (!hash) return null; p.delete('hash');
       const check = [...p.entries()].sort(([a], [c]) => (a < c ? -1 : 1)).map(([k, v]) => `${k}=${v}`).join('\n');
       const secret = crypto.createHmac('sha256', 'WebAppData').update(b.token).digest();
       const calc = crypto.createHmac('sha256', secret).update(check).digest('hex');
       if (calc.length !== hash.length || !crypto.timingSafeEqual(Buffer.from(calc), Buffer.from(hash))) return null;
-      if (Date.now() / 1000 - Number(p.get('auth_date') || 0) > 86400) return null;
+      if (Date.now() / 1000 - Number(p.get('auth_date') || 0) > (maxAge || 86400)) return null;
       return JSON.parse(p.get('user') || 'null');
     } catch { return null; }
   }

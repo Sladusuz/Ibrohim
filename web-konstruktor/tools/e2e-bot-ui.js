@@ -80,6 +80,8 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
     await ap.goto(BASE + '/admin', { waitUntil: 'load' }); await ap.fill('#pw', 'x-admin-1'); await ap.click('#lf button'); await ap.waitForSelector('#nav button');
     await ap.click('#nav button:has-text("Telegram botlar")'); await ap.waitForSelector('.tbl');
     ok(/demo_shop_bot/.test(await ap.innerText('#pg')) && /Ishlayapti/.test(await ap.innerText('#pg')), "adminda bot ko'rinadi");
+    ap.on('dialog', (d) => d.accept()); await ap.click('[data-bdel]'); await ap.waitForTimeout(900);
+    ok(/Hali bot ulanmagan/.test(await ap.innerText('#pg')) && (await J('/api/my/bots', { headers: { authorization: 'Bearer ' + reg.j.token } })).j.length === 0, "adminda botni o'chirish ishlaydi");
     ok(errs.length === 0, "konsolda xato yo'q" + (errs.length ? ': ' + errs.slice(0, 3).join(' | ') : ''));
   } catch (e) { fail++; console.log('  XATO', e.stack || e.message); }
   await b.close(); srv.kill(); mock.close();

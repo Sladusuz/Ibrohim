@@ -119,6 +119,11 @@ const ai = require('./lib/ai')({ getSettings: () => db.settings() });
 let lastOrigin = '';
 const bots = require('./lib/bot')({ F, readJSON, writeJSON, newId, getOrders: () => db.orders(), saveOrders: (v) => db.saveOrders(v), baseUrl: () => String(process.env.PUBLIC_URL || (rootDomains()[0] ? 'https://' + rootDomains()[0] : lastOrigin)).replace(/\/$/, '') });
 
+const publicBase = () => String(process.env.PUBLIC_URL || (rootDomains()[0] ? 'https://' + rootDomains()[0] : lastOrigin)).replace(/\/$/, '');
+const adminBot = require('./lib/adminbot')({ db, pay, tg: bots.tg, readJSON, writeJSON, F, newId, checkPassword: (pw) => eq(hashPw(String(pw || ''), secret.salt), secret.hash), baseUrl: publicBase, limited: (k, n, max, w) => limited(k, n, max, w), siteUrl: (m) => siteUrl(m) });
+// Server ishga tushganda (token va HTTPS domen bo'lsa) admin bot webhook'i o'zi o'rnatiladi
+setTimeout(() => { if ((process.env.TELEGRAM_BOT_TOKEN || (db.settings().notify || {}).telegramBotToken) && /^https:\/\//.test(publicBase())) adminBot.connect().catch((e) => console.log('Admin bot ulanmadi:', e.message)); }, 4000).unref();
+
 /* ---------- Subdomenlar, o'z domeni va statistika ---------- */
 const RESERVED = new Set(['www', 'mail', 'api', 'app', 'admin', 'kabinet', 'yaratish', 'ftp', 'smtp', 'imap', 'pop', 'ns1', 'ns2', 'static', 'cdn', 'help', 'support', 'blog', 'shop', 'test', 'demo', 'root', 'dashboard', 'login', 'impro', 'status']);
 const rootDomains = () => [...new Set([...String(process.env.ROOT_DOMAIN || '').split(','), ...(db.settings().domains || [])].map((x) => String(x).trim().toLowerCase()).filter(Boolean))];
@@ -267,9 +272,28 @@ async function api(req, res, url) {
     if (o.type === 'brief' && !Object.keys(o.extra).length) return send(res, 400, { error: "So'rov ma'lumotlari bo'sh" });
     const order = { id: newId(4), date: new Date().toISOString(), userId: me ? me.id : '', ...o, status: 'yangi', note: '' };
     const orders = db.orders(); orders.unshift(order); db.saveOrders(orders.slice(0, 20000));
+    adminBot.notifyOrder(order);
     const cur = (site.orders && site.orders.currency) || '';
     notifyTelegram(`${o.type === 'booking' ? 'Yangi ariza' : o.type === 'message' ? 'Yangi xabar' : o.type === 'brief' ? "Yangi LOYIHA SO'ROVI" : 'Yangi buyurtma'} #${order.id}\n${o.name}\n${o.phone}\n` + o.items.map((i) => `- ${i.name} x${i.qty}`).join('\n') + (o.total ? `\nJami: ${o.total} ${cur}` : '') + Object.entries(o.extra).map(([k, v]) => `\n${k}: ${v}`).join('') + (o.message ? `\n${o.message}` : ''));
     return send(res, 200, { ok: true, id: order.id });
+  }
+
+  /* --- Admin Telegram bot: webhook va mini ilova sessiyasi --- */
+  const abw = /^\/api\/adminbot\/([a-f0-9]{16,64})$/.exec(pn);
+  if (abw && req.method === 'POST') {
+    const cfgA = adminBot.cfg();
+    if (!cfgA.secret || !eq(cfgA.secret, abw[1]) || (req.headers['x-telegram-bot-api-secret-token'] && !eq(req.headers['x-telegram-bot-api-secret-token'], cfgA.secret))) return send(res, 403, { error: "Ruxsat yo'q" });
+    const upd = await readBody(req, 256 * 1024);
+    try { await adminBot.handle(upd); } catch (e) { console.error('admin bot xatosi', e.message); }
+    return send(res, 200, { ok: true });
+  }
+  if (route === 'POST /api/adminbot/session') {
+    if (limited(ip, 'absess', 20, 600e3)) return send(res, 429, { error: "Juda ko'p urinish" });
+    const b = await readBody(req, 8192), tkn = process.env.TELEGRAM_BOT_TOKEN || (db.settings().notify || {}).telegramBotToken;
+    const user = tkn ? bots.verifyInitData({ token: tkn }, b.initData, 3600) : null;
+    if (!user) return send(res, 401, { error: "Telegram ma'lumoti tasdiqlanmadi. Panelni botdagi tugma orqali oching." });
+    if (!adminBot.cfg().chats.some((c) => c.id === user.id)) return send(res, 403, { error: "Avval botda /login PAROL bilan kiring" });
+    return send(res, 200, { ok: true }, { 'Set-Cookie': `sid=${makeAdminToken()}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200${isHttps(req) ? '; Secure' : ''}` });
   }
 
   /* --- Telegram bot webhook va mini ilova --- */
@@ -391,6 +415,7 @@ async function api(req, res, url) {
         const ret = `${originOf(req)}/yaratish.html?p=${meta.id}&paid=1`;
         if (method === 'manual') {
           const ex = pay.list().find((x) => x.projectId === meta.id && x.method === 'manual' && x.state === 'pending') || pay.create({ projectId: meta.id, userId: me.id, usd: tp.usd, rate: tp.rate, method: 'manual' });
+          adminBot.notifyPayment(ex, meta, me);
           notifyTelegram(`Shablon sotib olish so'rovi (qo'lda to'lov)\nMijoz: ${me.name} (${me.phone})\nSayt: ${meta.name}\nSumma: $${tp.usd} (${ex.uzs} so'm)`);
           return send(res, 200, { manual: true, payment: { id: ex.id, usd: ex.usd, uzs: ex.uzs }, contacts: db.site().contacts || {}, text: db.settings().manualPay || '' });
         }
@@ -438,6 +463,7 @@ async function api(req, res, url) {
         meta.plan = str(b.plan, 60); meta.note = str(b.note, 1000); meta.contactPhone = str(b.phone, 40) || me.phone;
         if (!['yuborilgan', 'korilmoqda', 'narx', 'joylandi'].includes(meta.status)) meta.status = 'yuborilgan';
         meta.submittedAt = new Date().toISOString(); meta.updatedAt = meta.submittedAt; db.saveProjects(all);
+        adminBot.notifyText(`🌐 <b>Yangi sayt buyurtmasi</b>\n${me.name} · ${me.phone}\n${meta.name} [${meta.template}]\nTarif: ${meta.plan || '-'}`, { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: `pp:${meta.id}` }]] });
         notifyTelegram(`Yangi sayt buyurtmasi\nMijoz: ${me.name} (${me.phone})\nSayt: ${meta.name} [${meta.template}]\nTarif: ${meta.plan || '-'}${meta.note ? '\nIzoh: ' + meta.note : ''}`);
         return send(res, 200, { project: meta });
       }
@@ -509,6 +535,8 @@ async function api(req, res, url) {
     }
     const adb = /^\/api\/admin\/bots\/([a-f0-9]{6,24})$/.exec(pn);
     if (adb && req.method === 'DELETE') { const bot = bots.find(adb[1]); if (!bot) return send(res, 404, { error: 'Topilmadi' }); await bots.remove(bot); return send(res, 200, { ok: true }); }
+    if (route === 'POST /api/admin/adminbot/connect') { try { return send(res, 200, { ok: true, ...(await adminBot.connect()), status: adminBot.status() }); } catch (e) { return send(res, 400, { error: e.message }); } }
+    if (route === 'POST /api/admin/adminbot/revoke') { const b = await readBody(req, 1024); adminBot.revoke(Number(b.id)); return send(res, 200, { ok: true, status: adminBot.status() }); }
     if (route === 'GET /api/admin/payments') {
       const users = Object.fromEntries(db.users().map((u) => [u.id, u])), prj = Object.fromEntries(db.projects().map((x) => [x.id, x]));
       return send(res, 200, pay.list().map((x) => ({ id: x.id, projectId: x.projectId, project: prj[x.projectId] ? prj[x.projectId].name : '', user: users[x.userId] ? users[x.userId].name : '', phone: users[x.userId] ? users[x.userId].phone : '', usd: x.usd, uzs: x.uzs, method: x.method, state: x.state, createdAt: x.createdAt, paidAt: x.paidAt || '' })));
@@ -536,7 +564,7 @@ async function api(req, res, url) {
       const st = db.settings(), pm = (st.payments || {}).payme || {}, ck = (st.payments || {}).click || {}, a = st.ai || {};
       return send(res, 200, { notify: st.notify || {}, allowedOrigins: st.allowedOrigins || [], envAllowed: String(process.env.ALLOWED_ORIGINS || ''), domains: st.domains || [], envDomain: String(process.env.ROOT_DOMAIN || ''), manualPay: st.manualPay || '',
         ai: { hasKey: !!(process.env.ANTHROPIC_API_KEY || a.key), model: a.model || 'claude-sonnet-5-5' }, payments: { payme: { merchantId: pm.merchantId || '', hasKey: !!(process.env.PAYME_KEY || pm.key) }, click: { serviceId: ck.serviceId || '', merchantId: ck.merchantId || '', hasSecret: !!(process.env.CLICK_SECRET_KEY || ck.secretKey) } },
-        webhooks: { payme: `${originOf(req)}/api/pay/payme`, click: `${originOf(req)}/api/pay/click` } });
+        adminBot: adminBot.status(), webhooks: { payme: `${originOf(req)}/api/pay/payme`, click: `${originOf(req)}/api/pay/click` } });
     }
     if (route === 'PUT /api/admin/settings') {
       const b = await readBody(req, 32 * 1024), st = db.settings(), keep = (nv, ov, n) => (typeof nv === 'string' && nv.trim() ? str(nv, n) : ov || '');
