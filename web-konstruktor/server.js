@@ -35,7 +35,7 @@ const db = {
   orders: () => readJSON(F('orders.json'), []), saveOrders: (v) => writeJSON(F('orders.json'), v),
   projects: () => readJSON(F('projects.json'), []), saveProjects: (v) => writeJSON(F('projects.json'), v),
   site: () => readJSON(F('site.json'), {}), settings: () => Object.assign({ notify: {}, allowedOrigins: [] }, readJSON(F('settings.json'), {})),
-  pricing: () => readJSON(F('pricing.json'), { currency: "so'm", plans: [] }),
+  pricing: () => Object.assign({ currency: "so'm", plans: [], templatePrice: { usd: 10, rate: 12800 } }, readJSON(F('pricing.json'), {})),
 };
 const newId = (n = 6) => crypto.randomBytes(n).toString('hex');
 const projFile = (id) => path.join(PROJECTS, id.replace(/[^a-f0-9]/g, '') + '.json');
@@ -95,6 +95,58 @@ function notifyTelegram(text) {
   r.on('error', () => {}); r.write(data); r.end();
 }
 
+/* ---------- Modullar: eksport, to'lov, AI ---------- */
+const exporter = require('./lib/export')({ PUBLIC, UPLOADS });
+const readRaw = (req, limit = 64 * 1024) => new Promise((resolve, reject) => {
+  let size = 0; const chunks = [];
+  req.on('data', (c) => { size += c.length; if (size > limit) { reject(Object.assign(new Error('Hajm juda katta'), { code: 413 })); req.destroy(); return; } chunks.push(c); });
+  req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8'))); req.on('error', reject);
+});
+const pay = require('./lib/pay')({
+  readJSON, writeJSON, file: F('payments.json'), newId, getSettings: () => db.settings(),
+  onPaid: (pm) => {
+    const all = db.projects(), meta = all.find((x) => x.id === pm.projectId);
+    if (meta) { meta.paid = { at: new Date().toISOString(), usd: pm.usd, uzs: pm.uzs, method: pm.method, paymentId: pm.id }; meta.updatedAt = meta.paid.at; db.saveProjects(all); }
+    notifyTelegram(`To'lov qabul qilindi (${pm.method})\n${meta ? meta.name : pm.projectId}\n$${pm.usd} = ${pm.uzs} so'm`);
+  },
+  onRefund: (pm) => {
+    const all = db.projects(), meta = all.find((x) => x.id === pm.projectId);
+    if (meta) { meta.paid = null; meta.published = false; db.saveProjects(all); }
+    notifyTelegram(`To'lov qaytarildi/bekor qilindi: ${meta ? meta.name : pm.projectId}`);
+  },
+});
+const ai = require('./lib/ai')({ getSettings: () => db.settings() });
+
+/* ---------- Subdomenlar, o'z domeni va statistika ---------- */
+const RESERVED = new Set(['www', 'mail', 'api', 'app', 'admin', 'kabinet', 'yaratish', 'ftp', 'smtp', 'imap', 'pop', 'ns1', 'ns2', 'static', 'cdn', 'help', 'support', 'blog', 'shop', 'test', 'demo', 'root', 'dashboard', 'login', 'impro', 'status']);
+const rootDomains = () => [...new Set([...String(process.env.ROOT_DOMAIN || '').split(','), ...(db.settings().domains || [])].map((x) => String(x).trim().toLowerCase()).filter(Boolean))];
+const hostOf = (req) => String(req.headers.host || '').split(':')[0].toLowerCase();
+const isMainHost = (h) => !h || h === 'localhost' || /^[\d.]+$/.test(h) || /^\[/.test(h) || rootDomains().some((r) => h === r || h === 'www.' + r);
+const goodSlug = (v) => /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(v) && !RESERVED.has(v) && !/--/.test(v);
+const goodDomain = (v) => /^(?=.{4,100}$)([a-z0-9]([a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/.test(v);
+function tenantOf(host) {
+  if (isMainHost(host)) return null;
+  const projects = db.projects();
+  for (const r of rootDomains()) {
+    if (host.endsWith('.' + r)) { const sl = host.slice(0, -(r.length + 1)); return projects.find((x) => x.published && x.slug === sl) || { missing: true }; }
+  }
+  return projects.find((x) => x.published && x.customDomain === host) || (rootDomains().length ? { missing: true } : null);
+}
+const tenantData = (meta) => readJSON(projFile(meta.id), null);
+const statsMem = readJSON(F('stats.json'), {});
+const dayKey = (t = Date.now()) => new Date(t).toISOString().slice(0, 10);
+function hit(pid, k) { const d = (statsMem[pid] = statsMem[pid] || {}), day = dayKey(); (d[day] = d[day] || { v: 0, o: 0 })[k]++; }
+function flushStats() { try { for (const pid of Object.keys(statsMem)) { const keys = Object.keys(statsMem[pid]).sort(); for (const k of keys.slice(0, Math.max(0, keys.length - 90))) delete statsMem[pid][k]; } writeJSON(F('stats.json'), statsMem); } catch { /* ignore */ } }
+setInterval(flushStats, 20000).unref();
+for (const sig of ['SIGTERM', 'SIGINT']) process.on(sig, () => { flushStats(); process.exit(0); });
+function statsOf(pid) {
+  const d = statsMem[pid] || {}; const out = [];
+  for (let i = 29; i >= 0; i--) { const k = dayKey(Date.now() - i * 864e5); out.push({ day: k, v: (d[k] || {}).v || 0, o: (d[k] || {}).o || 0 }); }
+  return out;
+}
+const originOf = (req) => `${isHttps(req) ? 'https' : 'http'}://${req.headers.host}`;
+const siteUrl = (meta) => { const r = rootDomains()[0]; return meta.customDomain ? `https://${meta.customDomain}` : r ? `https://${meta.slug}.${r}` : ''; };
+
 /* ---------- CORS (faqat ochiq API uchun) ---------- */
 function allowedOrigins() { return [...(db.settings().allowedOrigins || []), ...String(process.env.ALLOWED_ORIGINS || '').split(',')].map((s) => s.trim().replace(/\/$/, '')).filter(Boolean); }
 function cors(req, res, pathname) {
@@ -107,12 +159,12 @@ function cors(req, res, pathname) {
 }
 
 /* ---------- Buyurtma yordamchilari ---------- */
-function siteItems() {
-  const m = {}; for (const s of db.site().sections || []) if (['products', 'menu'].includes(s.type)) for (const p of s.items || []) if (p && p.id) m[p.id] = p; return m;
+function siteItems(site) {
+  const m = {}; for (const s of (site || db.site()).sections || []) if (['products', 'menu'].includes(s.type)) for (const p of s.items || []) if (p && p.id) m[p.id] = p; return m;
 }
-function cleanOrder(b, user) {
+function cleanOrder(b, user, site) {
   const type = ['order', 'booking', 'message', 'brief'].includes(b.type) ? b.type : 'order';
-  const local = siteItems();
+  const local = siteItems(site);
   const items = (Array.isArray(b.items) ? b.items : []).slice(0, 60).map((i) => {
     const l = local[i && i.id]; const qty = Math.min(999, Math.max(1, parseInt(i && i.qty, 10) || 1));
     return l ? { id: str(l.id, 40), name: str(l.name, 120), price: Number(l.price) || 0, qty } : { id: str(i && i.id, 40), name: str(i && i.name, 120), price: Math.max(0, Number(i && i.price) || 0), qty };
@@ -130,9 +182,26 @@ async function api(req, res, url) {
   cors(req, res, pn);
   if (req.method === 'OPTIONS') { res.writeHead(204); return res.end(); }
 
+  /* --- subdomendagi sayt (tenant): faqat buyurtma qabul qiladi --- */
+  if (req.tenant) {
+    if (route === 'POST /api/order') {
+      const t = req.tenant, data = tenantData(t);
+      if (!data || limited(ip, 'torder' + t.id, 10, 600e3)) return send(res, 429, { error: "Juda ko'p so'rov. Birozdan so'ng urinib ko'ring." });
+      const b = await readBody(req, 100 * 1024), o = cleanOrder(b, null, data);
+      if (o.name.length < 2) return send(res, 400, { error: 'Ismingizni kiriting' });
+      if (!goodPhone(o.phone)) return send(res, 400, { error: "Telefon raqamini to'g'ri kiriting" });
+      if (o.type === 'order' && !o.items.length) return send(res, 400, { error: "Savat bo'sh" });
+      const order = { id: newId(4), date: new Date().toISOString(), userId: '', tenant: t.id, ...o, status: 'yangi', note: '' };
+      const orders = db.orders(); orders.unshift(order); db.saveOrders(orders.slice(0, 50000)); hit(t.id, 'o');
+      return send(res, 200, { ok: true, id: order.id });
+    }
+    if (route === 'GET /api/site') return send(res, 200, tenantData(req.tenant) || {});
+    return send(res, 404, { error: 'Topilmadi' });
+  }
+
   /* --- ochiq --- */
   if (route === 'GET /api/site') return send(res, 200, db.site());
-  if (route === 'GET /api/pricing') return send(res, 200, db.pricing());
+  if (route === 'GET /api/pricing') return send(res, 200, { ...db.pricing(), payMethods: pay.methods(), manualPay: db.settings().manualPay || '' });
 
   /* --- hisob --- */
   if (route === 'POST /api/auth/register') {
@@ -201,10 +270,34 @@ async function api(req, res, url) {
     return send(res, 200, { ok: true, id: order.id });
   }
 
+  /* --- to'lov tizimlari webhooklari --- */
+  if (route === 'POST /api/pay/payme') {
+    const raw = await readRaw(req); let body = {}; try { body = JSON.parse(raw || '{}'); } catch { /* ignore */ }
+    return send(res, 200, pay.payme(body, req.headers.authorization));
+  }
+  if (route === 'POST /api/pay/click') {
+    const raw = await readRaw(req); let f = {};
+    try { f = /^\s*\{/.test(raw) ? JSON.parse(raw) : Object.fromEntries(new URLSearchParams(raw)); } catch { /* ignore */ }
+    return send(res, 200, pay.click(f));
+  }
+
+  /* --- AI yordamchi --- */
+  if (route === 'POST /api/ai/generate') {
+    if (!me) return send(res, 401, { error: 'Kirish talab qilinadi' });
+    if (limited(me.id, 'ai', 8, 3600e3)) return send(res, 429, { error: "AI so'rovlari soatiga 8 ta. Keyinroq urinib ko'ring." });
+    const b = await readBody(req, 64 * 1024), d = str(b.description, 1500);
+    if (d.length < 8) return send(res, 400, { error: "Biznesingiz haqida kamida bir jumla yozing" });
+    try { return send(res, 200, { ok: true, ...(await ai.generate(d, b.templates)) }); } catch (e) { return send(res, 400, { error: e.message }); }
+  }
+
   /* --- mijozning shaxsiy ma'lumotlari --- */
   if (pn.startsWith('/api/my/')) {
     if (!me) return send(res, 401, { error: 'Kirish talab qilinadi' });
-    if (route === 'GET /api/my/orders') return send(res, 200, db.orders().filter((o) => o.userId === me.id).slice(0, 200));
+    if (route === 'GET /api/my/orders') return send(res, 200, db.orders().filter((o) => o.userId === me.id && !o.tenant).slice(0, 200));
+    if (route === 'GET /api/my/leads') {
+      const mine = new Map(db.projects().filter((p) => p.userId === me.id).map((p) => [p.id, p.name]));
+      return send(res, 200, db.orders().filter((o) => o.tenant && mine.has(o.tenant)).slice(0, 500).map((o) => ({ ...o, site: mine.get(o.tenant) })));
+    }
     if (route === 'GET /api/my/projects') return send(res, 200, db.projects().filter((p) => p.userId === me.id));
     if (route === 'POST /api/my/projects') {
       if (limited(me.id, 'pcreate', 20, 3600e3)) return send(res, 429, { error: "Juda ko'p yangi loyiha. Keyinroq urinib ko'ring." });
@@ -217,12 +310,55 @@ async function api(req, res, url) {
       const all = db.projects(); all.unshift(meta); db.saveProjects(all);
       return send(res, 200, { project: meta });
     }
-    const pm = /^\/api\/my\/projects\/([a-f0-9]{6,24})(\/submit)?$/.exec(pn);
+    const pm = /^\/api\/my\/projects\/([a-f0-9]{6,24})(\/(?:submit|checkout|export|publish|domain|stats))?$/.exec(pn);
     if (pm) {
       const all = db.projects(), meta = all.find((p) => p.id === pm[1] && p.userId === me.id);
       if (!meta) return send(res, 404, { error: 'Loyiha topilmadi' });
-      if (req.method === 'GET' && !pm[2]) return send(res, 200, { project: meta, data: readJSON(projFile(meta.id), null) });
-      if (req.method === 'PUT' && !pm[2]) {
+      const act = (pm[2] || '').slice(1);
+      if (req.method === 'GET' && !act) return send(res, 200, { project: { ...meta, url: meta.published ? siteUrl(meta) : '' }, data: readJSON(projFile(meta.id), null) });
+      if (act === 'stats' && req.method === 'GET') { const series = statsOf(meta.id); return send(res, 200, { series, views: series.reduce((a, x) => a + x.v, 0), orders: series.reduce((a, x) => a + x.o, 0) }); }
+      if (act === 'checkout' && req.method === 'POST') {
+        if (meta.paid) return send(res, 200, { paid: true });
+        if (limited(me.id, 'checkout', 20, 3600e3)) return send(res, 429, { error: "Juda ko'p urinish" });
+        const b = await readBody(req, 4096), tp = db.pricing().templatePrice || { usd: 10, rate: 12800 }, avail = pay.methods();
+        const method = ['payme', 'click'].includes(b.method) && avail[b.method] ? b.method : 'manual';
+        const ret = `${originOf(req)}/yaratish.html?p=${meta.id}&paid=1`;
+        if (method === 'manual') {
+          const ex = pay.list().find((x) => x.projectId === meta.id && x.method === 'manual' && x.state === 'pending') || pay.create({ projectId: meta.id, userId: me.id, usd: tp.usd, rate: tp.rate, method: 'manual' });
+          notifyTelegram(`Shablon sotib olish so'rovi (qo'lda to'lov)\nMijoz: ${me.name} (${me.phone})\nSayt: ${meta.name}\nSumma: $${tp.usd} (${ex.uzs} so'm)`);
+          return send(res, 200, { manual: true, payment: { id: ex.id, usd: ex.usd, uzs: ex.uzs }, contacts: db.site().contacts || {}, text: db.settings().manualPay || '' });
+        }
+        const pmt = pay.create({ projectId: meta.id, userId: me.id, usd: tp.usd, rate: tp.rate, method });
+        return send(res, 200, { payment: { id: pmt.id, usd: pmt.usd, uzs: pmt.uzs }, payUrl: pay.checkoutUrl(pmt, ret) });
+      }
+      if (act === 'export' && req.method === 'GET') {
+        if (!meta.paid) return send(res, 402, { error: "Yuklab olish uchun avval saytni sotib oling" });
+        const data = readJSON(projFile(meta.id), null); if (!data) return send(res, 404, { error: "Ma'lumot topilmadi" });
+        const fn = (String(meta.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sayt') + '.html';
+        return send(res, 200, exporter.standalone(data), { 'Content-Type': 'text/html; charset=utf-8', 'Content-Disposition': `attachment; filename="${fn}"` });
+      }
+      if (act === 'publish') {
+        if (!meta.paid) return send(res, 402, { error: "Joylash uchun avval saytni sotib oling" });
+        if (req.method === 'DELETE') { meta.published = false; db.saveProjects(all); return send(res, 200, { project: meta }); }
+        if (req.method === 'POST') {
+          const b = await readBody(req, 2048), sl = str(b.slug, 40).toLowerCase();
+          if (!rootDomains().length) return send(res, 400, { error: "Server domeni sozlanmagan (ROOT_DOMAIN)" });
+          if (!goodSlug(sl)) return send(res, 400, { error: "Manzil 3–30 belgi: kichik harf, raqam va chiziqcha bo'lsin" });
+          if (all.some((x) => x.id !== meta.id && x.slug === sl)) return send(res, 409, { error: 'Bu manzil band. Boshqasini tanlang.' });
+          meta.slug = sl; meta.published = true; meta.updatedAt = new Date().toISOString(); db.saveProjects(all);
+          return send(res, 200, { project: { ...meta, url: siteUrl(meta) } });
+        }
+      }
+      if (act === 'domain' && req.method === 'POST') {
+        if (!meta.paid) return send(res, 402, { error: "Avval saytni sotib oling" });
+        const b = await readBody(req, 2048), dm = str(b.domain, 100).toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+        if (!dm) { meta.customDomain = ''; db.saveProjects(all); return send(res, 200, { project: meta }); }
+        if (!goodDomain(dm) || rootDomains().some((r) => dm === r || dm.endsWith('.' + r))) return send(res, 400, { error: "Domen noto'g'ri" });
+        if (all.some((x) => x.id !== meta.id && x.customDomain === dm)) return send(res, 409, { error: 'Bu domen band' });
+        meta.customDomain = dm; db.saveProjects(all); return send(res, 200, { project: { ...meta, url: siteUrl(meta) } });
+      }
+      if (act && act !== 'submit') return send(res, 405, { error: "Ruxsat yo'q" });
+      if (req.method === 'PUT' && !act) {
         if (limited(me.id, 'psave', 200, 600e3)) return send(res, 429, { error: "Juda ko'p saqlash. Biroz kuting." });
         const b = await readBody(req, 16 * 1024 * 1024);
         if (b.data) { if (typeof b.data !== 'object' || !Array.isArray(b.data.sections)) return send(res, 400, { error: "Noto'g'ri loyiha" }); const json = JSON.stringify(b.data); fs.writeFileSync(projFile(meta.id), json); meta.size = json.length; }
@@ -230,8 +366,8 @@ async function api(req, res, url) {
         meta.updatedAt = new Date().toISOString(); db.saveProjects(all);
         return send(res, 200, { project: meta });
       }
-      if (req.method === 'DELETE' && !pm[2]) { try { fs.unlinkSync(projFile(meta.id)); } catch { /* ignore */ } db.saveProjects(all.filter((p) => p.id !== meta.id)); return send(res, 200, { ok: true }); }
-      if (req.method === 'POST' && pm[2]) {
+      if (req.method === 'DELETE' && !act) { try { fs.unlinkSync(projFile(meta.id)); } catch { /* ignore */ } db.saveProjects(all.filter((p) => p.id !== meta.id)); return send(res, 200, { ok: true }); }
+      if (req.method === 'POST' && act === 'submit') {
         const b = await readBody(req, 8192);
         meta.plan = str(b.plan, 60); meta.note = str(b.note, 1000); meta.contactPhone = str(b.phone, 40) || me.phone;
         if (!['yuborilgan', 'korilmoqda', 'narx', 'joylandi'].includes(meta.status)) meta.status = 'yuborilgan';
@@ -268,7 +404,7 @@ async function api(req, res, url) {
       const name = `${Date.now()}-${newId(3)}${IMG_EXT[m[1]]}`; fs.writeFileSync(path.join(UPLOADS, name), buf);
       return send(res, 200, { url: `/uploads/${name}` });
     }
-    if (route === 'GET /api/admin/orders') { const users = Object.fromEntries(db.users().map((u) => [u.id, u])); return send(res, 200, db.orders().map((o) => ({ ...o, userName: o.userId && users[o.userId] ? users[o.userId].name : '' }))); }
+    if (route === 'GET /api/admin/orders') { const users = Object.fromEntries(db.users().map((u) => [u.id, u])); return send(res, 200, db.orders().filter((o) => !o.tenant).map((o) => ({ ...o, userName: o.userId && users[o.userId] ? users[o.userId].name : '' }))); }
     if (route === 'PUT /api/admin/orders') {
       const b = await readBody(req, 8192), orders = db.orders(), o = orders.find((x) => x.id === b.id); if (!o) return send(res, 404, { error: 'Topilmadi' });
       if (['yangi', 'jarayonda', 'bajarildi', 'bekor'].includes(b.status)) o.status = b.status; if (typeof b.note === 'string') o.note = str(b.note, 1000);
@@ -290,9 +426,20 @@ async function api(req, res, url) {
         const b = await readBody(req, 8192);
         if (['qoralama', 'yuborilgan', 'korilmoqda', 'narx', 'joylandi', 'bekor'].includes(b.status)) meta.status = b.status;
         if (typeof b.price === 'string') meta.price = str(b.price, 60); if (typeof b.adminNote === 'string') meta.adminNote = str(b.adminNote, 1000);
+        if (typeof b.paid === 'boolean') {
+          const tp = db.pricing().templatePrice || { usd: 10, rate: 12800 };
+          let pm2 = pay.list().find((x) => x.projectId === meta.id && x.state !== 'refunded') || pay.list().find((x) => x.projectId === meta.id);
+          if (!pm2 && b.paid) pm2 = pay.create({ projectId: meta.id, userId: meta.userId, usd: tp.usd, rate: tp.rate, method: 'manual' });
+          if (pm2) pay.setPaid(pm2.id, b.paid, 'admin');
+          const fresh = db.projects().find((x) => x.id === meta.id); return send(res, 200, { project: fresh || meta });
+        }
         meta.updatedAt = new Date().toISOString(); db.saveProjects(all); return send(res, 200, { project: meta });
       }
       if (req.method === 'DELETE') { try { fs.unlinkSync(projFile(meta.id)); } catch { /* ignore */ } db.saveProjects(all.filter((p) => p.id !== meta.id)); return send(res, 200, { ok: true }); }
+    }
+    if (route === 'GET /api/admin/payments') {
+      const users = Object.fromEntries(db.users().map((u) => [u.id, u])), prj = Object.fromEntries(db.projects().map((x) => [x.id, x]));
+      return send(res, 200, pay.list().map((x) => ({ id: x.id, projectId: x.projectId, project: prj[x.projectId] ? prj[x.projectId].name : '', user: users[x.userId] ? users[x.userId].name : '', phone: users[x.userId] ? users[x.userId].phone : '', usd: x.usd, uzs: x.uzs, method: x.method, state: x.state, createdAt: x.createdAt, paidAt: x.paidAt || '' })));
     }
     if (route === 'GET /api/admin/users') {
       const orders = db.orders(), projects = db.projects();
@@ -311,12 +458,26 @@ async function api(req, res, url) {
     if (route === 'PUT /api/admin/pricing') {
       const b = await readBody(req, 100 * 1024);
       const plans = (Array.isArray(b.plans) ? b.plans : []).slice(0, 12).map((p) => ({ id: str(p.id, 30) || newId(3), name: str(p.name, 60), price: str(p.price, 40), period: str(p.period, 40), popular: !!p.popular, features: (Array.isArray(p.features) ? p.features : []).slice(0, 10).map((x) => str(x, 100)).filter(Boolean) })).filter((p) => p.name);
-      writeJSON(F('pricing.json'), { currency: str(b.currency, 12) || "so'm", plans }); return send(res, 200, { ok: true });
+      const tpIn = b.templatePrice || {}, tpOld = db.pricing().templatePrice; writeJSON(F('pricing.json'), { currency: str(b.currency, 12) || "so'm", plans, templatePrice: { usd: Math.max(0, Number(tpIn.usd) || tpOld.usd), rate: Math.max(1000, Number(tpIn.rate) || tpOld.rate) } }); return send(res, 200, { ok: true });
     }
-    if (route === 'GET /api/admin/settings') { const s = db.settings(); return send(res, 200, { notify: s.notify || {}, allowedOrigins: s.allowedOrigins || [], envAllowed: String(process.env.ALLOWED_ORIGINS || '') }); }
+    if (route === 'GET /api/admin/settings') {
+      const st = db.settings(), pm = (st.payments || {}).payme || {}, ck = (st.payments || {}).click || {}, a = st.ai || {};
+      return send(res, 200, { notify: st.notify || {}, allowedOrigins: st.allowedOrigins || [], envAllowed: String(process.env.ALLOWED_ORIGINS || ''), domains: st.domains || [], envDomain: String(process.env.ROOT_DOMAIN || ''), manualPay: st.manualPay || '',
+        ai: { hasKey: !!(process.env.ANTHROPIC_API_KEY || a.key), model: a.model || 'claude-sonnet-5-5' }, payments: { payme: { merchantId: pm.merchantId || '', hasKey: !!(process.env.PAYME_KEY || pm.key) }, click: { serviceId: ck.serviceId || '', merchantId: ck.merchantId || '', hasSecret: !!(process.env.CLICK_SECRET_KEY || ck.secretKey) } },
+        webhooks: { payme: `${originOf(req)}/api/pay/payme`, click: `${originOf(req)}/api/pay/click` } });
+    }
     if (route === 'PUT /api/admin/settings') {
-      const b = await readBody(req, 16 * 1024);
-      writeJSON(F('settings.json'), { notify: { telegramBotToken: str(b.notify && b.notify.telegramBotToken, 120), telegramChatId: str(b.notify && b.notify.telegramChatId, 40) }, allowedOrigins: (Array.isArray(b.allowedOrigins) ? b.allowedOrigins : []).slice(0, 10).map((s) => str(s, 200).replace(/\/$/, '')).filter((s) => /^https?:\/\/[^\s/]+$/.test(s)) });
+      const b = await readBody(req, 32 * 1024), st = db.settings(), keep = (nv, ov, n) => (typeof nv === 'string' && nv.trim() ? str(nv, n) : ov || '');
+      const n = b.notify || {}, pmIn = (b.payments || {}).payme || {}, ckIn = (b.payments || {}).click || {}, aiIn = b.ai || {}, pmOld = (st.payments || {}).payme || {}, ckOld = (st.payments || {}).click || {}, aiOld = st.ai || {};
+      const out = Object.assign({}, st, {
+        notify: { telegramBotToken: str(n.telegramBotToken, 120), telegramChatId: str(n.telegramChatId, 40) },
+        allowedOrigins: (Array.isArray(b.allowedOrigins) ? b.allowedOrigins : st.allowedOrigins || []).slice(0, 10).map((x) => str(x, 200).replace(/\/$/, '')).filter((x) => /^https?:\/\/[^\s]+$/.test(x)),
+        domains: (Array.isArray(b.domains) ? b.domains : st.domains || []).slice(0, 5).map((x) => str(x, 100).toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '')).filter(goodDomain),
+        manualPay: typeof b.manualPay === 'string' ? str(b.manualPay, 600) : st.manualPay || '',
+        ai: { key: keep(aiIn.key, aiOld.key, 200), model: str(aiIn.model, 60) || aiOld.model || '' },
+        payments: { payme: { merchantId: str(pmIn.merchantId, 60) || '', key: keep(pmIn.key, pmOld.key, 120) }, click: { serviceId: str(ckIn.serviceId, 40) || '', merchantId: str(ckIn.merchantId, 40) || '', secretKey: keep(ckIn.secretKey, ckOld.secretKey, 120) } },
+      });
+      writeJSON(F('settings.json'), out);
       return send(res, 200, { ok: true });
     }
     if (route === 'POST /api/admin/password') {
@@ -329,7 +490,8 @@ async function api(req, res, url) {
       return send(res, 200, {
         orders: { total: orders.length, new: orders.filter((o) => o.status === 'yangi').length, sum: orders.filter((o) => o.status !== 'bekor').reduce((a, o) => a + (o.total || 0), 0), series: series(orders, 'date') },
         users: { total: users.length, series: series(users, 'createdAt') },
-        projects: { total: projects.length, submitted: projects.filter((p) => p.status === 'yuborilgan').length, series: series(projects, 'createdAt') },
+        projects: { total: projects.length, submitted: projects.filter((p) => p.status === 'yuborilgan').length, series: series(projects, 'createdAt'), paid: projects.filter((p) => p.paid).length, published: projects.filter((p) => p.published).length },
+        revenue: { usd: projects.filter((p) => p.paid).reduce((a, p) => a + (p.paid.usd || 0), 0), uzs: projects.filter((p) => p.paid).reduce((a, p) => a + (p.paid.uzs || 0), 0) },
       });
     }
     return send(res, 404, { error: 'Topilmadi' });
@@ -352,6 +514,30 @@ const server = http.createServer(async (req, res) => {
     try { p = decodeURIComponent(url.pathname); } catch { return send(res, 400, "Noto'g'ri manzil"); }
     if (isHttps(req)) res.setHeader('Strict-Transport-Security', 'max-age=15552000');
     if (p === '/healthz') return send(res, 200, 'ok');
+    if (p === '/_ask') { // Caddy on-demand TLS: sertifikat faqat bizning domenlar uchun beriladi
+      const ra = req.socket.remoteAddress || ''; if (!/^(::1|127\.0\.0\.1|::ffff:127\.0\.0\.1)$/.test(ra)) return send(res, 403, 'no');
+      const d = String(url.searchParams.get('domain') || '').toLowerCase(); const t = tenantOf(d);
+      return send(res, isMainHost(d) && rootDomains().some((r) => d === r || d === 'www.' + r) || (t && !t.missing) ? 200 : 404, 'ok');
+    }
+    const tenant = tenantOf(hostOf(req));
+    if (tenant) {
+      if (tenant.missing) return send(res, 404, '<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Sayt topilmadi</title><body style="font-family:system-ui;display:grid;place-items:center;min-height:90vh;text-align:center;color:#334"><div><h1>Sayt topilmadi</h1><p>Bu manzilda hozircha sayt joylanmagan.</p></div>', { 'Content-Type': 'text/html; charset=utf-8' });
+      req.tenant = tenant;
+      if (p.startsWith('/api/')) return await api(req, res, url);
+      if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, "Ruxsat yo'q");
+      const data = tenantData(tenant); if (!data) return send(res, 404, 'Sayt topilmadi');
+      const origin = originOf(req);
+      if (p === '/') { hit(tenant.id, 'v'); return send(res, 200, exporter.tenantPage(data, { origin, slug: tenant.slug || tenant.customDomain }), { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-cache' }); }
+      if (p === '/manifest.webmanifest') return send(res, 200, JSON.stringify(exporter.manifest(data, origin)), { 'Content-Type': 'application/manifest+json; charset=utf-8' });
+      if (p === '/icon.svg') return send(res, 200, exporter.icon(data), { 'Content-Type': 'image/svg+xml; charset=utf-8', 'Cache-Control': 'public, max-age=86400' });
+      if (p === '/sw.js') return send(res, 200, exporter.SW, { 'Content-Type': 'application/javascript; charset=utf-8', 'Service-Worker-Allowed': '/' });
+      if (p === '/robots.txt') return send(res, 200, `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
+      if (p === '/sitemap.xml') return send(res, 200, `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${origin}/</loc></url></urlset>`, { 'Content-Type': 'application/xml; charset=utf-8' });
+      if (p === '/config.js') return send(res, 200, "window.__API__=location.origin;window.__SERVER__=true;", { 'Content-Type': 'application/javascript; charset=utf-8' });
+      if (p.startsWith('/uploads/')) return serveFile(res, path.join(UPLOADS, path.basename(p)), true);
+      if (p.startsWith('/img/')) { const f = path.normalize(path.join(PUBLIC, p)); if (!f.startsWith(path.join(PUBLIC, 'img') + path.sep)) return send(res, 404, 'Topilmadi'); return serveFile(res, f, true); }
+      return send(res, 404, 'Sahifa topilmadi');
+    }
     if (p.startsWith('/api/')) return await api(req, res, url);
     if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, "Ruxsat yo'q");
     if (p === '/config.js') return send(res, 200, "window.__API__='';window.__SERVER__=true;", { 'Content-Type': 'application/javascript; charset=utf-8', 'Cache-Control': 'no-cache' });
