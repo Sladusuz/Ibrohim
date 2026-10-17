@@ -36,8 +36,10 @@ export default async (req) => {
     else if (update.pre_checkout_query) await onPreCheckout(update.pre_checkout_query);
   } catch (e) {
     console.error(e);
+    const chat = update.message?.chat?.id || update.callback_query?.message?.chat?.id;
+    if (chat) await send(chat, "⚠️ Vaqtincha xatolik yuz berdi. Iltimos, bir necha soniyadan keyin qayta urinib ko'ring.");
   }
-  return new Response('ok');
+  return new Response('ok'); // doim 200: Telegram xabarni qayta-qayta yuborib ketmasin
 };
 
 // ---------- xabarlar ----------

@@ -17,11 +17,22 @@ const publicOrder = (o) => ({
 export default async (req) => {
   const url = new URL(req.url);
   const route = url.pathname.replace(/^\/api\/?/, '');
-  const user = verifyInitData(req.headers.get('x-tg-init-data') || '');
+  let user = null;
+  try { user = verifyInitData(req.headers.get('x-tg-init-data') || ''); } catch { /* noto'g'ri imzo = mehmon */ }
   try {
+    if (req.method === 'GET' && route === 'health') {
+      const h = await shop.health();
+      return json(h, h.ok ? 200 : 503);
+    }
+
     if (route.startsWith('admin/')) return await adminApi(route, req, user);
 
-    if (req.method === 'GET' && route === 'catalog') return json(await shop.publicCatalog());
+    if (req.method === 'GET' && route === 'catalog') {
+      const res = json(await shop.publicCatalog());
+      // CDN 15 soniya yangi saqlaydi, undan keyin eskisini berib fonda yangilaydi; xato bo'lsa 1 kungacha eski nusxa
+      res.headers.set('netlify-cdn-cache-control', 'public, max-age=15, stale-while-revalidate=120, stale-if-error=86400');
+      return res;
+    }
 
     if (req.method === 'GET' && route === 'orders') {
       if (!user) return fail("Telegram ichida oching", 401);

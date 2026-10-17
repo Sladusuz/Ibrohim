@@ -122,3 +122,22 @@ test('/admin buyrug\'i admin panel tugmasini yuboradi', async () => {
 });
 
 async function shopCatalog() { return J('catalog'); }
+
+test('ombor uzilsa: katalog eski nusxadan beriladi, health 503, buyurtma xato; tiklangach hammasi ishlaydi', async () => {
+  assert.equal((await call('catalog')).status, 200);               // oxirgi yaxshi nusxa xotirada
+  assert.equal((await J('health')).ok, true);
+  process.env.STORE_FAIL = '1';
+  try {
+    const cat = await call('catalog');
+    assert.equal(cat.status, 200);                                  // ombor ishlamasa ham do'kon bo'sh emas
+    assert.ok((await cat.json()).products.length >= 5);
+    const h = await call('health'); assert.equal(h.status, 503);
+    assert.match((await h.json()).error, /boom/);                   // sababi ko'rinadi
+    const ord = await call('order', { method: 'POST', id: 111, body: { name: 'Ali', phone: '901234567', delivery: 'pickup', payment: 'cash', items: [{ id: 6, qty: 1 }] } });
+    assert.equal(ord.status, 500);                                  // buyurtma yozilmaydi, lekin server qulamaydi
+    assert.ok((await ord.json()).error);
+  } finally { delete process.env.STORE_FAIL; }
+  assert.equal((await call('health')).status, 200);                 // tiklandi
+  const ok = await call('order', { method: 'POST', id: 111, body: { name: 'Ali', phone: '901234567', delivery: 'pickup', payment: 'cash', items: [{ id: 6, qty: 1 }] } });
+  assert.equal(ok.status, 200);
+});

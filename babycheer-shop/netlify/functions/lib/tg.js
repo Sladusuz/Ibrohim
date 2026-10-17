@@ -10,6 +10,7 @@ export async function api(method, params = {}) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params),
+    signal: AbortSignal.timeout(8000), // Telegram javob bermasa funksiya osilib qolmasin
   });
   const j = await res.json().catch(() => ({}));
   if (!j.ok) throw new Error(`Telegram ${method}: ${j.description || res.status}`);

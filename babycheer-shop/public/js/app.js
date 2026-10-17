@@ -37,14 +37,22 @@
   const saveCart = () => { LS.set('cart', S.cart); drawTabs(); };
 
   async function api(path, body) {
-    const res = await fetch('/api/' + path, {
-      method: body ? 'POST' : 'GET',
-      headers: { 'content-type': 'application/json', 'x-tg-init-data': (tg && tg.initData) || '' },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    const j = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error(j.error || 'Server xatosi');
-    return j;
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 15000);
+    try {
+      const res = await fetch('/api/' + path, {
+        method: body ? 'POST' : 'GET',
+        headers: { 'content-type': 'application/json', 'x-tg-init-data': (tg && tg.initData) || '' },
+        body: body ? JSON.stringify(body) : undefined,
+        signal: ctl.signal,
+      });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(j.error || 'Server xatosi');
+      return j;
+    } catch (e) {
+      if (e.name === 'AbortError') throw new Error("Internet sekin yoki uzildi, qayta urinib ko'ring");
+      if (e instanceof TypeError) throw new Error("Internetga ulanib bo'lmadi");
+      throw e;
+    } finally { clearTimeout(timer); }
   }
 
   // ---------- katalog yordamchilari ----------
@@ -511,14 +519,30 @@
   applyTheme();
 
   async function load(silent) {
-    const data = await api('catalog');
+    let data = null, err = null;
+    for (let i = 0; i < 3 && !data; i++) { // vaqtinchalik uzilishlarda 3 marta urinadi
+      try { data = await api('catalog'); } catch (e) { err = e; if (i < 2) await new Promise((r) => setTimeout(r, 600 * (i + 1))); }
+    }
+    if (data) LS.set('catalog', data);
+    else {
+      data = LS.get('catalog', null); // internet bo'lmasa oxirgi ko'rilgan katalog
+      if (!data) throw err;
+      if (!silent) toast("Aloqa sekin: oxirgi saqlangan ma'lumot ko'rsatilmoqda", true);
+    }
     S.data = data;
     S.cart = S.cart.filter((l) => data.products.some((p) => p.id === l.id));
     if (!silent) render(); else drawTabs();
   }
   $('#view').innerHTML = '<div class="skel" style="height:220px;border-radius:26px"></div><div class="grid" style="margin-top:16px">' + '<div class="skel" style="height:210px"></div>'.repeat(4) + '</div>';
-  load().catch((e) => {
-    $('#view').innerHTML = `<div class="empty"><div class="em">📡</div><b>Yuklab bo'lmadi</b>${esc(e.message)}<div style="margin-top:18px"><button class="btn" onclick="location.reload()">Qayta urinish</button></div></div>`;
-  });
+  let retries = 0;
+  function start() {
+    load().catch((e) => {
+      const auto = retries++ < 6; // 6 marta har 4 soniyada o'zi qayta urinadi
+      $('#view').innerHTML = `<div class="empty"><div class="em">📡</div><b>Yuklab bo'lmadi</b>${esc(e.message)}${auto ? '<br><small>Avtomatik qayta urinilmoqda...</small>' : ''}<div style="margin-top:18px"><button class="btn" id="retryBtn">Qayta urinish</button></div></div>`;
+      $('#retryBtn').onclick = () => { retries = 0; start(); };
+      if (auto) setTimeout(() => { if ($('#retryBtn')) start(); }, 4000);
+    });
+  }
+  start();
   document.addEventListener('visibilitychange', () => { if (!document.hidden && S.data && /^#\/(p|cart|checkout)/.test(location.hash) === false) load(true).catch(() => {}); });
 })();

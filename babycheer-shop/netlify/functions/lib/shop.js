@@ -51,8 +51,15 @@ export function deliveryFee(settings, subtotal, delivery) {
   return delivery === 'courier' && subtotal > 0 && subtotal < settings.freeFrom ? settings.deliveryFee : 0;
 }
 
+let lastGood = null; // oxirgi muvaffaqiyatli o'qilgan katalog: ombor vaqtincha ishlamasa, do'kon bo'sh qolmaydi
+
 export async function publicCatalog() {
-  const c = await getCatalog();
+  let c;
+  try { c = await getCatalog(); lastGood = c; } catch (e) {
+    if (!lastGood) throw e;
+    console.warn('katalog: ombor javob bermadi, oxirgi nusxa berildi:', e.message);
+    c = lastGood;
+  }
   const faqFmt = { freeFrom: money(c.settings.freeFrom), deliveryFee: money(c.settings.deliveryFee), warrantyMonths: c.settings.warrantyMonths };
   return {
     settings: { ...c.settings, payments: paymentMethods() },
@@ -187,3 +194,10 @@ export function invoicePrices(o) {
 }
 
 export { COLOR_HEX };
+
+/** Tizim sog'ligi: ombor o'qiladimi. */
+export async function health() {
+  const t = Date.now();
+  try { await store.get('counter'); return { ok: true, ms: Date.now() - t }; }
+  catch (e) { return { ok: false, ms: Date.now() - t, error: `${e && e.name}: ${String((e && e.message) || e).slice(0, 200)}` }; }
+}
