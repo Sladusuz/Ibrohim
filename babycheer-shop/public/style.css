@@ -99,9 +99,8 @@ body.no-tabs.has-cta #app { padding-bottom: calc(var(--nf) + var(--safe-b) + 84p
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .pcard { background: var(--card); border-radius: 20px; box-shadow: var(--shadow); overflow: hidden; position: relative; display: flex; flex-direction: column; text-align: left; }
 .media { position: relative; aspect-ratio: 1 / .86; display: grid; place-items: center; overflow: hidden; background: radial-gradient(90% 90% at 50% 20%, color-mix(in srgb, var(--tint, #2b59ff) 20%, var(--card)), color-mix(in srgb, var(--tint, #2b59ff) 7%, var(--card))); }
-.media.ph { background: #fff; }
-.media.ph:not(.done) { background: linear-gradient(90deg, #eef1f8, #fff, #eef1f8) 0 0 / 200% 100%; animation: sh 1.2s infinite; }
-.media img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: scale-down; padding: 5%; box-sizing: border-box; opacity: 0; transition: opacity .25s; }
+.media.ph:not(.done) { background: linear-gradient(90deg, var(--chip), var(--card), var(--chip)) 0 0 / 200% 100%; animation: sh 1.2s infinite; }
+.media img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .25s; }
 .media img.ld { opacity: 1; }
 .media .art { width: 92%; }
 .pcard .fav { position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border-radius: 50%; background: color-mix(in srgb, var(--card) 85%, transparent); display: grid; place-items: center; backdrop-filter: blur(6px); }
