@@ -27,6 +27,8 @@
     search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
     heart: '<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',
     back: '<path d="M15 5l-7 7 7 7"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
+    moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
   };
   const svg = (n) => `<svg viewBox="0 0 24 24">${ICON[n]}</svg>`;
 
@@ -86,13 +88,39 @@
     return { sub, fee, total: sub + fee, freeFrom };
   }
   const cartCount = () => lines().reduce((s, l) => s + l.qty, 0);
-  function addToCart(id, color, qty = 1) {
+  let holdBump = false;
+  const cartLink = () => $('#tabs a[href="#/cart"]');
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function bumpCart() {
+    const a = cartLink(); if (!a) return;
+    a.classList.remove('ring'); void a.offsetWidth; a.classList.add('ring'); setTimeout(() => a.classList.remove('ring'), 700);
+    const b = $('.badge', a); if (b) { b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+  }
+  // mahsulot rasmi yoy bo'ylab savat ikonkasiga uchib boradi
+  function flyToCart(src) {
+    const icon = $('svg', cartLink() || document.body), ok = cartLink() && icon && src && !reduceMotion && icon.getBoundingClientRect().width > 0;
+    if (!ok) return bumpCart();
+    const s = src.getBoundingClientRect(), t = icon.getBoundingClientRect(), size = 64;
+    const sx = s.left + s.width / 2, sy = s.top + Math.min(s.height / 2, 120), dx = t.left + t.width / 2 - sx, dy = t.top + t.height / 2 - sy;
+    const el = document.createElement('div'); el.className = 'fly'; el.innerHTML = src.innerHTML;
+    el.style.cssText = `left:${sx - size / 2}px;top:${sy - size / 2}px;width:${size}px;height:${size}px`;
+    document.body.append(el);
+    const anim = el.animate([
+      { transform: 'translate(0,0) scale(1) rotate(0deg)', opacity: 1 },
+      { transform: `translate(${dx * 0.5}px, ${Math.min(dy * 0.5, 0) - 110}px) scale(.85) rotate(160deg)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(.18) rotate(360deg)`, opacity: .35 },
+    ], { duration: 780, easing: 'cubic-bezier(.45,.05,.55,.95)' });
+    anim.onfinish = () => { el.remove(); bumpCart(); };
+    anim.oncancel = () => el.remove();
+  }
+  function addToCart(id, color, qty = 1, fromEl = null) {
     const p = prod(id);
     const ex = S.cart.find((l) => l.id === id && l.color === color);
     const have = ex ? ex.qty : 0;
     if (!p || have + qty > p.stock) { toast(`Omborda atigi ${p ? p.stock : 0} ta bor`, true); haptic('err'); return false; }
     ex ? (ex.qty += qty) : S.cart.push({ id, color, qty });
-    saveCart(); haptic('medium');
+    holdBump = !!fromEl && !reduceMotion; saveCart(); holdBump = false; haptic('medium');
+    if (fromEl) flyToCart(fromEl);
     return true;
   }
 
@@ -107,17 +135,18 @@
   let prevN = 0;
   function drawTabs() {
     const n = S.data ? cartCount() : 0;
-    const up = n > prevN; prevN = n;
+    const up = n > prevN && !holdBump; prevN = n;
     $('#tabs').innerHTML = TABS.map(([h, k, label, ic]) => `<a href="${h}" class="${curTab === k ? 'on' : ''}">${svg(ic)}${label}${k === 'cart' && n ? `<span class="badge${up ? ' bump' : ''}">${n}</span>` : ''}</a>`).join('');
   }
+  const themeBtn = () => `<button class="icon-btn tgl" data-theme-toggle aria-label="Kun va tun rejimi"><svg class="sun" viewBox="0 0 24 24">${ICON.sun}</svg><svg class="moon" viewBox="0 0 24 24">${ICON.moon}</svg></button>`;
   function setTop(v) {
     const top = $('#top');
     if (v.home) {
       top.innerHTML = `<div class="logo"><i>🚗</i>BabyCheer</div><span class="top-sp"></span>
         <a class="icon-btn" href="#/shop?q=" aria-label="Qidirish">${svg('search')}</a>
-        <a class="icon-btn" href="#/shop?fav=1" aria-label="Sevimlilar">${svg('heart')}</a>`;
+        <a class="icon-btn" href="#/shop?fav=1" aria-label="Sevimlilar">${svg('heart')}</a>${themeBtn()}`;
     } else {
-      top.innerHTML = `<button class="back" data-back aria-label="Orqaga">${svg('back')}</button><div class="top-title">${esc(v.title || '')}</div>${v.right || ''}`;
+      top.innerHTML = `<button class="back" data-back aria-label="Orqaga">${svg('back')}</button><div class="top-title">${esc(v.title || '')}</div>${v.right || ''}${themeBtn()}`;
     }
   }
   function setCta(c) {
@@ -215,7 +244,7 @@
       setCta({
         info: ['Narxi', money(p.price * st.qty)],
         text: n ? `Savatda ${n} ta · yana qo'shish` : "Savatga qo'shish",
-        onClick: () => { if (addToCart(p.id, st.color, st.qty)) { toast("Savatga qo'shildi ✅"); drawCta(); } },
+        onClick: () => { if (addToCart(p.id, st.color, st.qty, $('#gal .media'))) { toast("Savatga qo'shildi ✅"); drawCta(); } },
       });
     };
     return {
@@ -423,15 +452,16 @@
       e.stopPropagation(); e.preventDefault();
       const id = Number(fav.dataset.fav), i = S.favs.indexOf(id);
       i >= 0 ? S.favs.splice(i, 1) : S.favs.push(id); LS.set('favs', S.favs); haptic('light');
-      $$(`[data-fav="${id}"]`).forEach((b) => b.classList.toggle('on', i < 0));
+      $$(`[data-fav="${id}"]`).forEach((b) => { b.classList.toggle('on', i < 0); if (i < 0) { b.classList.remove('pop'); void b.offsetWidth; b.classList.add('pop'); setTimeout(() => b.classList.remove('pop'), 600); } });
       if (S.shop.fav && /^#\/shop/.test(location.hash)) render();
       return;
     }
+    if (t.closest('[data-theme-toggle]')) { LS.set('theme', currentTheme() === 'dark' ? 'light' : 'dark'); applyTheme(true); haptic('medium'); return; }
     const qa = t.closest('[data-quick]');
     if (qa) {
       e.stopPropagation(); e.preventDefault();
       const p = prod(Number(qa.dataset.quick)), color = p && p.colors[0] ? p.colors[0].name : '';
-      if (p && addToCart(p.id, color, 1)) { const html = qa.innerHTML; qa.classList.add('ok'); qa.innerHTML = svg('check'); toast(`${p.title}${color ? ` (${color})` : ''}: savatga qo'shildi ✅`); setTimeout(() => { qa.classList.remove('ok'); qa.innerHTML = html; }, 900); }
+      if (p && addToCart(p.id, color, 1, qa.closest('.pcard') && $('.media', qa.closest('.pcard')))) { const html = qa.innerHTML; qa.classList.add('ok'); qa.innerHTML = svg('check'); toast(`${p.title}${color ? ` (${color})` : ''}: savatga qo'shildi ✅`); setTimeout(() => { qa.classList.remove('ok'); qa.innerHTML = html; }, 900); }
       return;
     }
     const back = t.closest('[data-back]'); if (back) return goBack(/^#\/p\//.test(location.hash) ? S.lastList : '#/');
@@ -465,15 +495,18 @@
   });
 
   // ---------- Telegram va ishga tushirish ----------
-  function applyTheme() {
-    const dark = tg && tg.colorScheme ? tg.colorScheme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-    const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-    try { if (tg) { tg.setHeaderColor(bg); tg.setBackgroundColor(bg); tg.setBottomBarColor && tg.setBottomBarColor(getComputedStyle(document.documentElement).getPropertyValue('--card').trim()); } } catch { /* eski versiya */ }
+  const themePref = () => LS.get('theme', null);
+  const currentTheme = () => themePref() || (tg && tg.colorScheme ? (tg.colorScheme === 'dark' ? 'dark' : 'light') : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  function applyTheme(animate) {
+    const root = document.documentElement;
+    if (animate === true) { root.classList.add('theming'); setTimeout(() => root.classList.remove('theming'), 600); }
+    root.dataset.theme = currentTheme();
+    const cs = getComputedStyle(root), bg = cs.getPropertyValue('--bg').trim();
+    try { if (tg) { tg.setHeaderColor(bg); tg.setBackgroundColor(bg); tg.setBottomBarColor && tg.setBottomBarColor(cs.getPropertyValue('--card').trim()); } } catch { /* eski versiya */ }
     const m = $('meta[name=theme-color]'); if (m) m.content = bg;
   }
   if (tg) {
-    try { tg.ready(); tg.expand(); tg.disableVerticalSwipes && tg.disableVerticalSwipes(); tg.onEvent('themeChanged', applyTheme); if (tg.BackButton) tg.BackButton.onClick(() => goBack('#/')); } catch { /* */ }
+    try { tg.ready(); tg.expand(); tg.disableVerticalSwipes && tg.disableVerticalSwipes(); tg.onEvent('themeChanged', () => { if (!themePref()) applyTheme(true); }); if (tg.BackButton) tg.BackButton.onClick(() => goBack('#/')); } catch { /* */ }
   }
   applyTheme();
 

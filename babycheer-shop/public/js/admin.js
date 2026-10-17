@@ -48,7 +48,7 @@
     const d = A.data, today = new Date().toDateString();
     const live = d.orders.filter((o) => o.status !== 'cancelled');
     const low = d.products.filter((p) => p.active && p.stock <= 3).length;
-    $('#top').innerHTML = `<div class="a-head"><div class="logo"><i>🔧</i>Admin</div><span class="top-sp"></span><button class="icon-btn" data-reload aria-label="Yangilash"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg></button></div>`;
+    $('#top').innerHTML = `<div class="a-head"><div class="logo"><i>🔧</i>Admin</div><span class="top-sp"></span><button class="icon-btn tgl" data-theme-toggle aria-label="Kun va tun rejimi"><svg class="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button><button class="icon-btn" data-reload aria-label="Yangilash"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg></button></div>`;
     const stats = `<div class="stats"><div class="stat"><small>Bugungi buyurtma</small><b class="num">${d.orders.filter((o) => new Date(o.created_at).toDateString() === today).length}</b></div>
       <div class="stat"><small>Yangi (kutilmoqda)</small><b class="num">${d.orders.filter((o) => o.status === 'new').length}</b></div>
       <div class="stat"><small>Tushum (oxirgi ${d.orders.length} ta)</small><b class="num">${money(live.reduce((s, o) => s + o.total, 0))}</b></div>
@@ -192,6 +192,7 @@
     let el;
     if ((el = b('[data-tab]'))) { A.tab = el.dataset.tab; return draw(); }
     if ((el = b('[data-filter]'))) { A.filter = el.dataset.filter; return drawOrders(); }
+    if (b('[data-theme-toggle]')) { try { localStorage.setItem('bc.theme', JSON.stringify(cur() === 'dark' ? 'light' : 'dark')); } catch { /* */ } theme(true); haptic(); return; }
     if (b('[data-reload]')) { await load(true); return toast('Yangilandi'); }
     if ((el = b('[data-edit]'))) return openEditor(el.dataset.edit);
     if ((el = b('[data-st]'))) {
@@ -234,13 +235,16 @@
     }
   }
 
-  function theme() {
-    const dark = tg && tg.colorScheme ? tg.colorScheme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-    const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  const pref = () => { try { return JSON.parse(localStorage.getItem('bc.theme')); } catch { return null; } };
+  const cur = () => pref() || (tg && tg.colorScheme ? (tg.colorScheme === 'dark' ? 'dark' : 'light') : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  function theme(animate) {
+    const root = document.documentElement;
+    if (animate === true) { root.classList.add('theming'); setTimeout(() => root.classList.remove('theming'), 600); }
+    root.dataset.theme = cur();
+    const bg = getComputedStyle(root).getPropertyValue('--bg').trim();
     try { if (tg) { tg.setHeaderColor(bg); tg.setBackgroundColor(bg); } } catch { /* */ }
   }
-  if (tg) { try { tg.ready(); tg.expand(); tg.disableVerticalSwipes && tg.disableVerticalSwipes(); tg.onEvent('themeChanged', theme); } catch { /* */ } }
+  if (tg) { try { tg.ready(); tg.expand(); tg.disableVerticalSwipes && tg.disableVerticalSwipes(); tg.onEvent('themeChanged', () => { if (!pref()) theme(true); }); } catch { /* */ } }
   theme();
 
   if (!(tg && tg.initData)) {
