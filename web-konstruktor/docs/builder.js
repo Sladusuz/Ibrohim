@@ -104,21 +104,87 @@
     const sec = D.sections.filter((s) => s.enabled !== false).length; c.push([sec >= 3, `Saytda ${sec} ta bo'lim ko'rinadi`]);
     return c;
   }
+  /* ---------- Sotib olish, yuklab olish va joylash ---------- */
+  let payInfo = null, stats = null, busy = false;
+  const money = (n) => Number(n || 0).toLocaleString('ru-RU').replace(/ /g, ' ');
+  const tp = () => (pricing.templatePrice || { usd: 10, rate: 12800 });
+  const paid = () => !!(P && P.paid);
+  const contactBtns = () => {
+    const c = (pricing.contacts || {}); const tel = c.phone || '+998 33 623 33 13';
+    return `<a class="b g w" style="margin-top:8px" href="tel:${esc(String(tel).replace(/[^\d+]/g, ''))}">${icon('tel')} ${esc(tel)}</a>${c.telegram ? `<a class="b g w" style="margin-top:8px" target="_blank" rel="noopener" href="https://t.me/${esc(String(c.telegram).replace(/^@/, ''))}">Telegram: ${esc(c.telegram)}</a>` : ''}`;
+  };
+  function buyBox() {
+    const price = `<div class="pricebox"><div><b>$${esc(String(tp().usd))}</b><span>bir martalik to'lov</span></div><small>≈ ${money(Math.round(tp().usd * tp().rate))} so'm</small></div>
+      <ul class="incl"><li>Tayyor saytni yuklab olish (bitta mustaqil fayl)</li><li>Subdomenda joylash: <b>nomingiz.${esc(pricing.rootDomain || 'improuzbekiston.uz')}</b></li><li>O'z domeningizni ulash</li><li>Telefonga ilova kabi o'rnatiladi, Google uchun SEO sozlangan</li><li>Statistika va kelgan buyurtmalar kabinetda</li></ul>`;
+    if (!useAcc) return `${price}<p class="hint">Sotib olish uchun biz bilan bog'laning, saytingizni darrov tayyorlab beramiz.</p>${contactBtns()}<button class="b g w" style="margin-top:8px" data-x="mail">Pochta orqali so'rov yuborish</button><div class="hint">Tayyor sayt faqat to'lovdan keyin beriladi. Oldindan ko'rish va tahrirlash bepul.</div>`;
+    const pm = pricing.payMethods || {};
+    if (payInfo && payInfo.manual) {
+      const c = payInfo.contacts || {};
+      return `${price}<div class="guide" style="margin-top:12px"><b>To'lov so'rovingiz qabul qilindi (#${esc(payInfo.payment.id)})</b><br>Summa: <b>$${esc(String(payInfo.payment.usd))}</b> (${money(payInfo.payment.uzs)} so'm).${payInfo.text ? `<br>${esc(payInfo.text)}` : ''}<br>To'lov qilgach, admin tasdiqlaydi va sayt ochiladi. ${c.phone ? `Aloqa: <b>${esc(c.phone)}</b>` : ''}${c.telegram ? `, <b>${esc(c.telegram)}</b>` : ''}</div><button class="b g w" style="margin-top:10px" data-x="recheck">To'lovni tekshirish</button>`;
+    }
+    return `${price}<div class="msg" id="buyMsg"></div>${pm.payme ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="payme">Payme orqali to'lash</button>` : ''}${pm.click ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="click">Click orqali to'lash</button>` : ''}<button class="b ${pm.payme || pm.click ? 'g' : ''} w" style="margin-top:8px;padding:14px" data-x="buy" data-m="manual">${pm.payme || pm.click ? "Boshqa usul (karta, Telegram)" : "Sotib olish"}</button><div class="hint">Oldindan ko'rish va tahrirlash bepul. To'lovdan keyin sayt yuklab olinadi yoki joylanadi.</div>`;
+  }
+  function ownBox() {
+    const url = P.published ? (P.url || '') : '';
+    const st = stats ? `<div class="guide" style="margin-top:10px">So'nggi 30 kunda: <b>${stats.views}</b> tashrif, <b>${stats.orders}</b> buyurtma.</div>` : '';
+    return `<div class="chk ok"><span>✓</span><span><b>Sayt sotib olingan.</b> Endi yuklab olishingiz yoki joylashingiz mumkin.</span></div>
+      <h4>1. Yuklab olish</h4><button class="b w" style="padding:14px" data-x="dl">${icon('download')} Saytni yuklab olish (.html)</button><div class="hint">Bitta fayl: istalgan hostingga yuklang (masalan, netlify.com/drop).</div>
+      <h4>2. Subdomenda joylash</h4>${url ? `<div class="chk ok"><span>✓</span><span>Joylangan: <a href="${esc(url)}" target="_blank" rel="noopener"><b>${esc(url.replace(/^https?:\/\//, ''))}</b></a></span></div>${st}<button class="b g w" style="margin-top:8px" data-x="unpub">Joylashni to'xtatish</button>` : `<label class="f">Sayt manzili</label><div style="display:flex;gap:6px;align-items:center"><input id="slug" type="text" maxlength="30" placeholder="masalan, lola-salon" value="${esc(P.slug || '')}"><span class="hint" style="white-space:nowrap">.${esc(pricing.rootDomain || 'domen')}</span></div><div class="msg" id="pubMsg"></div><button class="b w" style="margin-top:8px;padding:12px" data-x="pub">Joylash</button>`}
+      ${url ? `<h4>3. O'z domeningiz</h4><input id="cdom" type="text" placeholder="masalan, lolasalon.uz" value="${esc(P.customDomain || '')}"><div class="hint">Domen A yozuvini server IP manziliga yo'naltiring, so'ng shu yerga yozing. Aniq IP manzilni Impro IT dan so'rang.</div><div class="msg" id="domMsg"></div><button class="b g w" style="margin-top:8px" data-x="dom">Domenni saqlash</button>` : ''}`;
+  }
+  async function downloadPaid() {
+    if (busy) return; busy = true;
+    try {
+      const r = await fetch(`${Auth.api || ''}/api/my/projects/${P.id}/export`, { headers: { Authorization: 'Bearer ' + Auth.token() } });
+      if (!r.ok) { let m = ''; try { m = (await r.json()).error; } catch { /* ignore */ } throw new Error(m || 'Yuklab bo\'lmadi'); }
+      const blob = await r.blob(), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = slug() + '.html'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+    } catch (e) { toast(e.message); } busy = false;
+  }
+  async function refreshProject() { try { const j = await Auth.request(`/api/my/projects/${P.id}`); P = j.project; } catch { /* ignore */ } }
+  async function loadStats() { if (!useAcc || !paid() || !P.published) return; try { stats = await Auth.request(`/api/my/projects/${P.id}/stats`); ed.render(true); } catch { /* ignore */ } }
+  async function waitPaid() {
+    for (let i = 0; i < 25 && P && !paid(); i++) { await new Promise((r) => setTimeout(r, 3000)); await refreshProject(); }
+    if (paid()) { toast("To'lov qabul qilindi! Rahmat."); if (ed) ed.render(true); }
+  }
+  async function buy(method) {
+    const m = $('#buyMsg'); if (m) { m.className = 'msg'; m.textContent = ''; }
+    try {
+      await save();
+      const j = await Auth.request(`/api/my/projects/${P.id}/checkout`, { method: 'POST', body: { method } });
+      if (j.paid) { await refreshProject(); ed.render(true); return; }
+      if (j.manual) { payInfo = j; ed.render(true); return; }
+      if (j.payUrl) location.href = j.payUrl;
+    } catch (e) { if (m) { m.className = 'msg bad'; m.textContent = e.message; } else toast(e.message); }
+  }
+  async function publish() {
+    const m = $('#pubMsg'); m.className = 'msg'; m.textContent = '';
+    try { await save(); const j = await Auth.request(`/api/my/projects/${P.id}/publish`, { method: 'POST', body: { slug: ($('#slug') || {}).value || '' } }); P = j.project; toast('Sayt joylandi!'); ed.render(true); loadStats(); }
+    catch (e) { m.className = 'msg bad'; m.textContent = e.message; }
+  }
+  async function setDomain() {
+    const m = $('#domMsg'); m.className = 'msg'; m.textContent = '';
+    try { const j = await Auth.request(`/api/my/projects/${P.id}/domain`, { method: 'POST', body: { domain: ($('#cdom') || {}).value || '' } }); P = j.project; m.className = 'msg okk'; m.textContent = 'Saqlandi'; }
+    catch (e) { m.className = 'msg bad'; m.textContent = e.message; }
+  }
   const tayyor = {
     id: 'ready', label: '✓ Tayyor',
     render() {
       const sub = P && P.status !== 'qoralama';
       return `<h4>Saytingiz holati</h4>${checks().map(([ok, t]) => `<div class="chk ${ok ? 'ok' : 'w'}"><span>${ok ? '✓' : '!'}</span><span>${esc(t)}</span></div>`).join('')}
-        <h4>1. Tayyor saytni olish</h4><button class="b w" style="padding:14px" data-x="download">${icon('download')} Saytni yuklab olish (.html)</button><div class="hint">Bitta fayl. Brauzerda oching yoki istalgan hostingga yuklang. Buyurtma va xabarlar emailingizga yuboriladi.</div>
-        <div class="guide"><b>Internetga qanday joylash?</b><ol><li>netlify.com/drop sahifasini oching</li><li>Yuklab olingan faylni (index.html deb nomlab) sudrab tashlang</li><li>Tayyor havolani oling, o'z domeningizni keyin ulaysiz</li></ol></div>
-        <h4>2. Impro IT ga topshirish</h4>${useAcc ? (sub ? submittedBox() : submitBox()) : `<p class="hint">Saytingizni joylab, domenga ulab beramiz.</p><button class="b g w" data-x="mail">Pochta orqali so'rov yuborish</button><div class="hint">Avval loyihani fayl qilib saqlab, xatga ilova qiling.</div>`}
-        <h4>3. Loyihani saqlash</h4><p class="hint">Boshqa kompyuterda davom ettirish uchun.</p><button class="b g w" data-x="json">Loyiha faylini yuklab olish (.json)</button><label class="b g w" style="margin-top:8px;cursor:pointer">Loyiha faylini ochish<input type="file" accept=".json,application/json" data-import hidden></label>
+        <h4>Saytingizni oling</h4>${useAcc && paid() ? ownBox() : buyBox()}
+        <h4>Impro IT ga topshirish</h4>${useAcc ? (sub ? submittedBox() : submitBox()) : `<p class="hint">Saytni sizning o'rningizga to'liq tayyorlab, joylab beramiz.</p><button class="b g w" data-x="mail">Pochta orqali so'rov yuborish</button>`}
+        <h4>Loyihani saqlash</h4><p class="hint">Boshqa kompyuterda davom ettirish uchun (bepul).</p><button class="b g w" data-x="json">Loyiha faylini yuklab olish (.json)</button><label class="b g w" style="margin-top:8px;cursor:pointer">Loyiha faylini ochish<input type="file" accept=".json,application/json" data-import hidden></label>
         <h4>Boshqa shablon</h4><button class="b g w" data-x="tpl">Shablonni almashtirish</button><div class="hint">Sayt nomi va aloqa ma'lumotlari saqlanib qoladi.</div>`;
     },
     click(e) {
       const x = e.target.closest('[data-x]'); if (!x) return;
       const a = x.dataset.x;
-      if (a === 'download') downloadSite();
+      if (a === 'dl') downloadPaid();
+      if (a === 'buy') buy(x.dataset.m);
+      if (a === 'recheck') refreshProject().then(() => { if (paid()) toast("To'lov tasdiqlandi!"); else toast("Hali tasdiqlanmagan. To'lovdan keyin biroz kuting."); ed.render(true); });
+      if (a === 'pub') publish();
+      if (a === 'unpub') Auth.request(`/api/my/projects/${P.id}/publish`, { method: 'DELETE' }).then((j) => { P = j.project; stats = null; ed.render(true); }).catch((er) => toast(er.message));
+      if (a === 'dom') setDomain();
       if (a === 'json') exportJson();
       if (a === 'mail') mailRequest();
       if (a === 'tpl') showGallery(true);
@@ -208,9 +274,56 @@
     ls.set(JSON.stringify({ tplId, D, pid: P && P.id })); status(useAcc ? 'Hisobingizda saqlandi' : 'Brauzerda saqlandi'); showEditor();
     $('#ttl').textContent = D.company.name || ''; history.replaceState(null, '', useAcc && P ? `?p=${P.id}` : location.pathname);
   }
-  async function pick(id) {
+  /* ---------- AI yordamchi ---------- */
+  const digitsOf = (v) => { const n = parseInt(String(v == null ? '' : v).replace(/[^\d]/g, ''), 10); return Number.isFinite(n) && n > 0 ? n : 0; };
+  function localMatch(desc) {
+    const d = ' ' + desc.toLowerCase().replace(/[ʻʼ'’`]/g, '') + ' '; let best = null, bs = 0;
+    for (const t of window.TEMPLATES) {
+      let sc = 0;
+      for (const w of [t.id, t.name, t.cat, ...(t.tags || [])]) { const x = String(w || '').toLowerCase().replace(/[ʻʼ'’`]/g, '').trim(); if (x.length < 3) continue; if (d.includes(x)) sc += x.length > 4 ? 3 : 2; else if (x.length > 5 && d.includes(x.slice(0, x.length - 2))) sc += 1; }
+      if (sc > bs) { bs = sc; best = t; }
+    }
+    const nm = /["«“]([^"»”]{2,40})["»”]/.exec(desc) || /\b([A-ZА-Я][\w'-]{2,20}(?:\s[A-ZА-Я][\w'-]{2,20})?)\s+(?:nomli|nomi|deb nomlangan)/.exec(desc);
+    return { template: (best || window.TEMPLATES.find((t) => t.id === 'kompaniya') || window.TEMPLATES[0]).id, name: nm ? nm[1] : '' };
+  }
+  function applyAI(d, r) {
+    if (r.name) { d.company.name = r.name; d.company.logo = r.name.trim()[0].toUpperCase(); }
+    if (r.tagline) d.company.tagline = r.tagline;
+    if (r.phone) d.contacts.phone = r.phone; if (r.address) d.contacts.address = r.address;
+    const hero = d.sections.find((x) => x.type === 'hero');
+    if (hero) { if (r.heroTitle) { hero.titleStart = r.heroTitle; hero.words = []; hero.titleEnd = ''; } if (r.heroText) hero.text = r.heroText; }
+    if (r.about) { const st = d.sections.find((x) => x.type === 'statement'); if (st) st.text = r.about; else { const ab = d.sections.find((x) => x.type === 'about'); if (ab && 'text' in ab) ab.text = r.about; } }
+    const list = d.sections.find((x) => ['services', 'features', 'bento', 'menu', 'products'].includes(x.type) && Array.isArray(x.items) && x.items.length);
+    if (list && (r.services || []).length) {
+      r.services.slice(0, list.items.length).forEach((sv, i) => {
+        const it = list.items[i];
+        if (list.type === 'menu' || list.type === 'products') { it.name = sv.title; if (sv.text) it.description = sv.text; if (sv.price) it.price = sv.price; if ('oldPrice' in it) it.oldPrice = 0; }
+        else { it.title = sv.title; if (sv.text) it.text = sv.text; }
+      });
+    }
+    const fq = d.sections.find((x) => x.type === 'faq');
+    if (fq && (r.faq || []).length) fq.items = r.faq.map((f) => ({ q: f.q, a: f.a }));
+    return d;
+  }
+  async function runAI() {
+    const el = $('#aiq'), msg = $('#aiMsg'), btn = $('#aiGo'), desc = (el.value || '').trim();
+    msg.className = 'msg'; if (desc.length < 8) { msg.className = 'msg bad'; msg.textContent = 'Biznesingiz haqida kamida bir jumla yozing'; el.focus(); return; }
+    btn.disabled = true; msg.textContent = 'Sayt tayyorlanmoqda…';
+    try {
+      let res;
+      if (useAcc) res = await Auth.request('/api/ai/generate', { method: 'POST', body: { description: desc, templates: window.TEMPLATES.map((t) => ({ id: t.id, name: t.name, cat: t.cat, tags: t.tags || [] })) } });
+      else { const m = localMatch(desc); res = { ai: false, result: { template: m.template, name: m.name, services: [], faq: [] } }; }
+      const r = res.result; if (!window.getTemplate(r.template)) throw new Error('Mos shablon topilmadi');
+      $('#gallery').dataset.switch = '';
+      await pick(r.template, r);
+      toast(res.ai ? 'AI saytingizni tayyorladi. Endi xohlaganingizcha tahrirlang.' : "Mos shablon tanlandi. Matnlarni o'zingiz tahrirlang.");
+    } catch (e) { msg.className = 'msg bad'; msg.textContent = e.message; }
+    btn.disabled = false;
+  }
+  async function pick(id, ai) {
     const switching = $('#gallery').dataset.switch === '1' && D;
     const d = E.normalize(window.getTemplate(id)); delete d.account;
+    if (ai) applyAI(d, ai);
     if (switching) {
       const o = D; d.company.name = o.company.name || d.company.name; d.company.logo = o.company.logo || d.company.logo; d.company.tagline = o.company.tagline || d.company.tagline; d.company.logoImage = o.company.logoImage || '';
       d.contacts = Object.assign({}, d.contacts, Object.fromEntries(Object.entries(o.contacts || {}).filter(([, v]) => v)));
@@ -220,12 +333,18 @@
     try { await openData(d, id, null); } catch (e) { toast(e.message); }
   }
   async function openProject(id) {
-    try { const j = await Auth.request(`/api/my/projects/${id}`); await openData(E.normalize(j.data), j.project.template, j.project); }
-    catch (e) { toast(e.message); showGallery(false); }
+    try {
+      const wasPaid = new URLSearchParams(location.search).get('paid') === '1';
+      const j = await Auth.request(`/api/my/projects/${id}`); await openData(E.normalize(j.data), j.project.template, j.project);
+      if (wasPaid) { try { ed.setTab('ready'); } catch { /* ignore */ } if (!paid()) waitPaid(); }
+      if (paid() && P.published) loadStats();
+    } catch (e) { toast(e.message); showGallery(false); }
   }
 
   /* ---------- Hodisalar ---------- */
   document.addEventListener('input', (e) => { if (e.target.id === 'tq') { query = e.target.value; drawGallery(); } });
+  document.addEventListener('click', (e) => { if (e.target.closest('#aiGo')) runAI(); });
+  document.addEventListener('keydown', (e) => { if (e.target.id === 'aiq' && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) runAI(); });
   document.addEventListener('click', async (e) => {
     const t = e.target.closest('button,a'); if (!t) return;
     if (t.dataset.cat !== undefined) { e.preventDefault(); catFilter = t.dataset.cat; if (!t.closest('#cats')) { query = ''; const q = $('#tq'); if (q) q.value = ''; } drawGallery(); }

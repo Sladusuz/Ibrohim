@@ -49,12 +49,14 @@ if [ ! -f "$ENVF" ]; then
 PORT=3000
 DATA_DIR=$DATA
 TRUST_PROXY=1
+ROOT_DOMAIN=$DOMAIN
 ADMIN_PASSWORD=$PW
 ENV
   chmod 600 "$ENVF"
   echo "$PW" > /root/impro-admin-parol.txt
   chmod 600 /root/impro-admin-parol.txt
 fi
+grep -q '^ROOT_DOMAIN=' "$ENVF" || echo "ROOT_DOMAIN=$DOMAIN" >> "$ENVF"
 
 say "[5/6] Xizmatni sozlash va ishga tushirish"
 cat > /etc/systemd/system/impro.service <<UNIT
@@ -85,12 +87,25 @@ systemctl restart impro
 
 say "[6/6] HTTPS, xavfsizlik va zaxira nusxa"
 cat > /etc/caddy/Caddyfile <<CADDY
+{
+	on_demand_tls {
+		ask http://127.0.0.1:3000/_ask
+	}
+}
 $DOMAIN {
 	encode gzip zstd
 	reverse_proxy 127.0.0.1:3000
 }
 www.$DOMAIN {
 	redir https://$DOMAIN{uri} permanent
+}
+# Mijozlar saytlari (nomi.$DOMAIN) va ularning o'z domenlari: sertifikat talab bo'yicha, faqat bizning domenlarga
+https:// {
+	tls {
+		on_demand
+	}
+	encode gzip zstd
+	reverse_proxy 127.0.0.1:3000
 }
 CADDY
 systemctl enable caddy >/dev/null 2>&1

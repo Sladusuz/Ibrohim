@@ -1,8 +1,51 @@
 {
-  "currency": "so'm",
-  "plans": [
-    { "id": "self", "name": "O'zim joylayman", "price": "Bepul", "period": "", "popular": false, "features": ["Tayyor sayt fayli", "Istalgan hostingga yuklash mumkin", "Cheksiz tahrirlash"] },
-    { "id": "host", "name": "Joylab beramiz", "price": "250 000", "period": "bir martalik", "popular": true, "features": ["Saytni internetga joylash", "Domen ulash", "SSL (https) sozlash"] },
-    { "id": "pro", "name": "To'liq xizmat", "price": "900 000", "period": "bir martalik", "popular": false, "features": ["Dizaynni sizga moslab sozlash", "Rasm va matnlarni joylash", "Admin panel va buyurtmalar", "1 oy qo'llab-quvvatlash"] }
-  ]
+ "currency": "so'm",
+ "plans": [
+  {
+   "id": "self",
+   "name": "O'zim joylayman",
+   "price": "Bepul",
+   "period": "",
+   "popular": false,
+   "features": [
+    "Tayyor sayt fayli",
+    "Istalgan hostingga yuklash mumkin",
+    "Cheksiz tahrirlash"
+   ]
+  },
+  {
+   "id": "host",
+   "name": "Joylab beramiz",
+   "price": "250 000",
+   "period": "bir martalik",
+   "popular": true,
+   "features": [
+    "Saytni internetga joylash",
+    "Domen ulash",
+    "SSL (https) sozlash"
+   ]
+  },
+  {
+   "id": "pro",
+   "name": "To'liq xizmat",
+   "price": "900 000",
+   "period": "bir martalik",
+   "popular": false,
+   "features": [
+    "Dizaynni sizga moslab sozlash",
+    "Rasm va matnlarni joylash",
+    "Admin panel va buyurtmalar",
+    "1 oy qo'llab-quvvatlash"
+   ]
+  }
+ ],
+ "templatePrice": {
+  "usd": 10,
+  "rate": 12800
+ },
+ "rootDomain": "improuzbekiston.uz",
+ "contacts": {
+  "phone": "+998 33 623 33 13",
+  "telegram": ""
+ }
 }

@@ -292,7 +292,7 @@
       contacts: { phone: '+998 71 207 33 11', email: 'salom@qahvanon.uz', address: "Toshkent, Mirzo Ulug'bek tumani, Oybek ko'chasi 19", hours: 'Har kuni 8:00 – 22:00', telegram: '@qahvanon_uz', instagram: '@qahva.non' },
       footer: { text: 'Issiq qahva, iliq suhbat.', links: [] },
       sections: [
-        sec('bosh', 'hero', { layout: 'cinema', badge: 'Har kuni 8:00 dan 22:00 gacha', titleStart: "Ertalab *qahva*, kunni esa shirinlik bilan", words: [], titleEnd: '', text: "O'zimiz qovurgan qahva donalari, ertalab pishgan kruassan va uyda tayyorlangan shirinliklar. Ishga shoshilmang: bir piyola vaqt ajrating.", cta1Text: 'Stol band qilish', cta1Link: '#bron', cta2Text: "Menyuni ko'rish", cta2Link: '#menyu', visual: 'none', image: P('kafe', 1), trust: [{ value: '4.9', label: 'mehmonlar bahosi' }, { value: '40+', label: 'xil shirinlik' }, { value: '8 yil', label: 'sizlar bilan' }] }),
+        sec('bosh', 'hero', { layout: 'cinema', badge: 'Har kuni 8:00 dan 22:00 gacha', titleStart: "Har ertalab *qahva* va non", words: [], titleEnd: '', text: "O'zimiz qovurgan qahva donalari, ertalab pishgan kruassan va uyda tayyorlangan shirinliklar. Ishga shoshilmang: bir piyola vaqt ajrating.", cta1Text: 'Stol band qilish', cta1Link: '#bron', cta2Text: "Menyuni ko'rish", cta2Link: '#menyu', visual: 'none', image: P('kafe', 1), trust: [{ value: '4.9', label: 'mehmonlar bahosi' }, { value: '40+', label: 'xil shirinlik' }, { value: '8 yil', label: 'sizlar bilan' }] }),
         sec('lenta', 'marquee', { items: ['Yangi qovurilgan qahva', 'Kruassan', 'Cheesecake', 'Tiramisu', 'Matcha', 'Nonushta', 'Uy pishiriqlari'] }),
         sec('biz', 'statement', { navLabel: 'Biz haqimizda', eyebrow: 'Hikoyamiz', text: "Biz uchun qahva — bu *kichik bayram*. Har bir piyola *mehr* va diqqat bilan, har bir pishiriq esa *ertalab* qo'lda tayyorlanadi.", author: 'Dilshod Nazarov', role: 'Barista va asoschi', image: P('odam', 2), buttonText: '', buttonLink: '#' }),
         sec('menyu', 'menu', { navLabel: 'Menyu', eyebrow: 'Menyu', title: "Bizning *sevimlilar*", text: 'Qahva, nonushta va shirinliklar: har kuni yangi tayyorlanadi.', mode: 'none', items: [
@@ -360,7 +360,7 @@
           mi('pepperoni', 'Pitsa Pepperoni 32 sm', 79000, 'Pitsalar', 'Hit', "Pepperoni, mozzarella va maxsus sous.", ''),
           mi('sirli', 'Pitsa 4 xil pishloq 32 sm', 85000, 'Pitsalar', '', "Mozzarella, cheddar, parmezan, dor-blyu.", ''),
           mi('kartoshka', 'Kartoshka fri', 18000, "Qo'shimcha", '', "Qarsildoq, pishloq sousi bilan.", ''),
-          mi('qanot', 'Tovuq qanotlari (8 ta)', 42000, "Qo'shimcha", 'Achchiq', "Achchiq marinadda, ranch sousi bilan.", ''))] }),
+          mi('qanot', 'Tovuq qanotlari (8 ta)', 42000, "Qo'shimcha", 'Achchiq', "Achchiq marinadda, ranch sousi bilan.", '')] }),
         sec('kombo', 'bento', { navLabel: 'Kombo', eyebrow: 'Kombo to\'plamlar', title: "Kombo bilan *arzonroq*", text: '', items: [
           { kind: 'image', size: 'w', tall: false, title: 'Bro kombo: burger + fri + kola', text: "99 000 o'rniga 79 000 so'm.", value: '', icon: 'star', image: P('fastfood', 1), link: '' },
           { kind: 'stat', size: 's', tall: false, title: 'tejaysiz', text: '', value: '-20%', icon: 'percent', image: '', link: '' },

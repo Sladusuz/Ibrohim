@@ -76,8 +76,9 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
     await ap.fill('#pw', ADMIN); await ap.click('#lf button');
     await ap.waitForSelector('#nav button', { timeout: 6000 }).catch(() => {});
     ok((await ap.$$('#nav button')).length >= 6, 'admin paneli yuklandi');
-    for (const label of ['Buyurtmalar', 'Narxlar', 'Sayt']) { await ap.click(`#nav button:text-is("${label}")`).catch(() => {}); await ap.waitForTimeout(700); }
-    ok(await ap.$('#if, iframe') !== null, 'admin sayt tahrirlagichi (ko\'rinish) ochildi');
+    for (const label of ['Buyurtmalar', 'Narxlar', 'Sozlamalar']) { await ap.click(`#nav button:has-text("${label}")`).catch(() => {}); await ap.waitForTimeout(700); }
+    await ap.click('#nav button:nth-child(6)').catch(() => {}); await ap.waitForSelector('#eif', { timeout: 6000 }).catch(() => {});
+    ok(await ap.$('#eif') !== null, 'admin sayt tahrirlagichi (ko\'rinish) ochildi');
 
     console.log('Konstruktor');
     const bp = await b.newPage({ viewport: { width: 1440, height: 900 } });

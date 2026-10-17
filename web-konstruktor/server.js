@@ -201,7 +201,7 @@ async function api(req, res, url) {
 
   /* --- ochiq --- */
   if (route === 'GET /api/site') return send(res, 200, db.site());
-  if (route === 'GET /api/pricing') return send(res, 200, { ...db.pricing(), payMethods: pay.methods(), manualPay: db.settings().manualPay || '' });
+  if (route === 'GET /api/pricing') return send(res, 200, { ...db.pricing(), payMethods: pay.methods(), manualPay: db.settings().manualPay || '', rootDomain: rootDomains()[0] || '', contacts: { phone: (db.site().contacts || {}).phone || '', telegram: (db.site().contacts || {}).telegram || '' }, aiEnabled: ai.enabled() });
 
   /* --- hisob --- */
   if (route === 'POST /api/auth/register') {
@@ -298,7 +298,7 @@ async function api(req, res, url) {
       const mine = new Map(db.projects().filter((p) => p.userId === me.id).map((p) => [p.id, p.name]));
       return send(res, 200, db.orders().filter((o) => o.tenant && mine.has(o.tenant)).slice(0, 500).map((o) => ({ ...o, site: mine.get(o.tenant) })));
     }
-    if (route === 'GET /api/my/projects') return send(res, 200, db.projects().filter((p) => p.userId === me.id));
+    if (route === 'GET /api/my/projects') return send(res, 200, db.projects().filter((p) => p.userId === me.id).map((p) => ({ ...p, url: p.published ? siteUrl(p) : '' })));
     if (route === 'POST /api/my/projects') {
       if (limited(me.id, 'pcreate', 20, 3600e3)) return send(res, 429, { error: "Juda ko'p yangi loyiha. Keyinroq urinib ko'ring." });
       const mine = db.projects().filter((p) => p.userId === me.id); if (mine.length >= 25) return send(res, 400, { error: "Loyihalar soni chegarasi (25). Keraksizini o'chiring." });
