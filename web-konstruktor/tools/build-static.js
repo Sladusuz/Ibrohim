@@ -128,6 +128,7 @@ const nf = `<!doctype html><html lang="uz"><head><meta charset="utf-8"><meta nam
 for (const dir of [P, OUT]) { fs.writeFileSync(path.join(dir, 'manifest.webmanifest'), MANIFEST); fs.writeFileSync(path.join(dir, 'sw.js'), SW); }
 for (const dir of [P, OUT]) { for (const [f, t] of Object.entries(legal)) fs.writeFileSync(path.join(dir, f), t); fs.writeFileSync(path.join(dir, 'favicon.svg'), FAV); fs.writeFileSync(path.join(dir, 'robots.txt'), robots); fs.writeFileSync(path.join(dir, 'sitemap.xml'), sitemap); }
 fs.writeFileSync(path.join(OUT, '404.html'), nf);
+if (fs.existsSync(path.join(__dirname, '..', 'download', 'Impro-IT.apk'))) fs.copyFileSync(path.join(__dirname, '..', 'download', 'Impro-IT.apk'), path.join(OUT, 'Impro-IT.apk'));
 // Ilova (Capacitor) bilan bog'lash: native.js hamma sahifada, oddiy brauzerda hech narsa qilmaydi
 fs.copyFileSync(path.join(__dirname, 'app-native.js'), path.join(OUT, 'native.js'));
 (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (e.name.endsWith('.html') && e.name !== 'offline.html') { const h = fs.readFileSync(p, 'utf8'); if (!h.includes('/native.js') && h.includes('</body>')) fs.writeFileSync(p, h.replace('</body>', '<script src="/native.js" defer></script></body>')); } } })(OUT);
