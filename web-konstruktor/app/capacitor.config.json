@@ -3,10 +3,31 @@
   "appName": "Impro IT",
   "webDir": "www",
   "backgroundColor": "#05070f",
-  "ios": { "contentInset": "never", "backgroundColor": "#05070f", "limitsNavigationsToAppBoundDomains": false },
-  "android": { "backgroundColor": "#05070f" },
+  "ios": {
+    "contentInset": "never",
+    "backgroundColor": "#05070f"
+  },
+  "android": {
+    "backgroundColor": "#05070f"
+  },
   "plugins": {
-    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#05070f", "showSpinner": false },
-    "StatusBar": { "style": "DARK", "backgroundColor": "#05070f" }
+    "SplashScreen": {
+      "launchShowDuration": 800,
+      "backgroundColor": "#05070f",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#05070f"
+    }
+  },
+  "server": {
+    "url": "https://improuzbekiston.uz",
+    "cleartext": false,
+    "allowNavigation": [
+      "improuzbekiston.uz",
+      "*.improuzbekiston.uz"
+    ],
+    "errorPath": "offline.html"
   }
 }

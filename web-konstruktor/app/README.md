@@ -1,6 +1,6 @@
 # Impro IT: iOS/Android ilova (Capacitor)
 
-Sayt (`docs/`) ilova ichiga oflayn paketlanadi + native imkoniyatlar (`tools/app-native.js`): tebranish, ulashish, oflayn ogohlantirish, status bar, splash, tizim ilovalarida havola ochish.
+Ilova **jonli sayt `improuzbekiston.uz` ga ulangan** (`server.url`): saytda nima o'zgarsa (narx, shablon, tarjima, blog), ilova ham shu zahoti o'zgaradi, ilovani qayta yuklash shart emas. Sayt ichidagi `native.js` ilova ichida native imkoniyatlarni yoqadi (tebranish, ulashish, oflayn ogohlantirish, status bar, tizim ilovalarida havola ochish); oddiy brauzerda hech narsa qilmaydi. Internet yo'q bo'lsa `offline.html` ko'rsatiladi.
 
 Bundle ID: `uz.improuzbekiston.app` · Nomi: Impro IT
 
@@ -13,7 +13,7 @@ Bundle ID: `uz.improuzbekiston.app` · Nomi: Impro IT
 6. App Store Connect'da skrinshotlar, tavsif, maxfiylik havolasi (`https://improuzbekiston.uz/maxfiylik.html`) ni to'ldirib «Submit for Review».
 
 ## Review uchun eslatma (Guideline 4.2)
-Apple oddiy "sayt o'rami"ni rad etadi. Shuning uchun sayt ilovaga oflayn paketlangan va native funksiyalar bor. Review notes'da yozing: *"App bundles a full offline site builder catalog (32 templates) and uses native haptics, share sheet, offline handling."* Push-bildirishnomalar keyingi versiyada (APNs kaliti kerak).
+Ilova jonli saytni ochgani uchun Apple uni "sayt o'rami" deb rad etishi mumkin (4.2). Himoya: native tebranish, ulashish, oflayn holat, mijoz uchun maxsus tajriba. Review notes'da yozing: *"Client app for Impro IT: browse 32 industry website templates, build and customize a site, chat with support, uses native haptics, share sheet, system link handling and offline state."* Rad etilsa, push-bildirishnoma (APNs kaliti kerak) va oflayn katalogni qo'shamiz.
 
 ## Mahalliy yig'ish (Mac'da)
 ```
