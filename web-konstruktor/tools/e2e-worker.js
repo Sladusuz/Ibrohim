@@ -120,7 +120,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   env.CALL_USER = '+998901234567'; env.CALL_ANYTIME = '1';
   await msg(7061, 'Tezkor sayt kerak, hoziroq qilib bering', 171);
   const cu1 = callsOf().slice(-1)[0]; const q = cu1 && new URL(cu1.body.url);
-  ok(cu1 && q.hostname === 'api.callmebot.com' && q.searchParams.get('user') === '+998901234567' && /Shoshilinch mijoz/.test(q.searchParams.get('text')) && q.searchParams.get('lang') === 'uz-UZ-Standard-A' && q.searchParams.get('text').length <= 256, "shoshilinch mijozda qo'ng'iroq: matn, til va raqam to'g'ri");
+  ok(cu1 && q.hostname === 'api.callmebot.com' && cu1.body.url.includes('user=+998901234567&') && /Shoshilinch mijoz/.test(q.searchParams.get('text')) && q.searchParams.get('lang') === 'uz-UZ-Standard-A' && q.searchParams.get('text').length <= 256, "shoshilinch mijozda qo'ng'iroq: matn, til va raqam to'g'ri");
   const k1 = callsOf().length; await msg(7062, 'Sayt tezligi qancha?', 172); ok(callsOf().length === k1, "oddiy savolda qo'ng'iroq yo'q");
   await msg(7001, '/qongiroq', 173); ok(callsOf().length === k1 + 1 && /Qo'ng'iroq yuborildi/.test(lastTo(7001).body.text), '/qongiroq sinov qo\'ng\'irog\'ini yuboradi');
   const td2 = new Date(Date.now() + 5 * 3600e3), at20b = Date.UTC(td2.getUTCFullYear(), td2.getUTCMonth(), td2.getUTCDate() + 1, 15, 1), cB = callsOf().length;

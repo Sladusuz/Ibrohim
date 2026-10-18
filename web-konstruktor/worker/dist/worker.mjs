@@ -175,7 +175,7 @@ async function callOwner(env, st, text, now = Date.now()) {
   const to = String(env.CALL_USER || '').trim(); if (!to) return false;
   const h = tz(now).getUTCHours(); if ((h < 8 || h >= 22) && !env.CALL_ANYTIME) return false;
   if (await limited(st, 'call:' + dkey(now), 8, 86400, true)) return false;
-  try { const r = await fetch(`http://api.callmebot.com/start.php?user=${encodeURIComponent(to)}&text=${encodeURIComponent(String(text).replace(/\s+/g, ' ').trim().slice(0, 250))}&lang=${encodeURIComponent(env.CALL_LANG || 'uz-UZ-Standard-A')}&rpt=2&cc=no`, { signal: AbortSignal.timeout(20000) }); return r.ok; } catch { return false; }
+  try { const r = await fetch(`http://api.callmebot.com/start.php?user=${to.replace(/[^+@\w]/g, '')}&text=${encodeURIComponent(String(text).replace(/\s+/g, ' ').trim().slice(0, 250))}&lang=${encodeURIComponent(env.CALL_LANG || 'uz-UZ-Standard-A')}&rpt=2&cc=no`, { signal: AbortSignal.timeout(20000) }); return r.ok; } catch { return false; }
 }
 const spell = (p) => String(p || '').replace(/\D/g, '').split('').join(' '); // telefon raqamini raqam-raqam o'qitish uchun
 const REMIND = [10, 40, 100, 220, 460]; // daqiqalarda: javob berilmasa takroriy eslatma
