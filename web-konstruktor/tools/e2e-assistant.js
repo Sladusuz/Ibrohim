@@ -42,6 +42,16 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok(/5–10/.test((await T("Qancha vaqtda tayyor bo'ladi?")).text) && !/Start sayt: dan/.test((await T("Qancha vaqtda tayyor bo'ladi?")).text.split('\n')[0].replace(/5–10.*/, '')), "'qancha vaqtda' muddatlarni beradi (narxni emas)", await T("Qancha vaqtda tayyor bo'ladi?"));
   ok(/5–10/.test((await T('Сколько времени займет сайт?')).text), "ruscha 'сколько времени' muddatlar");
   ok(/2 500 000/.test((await T('Sayt qancha turadi?')).text), "'qancha turadi' narxni beradi");
+  // Workers AI (bepul): soxta binding
+  const runs = []; let failBig = false;
+  const W = require('../lib/assistant')({ getSettings: () => ({}), getSite: () => site, getPricing: () => ({}), workersAi: { run: async (model, input) => { runs.push({ model, input }); if (failBig && /70b/.test(model)) throw new Error('quota'); return { response: /operator/i.test(input.messages.slice(-1)[0].content) ? 'Telefon raqamingizni yozing. [[HANDOFF]]' : 'Workers AI javobi: Start sayt 2 500 000 so\'mdan.' }; } } });
+  ok(W.enabled(), 'Workers AI bo\'lsa kalitsiz ham AI yoqiladi');
+  const w1 = await W.answer({ text: 'Sayt SEO uchun yaxshimi?', history: [{ r: 'u', t: 'salom' }, { r: 'a', t: 'javob' }] });
+  ok(w1.ai && /Workers AI javobi/.test(w1.text) && /70b/.test(runs[0].model) && runs[0].input.messages[0].role === 'system' && /Start sayt/.test(runs[0].input.messages[0].content), 'Workers AI katta model bilan javob berdi (kompaniya ma\'lumotlari bilan)', w1);
+  const w2 = await W.answer({ text: 'Menga operator kerak', history: [] }); ok(w2.handoff && !/HANDOFF/.test(w2.text), 'Workers AI handoff belgisi aniqlandi');
+  failBig = true; const w3 = await W.answer({ text: 'savol', history: [] }); ok(w3.ai && /8b/.test(runs[runs.length - 1].model), 'katta model xato bersa kichigi javob beradi');
+  const W2 = require('../lib/assistant')({ getSettings: () => ({}), getSite: () => site, getPricing: () => ({}), workersAi: { run: async () => { throw new Error('down'); } } });
+  const w4 = await W2.answer({ text: 'narx qancha?', history: [] }); ok(!w4.ai && /Start sayt/.test(w4.text), 'Workers AI butunlay ishlamasa qoidalar javob beradi');
   mock.close();
   console.log(`\nNatija: ${pass} PASS, ${fail} FAIL`); process.exit(fail ? 1 : 0);
 })();

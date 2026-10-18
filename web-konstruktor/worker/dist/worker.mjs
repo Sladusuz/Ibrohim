@@ -5,10 +5,10 @@ const __am = { exports: {} };
 // Yordam boti uchun avtomatik javob beruvchi: kompaniya ma'lumotlari (xizmatlar, narxlar, savol-javoblar) asosida
 // mijoz savoliga uz/ru/en tilida javob beradi. Claude API kaliti bo'lsa AI ishlatadi, bo'lmasa qoidalar asosida javob beradi.
 // Javob bera olmasa yoki mijoz operator so'rasa: handoff=true (operatorga uzatiladi).
-module.exports = function makeAssistant({ getSettings, getSite, getPricing }) {
+module.exports = function makeAssistant({ getSettings, getSite, getPricing, workersAi }) {
   const penv = (typeof process !== 'undefined' && process.env) || {};
   const cfg = () => { const a = getSettings().ai || {}; return { key: penv.ANTHROPIC_API_KEY || a.key || '', model: penv.AI_MODEL || a.model || 'claude-sonnet-5-5', base: (penv.ANTHROPIC_BASE_URL || a.base || 'https://api.anthropic.com').replace(/\/$/, '') }; };
-  const enabled = () => !!cfg().key;
+  const enabled = () => !!(cfg().key || workersAi);
   const money = (n) => Number(n || 0).toLocaleString('ru-RU').replace(/[  ]/g, ' ');
   const plain = (s) => String(s == null ? '' : s).replace(/\*/g, '').replace(/\s+/g, ' ').trim();
   const norm = (s) => String(s || '').toLowerCase().replace(/[ʻʼ’‘`´]/g, "'").replace(/ё/g, 'е');
@@ -72,6 +72,21 @@ ${kb(F)}`;
     return { text: out.replace(/\[\[HANDOFF\]\]/g, '').trim().slice(0, 3000), handoff, ai: true };
   }
 
+  // Cloudflare Workers AI (bepul kunlik limit, kalit shart emas): katta model, xato bo'lsa kichigi
+  const CF_MODELS = ['@cf/meta/llama-3.3-70b-instruct-fp8-fast', '@cf/meta/llama-3.1-8b-instruct'];
+  async function viaWorkersAi(F, hist, text) {
+    const messages = [{ role: 'system', content: SYSTEM(F) }, ...hist.slice(-6).map((m) => ({ role: m.r === 'u' ? 'user' : 'assistant', content: String(m.t).slice(0, 900) })), { role: 'user', content: text.slice(0, 1000) }];
+    let last;
+    for (const model of CF_MODELS) {
+      try {
+        const r = await workersAi.run(model, { messages, max_tokens: 450, temperature: 0.3 });
+        const out = String((r && (r.response != null ? r.response : r.result && r.result.response)) || '').trim();
+        if (out) return { text: out.replace(/\[\[HANDOFF\]\]/g, '').trim().slice(0, 3000), handoff: /\[\[HANDOFF\]\]/.test(out), ai: true };
+      } catch (e) { last = e; }
+    }
+    throw last || new Error('Workers AI javob bermadi');
+  }
+
   // Qoidalar asosidagi zaxira javoblar (AI kaliti bo'lmaganda)
   const T = {
     uz: { hi: (n) => `Assalomu alaykum! Men ${n} yordam botiman. Sayt, Telegram bot, mobil ilova, narx va muddatlar haqida so'rang.`, thanks: 'Marhamat! Yana savol bo\'lsa yozing 🙂', phone: (F) => `Tez aloqa: ${F.phone}${F.hours ? ' (' + F.hours + ')' : ''}`, askphone: 'Aniq javob uchun telefon raqamingizni qoldiring, mutaxassisimiz siz bilan bog\'lanadi.', handoff: 'Savolingizni mutaxassisga yubordim. Telefon raqamingizni yozsangiz, tezroq bog\'lanamiz.', from: 'dan', day: 'Muddat', tplText: (F) => `Tayyor sayt shabloni: 32 ta shablonni bepul tahrirlab ko'rasiz, yuklab olish yoki e'lon qilish uchun bir martalik $${F.tpl.usd}. Boshlash: https://improuzbekiston.uz/yaratish.html`, botText: "Telegram bot konstruktori: tokenni kiritasiz, katalog, savat va mini do'kon darrov ishlaydi. Boshlash: https://improuzbekiston.uz/bot.html", payText: "To'lov Payme, Click yoki karta o'tkazmasi orqali. Katta loyihalarda bosqichma-bosqich, shartnoma asosida.", domText: "Ha, o'z domeningizni ulashingiz yoki bizning subdomenimizda e'lon qilishingiz mumkin." },
@@ -112,7 +127,8 @@ ${kb(F)}`;
 
   async function answer({ text, history = [] }) {
     const F = facts(), lang = detect(text);
-    if (enabled()) { try { return await viaClaude(F, history, text); } catch { /* AI ishlamasa qoidalarga o'tamiz */ } }
+    if (cfg().key) { try { return await viaClaude(F, history, text); } catch { /* keyingisiga o'tamiz */ } }
+    if (workersAi) { try { return await viaWorkersAi(F, history, text); } catch { /* AI ishlamasa qoidalarga o'tamiz */ } }
     return { ...rules(F, text, lang), ai: false };
   }
   return { answer, enabled, facts, kb };
@@ -149,7 +165,7 @@ async function tg(env, method, params) {
 const say = (env, chat, text, extra) => tg(env, 'sendMessage', { chat_id: chat, text, parse_mode: 'HTML', disable_web_page_preview: true, ...extra });
 const adminsOf = async (env, st) => [...new Set([...(await st.get('admins')) || [], ...String(env.TG_CHAT || '').split(',').map((x) => Number(x.trim())).filter(Boolean)])];
 const who = (m) => [m.from && m.from.first_name, m.from && m.from.last_name, m.from && m.from.username && '@' + m.from.username].filter(Boolean).join(' ') || 'Mijoz';
-const assistantOf = (env) => makeAssistant({ getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }), getSite: () => SITE, getPricing: () => PRICING });
+const assistantOf = (env) => makeAssistant({ getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }), getSite: () => SITE, getPricing: () => PRICING, workersAi: env.AI });
 
 /* ---------- Mijoz xabari ---------- */
 async function supportIn(env, st, m) {
@@ -252,7 +268,7 @@ export default {
       const w = await tg(env, 'setWebhook', { url: `${url.origin}/hook/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message'], drop_pending_updates: false });
       await tg(env, 'setMyCommands', { commands: [{ command: 'start', description: 'Boshlash' }] });
       const me = await tg(env, 'getMe', {});
-      return new Response(JSON.stringify({ webhook: !!w, bot: me && me.username, kv: !!env.STATE, ai: !!env.ANTHROPIC_API_KEY }), { headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify({ webhook: !!w, bot: me && me.username, kv: !!env.STATE, ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
     }
     if (url.pathname.startsWith('/hook/')) {
       if (req.method !== 'POST' || !env.WEBHOOK_SECRET || !tEq(url.pathname.slice(6), env.WEBHOOK_SECRET) || !tEq(req.headers.get('X-Telegram-Bot-Api-Secret-Token') || '', env.WEBHOOK_SECRET)) return new Response('no', { status: 403 });

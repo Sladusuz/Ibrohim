@@ -26,7 +26,7 @@ async function cf(method, p, body, headers) {
   if (!sub) sub = (await cf('PUT', `${acc}/workers/subdomain`, { subdomain: 'impro-' + crypto.randomBytes(3).toString('hex') })).subdomain; // yangi hisobda workers.dev nomi yaratiladi
   const kvs = await cf('GET', `${acc}/storage/kv/namespaces?per_page=100`);
   const kv = kvs.find((x) => x.title === 'impro-state') || (await cf('POST', `${acc}/storage/kv/namespaces`, { title: 'impro-state' }));
-  const bindings = [{ type: 'kv_namespace', name: 'STATE', namespace_id: kv.id },
+  const bindings = [{ type: 'kv_namespace', name: 'STATE', namespace_id: kv.id }, { type: 'ai', name: 'AI' }, // Workers AI: bepul sun'iy intellekt (kalit shart emas)
     { type: 'plain_text', name: 'ALLOW_ORIGIN', text: E.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz' },
     { type: 'secret_text', name: 'TG_TOKEN', text: E.TG_TOKEN }, { type: 'secret_text', name: 'ADMIN_PASSWORD', text: E.ADMIN_PASSWORD },
     ...Object.entries(secrets).map(([name, text]) => ({ type: 'secret_text', name, text })),

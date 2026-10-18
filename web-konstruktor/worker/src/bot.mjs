@@ -25,7 +25,7 @@ async function tg(env, method, params) {
 const say = (env, chat, text, extra) => tg(env, 'sendMessage', { chat_id: chat, text, parse_mode: 'HTML', disable_web_page_preview: true, ...extra });
 const adminsOf = async (env, st) => [...new Set([...(await st.get('admins')) || [], ...String(env.TG_CHAT || '').split(',').map((x) => Number(x.trim())).filter(Boolean)])];
 const who = (m) => [m.from && m.from.first_name, m.from && m.from.last_name, m.from && m.from.username && '@' + m.from.username].filter(Boolean).join(' ') || 'Mijoz';
-const assistantOf = (env) => makeAssistant({ getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }), getSite: () => SITE, getPricing: () => PRICING });
+const assistantOf = (env) => makeAssistant({ getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }), getSite: () => SITE, getPricing: () => PRICING, workersAi: env.AI });
 
 /* ---------- Mijoz xabari ---------- */
 async function supportIn(env, st, m) {
@@ -128,7 +128,7 @@ export default {
       const w = await tg(env, 'setWebhook', { url: `${url.origin}/hook/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message'], drop_pending_updates: false });
       await tg(env, 'setMyCommands', { commands: [{ command: 'start', description: 'Boshlash' }] });
       const me = await tg(env, 'getMe', {});
-      return new Response(JSON.stringify({ webhook: !!w, bot: me && me.username, kv: !!env.STATE, ai: !!env.ANTHROPIC_API_KEY }), { headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify({ webhook: !!w, bot: me && me.username, kv: !!env.STATE, ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
     }
     if (url.pathname.startsWith('/hook/')) {
       if (req.method !== 'POST' || !env.WEBHOOK_SECRET || !tEq(url.pathname.slice(6), env.WEBHOOK_SECRET) || !tEq(req.headers.get('X-Telegram-Bot-Api-Secret-Token') || '', env.WEBHOOK_SECRET)) return new Response('no', { status: 403 });
