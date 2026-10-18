@@ -4,7 +4,7 @@
 // to'lovni tasdiqlash tasdiq tugmasi bilan.
 const crypto = require('crypto');
 
-module.exports = function makeAdminBot({ db, pay, tg, readJSON, writeJSON, F, newId, checkPassword, baseUrl, limited, siteUrl }) {
+module.exports = function makeAdminBot({ db, pay, tg, readJSON, writeJSON, F, newId, checkPassword, baseUrl, limited, siteUrl, assistant }) {
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
   const money = (n) => Number(n || 0).toLocaleString('ru-RU').replace(/[  ]/g, ' ');
   const token = () => process.env.TELEGRAM_BOT_TOKEN || (db.settings().notify || {}).telegramBotToken || '';
@@ -24,17 +24,28 @@ module.exports = function makeAdminBot({ db, pay, tg, readJSON, writeJSON, F, ne
     }
     if (limited(String(chat), 'sup', 12, 600e3)) return say(chat, "Juda ko'p xabar yuborildi. Birozdan so'ng yozing.");
     const admins = cfg().chats; if (!admins.length) return say(chat, "Hozir operator ulanmagan. Iltimos, +998 33 623 33 13 raqamiga qo'ng'iroq qiling.");
-    const d = SUP(); d.chats[chat] = { name: who(m), at: new Date().toISOString() };
+    const d = SUP(); d.chats[chat] = Object.assign(d.chats[chat] || {}, { name: who(m), at: new Date().toISOString() });
     for (const a of admins) {
       const head = await call('sendMessage', { chat_id: a.id, parse_mode: 'HTML', text: `💬 <b>${esc(who(m))}</b> <code>${chat}</code>\nJavob berish uchun shu xabarga <b>reply</b> qiling.` + (m.text ? `\n\n${esc(text.slice(0, 3500))}` : '') });
       if (head) d.map[a.id + ':' + head.message_id] = chat;
       if (!m.text) { const cp = await call('copyMessage', { chat_id: a.id, from_chat_id: chat, message_id: m.message_id, reply_to_message_id: head && head.message_id }); if (cp) d.map[a.id + ':' + cp.message_id] = chat; }
     }
+    const rec = d.chats[chat]; rec.hist = rec.hist || [];
+    if (rec.humanUntil > Date.now()) { saveSup(d); return; } // operator bu mijoz bilan yozishmoqda: bot jim
+    const auto = cfg().auto !== false && assistant && m.text;
+    if (!auto) { saveSup(d); return say(chat, '✅ Xabaringiz qabul qilindi. Tez orada javob beramiz.'); }
+    // Avtomatik javob (AI yoki qoidalar); murakkab savol bo'lsa operatorga uzatiladi
+    let a = null;
+    try { a = await assistant.answer({ text, history: limited('all', 'supai', 400, 3600e3) ? [] : rec.hist }); } catch { a = null; }
+    if (!a || !a.text) { saveSup(d); return say(chat, '✅ Xabaringiz qabul qilindi. Tez orada javob beramiz.'); }
+    rec.hist.push({ r: 'u', t: text.slice(0, 600) }, { r: 'a', t: a.text.slice(0, 900) }); rec.hist = rec.hist.slice(-12);
+    await say(chat, esc(a.text));
+    for (const ad of admins) { const n = await call('sendMessage', { chat_id: ad.id, parse_mode: 'HTML', text: `🤖 <b>Bot javobi</b> ${a.handoff ? '⚠️ <b>Operator kerak</b>' : '✅'}${a.ai ? '' : ' (qoida)'}:\n${esc(a.text.slice(0, 1500))}`, ...(a.handoff ? {} : { disable_notification: true }) }); if (n) d.map[ad.id + ':' + n.message_id] = chat; }
     saveSup(d);
-    return say(chat, '✅ Xabaringiz qabul qilindi. Tez orada javob beramiz.');
   }
   async function supportOut(m) { // admin reply -> mijoz
     const d = SUP(), to = d.map[m.chat.id + ':' + m.reply_to_message.message_id]; if (!to) return false;
+    if (d.chats[to]) { d.chats[to].humanUntil = Date.now() + 2 * 3600e3; saveSup(d); } // operator yozdi: 2 soat bot jim turadi
     if (m.text) await say(to, `💬 <b>Impro IT:</b>\n${esc(m.text)}`);
     else await call('copyMessage', { chat_id: to, from_chat_id: m.chat.id, message_id: m.message_id });
     await call('setMessageReaction', { chat_id: m.chat.id, message_id: m.message_id, reaction: [{ type: 'emoji', emoji: '👍' }] });
@@ -81,9 +92,13 @@ module.exports = function makeAdminBot({ db, pay, tg, readJSON, writeJSON, F, ne
     }
     if (!authed(chat)) return supportIn(m);
     if (m.reply_to_message && !text.startsWith('/') && await supportOut(m)) return;
+    if (cmd === '/auto') {
+      const c = cfg(); if (/^(on|yoq|yoqish|1)$/i.test(arg)) c.auto = true; else if (/^(off|o'?chir|ochir|0)$/i.test(arg)) c.auto = false; else return say(chat, `Avtomatik javob: <b>${c.auto === false ? "o'chiq" : 'yoqilgan'}</b>\n/auto on yoki /auto off`);
+      saveCfg(c); return say(chat, c.auto === false ? "🤖 Avtomatik javob o'chirildi. Mijozlarga faqat siz javob berasiz." : '🤖 Avtomatik javob yoqildi. Murakkab savollar sizga uzatiladi.');
+    }
     if (cmd === '/panel') return say(chat, '🛠 Admin panelni Telegram ichida oching:', { reply_markup: { inline_keyboard: [[{ text: 'Admin panel', web_app: { url: `${baseUrl()}/admin` } }]] } });
     if (cmd === '/logout') { revoke(chat); return say(chat, 'Chiqdingiz. Qayta kirish uchun /login.'); }
-    if (cmd === '/start' || cmd === '/help') return say(chat, "<b>Admin buyruqlari</b>\n/panel — admin panel (mini ilova)\n/stats — statistika\n/orders — oxirgi buyurtmalar\n/projects — mijoz saytlari\n/payments — kutilayotgan to'lovlar\n/narx SAYT NARX — masalan <code>/narx lola 900000 so'm</code>\n/mijoz TELEFON — mijoz kartochkasi\n/logout — chiqish");
+    if (cmd === '/start' || cmd === '/help') return say(chat, "<b>Admin buyruqlari</b>\n/panel — admin panel (mini ilova)\n/stats — statistika\n/auto on|off — mijozlarga avtomatik javob\n/orders — oxirgi buyurtmalar\n/projects — mijoz saytlari\n/payments — kutilayotgan to'lovlar\n/narx SAYT NARX — masalan <code>/narx lola 900000 so'm</code>\n/mijoz TELEFON — mijoz kartochkasi\n/logout — chiqish");
     if (cmd === '/stats') {
       const os = db.orders().filter((o) => !o.tenant && !o.bot), pr = db.projects(), day = dayStart();
       return say(chat, `📊 <b>Statistika</b>\nBuyurtmalar: <b>${os.length}</b> (yangi: ${os.filter((o) => o.status === 'yangi').length}, bugun: ${os.filter((o) => Date.parse(o.date) >= day).length})\nMijozlar: <b>${db.users().length}</b>\nSaytlar: <b>${pr.length}</b> (sotilgan: ${pr.filter((p) => p.paid).length}, joylangan: ${pr.filter((p) => p.published).length})\nDaromad: <b>$${pr.filter((p) => p.paid).reduce((a, p) => a + (p.paid.usd || 0), 0)}</b>\nBuyurtma summasi: <b>${money(os.filter((o) => o.status !== 'bekor').reduce((a, o) => a + (o.total || 0), 0))}</b>`);

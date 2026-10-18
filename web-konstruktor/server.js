@@ -139,7 +139,8 @@ let lastOrigin = '';
 const bots = require('./lib/bot')({ F, readJSON, writeJSON, newId, getOrders: () => db.orders(), saveOrders: (v) => db.saveOrders(v), baseUrl: () => String(process.env.PUBLIC_URL || (rootDomains()[0] ? 'https://' + rootDomains()[0] : lastOrigin)).replace(/\/$/, '') });
 
 const publicBase = () => String(process.env.PUBLIC_URL || (rootDomains()[0] ? 'https://' + rootDomains()[0] : lastOrigin)).replace(/\/$/, '');
-const adminBot = require('./lib/adminbot')({ db, pay, tg: bots.tg, readJSON, writeJSON, F, newId, checkPassword: (pw) => eq(hashPw(String(pw || ''), secret.salt), secret.hash), baseUrl: publicBase, limited: (k, n, max, w) => limited(k, n, max, w), siteUrl: (m) => siteUrl(m) });
+const assistant = require('./lib/assistant')({ getSettings: () => db.settings(), getSite: () => db.site(), getPricing: () => db.pricing() });
+const adminBot = require('./lib/adminbot')({ assistant, db, pay, tg: bots.tg, readJSON, writeJSON, F, newId, checkPassword: (pw) => eq(hashPw(String(pw || ''), secret.salt), secret.hash), baseUrl: publicBase, limited: (k, n, max, w) => limited(k, n, max, w), siteUrl: (m) => siteUrl(m) });
 // Server ishga tushganda (token va HTTPS domen bo'lsa) admin bot webhook'i o'zi o'rnatiladi
 setTimeout(() => { if ((process.env.TELEGRAM_BOT_TOKEN || (db.settings().notify || {}).telegramBotToken) && /^https:\/\//.test(publicBase())) adminBot.connect().catch((e) => console.log('Admin bot ulanmadi:', e.message)); }, 4000).unref();
 
