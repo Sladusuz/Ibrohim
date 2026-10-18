@@ -28,7 +28,7 @@
   function showLogin() { $('#login').hidden = false; $('#app').hidden = true; setTimeout(() => $('#pw').focus(), 50); }
   $('#lf').addEventListener('submit', async (e) => {
     e.preventDefault(); $('#le').textContent = '';
-    try { await api('POST', '/api/admin/login', { password: $('#pw').value }); $('#pw').value = ''; $('#login').hidden = true; await start(); } catch (er) { $('#le').textContent = er.message; }
+    try { await api('POST', '/api/admin/login', { password: $('#pw').value.trim() }); $('#pw').value = ''; $('#login').hidden = true; await start(); } catch (er) { $('#le').textContent = er.message; }
   });
   $('#out').addEventListener('click', async () => { await api('POST', '/api/admin/logout', {}).catch(() => {}); st.siteDirty = false; location.reload(); });
 

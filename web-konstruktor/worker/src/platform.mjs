@@ -54,7 +54,7 @@ async function platformApi(req, env, ctx, url) {
     if (pn.startsWith('/api/admin/') && pn !== '/api/admin/login') return adminApi(req, env, ctx, url, st, J, body, cors, route);
     if (route === 'POST /api/admin/login') {
       if (await limited(st, 'alog' + ip, 8, 600)) return J({ error: "Juda ko'p urinish. 10 daqiqadan so'ng qayta urining." }, 429);
-      const b = await body(4096), pw = String(b.password || ''), ov = await st.get('admpw');
+      const b = await body(4096), pw = String(b.password || '').trim(), ov = await st.get('admpw');
       const good = ov ? tEq(await pwHash(env, pw, ov.salt, 10000), ov.hash) : !!env.ADMIN_PASSWORD && tEq(pw, env.ADMIN_PASSWORD);
       if (!good) return J({ error: "Parol noto'g'ri" }, 401);
       const tok = pRnd(24); await st.put('as:' + (await pSha(tok)), 1, 12 * 3600); return J({ ok: true, token: tok });
