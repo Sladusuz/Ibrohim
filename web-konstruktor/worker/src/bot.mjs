@@ -100,17 +100,19 @@ async function closeUrgentOf(st, chat) { for (const id of (await st.get('ul')) |
 async function stats(st, day) {
   const keys = (await st.list(`ev:${day}:`)).map((k) => k.metadata).filter(Boolean).sort((a, b) => a.t - b.t);
   const n = (k) => keys.filter((e) => e.k === k).length;
-  return { good: n('good'), bad: n('bad'), keys, msg: n('msg'), bot: n('bot'), chats: new Set(keys.filter((e) => e.k === 'msg').map((e) => e.c)).size, leads: keys.filter((e) => e.k === 'lead'), hand: keys.filter((e) => e.k === 'handoff'), urg: keys.filter((e) => e.k === 'urgent') };
+  return { rp: keys.filter((e) => e.k === 'reply').reduce((o, e) => { o[e.n] = (o[e.n] || 0) + 1; return o; }, {}), good: n('good'), bad: n('bad'), keys, msg: n('msg'), bot: n('bot'), chats: new Set(keys.filter((e) => e.k === 'msg').map((e) => e.c)).size, leads: keys.filter((e) => e.k === 'lead'), hand: keys.filter((e) => e.k === 'handoff'), urg: keys.filter((e) => e.k === 'urgent') };
 }
 async function report(env, st, day) {
   const keys = (await st.list(`ev:${day}:`)).map((k) => k.metadata).filter(Boolean).sort((a, b) => a.t - b.t);
   const n = (k) => keys.filter((e) => e.k === k).length, chats = new Set(keys.filter((e) => e.k === 'msg').map((e) => e.c));
   const leads = keys.filter((e) => e.k === 'lead'), hand = keys.filter((e) => e.k === 'handoff'), urg = keys.filter((e) => e.k === 'urgent');
   let openU = 0; for (const id of (await st.get('ul')) || []) { const u = await st.get('u:' + id); if (u && !u.done) openU++; }
+  const rp = keys.filter((e) => e.k === 'reply').reduce((o, e) => { o[e.n] = (o[e.n] || 0) + 1; return o; }, {});
   const row = (e) => `• ${hm(e.t)} ${esc(e.n || 'Mijoz')}${e.p ? ' ' + esc(e.p) : ''}${e.x ? ' — «' + esc(e.x.slice(0, 70)) + '»' : ''}`;
   const L = [`📊 <b>Kunlik hisobot</b> · ${day.split('-').reverse().join('.')}`, '',
     `💬 Mijoz suhbatlari: <b>${chats.size}</b> (xabarlar: ${n('msg')})`, `🤖 Bot o'zi javob bergan: <b>${n('bot')}</b>`, `⚠️ Operator kerak bo'lgan: <b>${hand.length}</b>`, `📝 Saytdan so'rovlar: <b>${leads.length}</b>`, `🔥 Shoshilinch: <b>${urg.length}</b>${openU ? ` (javobsiz: ${openU})` : ''}`,
-    ...(n('good') + n('bad') ? [`👍 ${n('good')} · 👎 ${n('bad')} (bot javoblari baholari)`] : [])];
+    ...(n('good') + n('bad') ? [`👍 ${n('good')} · 👎 ${n('bad')} (bot javoblari baholari)`] : []),
+    ...(Object.keys(rp).length ? ['👨‍💼 Javoblar: ' + Object.entries(rp).map(([k, v]) => `${esc(k)} ${v}`).join(' · ')] : [])];
   if (leads.length) L.push('', "<b>Saytdan kelgan so'rovlar:</b>", ...leads.slice(-8).map(row));
   if (urg.length) L.push('', '<b>Shoshilinch mijozlar:</b>', ...urg.slice(-5).map(row));
   if (hand.length) L.push('', "<b>Operator kerak bo'lgan savollar:</b>", ...hand.slice(-5).map(row));
@@ -146,6 +148,11 @@ async function tick(env, now = Date.now()) {
   if (left.length !== fl.length) await st.put('fl', left);
   if (st.gc && !(await st.get('gc:' + dkey(now)))) { await st.put('gc:' + dkey(now), 1, 2 * 86400); await st.gc().catch(() => {}); } // eskirgan yozuvlarni tozalash (kuniga bir marta)
   if (h === 9 && mi < 5 && tz(now).getUTCDay() === 1 && !(await st.get('repw:' + dkey(now)))) { await st.put('repw:' + dkey(now), 1, 2 * 86400); const wt = await weekly(env, st, now); for (const a of admins) await say(env, a, wt); }
+  if (h === 10 && mi < 5 && !(await st.get('dig:' + dkey(now)))) { // ertalabki xulosa: kechagi javobsiz savollar
+    await st.put('dig:' + dkey(now), 1, 2 * 86400);
+    const ys = (await st.list(`ev:${dkey(now - 864e5)}:`)).map((k) => k.metadata).filter((e) => e && e.k === 'handoff' && e.x && !/^telefon:/.test(e.x)).slice(-8);
+    if (ys.length) { const t = `📋 <b>Kechagi javobsiz savollar</b> (${ys.length})\n` + ys.map((e) => `• ${esc(e.n || 'Mijoz')}: «${esc(String(e.x).slice(0, 90))}»`).join('\n') + '\n\nBotni o\'rgatish: <code>/bilim ...</code>'; for (const a of admins) await say(env, a, t); }
+  }
   if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await pushPhone(env, 'Kunlik hisobot', `Suhbatlar: ${S.chats}, saytdan so'rovlar: ${S.leads.length}, shoshilinch: ${S.urg.length}, operator kerak: ${S.hand.length}. Batafsil Telegramda.`, 3, 'bar_chart'); await callOwner(env, st, `Дневной отчёт. Диалогов ${S.chats}. Заявок с сайта ${S.leads.length}. Срочных ${S.urg.length}. Нужен оператор ${S.hand.length}. Подробности в Телеграме.`, now); }
 }
 
@@ -204,8 +211,9 @@ async function flowStart(env, st, chat, rec) {
   return say(env, chat, '📝 <b>Buyurtma anketasi</b> (5 ta qisqa savol, bekor qilish: /cancel)\n\n1/5. Qanday xizmat kerak?', { reply_markup: kbOf('svc', SERVICES) });
 }
 async function flowFinish(env, st, chat, rec, name) {
-  const d = rec.flow.d; rec.flow = null; rec.phone = d.ph; addTag(rec, 'anketa'); addTag(rec, 'issiq'); await saveRec(st, chat, rec);
-  const txt = `📝 <b>Yangi anketa (bot)</b>\n👤 ${esc(name)}${chat ? ` <code>${chat}</code>` : ''}\n🔧 ${esc(d.svc)}\n🏢 ${esc(d.name)}\n⏱ ${esc(d.dl)}\n💰 ${esc(d.bd)}\n📞 <b>${esc(d.ph)}</b>`;
+  const d = rec.flow.d; rec.flow = null; rec.phone = d.ph; const tmp = leadTemp({ phone: true, anketa: true, urgent: /^Shoshilinch/.test(d.dl), budget: d.bd }); addTag(rec, 'anketa'); addTag(rec, tmp); await saveRec(st, chat, rec);
+  await saveLead(st, { c: chat, n: name, p: d.ph, s: 'anketa', x: `${d.svc}; ${d.name}; ${d.dl}; ${d.bd}`, g: tmp });
+  const txt = `📝 <b>Yangi anketa (bot)</b> #${tmp}\n👤 ${esc(name)}${chat ? ` <code>${chat}</code>` : ''}\n🔧 ${esc(d.svc)}\n🏢 ${esc(d.name)}\n⏱ ${esc(d.dl)}\n💰 ${esc(d.bd)}\n📞 <b>${esc(d.ph)}</b>`;
   await ev(st, { k: 'lead', c: chat, n: name, p: d.ph, x: `anketa: ${d.svc}, ${d.dl}` });
   const map = {};
   for (const a of await adminsOf(env, st)) { const h = await say(env, a, txt + '\n\nJavob berish uchun shu xabarga <b>reply</b> qiling.', { reply_markup: { inline_keyboard: [[{ text: `📞 ${d.ph}`, url: 'https://t.me/' + d.ph }]] } }); if (h) map[a + ':' + h.message_id] = chat; }
@@ -237,14 +245,88 @@ async function weekly(env, st, now = Date.now()) {
   const all = []; for (let i = 0; i < 7; i++) all.push(...(await st.list(`ev:${dkey(now - i * 864e5)}:`)).map((k) => k.metadata).filter(Boolean));
   const n = (k) => all.filter((e) => e.k === k).length, msgs = all.filter((e) => e.k === 'msg'), chats = new Set(msgs.map((e) => e.c));
   const TOP = [['Narx', /narx|qancha|price|cost|цена|стоим|сколько/i], ['Muddat', /muddat|vaqt|срок|когда|deadline|how long/i], ['Telegram bot', /bot|бот/i], ['Sayt / shablon', /sayt|shablon|сайт|шаблон|site|template/i], ['Mobil ilova', /ilova|приложен|app/i], ["To'lov", /to'?lov|payme|click|оплат|pay/i], ['Domen / hosting', /domen|hosting|домен/i], ['SEO / Google', /seo|google|qidiruv/i]];
+  const wrp = Object.entries(all.filter((e) => e.k === 'reply').reduce((o, e) => { o[e.n] = (o[e.n] || 0) + 1; return o; }, {}));
   const top = TOP.map(([t, re]) => [t, msgs.filter((e) => re.test(e.x)).length]).filter((x) => x[1]).sort((a, b) => b[1] - a[1]).slice(0, 5);
   const unans = all.filter((e) => e.k === 'handoff' && e.x && !/^telefon:/.test(e.x)).slice(-6);
   const L = [`📈 <b>Haftalik hisobot</b> · ${dkey(now - 6 * 864e5).split('-').reverse().join('.')} – ${dkey(now).split('-').reverse().join('.')}`, '',
-    `👥 Mijozlar: <b>${chats.size}</b> (xabarlar: ${msgs.length})`, `🤖 Bot o'zi javob bergan: <b>${n('bot') + n('menu')}</b>`, `⚠️ Operator kerak bo'lgan: <b>${n('handoff')}</b>`, `📝 So'rovlar va telefonlar: <b>${n('lead')}</b>`, `🔥 Shoshilinch: <b>${n('urgent')}</b>`, ...(n('good') + n('bad') ? [`👍 ${n('good')} · 👎 ${n('bad')}`] : [])];
+    `👥 Mijozlar: <b>${chats.size}</b> (xabarlar: ${msgs.length})`, `🤖 Bot o'zi javob bergan: <b>${n('bot') + n('menu')}</b>`, `⚠️ Operator kerak bo'lgan: <b>${n('handoff')}</b>`, `📝 So'rovlar va telefonlar: <b>${n('lead')}</b>`, `🔥 Shoshilinch: <b>${n('urgent')}</b>`, ...(n('good') + n('bad') ? [`👍 ${n('good')} · 👎 ${n('bad')}`] : []), ...(wrp.length ? ['👨‍💼 Javoblar: ' + wrp.map(([k, v]) => `${esc(k)} ${v}`).join(' · ')] : [])];
   if (top.length) L.push('', '<b>Eng ko\'p so\'ralgan mavzular:</b>', ...top.map(([t, c]) => `• ${t}: ${c}`));
   if (unans.length) L.push('', "<b>Bot javob bera olmagan savollar</b> (<code>/bilim</code> bilan o'rgating):", ...unans.map((e) => `• «${esc(String(e.x).slice(0, 80))}»`));
   if (!all.length) L.push('', "Bu hafta ma'lumot yo'q.");
   return L.join('\n').slice(0, 4000);
+}
+/* ---------- Lidlar bazasi, eksport, javob loyihasi, jamoa, sayt chati ---------- */
+// Lid: doimiy saqlanadi (TTL yo'q). s = manba: bot | anketa | sayt | chat
+async function saveLead(st, l) {
+  try {
+    const t = Date.now(), id = t.toString(36) + Math.random().toString(36).slice(2, 5);
+    await st.put('lead:' + id, { ...l, t }, 0, { t, n: String(l.n || '').slice(0, 40), p: String(l.p || '').slice(0, 25), s: l.s || '', x: String(l.x || '').replace(/\s+/g, ' ').slice(0, 160), g: l.g || '' });
+  } catch { /* lid saqlanmasa ham mijozga javob ketadi */ }
+}
+// Mijoz "isitma darajasi": telefon + anketa + shoshilinch + byudjet bo'yicha ballar
+const leadTemp = ({ phone, anketa, urgent, budget }) => { const sc = (phone ? 2 : 0) + (anketa ? 2 : 0) + (urgent ? 2 : 0) + (/7–15|15 mln/.test(budget || '') ? 2 : /3–7/.test(budget || '') ? 1 : 0); return sc >= 4 ? 'issiq' : sc >= 2 ? 'iliq' : 'sovuq'; };
+const csvCell = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""').replace(/\r?\n/g, ' ') + '"';
+async function sendDoc(env, chat, name, text, caption) {
+  const fd = new FormData(); fd.append('chat_id', String(chat)); if (caption) fd.append('caption', caption);
+  fd.append('document', new Blob(['﻿' + text], { type: 'text/csv' }), name);
+  try { const r = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/sendDocument`, { method: 'POST', body: fd }); return r.ok; } catch { return false; }
+}
+const leadRow = (k) => { const m = k.metadata || {}; return { t: m.t || 0, n: m.n || '', p: m.p || '', s: m.s || '', x: m.x || '', g: m.g || '' }; };
+async function listLeads(st) { return (await st.list('lead:')).map(leadRow).sort((a, b) => b.t - a.t); }
+// Javob loyihasi: bot bilmagan savolga operator uchun tayyor matn (tasdiqlansa mijozga ketadi)
+async function offerDraft(env, st, admins, { to, name, text, hist, extra, label }) {
+  let dr = ''; try { dr = await assistantOf(env, extra).draft({ text, history: hist || [] }); } catch { dr = ''; }
+  if (!dr) return;
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 4);
+  await st.put('dr:' + id, { to, text: dr }, 86400);
+  for (const a of admins) await say(env, a, `📝 <b>Javob loyihasi</b> → ${esc(name || 'Mijoz')}${label ? ' (' + label + ')' : ''}:\n\n${esc(dr)}\n\n<i>Yuborish tugmasini bosing yoki o'zingiz yozing (xabarga reply).</i>`, { reply_markup: { inline_keyboard: [[{ text: '✅ Yuborish', callback_data: 'dr:' + id }, { text: '🗑 Rad', callback_data: 'dx:' + id }]] } });
+}
+// Mijozga operator nomidan xabar (Telegram yoki sayt chati)
+async function deliver(env, st, to, text, asAdmin) {
+  if (String(to).startsWith('web:')) { const sid = String(to).slice(4), box = (await st.get('wo:' + sid)) || []; box.push({ t: Date.now(), text }); await st.put('wo:' + sid, box.slice(-20), 3600); await st.put('hu:' + to, 1, 2 * 3600); return true; }
+  const r = await say(env, to, `💬 <b>Impro IT:</b>\n${esc(text)}`);
+  if (r) { await st.put('hu:' + to, 1, 2 * 3600); await closeUrgentOf(st, to); }
+  if (asAdmin) await ev(st, { k: 'reply', c: 0, n: asAdmin, x: '' });
+  return !!r;
+}
+const adminName = (q) => who({ from: q.from || q }) || 'Admin';
+// Sayt chati API (CORS: faqat ruxsat etilgan saytlar)
+async function chatApi(req, env) {
+  const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || '').split(',').map((x) => x.trim()).filter(Boolean);
+  if (!allow.length) allow.push('https://improuzbekiston.uz', 'https://www.improuzbekiston.uz');
+  const okOrigin = allow.includes(origin), cors = { 'Access-Control-Allow-Origin': okOrigin ? origin : 'null', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
+  const json = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: { ...cors, 'Content-Type': 'application/json' } });
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+  if (!okOrigin) return new Response("Ruxsat yo'q", { status: 403, headers: cors });
+  const st = store(env), url = new URL(req.url), SID = /^[A-Za-z0-9]{16,40}$/;
+  if (req.method === 'GET') { // operator javoblarini olish
+    const sid = url.searchParams.get('sid') || ''; if (!SID.test(sid)) return json({ error: 'sid' }, 400);
+    const box = (await st.get('wo:' + sid)) || []; if (box.length) await st.put('wo:' + sid, [], 3600);
+    return json({ msgs: box.map((x) => x.text) });
+  }
+  if (req.method !== 'POST') return new Response("Ruxsat yo'q", { status: 405, headers: cors });
+  let b; try { b = await req.json(); } catch { return json({ error: "Noto'g'ri so'rov" }, 400); }
+  const sid = String(b.sid || ''), text = String(b.text || '').trim().slice(0, 500);
+  if (!SID.test(sid) || !text) return json({ error: "Noto'g'ri so'rov" }, 400);
+  if (await limited(st, 'wip:' + (req.headers.get('CF-Connecting-IP') || 'x'), 40, 600) || await limited(st, 'wsid:' + sid, 20, 600)) return json({ error: "Juda ko'p xabar. Birozdan so'ng yozing." }, 429);
+  const key = 'web:' + sid, tag = 'W' + sid.slice(0, 5), admins = await adminsOf(env, st);
+  const rec = (await st.get('wc:' + sid)) || { hist: [], name: 'Sayt mehmoni ' + tag };
+  const ph = findPhone(text), urgent = isUrgent(text), lang = makeAssistantDetect(env)(text), extra = (await st.get('kb')) || [];
+  await ev(st, { k: 'msg', c: tag, n: rec.name, x: text });
+  if (ph) { rec.phone = ph.phone; const g = leadTemp({ phone: true, urgent }); await ev(st, { k: 'lead', c: tag, n: rec.name, p: ph.phone, x: ph.rest || 'telefon qoldirdi' }); await saveLead(st, { c: key, n: rec.name, p: ph.phone, s: 'chat', x: ph.rest || text, g }); }
+  const map = {};
+  for (const a of admins) { const h = await say(env, a, `🌐 <b>Sayt chati</b> <code>${tag}</code>${ph ? `\n📞 <b>Telefon qoldirdi: ${esc(ph.phone)}</b>` : rec.phone ? `\n📞 ${esc(rec.phone)}` : ''}\nJavob berish uchun shu xabarga <b>reply</b> qiling.\n\n${esc(text)}`); if (h) map[a + ':' + h.message_id] = key; }
+  await Promise.all(Object.entries(map).map(([k, v]) => st.put('m:' + k, v, 30 * 86400)));
+  if (urgent) await raiseUrgent(env, st, { chat: 0, name: rec.name, phone: rec.phone, text });
+  if (await st.get('hu:' + key)) { await st.put('wc:' + sid, rec, 2 * 86400); return json({ ok: true, reply: '', operator: true }); }
+  if (ph && ph.rest.replace(/[^\p{L}]/gu, '').length < 12) { await st.put('wc:' + sid, rec, 2 * 86400); await ev(st, { k: 'handoff', c: tag, n: rec.name, x: 'telefon: ' + ph.phone }); return json({ ok: true, reply: (THANKS_PHONE[lang] || THANKS_PHONE.uz) + (isOffice() ? '' : OFFLINE[lang] || OFFLINE.uz) }); }
+  let a = null; try { a = await assistantOf(env, extra).answer({ text, history: rec.hist }); } catch { a = null; }
+  if (!a || !a.text) { await st.put('wc:' + sid, rec, 2 * 86400); return json({ ok: true, reply: '✅ Xabaringiz qabul qilindi. Tez orada javob beramiz.' }); }
+  rec.hist = [...rec.hist, { r: 'u', t: text.slice(0, 600) }, { r: 'a', t: a.text.slice(0, 900) }].slice(-12);
+  await st.put('wc:' + sid, rec, 2 * 86400);
+  await ev(st, { k: a.handoff ? 'handoff' : 'bot', c: tag, n: rec.name, x: text });
+  if (a.handoff) await offerDraft(env, st, admins, { to: key, name: rec.name, text, hist: rec.hist, extra, label: 'sayt chati' });
+  return json({ ok: true, reply: a.text + (a.handoff && !isOffice() ? OFFLINE[lang] || OFFLINE.uz : ''), handoff: !!a.handoff });
 }
 async function supportIn(env, st, m) {
   const chat = m.chat.id; let text = (m.text || '').trim();
@@ -258,19 +340,19 @@ async function supportIn(env, st, m) {
   if (text === '/anketa') return flowStart(env, st, chat, rec);
   if (rec.flow && m.text) return flowText(env, st, m, rec);
   if ((m.voice || m.audio) && !m.text) { const tr = await transcribe(env, m); if (tr) { m = { ...m, text: tr, _voice: true }; text = tr; } }
-  rec.name = who(m);
+  rec.name = who(m); const prevT = rec.lastT; rec.lastT = Date.now();
   const urgent = !!m.text && isUrgent(text);
   const ph = m.text ? findPhone(text) : null, lang0 = makeAssistantDetect(env)(text);
   rec.lang = lang0;
   const tl = m.text && lang0 !== 'uz' ? await translateUz(env, text) : '';
   if (urgent) addTag(rec, 'shoshilinch');
-  if (ph) { addTag(rec, 'issiq'); if (!(await st.get('hu:' + chat))) await scheduleFollow(st, { c: chat, k: 'ph', due: Date.now() + 3600e3, n: who(m), p: ph.phone }); }
+  if (ph) { if (!(await st.get('hu:' + chat))) await scheduleFollow(st, { c: chat, k: 'ph', due: Date.now() + 3600e3, n: who(m), p: ph.phone }); }
   if (m.text && /narx|qancha|price|cost|цена|стоим|сколько/i.test(text) && !rec.phone && !ph && !rec.fuPrice) { rec.fuPrice = 1; await scheduleFollow(st, { c: chat, k: 'price', due: Date.now() + 24 * 3600e3, n: who(m) }); }
-  if (ph) { rec.phone = ph.phone; await ev(st, { k: 'lead', c: chat, n: who(m), p: ph.phone, x: ph.rest || 'telefon qoldirdi' }); }
+  if (ph) { rec.phone = ph.phone; const tmp = leadTemp({ phone: true, urgent }); addTag(rec, tmp); await ev(st, { k: 'lead', c: chat, n: who(m), p: ph.phone, x: ph.rest || 'telefon qoldirdi' }); await saveLead(st, { c: chat, n: who(m), p: ph.phone, s: 'bot', x: ph.rest || 'telefon qoldirdi', g: tmp }); }
   await ev(st, { k: 'msg', c: chat, n: who(m), x: m.text ? text : '[fayl/rasm]' });
   const map = {};
   for (const a of admins) {
-    const head = await say(env, a, `💬 <b>${esc(who(m))}</b> <code>${chat}</code>${m._voice ? '\n🎤 <i>ovozli xabar (matnga aylantirildi)</i>' : ''}${ph ? `\n📞 <b>Telefon qoldirdi: ${esc(ph.phone)}</b>` : rec.phone ? `\n📞 ${esc(rec.phone)}` : ''}\nJavob berish uchun shu xabarga <b>reply</b> qiling.` + (m.text ? `\n\n${esc(text.slice(0, 3500))}` : '') + (tl ? `\n\n🌐 <i>${esc(tl)}</i>` : ''));
+    const head = await say(env, a, `💬 <b>${esc(who(m))}</b> <code>${chat}</code>${m._voice ? '\n🎤 <i>ovozli xabar (matnga aylantirildi)</i>' : ''}${ph ? `\n📞 <b>Telefon qoldirdi: ${esc(ph.phone)}</b>` : rec.phone ? `\n📞 ${esc(rec.phone)}` : ''}\nJavob berish uchun shu xabarga <b>reply</b> qiling.` + (m.text ? `\n\n${esc(text.slice(0, 3500))}` : '') + (tl ? `\n\n🌐 <i>${esc(tl)}</i>` : ''), admins.length > 1 ? { reply_markup: { inline_keyboard: [[{ text: '✅ Men oldim', callback_data: 'tk:' + chat }]] } } : undefined);
     if (head) map[a + ':' + head.message_id] = chat;
     if (!m.text) { const cp = await tg(env, 'copyMessage', { chat_id: a, from_chat_id: chat, message_id: m.message_id, reply_to_message_id: head && head.message_id }); if (cp) map[a + ':' + cp.message_id] = chat; }
   }
@@ -289,21 +371,25 @@ async function supportIn(env, st, m) {
   await saveRec(st, chat, rec);
   await ev(st, { k: a.handoff ? 'handoff' : 'bot', c: chat, n: who(m), x: text });
   const lg = makeAssistantDetect(env)(text), URGLINE = { uz: "\n\n🔥 Shoshilinch ekaningizni qayd etdim: mutaxassisimiz tez orada bog'lanadi.", ru: '\n\n🔥 Отметил срочность: специалист свяжется с вами в ближайшее время.', en: '\n\n🔥 Marked as urgent: a specialist will contact you shortly.' };
-  await say(env, chat, esc(a.text) + (urgent ? URGLINE[lg] || URGLINE.uz : '') + (a.handoff && !isOffice() ? OFFLINE[lg] || OFFLINE.uz : ''), a.handoff ? undefined : { reply_markup: FEEDBACK });
+  const fn = String(rec.name || '').split(' ')[0], back = prevT && Date.now() - prevT > 6 * 3600e3 && fn.length > 1 && /\p{L}/u.test(fn) ? ({ uz: `Yana salom, ${fn}! 👋\n`, ru: `С возвращением, ${fn}! 👋\n`, en: `Welcome back, ${fn}! 👋\n` }[lg] || '') : '';
+  await say(env, chat, esc(back) + esc(a.text) + (urgent ? URGLINE[lg] || URGLINE.uz : '') + (a.handoff && !isOffice() ? OFFLINE[lg] || OFFLINE.uz : ''), a.handoff ? undefined : { reply_markup: FEEDBACK });
   for (const ad of admins) { const n = await tg(env, 'sendMessage', { chat_id: ad, parse_mode: 'HTML', text: `🤖 <b>Bot javobi</b> ${a.handoff ? '⚠️ <b>Operator kerak</b>' : '✅'}${a.ai ? '' : ' (qoida)'}:\n${esc(a.text.slice(0, 1500))}`, ...(a.handoff ? {} : { disable_notification: true }) }); if (n) map[ad + ':' + n.message_id] = chat; }
   await saveMap();
+  if (a.handoff) await offerDraft(env, st, admins, { to: chat, name: who(m), text, hist: rec.hist, extra });
   if (urgent) await raiseUrgent(env, st, { chat, name: who(m), phone: rec.phone, text });
 }
 // Admin reply -> mijoz
 async function supportOut(env, st, m) {
   const to = await st.get('m:' + m.chat.id + ':' + m.reply_to_message.message_id); if (!to) return false;
-  await st.put('hu:' + to, 1, 2 * 3600); // operator yozdi: 2 soat bot jim turadi
-  await closeUrgentOf(st, to);
-  if (m.text) await say(env, to, `💬 <b>Impro IT:</b>\n${esc(m.text)}`); else await tg(env, 'copyMessage', { chat_id: to, from_chat_id: m.chat.id, message_id: m.message_id });
+  const me = who(m), own = await st.get('own:' + to), web = String(to).startsWith('web:');
+  if (own && own.a !== m.chat.id) { await say(env, m.chat.id, `⚠️ Bu mijozni <b>${esc(own.n)}</b> olgan. Baribir yuborish uchun: <code>/javob ${to} matn</code>`); return true; }
+  await st.put('own:' + to, { a: m.chat.id, n: me }, 2 * 3600);
+  if (m.text) await deliver(env, st, to, m.text, me);
+  else if (web) { await say(env, m.chat.id, "Sayt chatiga fayl yuborib bo'lmaydi, matn yozing."); return true; }
+  else { await st.put('hu:' + to, 1, 2 * 3600); await closeUrgentOf(st, to); await tg(env, 'copyMessage', { chat_id: to, from_chat_id: m.chat.id, message_id: m.message_id }); await ev(st, { k: 'reply', c: 0, n: me, x: '' }); }
   await tg(env, 'setMessageReaction', { chat_id: m.chat.id, message_id: m.message_id, reaction: [{ type: 'emoji', emoji: '👍' }] });
   return true;
 }
-
 async function handleCallback(env, st, q) {
   const chat = q.message && q.message.chat && q.message.chat.id, d = String(q.data || ''), ans = (text) => tg(env, 'answerCallbackQuery', { callback_query_id: q.id, ...(text ? { text } : {}) });
   if (!chat) return ans();
@@ -323,6 +409,28 @@ async function handleCallback(env, st, q) {
   if (d === 'm:order') { await ans(); return flowStart(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) }); }
   const oc = /^o:(svc|dl|bd):(\d+)$/.exec(d);
   if (oc) { await ans(); return flowCallback(env, st, q, oc[1], oc[2]); }
+  const tk = /^tk:(\d+)$/.exec(d);
+  if (tk) { // jamoa: "Men oldim"
+    if (!isAdmin) return ans("Ruxsat yo'q");
+    const nm = who({ from: q.from }) || 'Admin', cur = await st.get('own:' + tk[1]);
+    if (cur && cur.a !== chat) return ans(`Bu mijozni ${cur.n} olgan`);
+    await st.put('own:' + tk[1], { a: chat, n: nm }, 2 * 3600); await ev(st, { k: 'take', c: 0, n: nm, x: tk[1] }); await ans('Siz oldingiz');
+    for (const a of await adminsOf(env, st)) if (a !== chat) await say(env, a, `👤 <b>${esc(nm)}</b> mijozni oldi (<code>${tk[1]}</code>). Javob bermang.`);
+    return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: '👤 Siz oldingiz', callback_data: 'noop' }]] } });
+  }
+  const dd = /^(dr|dx):(\w+)$/.exec(d);
+  if (dd) { // javob loyihasi: yuborish yoki rad etish
+    if (!isAdmin) return ans("Ruxsat yo'q");
+    const job = await st.get('dr:' + dd[2]); if (!job) return ans('Muddati tugagan yoki allaqachon ishlangan');
+    await st.put('dr:' + dd[2], null, 60);
+    if (dd[1] === 'dx') { await ans("Rad etildi"); return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: '🗑 Rad etildi', callback_data: 'noop' }]] } }); }
+    const nm = who({ from: q.from }) || 'Admin', own = await st.get('own:' + job.to);
+    if (own && own.a !== chat) { await ans(`Bu mijozni ${own.n} olgan`); return; }
+    const okd = await deliver(env, st, job.to, job.text, nm); await st.put('own:' + job.to, { a: chat, n: nm }, 2 * 3600);
+    if (String(job.to).startsWith('web:')) await ev(st, { k: 'reply', c: 0, n: nm, x: '' });
+    await ans(okd ? 'Yuborildi' : 'Yuborilmadi');
+    return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: okd ? '✅ Yuborildi' : '❌ Yuborilmadi', callback_data: 'noop' }]] } });
+  }
   const bc = /^bc:(\w+)$/.exec(d);
   if (bc) { // ommaviy xabarni tasdiqlash (faqat admin)
     if (!isAdmin) return ans("Ruxsat yo'q");
@@ -373,10 +481,19 @@ async function handleUpdate(env, upd) {
   }
   if (cmd === '/haftalik') return say(env, chat, await weekly(env, st));
   if (cmd === '/javob') {
-    const mm = /^(\d+)\s+([\s\S]{1,3500})$/.exec(arg); if (!mm) return say(env, chat, 'Format: <code>/javob 123456 Salom, ...</code>');
-    const to = Number(mm[1]), r = await say(env, to, `💬 <b>Impro IT:</b>\n${esc(mm[2])}`);
-    if (r) { await st.put('hu:' + to, 1, 2 * 3600); await closeUrgentOf(st, to); }
+    const mm = /^(web:[A-Za-z0-9]{16,40}|\d+)\s+([\s\S]{1,3500})$/.exec(arg); if (!mm) return say(env, chat, 'Format: <code>/javob 123456 Salom, ...</code>');
+    const to = /^\d+$/.test(mm[1]) ? Number(mm[1]) : mm[1], me = who(m), r = await deliver(env, st, to, mm[2], me);
+    if (r) await st.put('own:' + to, { a: chat, n: me }, 2 * 3600);
     return say(env, chat, r ? '✅ Yuborildi.' : "Yuborilmadi (mijoz botni bloklagan yoki ID noto'g'ri).");
+  }
+  if (cmd === '/lidlar') {
+    const ls = (await listLeads(st)).slice(0, 15);
+    return say(env, chat, ls.length ? `🎯 <b>Oxirgi lidlar</b> (jami baza: /eksport)\n` + ls.map((l) => `• ${hm(l.t)} <b>${esc(l.n || 'Mijoz')}</b> ${esc(l.p)}${l.g ? ' #' + esc(l.g) : ''} · ${esc(l.s)}${l.x ? '\n   <i>' + esc(l.x.slice(0, 90)) + '</i>' : ''}`).join('\n') : "Hozircha lid yo'q.");
+  }
+  if (cmd === '/eksport') {
+    const ls = await listLeads(st); if (!ls.length) return say(env, chat, "Eksport qilish uchun lid yo'q.");
+    const csv = ['Sana,Ism,Telefon,Manba,Teg,Izoh', ...ls.map((l) => [new Date(l.t + TZ).toISOString().replace('T', ' ').slice(0, 16), l.n, l.p, l.s, l.g, l.x].map(csvCell).join(','))].join('\n');
+    return (await sendDoc(env, chat, `lidlar-${dkey()}.csv`, csv, `🎯 Lidlar: ${ls.length} ta`)) ? undefined : say(env, chat, 'Fayl yuborilmadi.');
   }
   if (cmd === '/ban' || cmd === '/unban') {
     const to = Number(arg.trim()); if (!to) return say(env, chat, `Format: <code>${cmd} 123456</code>`);
@@ -411,7 +528,7 @@ async function handleUpdate(env, upd) {
     let a = null; try { a = await assistantOf(env).answer({ text: arg.slice(0, 800), history: [] }); } catch { a = null; }
     return say(env, chat, a && a.text ? `🧪 <b>Mijoz ko'radigan javob</b>${a.ai ? '' : ' (qoida)'}${a.handoff ? ' ⚠️ operatorga uzatiladi' : ''}:\n\n${esc(a.text)}` : 'Javob olinmadi.');
   }
-  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
+  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
   if (cmd === '/start' || cmd === '/help') return say(env, chat, help);
   if (!m.reply_to_message) return say(env, chat, help); // admin oddiy matn yozdi: nima qilish kerakligini ko'rsatamiz
 }
@@ -436,8 +553,10 @@ async function relay(req, env) {
   if (p.page) L.push('', `🔗 ${esc(String(p.page).slice(0, 200))}`);
   const admins = await adminsOf(env, st);
   const flat = [p.message, ...Object.values(p.extra || {}).map(String)].join(' ');
-  await ev(st, { k: 'lead', n: name, p: phone, x: p.message || Object.values(p.extra || {}).filter(Boolean).slice(0, 3).join(', ') });
+  const lx = p.message || Object.values(p.extra || {}).filter(Boolean).slice(0, 3).join(', ');
+  await ev(st, { k: 'lead', n: name, p: phone, x: lx });
   const urgentLead = isUrgent(flat) || /shoshilinch/i.test(JSON.stringify(p.extra || {}));
+  await saveLead(st, { n: name, p: phone, s: 'sayt', x: lx, g: leadTemp({ phone: true, anketa: p.type === 'brief', urgent: urgentLead, budget: JSON.stringify(p.extra || {}) }) });
   const res = await Promise.all(admins.map((a) => say(env, a, L.join('\n').slice(0, 4000)).then((r) => !!r)));
   if (!res.some(Boolean)) return new Response('Yuborilmadi', { status: 502, headers: cors });
   if (urgentLead) await raiseUrgent(env, st, { chat: 0, name, phone, text: p.message || flat });
@@ -462,6 +581,7 @@ export default {
       if (ctx && ctx.waitUntil) ctx.waitUntil(work); else await work;
       return new Response('ok');
     }
+    if (url.pathname === '/chat') return chatApi(req, env);
     return relay(req, env);
   },
   async scheduled(event, env, ctx) { ctx.waitUntil(tick(env)); },

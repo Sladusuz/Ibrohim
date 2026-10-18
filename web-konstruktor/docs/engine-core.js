@@ -47,6 +47,7 @@
     d.account = Object.assign({ enabled: false, requireOrder: true, requireBooking: false }, d.account);
     d.contacts = d.contacts || {};
     d.analytics = Object.assign({ ga: '', ym: '', fb: '' }, d.analytics);
+    d.chat = Object.assign({ enabled: false }, d.chat);
     d.footer = Object.assign({ text: '', links: [] }, d.footer);
     d.sections = (Array.isArray(d.sections) ? d.sections : []).filter((s) => s && typeof s === 'object' && s.type);
     return d;
@@ -250,12 +251,46 @@
     const c = S.contacts || {}, L = [];
     const brief = !!E.actions['brief-open'] && S.sections.some((s) => on(s) && s.type === 'brief');
     if (brief) L.push(`<a class="fb-b main" href="#brief-open" aria-label="Bepul maslahat">${icon('edit')}<span>Bepul maslahat</span></a>`);
+    const chatOn = !!(S.chat && S.chat.enabled && String(window.__RELAY__ || '').trim() && !isPreview && !window.__DEMO__);
+    if (chatOn) L.push(`<button type="button" class="fb-b chatb" aria-label="Yordam chati">${icon('support')}</button>`);
     if (c.telegram) { const u = String(c.telegram).replace(/^@/, '').replace(/^https?:\/\/t\.me\//, ''); L.push(`<a class="fb-b tg" href="https://t.me/${esc(u)}" target="_blank" rel="noopener" aria-label="Telegram">${icon('send')}</a>`); }
     if (c.whatsapp && /\d{9}/.test(String(c.whatsapp))) L.push(`<a class="fb-b wa" href="https://wa.me/${String(c.whatsapp).replace(/\D/g, '')}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('support')}</a>`);
     if (c.phone) L.push(`<a class="fb-b ph" href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}" aria-label="Qo'ng'iroq">${icon('tel')}</a>`);
     if (!L.length) return;
     const d = document.createElement('div'); d.id = 'fab'; d.className = 'fab'; d.innerHTML = L.join(''); document.body.appendChild(d);
+    const cb = d.querySelector('.chatb'); if (cb) cb.addEventListener('click', () => chatToggle());
   }
+  /* ---------- Sayt chati (Cloudflare Worker orqali bot bilan) ---------- */
+  let chatBox = null, chatPoll = 0;
+  function chatToggle() {
+    const RELAY = String(window.__RELAY__ || '').replace(/\/$/, ''); if (!RELAY) return;
+    if (!chatBox) {
+      let sid = ''; try { sid = localStorage.getItem('impro_chat') || ''; } catch { /* ignore */ }
+      if (!/^[A-Za-z0-9]{16,40}$/.test(sid)) { const a = 'abcdefghijklmnopqrstuvwxyz0123456789', r = new Uint8Array(24); (window.crypto || { getRandomValues: (x) => x.map(() => Math.random() * 256) }).getRandomValues(r); sid = Array.from(r, (b) => a[b % 36]).join(''); try { localStorage.setItem('impro_chat', sid); } catch { /* ignore */ } }
+      const box = document.createElement('div'); box.id = 'chatw'; box.hidden = true; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'Yordam chati');
+      box.innerHTML = `<div class="cw-h"><b>Impro IT yordam</b><button type="button" class="cw-x" aria-label="Yopish">×</button></div><div class="cw-m" aria-live="polite"></div><form class="cw-f"><input maxlength="500" placeholder="Savolingizni yozing…" autocomplete="off" aria-label="Xabar"><button type="submit" aria-label="Yuborish">${icon('send')}</button></form>`;
+      document.body.appendChild(box); chatBox = box;
+      const msgs = box.querySelector('.cw-m'), form = box.querySelector('form'), input = box.querySelector('input');
+      const add = (t, me) => { const b = document.createElement('div'); b.className = 'cw-b ' + (me ? 'me' : 'bot'); b.textContent = t; msgs.appendChild(b); msgs.scrollTop = msgs.scrollHeight; return b; };
+      add("Salom! Men Impro IT yordamchisiman. Savolingizni yozing, darrov javob beraman. Telefon raqamingizni qoldirsangiz, mutaxassis bog'lanadi.", false);
+      box.querySelector('.cw-x').addEventListener('click', () => chatToggle());
+      let busy = false;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault(); const text = input.value.trim(); if (!text || busy) return; busy = true; input.value = ''; add(text, true);
+        const typing = add('…', false); typing.classList.add('typing');
+        try {
+          const r = await fetch(RELAY + '/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ sid, text }) });
+          const j = await r.json().catch(() => ({})); typing.remove();
+          if (!r.ok) add(j.error || "Xatolik yuz berdi. Qayta urinib ko'ring.", false); else if (j.reply) add(j.reply, false);
+        } catch { typing.remove(); add("Xatolik yuz berdi. Qayta urinib ko'ring.", false); }
+        busy = false; input.focus();
+      });
+      box._poll = async () => { try { const r = await fetch(RELAY + '/chat?sid=' + sid); if (r.ok) (await r.json()).msgs.forEach((t) => add(t, false)); } catch { /* keyingi safar */ } };
+    }
+    const open = chatBox.hidden; chatBox.hidden = !open;
+    clearInterval(chatPoll); if (open) { chatBox.querySelector('input').focus(); chatBox._poll(); chatPoll = setInterval(() => chatBox._poll(), window.__CHAT_POLL__ || 6000); }
+  }
+  E.chatToggle = chatToggle;
 
   /* ---------- Formalar ---------- */
   E.prefill = function (msg) {

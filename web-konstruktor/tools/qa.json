@@ -1,0 +1,126 @@
+[
+ {
+  "q": "Siz nima qilasiz? Qanday xizmatlar bor?",
+  "a": "Veb-saytlar (vizitka, korporativ, onlayn do'kon), Telegram botlar, mobil ilovalar, UI/UX dizayn va oylik texnik yordam. Shuningdek, saytni o'zingiz yaratadigan konstruktor (32 ta tayyor shablon) va Telegram bot konstruktori ham bor."
+ },
+ {
+  "q": "Eng arzon sayt qancha turadi?",
+  "a": "Eng arzon yo'l: tayyor shablonni o'zingiz sozlaysiz, tayyor saytni yuklab olish yoki e'lon qilish uchun bir martalik $10. Biz tayyorlab beradigan eng oddiy paket (Start sayt, 5 sahifagacha) 2 500 000 so'mdan boshlanadi."
+ },
+ {
+  "q": "Onlayn do'kon qancha turadi?",
+  "a": "Onlayn do'kon (katalog, savat, buyurtma va admin panel bilan) 6 900 000 so'mdan boshlanadi, odatda 2–3 hafta ichida tayyor bo'ladi. Aniq narx talablarga qarab suhbatdan keyin belgilanadi."
+ },
+ {
+  "q": "Telegram bot qancha turadi va qancha vaqtda tayyor bo'ladi?",
+  "a": "Buyurtma va so'rov qabul qiluvchi tayyor Telegram bot 3 200 000 so'mdan boshlanadi, taxminan 1–2 hafta ichida tayyor bo'ladi. O'zingiz yaratmoqchi bo'lsangiz, bot konstruktori ham bor: token kiritasiz, katalog va mini do'kon darrov ishlaydi."
+ },
+ {
+  "q": "Mobil ilova qancha turadi?",
+  "a": "iOS va Android uchun mobil ilova 15 000 000 so'mdan boshlanadi va odatda 1–2 oy vaqt oladi. Aniq narx funksiyalarga bog'liq, shuning uchun avval bepul maslahat beramiz."
+ },
+ {
+  "q": "UI/UX dizayn qancha turadi?",
+  "a": "Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip 1 800 000 so'mdan boshlanadi, odatda 1–2 hafta."
+ },
+ {
+  "q": "Texnik yordam bormi, qancha turadi?",
+  "a": "Ha. Oylik texnik yordam (yangilash, xavfsizlik, zaxira nusxa, tezkor tuzatishlar) 900 000 so'mdan. Ishga tushgandan keyingi yordam shartlari shartnomada aniq yoziladi."
+ },
+ {
+  "q": "Shablon bilan sayt qanday yaratiladi?",
+  "a": "improuzbekiston.uz/yaratish.html sahifasida kasbingizga mos shablonni tanlaysiz (32 ta), matn, rasm va ranglarni o'zgartirasiz. Tahrirlash va ko'rish bepul. Tayyor saytni yuklab olish yoki e'lon qilish uchun bir martalik $10 to'laysiz."
+ },
+ {
+  "q": "Shablon uchun $10 nimani o'z ichiga oladi?",
+  "a": "Tayyor saytni yuklab olish (bitta mustaqil fayl), nomingiz.improuzbekiston.uz subdomenida e'lon qilish, o'z domeningizni ulash imkoniyati, telefonga ilova kabi o'rnatilishi va SEO sozlamalari."
+ },
+ {
+  "q": "Saytni o'z domenimga ulay olamanmi?",
+  "a": "Ha, tayyor saytni bizning subdomenimizda e'lon qilishingiz yoki o'z domeningizni (masalan, sizningbiznes.uz) ulashingiz mumkin."
+ },
+ {
+  "q": "Domen va hosting kerakmi?",
+  "a": "Shablon sayt bizning subdomenimizda bepul turadi, domen shart emas. Individual loyihada domen va hosting 1 yilga 350 000 so'm atrofida qo'shiladi."
+ },
+ {
+  "q": "Qanday to'lov usullari bor?",
+  "a": "Payme, Click yoki bank kartasiga o'tkazma. Katta loyihalarda to'lov bosqichma-bosqich, shartnoma asosida amalga oshiriladi."
+ },
+ {
+  "q": "Shartnoma tuzasizlarmi?",
+  "a": "Ha, individual loyihalarda narx, muddat va ish hajmi shartnomada aniq yoziladi."
+ },
+ {
+  "q": "Loyiha qancha vaqtda tayyor bo'ladi?",
+  "a": "Vizitka sayt 5–10 kun, onlayn do'kon 2–3 hafta, Telegram bot 1–2 hafta, mobil ilova 1–2 oy, dizayn 1–2 hafta. Aniq muddat suhbatdan keyin shartnomada belgilanadi."
+ },
+ {
+  "q": "Ish jarayoni qanday?",
+  "a": "To'rt bosqich: 1) tahlil va maqsad, 2) dizayn va prototip, 3) ishlab chiqish, 4) ishga tushirish va yordam. Har bosqichda natijani siz ko'rib tasdiqlaysiz."
+ },
+ {
+  "q": "Admin panel bo'ladimi?",
+  "a": "Ha, admin panel qo'shimcha imkoniyat sifatida 800 000 so'mdan. Unda buyurtmalar, mahsulotlar va sayt matnlarini o'zingiz boshqarasiz."
+ },
+ {
+  "q": "Sayt bir nechta tilda bo'la oladimi?",
+  "a": "Ha, o'zbek, rus va ingliz tillarida. Ko'p tillilik qo'shimcha imkoniyat sifatida 600 000 so'mdan."
+ },
+ {
+  "q": "Onlayn to'lov ulay olasizlarmi?",
+  "a": "Ha, Click va Payme orqali onlayn to'lov qo'shimcha imkoniyat sifatida 900 000 so'mdan."
+ },
+ {
+  "q": "Google va Yandex'da topilish uchun SEO qilasizlarmi?",
+  "a": "Ha, SEO sozlash va Google ro'yxatiga qo'shish 500 000 so'mdan. Tayyor shablon saytlarda asosiy SEO sozlamalari allaqachon bor. Blogimizda SEO bo'yicha 10 qadamlik qo'llanma ham bor."
+ },
+ {
+  "q": "Mijozlarim buyurtmasi menga Telegramga kelsinmi?",
+  "a": "Ha, Telegram xabarnoma qo'shimcha imkoniyat sifatida 200 000 so'mdan: yangi buyurtma yoki ariza kelganda sizning Telegramingizga xabar keladi."
+ },
+ {
+  "q": "Logotip va brend uslubi ham qilib berasizlarmi?",
+  "a": "Ha, logotip va brend uslubi 700 000 so'mdan. Matn va rasmlarni tayyorlash xizmati ham bor (500 000 so'mdan)."
+ },
+ {
+  "q": "Mavjud saytni yangilab berasizlarmi?",
+  "a": "Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz. Saytingiz havolasini yuboring, bepul baho beramiz."
+ },
+ {
+  "q": "Telegram botda do'kon (mini ilova) qilsa bo'ladimi?",
+  "a": "Ha. Bot konstruktorida token kiritganingizda katalog, savat, buyurtmalar va Telegram ichidagi mini do'kon darrov ishlaydi. Kod yozish shart emas. Boshlash: improuzbekiston.uz/bot.html"
+ },
+ {
+  "q": "Sayt telefonda yaxshi ishlaydimi?",
+  "a": "Ha, barcha saytlarimiz telefon, planshet va kompyuterga moslashgan, shablonlar telefonga ilova kabi o'rnatiladi."
+ },
+ {
+  "q": "Bepul maslahat olsam bo'ladimi?",
+  "a": "Albatta. Telefon raqamingizni yozib qoldiring yoki anketani to'ldiring, mutaxassisimiz 15 daqiqa ichida (ish vaqtida) bog'lanadi."
+ },
+ {
+  "q": "Ish vaqtingiz qanday?",
+  "a": "Dushanbadan shanbagacha 9:00–18:00 (Toshkent vaqti). Bot esa kechayu kunduz javob beradi, murakkab savollar ish vaqtida ko'rib chiqiladi."
+ },
+ {
+  "q": "Aloqa ma'lumotlaringiz?",
+  "a": "Telefon: +998 33 623 33 13, email: info@improuzbekiston.uz, Telegram: @improsupport_bot, Instagram: @improuzbekiston_uz. Manzil: Toshkent."
+ },
+ {
+  "q": "Portfolio yoki ishlaringizni ko'rsata olasizmi?",
+  "a": "Shablonlarimizning jonli namunalari improuzbekiston.uz saytida ko'rinadi. Hozirgi loyihalar haqida mutaxassisimiz suhbatda batafsil aytadi, telefon raqamingizni qoldiring."
+ },
+ {
+  "q": "Mening ma'lumotlarim xavfsizmi?",
+  "a": "Ma'lumotlaringiz uchinchi shaxslarga sotilmaydi, parollar shifrlangan holda saqlanadi. Batafsil: improuzbekiston.uz/maxfiylik.html"
+ },
+ {
+  "q": "Pulni qaytarish mumkinmi?",
+  "a": "Tayyor saytni yuklab olishdan yoki e'lon qilishdan oldin to'lovdan keyin 3 kun ichida qaytarish so'rovi qabul qilinadi. Batafsil shartlar: improuzbekiston.uz/qaytarish.html"
+ },
+ {
+  "q": "Blog bormi?",
+  "a": "Ha, improuzbekiston.uz/blog/ sahifasida sayt, Telegram bot, SEO va onlayn savdo bo'yicha amaliy maqolalar bor."
+ }
+]

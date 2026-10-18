@@ -9,6 +9,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const calls = []; let n = 100, aiMode = false;
   globalThis.fetch = async (url, o) => {
     const u = String(url); let body = {}; try { body = o && o.body ? JSON.parse(o.body) : {}; } catch { body = {}; }
+    if (o && o.body instanceof FormData) { const f = o.body.get('document'); body = { chat_id: Number(o.body.get('chat_id')), doc: f ? await f.text() : '' }; }
     if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
     if (u.includes('/file/bot')) return new Response(new Uint8Array([1, 2, 3, 4]), { status: 200 });
     if (u.includes('api.twilio.com')) { calls.push({ method: 'TWILIO', body: { url: u, h: o.headers, form: Object.fromEntries(new URLSearchParams(o.body)) } }); return new Response('{"sid":"CA1"}', { status: 201 }); }
@@ -260,6 +261,84 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const wB = sent(7001, /Haftalik hisobot/).length; await W.tick(env, mon0901); await W.tick(env, mon0901 + 60e3);
   ok(sent(7001, /Haftalik hisobot/).length === wB + 1, 'dushanba 09:00 da haftalik hisobot avtomatik, bir marta');
   delete env.AI;
+  console.log('Lidlar, loyiha, jamoa, qayta salomlashish, savol-javob bazasi, sayt chati');
+  {
+  env.AI = { run: async (model, input) => {
+    if (/whisper/.test(model)) return { text: 'x' };
+    const sys = input.messages[0].content, last = input.messages.slice(-1)[0].content;
+    if (/Translate/.test(sys)) return { response: 'TARJIMA' };
+    if (/javob loyihasini/.test(sys)) return { response: "Loyiha uchun avval qanday CRM kerakligini aniqlashtiramiz: soha va byudjetni ayting, telefon raqamingizni yozing." };
+    if (/Murakkab/.test(last)) return { response: 'Telefon raqamingizni yozing, mutaxassis bog\'lanadi. [[HANDOFF]]' };
+    return { response: 'AI javob: Start sayt 2 500 000 so\'mdan.' };
+  } };
+  // lidlar va eksport
+  await msg(7001, '/lidlar', 400); const ld = lastTo(7001).body.text;
+  ok(/Oxirgi lidlar/.test(ld) && /\+998901234567/.test(ld) && /#issiq/.test(ld) && /anketa/.test(ld), "/lidlar: telefon qoldirganlar, manba va issiqlik darajasi");
+  const docB = calls.filter((c) => c.method === 'sendDocument').length; await msg(7001, '/eksport', 401);
+  const dc = calls.filter((c) => c.method === 'sendDocument').slice(-1)[0];
+  ok(calls.filter((c) => c.method === 'sendDocument').length === docB + 1 && dc.body.chat_id === 7001 && /^\ufeff?Sana,Ism,Telefon,Manba,Teg,Izoh/.test(dc.body.doc) && /\+998901112233/.test(dc.body.doc) && /Lola Beauty/.test(dc.body.doc), "/eksport: CSV fayl (sarlavha, telefonlar, anketa) yuborildi");
+  // javob loyihasi
+  await msg(7110, 'Murakkab loyiha bor, CRM kerak', 410);
+  const dm = sent(7001, /Javob loyihasi/).slice(-1)[0];
+  ok(dm && /aniqlashtiramiz/.test(dm.body.text) && dm.body.reply_markup.inline_keyboard[0][0].callback_data.startsWith('dr:'), "bot bilmagan savolda operatorga tayyor javob loyihasi tugma bilan keladi");
+  const did = dm.body.reply_markup.inline_keyboard[0][0].callback_data;
+  const nd = sent(7110).length; await cb(9999, did); ok(sent(7110).length === nd, "admin bo'lmaganlar loyihani yubora olmaydi");
+  await cb(7001, did); ok(sent(7110).length === nd + 1 && /aniqlashtiramiz/.test(lastTo(7110).body.text) && /Impro IT:/.test(lastTo(7110).body.text), "'Yuborish' bosilganda loyiha mijozga ketdi");
+  await cb(7001, did); ok(sent(7110).length === nd + 1, 'bitta loyiha ikki marta yuborilmaydi');
+  await msg(7111, 'Murakkab loyiha: dasturiy ta\'minot', 411); const dm2 = sent(7001, /Javob loyihasi/).slice(-1)[0], nd2 = sent(7111).length;
+  await cb(7001, dm2.body.reply_markup.inline_keyboard[0][1].callback_data); ok(sent(7111).length === nd2, "'Rad' bosilsa mijozga hech narsa ketmaydi");
+  // jamoa: "Men oldim"
+  await S.put('admins', [7001, 7500]);
+  await msg(7501, 'Salom, narx haqida gaplashamiz', 420);
+  const hd = sent(7001, /U7501/).slice(-1)[0], hdId = idOf(hd);
+  ok(JSON.stringify(hd.body.reply_markup).includes('tk:7501'), "ikki admin bo'lsa xabar ostida 'Men oldim' tugmasi");
+  await cb(7500, 'tk:7501'); ok(sent(7001, /mijozni oldi/).length >= 1, "'Men oldim': boshqa admin ogohlantirildi");
+  const n501 = sent(7501).length; await hook({ message: { message_id: 421, chat: { id: 7001, type: 'private' }, from: { id: 7001, first_name: 'A' }, text: 'Men javob beraman', reply_to_message: { message_id: hdId } } });
+  ok(sent(7001, /Bu mijozni .* olgan/).length >= 1 && sent(7501).length === n501, "boshqa xodim olgan mijozga javob yuborilmaydi (ogohlantirish)");
+  const hd5 = sent(7500, /U7501/).slice(-1)[0];
+  await hook({ message: { message_id: 422, chat: { id: 7500, type: 'private' }, from: { id: 7500, first_name: 'U7500' }, text: 'Salom, men javob beraman', reply_to_message: { message_id: idOf(hd5) } } });
+  ok(sent(7501).length === n501 + 1 && /men javob beraman/.test(lastTo(7501).body.text), "mijozni olgan xodim javob bera oladi");
+  await S.put('admins', [7001]);
+  // qayta salomlashish
+  await msg(7502, 'Salom, narx qancha?', 430); const r502 = await S.get('c:7502'); r502.lastT = Date.now() - 7 * 3600e3; await S.put('c:7502', r502, 7 * 86400);
+  await msg(7502, 'Muddat qancha?', 431); ok(/^Yana salom, U7502!/.test(lastTo(7502).body.text), "qaytgan mijozga 'Yana salom, Ism!' deyiladi");
+  // kechagi javobsiz savollar (10:00)
+  const t1 = new Date(Date.now() + 5 * 3600e3), at10 = Date.UTC(t1.getUTCFullYear(), t1.getUTCMonth(), t1.getUTCDate() + 1, 5, 1);
+  await S.put('ul', []); await W.tick(env, at10);
+  ok(/Kechagi javobsiz savollar/.test(sent(7001, /Kechagi javobsiz/).slice(-1)[0] ? sent(7001, /Kechagi javobsiz/).slice(-1)[0].body.text : ''), "10:00 da kechagi javobsiz savollar ro'yxati keladi");
+  // savol-javob bazasi va blog (qoidalar rejimi: AI o'chiq)
+  const aiSave = env.AI; delete env.AI;
+  await msg(7503, "Portfolio yoki ishlaringizni ko'rsata olasizmi?", 440); ok(/jonli namunalari/.test(lastTo(7503).body.text), "tayyor savol-javob bazasidan javob (portfolio)");
+  await msg(7504, "Kichik biznes uchun SEO qadamlar haqida ma'lumot bering", 441); ok(/maqolamiz bor/.test(lastTo(7504).body.text) && /\/blog\/kichik-biznes-uchun-seo-10-qadam\//.test(lastTo(7504).body.text), "blog maqolasiga havola beradi");
+  env.AI = aiSave;
+  // sayt chati
+  const OR = 'https://improuzbekiston.uz';
+  const chatPost = (b, origin = OR, ip = '2.2.2.2') => W.fetch(new Request('https://w.example/chat', { method: 'POST', headers: { 'content-type': 'application/json', Origin: origin, 'CF-Connecting-IP': ip }, body: JSON.stringify(b) }), env, ctx);
+  const chatGet = (sid, origin = OR) => W.fetch(new Request('https://w.example/chat?sid=' + sid, { headers: { Origin: origin } }), env, ctx);
+  const SID1 = 'abcdefghij0123456789xyz1', SID2 = 'abcdefghij0123456789xyz2';
+  const c1 = await chatPost({ sid: SID1, text: 'Narx qancha?' }); const j1 = await c1.json();
+  ok(c1.status === 200 && /Start sayt/.test(j1.reply) && c1.headers.get('Access-Control-Allow-Origin') === OR, "sayt chati: mehmon savoliga bot javob beradi");
+  const wh = sent(7001, /Sayt chati/).slice(-1)[0]; ok(wh && /Narx qancha/.test(wh.body.text), 'sayt chati xabari adminga Telegramda keldi');
+  ok((await chatPost({ sid: SID1, text: 'x' }, 'https://evil.example')).status === 403, "begona sayt chatdan foydalana olmaydi");
+  ok((await chatPost({ sid: 'qisqa', text: 'x' })).status === 400 && (await chatPost({ sid: SID1, text: '  ' })).status === 400, "noto'g'ri sid yoki bo'sh xabar rad etiladi");
+  ok((await W.fetch(new Request('https://w.example/chat', { method: 'OPTIONS', headers: { Origin: OR } }), env, ctx)).status === 204, 'chat CORS preflight');
+  const c2 = await chatPost({ sid: SID1, text: 'Telefonim 90 777 88 99' }); const j2 = await c2.json();
+  ok(/Rahmat/.test(j2.reply) && sent(7001, /Sayt chati/).slice(-1)[0].body.text.includes('+998907778899'), "chatda telefon qoldirilsa: rahmat va adminga raqam");
+  await msg(7001, '/lidlar', 450); ok(/\+998907778899/.test(lastTo(7001).body.text) && /chat/.test(lastTo(7001).body.text), "chatdan kelgan lid /lidlar da ko'rinadi (manba: chat)");
+  const hdw = sent(7001, /Sayt chati/).slice(-1)[0];
+  await hook({ message: { message_id: 451, chat: { id: 7001, type: 'private' }, from: { id: 7001, first_name: 'A' }, text: 'Salom! Hozir qo\'ng\'iroq qilaman', reply_to_message: { message_id: idOf(hdw) } } });
+  const g1 = await (await chatGet(SID1)).json(), g2 = await (await chatGet(SID1)).json();
+  ok(g1.msgs.length === 1 && /qo'ng'iroq qilaman/.test(g1.msgs[0]) && g2.msgs.length === 0, "operator javobi saytga yetdi (bir marta)");
+  const c3 = await chatPost({ sid: SID1, text: 'Rahmat, yana savol: muddat?' }); const j3 = await c3.json();
+  ok(j3.operator === true && j3.reply === '', 'operator yozgandan keyin bot sayt chatida jim');
+  const c4 = await (await chatPost({ sid: SID2, text: 'Murakkab loyiha: CRM tizimi' })).json();
+  ok(c4.handoff === true && /Telefon raqamingizni yozing/.test(c4.reply) && sent(7001, /Javob loyihasi.*sayt chati/s).length >= 1, "sayt chatida bilmagan savol: operatorga loyiha ketdi");
+  const dmw = sent(7001, /Javob loyihasi/).slice(-1)[0]; await cb(7001, dmw.body.reply_markup.inline_keyboard[0][0].callback_data);
+  const g3 = await (await chatGet(SID2)).json(); ok(g3.msgs.length === 1 && /aniqlashtiramiz/.test(g3.msgs[0]), "loyiha sayt mehmoniga yetib bordi");
+  let lastS = 200; for (let i = 0; i < 22; i++) lastS = (await chatPost({ sid: 'rateLimitTest0123456789' + (i % 1), text: 'salom ' + i }, OR, '3.3.3.' + i)).status; ok(lastS === 429, 'bir mehmon ko\'p xabar yuborsa cheklanadi');
+  await msg(7001, '/hisobot', 452); ok(/Javoblar: .*U7500 1/.test(lastTo(7001).body.text), "hisobotda xodimlar javoblari soni ko'rinadi");
+  delete env.AI;
+  }
   console.log('Workers AI (bepul)');
   const aiRuns = []; env.AI = { run: async (model, input) => { aiRuns.push(model); return { response: "Workers AI: SEO uchun sayt tayyor, qo'shimcha sozlash kerak bo'lishi mumkin." }; } };
   await msg(7040, 'Sayt SEO uchun yaxshimi?', 130); ok(/Workers AI: SEO/.test(lastTo(7040).body.text) && aiRuns.length === 1, "kalitsiz ham Workers AI mijoz savoliga javob beradi");

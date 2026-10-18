@@ -30,6 +30,8 @@ module.exports = function makeAssistant({ getSettings, getSite, getPricing, work
       if (s.type === 'process') F.process.push(...(s.items || []).map((p) => `${plain(p.title)}: ${plain(p.text)}`));
     }
     F.extra = (getExtra ? getExtra() : []).map((x) => plain(x)).filter(Boolean);
+    F.faq.push(...(site.qa || []).map((x) => ({ q: plain(x.q), a: plain(x.a) })));
+    F.blog = (site.blog || []).map((b) => ({ title: plain(b.title), slug: b.slug }));
     const brief = secs.find((s) => s.type === 'brief');
     if (brief) F.briefServices = (brief.services || []).map((x) => ({ name: plain(x.name), price: Number(x.price) || 0, days: plain(x.days) }));
     return F;
@@ -43,6 +45,7 @@ module.exports = function makeAssistant({ getSettings, getSite, getPricing, work
     if (F.packs.length) L.push('Tayyor paketlar (boshlang\'ich narx, so\'m): ' + F.packs.map((p) => `${p.name} ${money(p.price)}${p.text ? ' (' + p.text + ')' : ''}`).join('; '));
     if (F.briefServices) L.push('Muddatlar: ' + F.briefServices.map((x) => `${x.name} ${x.days}`).join('; '));
     if (F.extra && F.extra.length) L.push("Qo'shimcha ma'lumotlar (administrator kiritgan, eng yangi va ishonchli):\n" + F.extra.map((x) => '- ' + x).join('\n'));
+    if (F.blog && F.blog.length) L.push("Blog maqolalar (mavzu bo'yicha havola berish mumkin, manzil https://improuzbekiston.uz/blog/<nom>/): " + F.blog.map((b) => `«${b.title}» (${b.slug})`).join('; '));
     if (F.faq.length) L.push('Ko\'p so\'raladigan savollar:\n' + F.faq.map((f) => `- ${f.q} ${f.a}`).join('\n'));
     return L.join('\n');
   }
@@ -58,12 +61,12 @@ Qoidalar:
 MA'LUMOTLAR:
 ${kb(F)}`;
 
-  async function viaClaude(F, hist, text) {
+  async function viaClaude(F, hist, text, sys) {
     const c = cfg();
     const messages = [...hist.slice(-8).map((m) => ({ role: m.r === 'u' ? 'user' : 'assistant', content: String(m.t).slice(0, 1200) })), { role: 'user', content: text.slice(0, 1200) }];
     // Claude API birinchi xabar 'user' bo'lishini talab qiladi
     while (messages.length && messages[0].role !== 'user') messages.shift();
-    const r = await fetch(`${c.base}/v1/messages`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': c.key, 'anthropic-version': '2023-06-01' }, body: JSON.stringify({ model: c.model, max_tokens: 600, system: SYSTEM(F), messages }), signal: AbortSignal.timeout(30000) });
+    const r = await fetch(`${c.base}/v1/messages`, { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': c.key, 'anthropic-version': '2023-06-01' }, body: JSON.stringify({ model: c.model, max_tokens: 600, system: (sys || SYSTEM)(F), messages }), signal: AbortSignal.timeout(30000) });
     if (!r.ok) throw new Error('AI ' + r.status);
     const j = await r.json(), out = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('').trim();
     if (!out) throw new Error('bo\'sh javob');
@@ -73,8 +76,8 @@ ${kb(F)}`;
 
   // Cloudflare Workers AI (bepul kunlik limit, kalit shart emas): katta model, xato bo'lsa kichigi
   const CF_MODELS = ['@cf/meta/llama-3.3-70b-instruct-fp8-fast', '@cf/meta/llama-3.1-8b-instruct'];
-  async function viaWorkersAi(F, hist, text) {
-    const messages = [{ role: 'system', content: SYSTEM(F) }, ...hist.slice(-6).map((m) => ({ role: m.r === 'u' ? 'user' : 'assistant', content: String(m.t).slice(0, 900) })), { role: 'user', content: text.slice(0, 1000) }];
+  async function viaWorkersAi(F, hist, text, sys) {
+    const messages = [{ role: 'system', content: (sys || SYSTEM)(F) }, ...hist.slice(-6).map((m) => ({ role: m.r === 'u' ? 'user' : 'assistant', content: String(m.t).slice(0, 900) })), { role: 'user', content: text.slice(0, 1000) }];
     let last;
     for (const model of CF_MODELS) {
       try {
@@ -120,7 +123,7 @@ ${kb(F)}`;
       case 'domain': return { text: L.domText };
       case 'contact': return { text: [F.phone && `📞 ${F.phone}`, F.email && `✉️ ${F.email}`, F.telegram && `Telegram: ${F.telegram}`, F.instagram && `Instagram: ${F.instagram}`, F.hours && `🕘 ${F.hours}`, F.address && `📍 ${F.address}`].filter(Boolean).join('\n') };
       case 'app': return { text: `${(F.packs.find((p) => /ilova|app/i.test(p.name)) || {}).name || 'Mobil ilova'}: ${L.from} ${money((F.packs.find((p) => /ilova|app/i.test(p.name)) || {}).price || 0)} so'm. ${L.askphone}`, handoff: true };
-      default: { const words = t.split(/[^\p{L}\p{N}']+/u).filter((x) => x.length > 3); const ex = (F.extra || []).map((x) => ({ x, n: words.filter((w) => norm(x).includes(w.slice(0, Math.max(4, w.length - 2)))).length })).sort((a, b) => b.n - a.n)[0]; if (ex && ex.n >= 2) return { text: ex.x }; return faq ? { text: faq.a } : { text: L.handoff, handoff: true }; }
+      default: { const words = t.split(/[^\p{L}\p{N}']+/u).filter((x) => x.length > 3); const ex = (F.extra || []).map((x) => ({ x, n: words.filter((w) => norm(x).includes(w.slice(0, Math.max(4, w.length - 2)))).length })).sort((a, b) => b.n - a.n)[0]; if (ex && ex.n >= 2) return { text: ex.x }; if (faq) return { text: faq.a }; const bl = (F.blog || []).map((b) => ({ b, n: words.filter((w) => norm(b.title).includes(w.slice(0, Math.max(4, w.length - 2)))).length })).sort((a, b) => b.n - a.n)[0]; if (bl && bl.n >= 2) return { text: `${lang === 'ru' ? 'У нас есть статья по этой теме' : lang === 'en' ? 'We have an article on this topic' : 'Bu haqda maqolamiz bor'}: «${bl.b.title}»\nhttps://improuzbekiston.uz/blog/${bl.b.slug}/` }; return { text: L.handoff, handoff: true }; }
     }
   }
 
@@ -130,6 +133,17 @@ ${kb(F)}`;
     if (workersAi) { try { return await viaWorkersAi(F, history, text); } catch { /* AI ishlamasa qoidalarga o'tamiz */ } }
     return { ...rules(F, text, lang), ai: false };
   }
+  // Operator uchun javob loyihasi (mijozga yuborilmaydi: admin tasdiqlaydi)
+  const DRAFT = (F) => `Sen ${F.name} operatoriga yordam beruvchi yordamchisan. Mijoz xabariga OPERATOR NOMIDAN yuboriladigan javob loyihasini yoz: mijoz tilida (o'zbek lotin, rus yoki ingliz), 2-5 jumla, samimiy va aniq. Faqat MA'LUMOTLARDAGI narx, muddat va shartlarni ishlat. Ma'lumotda yo'q narsani to'qima va va'da berma; buning o'rniga aniqlashtiruvchi savol ber (qanday sayt/bot, soha, byudjet, muddat) va telefon raqamini so'ra. [[HANDOFF]] belgisini yozma. Faqat javob matnini yoz.\n\nMA'LUMOTLAR:\n${kb(F)}`;
+  async function draft({ text, history = [] }) {
+    const F = facts();
+    try {
+      let r = null;
+      if (cfg().key) { try { r = await viaClaude(F, history, text, DRAFT); } catch { /* keyingisi */ } }
+      if (!r && workersAi) r = await viaWorkersAi(F, history, text, DRAFT);
+      return r && r.text ? r.text.replace(/\[\[HANDOFF\]\]/g, '').trim().slice(0, 1500) : '';
+    } catch { return ''; }
+  }
   const quick = (text) => ({ ...rules(facts(), text, detect(text)) });
-  return { answer, enabled, facts, kb, detect, quick };
+  return { answer, enabled, facts, kb, detect, quick, draft };
 };

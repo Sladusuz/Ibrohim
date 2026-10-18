@@ -606,3 +606,19 @@ body:has(.sw) .fab{bottom:78px}
 .demobar .dl{color:#9fb0d6;text-decoration:none;font-size:13px;padding-right:12px}.demobar .dl:hover{color:#fff}
 body:has(.demobar) .fab{bottom:86px}
 @media(max-width:640px){.demobar{gap:8px;padding:6px 6px 6px 14px;font-size:12.5px;bottom:10px}.demobar .dl{display:none}}
+
+.fb-b.chatb{background:linear-gradient(135deg,#22d3ee,#7c5cff);color:#04101c;border:0;cursor:pointer}
+#chatw{position:fixed;right:88px;bottom:24px;z-index:95;width:340px;max-width:calc(100vw - 24px);height:460px;max-height:calc(100vh - 48px);display:flex;flex-direction:column;border-radius:20px;overflow:hidden;background:var(--bg2,#0a0f1e);color:var(--ink,#eef1ff);border:1px solid var(--line,rgba(255,255,255,.12));box-shadow:0 24px 70px -10px rgba(0,0,0,.6)}
+#chatw[hidden]{display:none}
+#chatw .cw-h{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:linear-gradient(135deg,#22d3ee,#7c5cff);color:#04101c}
+#chatw .cw-x{background:transparent;border:0;color:inherit;font-size:24px;line-height:1;cursor:pointer;padding:0 4px}
+#chatw .cw-m{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+#chatw .cw-b{max-width:86%;padding:9px 13px;border-radius:16px;font-size:14.5px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+#chatw .cw-b.bot{align-self:flex-start;background:rgba(127,127,160,.16);border-bottom-left-radius:5px}
+#chatw .cw-b.me{align-self:flex-end;background:var(--acc,#22d3ee);color:var(--on,#04101c);border-bottom-right-radius:5px}
+#chatw .cw-b.typing{opacity:.6}
+#chatw .cw-f{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line,rgba(255,255,255,.1))}
+#chatw .cw-f input{flex:1;min-width:0;border-radius:99px;border:1px solid var(--line,rgba(255,255,255,.14));background:transparent;color:inherit;padding:10px 14px;font:inherit;font-size:14.5px}
+#chatw .cw-f button{width:42px;height:42px;border-radius:50%;border:0;background:var(--acc,#22d3ee);color:var(--on,#04101c);display:grid;place-items:center;cursor:pointer;flex:none}
+#chatw .cw-f button svg{width:18px;height:18px}
+@media(max-width:640px){#chatw{right:8px;left:8px;bottom:8px;width:auto;max-width:none;height:min(72vh,520px)}}

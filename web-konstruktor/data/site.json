@@ -1012,6 +1012,9 @@
       "image": ""
     }
   ],
+  "chat": {
+    "enabled": true
+  },
   "analytics": {
     "ga": "",
     "ym": "",

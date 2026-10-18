@@ -31,3 +31,10 @@ Bot tokeni, parol va API kalit faqat Worker'ning maxfiy o'zgaruvchilarida turadi
 Sayt matni yoki narxlar o'zgarsa bot bilimlari ham yangilanishi kerak: `node tools/build-worker.js` va yangi `dist/worker.mjs` ni qayta joylang.
 
 Server (VDS) ulansa, Worker kerak emas: server aynan shu ishlarni o'zi bajaradi.
+
+## Imkoniyatlar (qisqacha)
+- **Mijozlar uchun:** tugmali menyu, avtomatik javob (bepul AI, uz/ru/en), ovozli xabarni matnga aylantirish (Whisper), anketa suhbati (`/anketa`), telefon yig'ish, javobni 👍/👎 baholash, sayt chati.
+- **Admin uchun:** `/hisobot`, `/haftalik`, `/mijozlar [#teg]`, `/teg`, `/javob`, `/xabar [#teg]`, `/bilim`, `/lidlar`, `/eksport` (CSV), `/ban`, `/auto`, `/test`.
+- **Avtomatik:** shoshilinch mijozga tez-tez eslatma, 1 soatdan keyin qayta aloqa, 24 soatdan keyin yordam taklifi, kunlik (20:00) va haftalik (dushanba 09:00) hisobot, 10:00 da kechagi javobsiz savollar, javob loyihalari (tasdiq tugmasi bilan), jamoa uchun "Men oldim".
+- **Saqlash:** Cloudflare D1 (bepul, kuniga 100 000 yozuv); `tools/deploy-worker.js` uni o'zi yaratadi. Bot bilimlarini yangilash: `/bilim` yoki `tools/qa.json`, `tools/blog.json` o'zgarsa `node tools/build-worker.js` va qayta joylash.
+- **Test:** `node tools/e2e-worker.js` (KV), `STORE=d1 node tools/e2e-worker.js` (D1), `node tools/e2e-chat-ui.js` (sayt chati).

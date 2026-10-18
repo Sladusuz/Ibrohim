@@ -10,6 +10,7 @@ d.template = 'impro';
 d.company = { name: 'Impro IT', logo: 'I', tagline: 'Veb-sayt, mobil ilova va Telegram botlar. Tez, sifatli, kafolat bilan.' };
 d.theme = Object.assign(d.theme, { preset: 'dark', font: 'display', radius: 'round', bg: 'plain', look: 'cinema', motion: true, switcher: true, fab: true });
 d.nav = { style: 'pill', cta: 'Bepul maslahat', ctaLink: '#brief-open', search: false };
+d.chat = { enabled: true }; // saytda jonli chat (Cloudflare Worker orqali)
 d.analytics = { ga: process.env.GA || '', ym: process.env.YM || '', fb: '' }; // GA=G-XXXX YM=12345678 node tools/make-site.js
 d.account = { enabled: true, requireOrder: true, requireBooking: false };
 d.orders = { enabled: true, currency: "so'm", freeShipFrom: 0, deliveryFee: 0 };
