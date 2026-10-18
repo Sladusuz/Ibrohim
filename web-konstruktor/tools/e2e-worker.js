@@ -10,6 +10,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = async (url, o) => {
     const u = String(url); let body = {}; try { body = o && o.body ? JSON.parse(o.body) : {}; } catch { body = {}; }
     if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
+    if (u.includes('api.pushbullet.com')) { calls.push({ method: 'PB', body: { h: o.headers, j: JSON.parse(o.body) } }); return new Response('{}', { status: 200 }); }
     if (u.includes('ntfy.sh')) { calls.push({ method: 'PUSH', body: { url: u, h: o.headers, text: o.body } }); return new Response('{}', { status: 200 }); }
     if (u.includes('api.callmebot.com')) { calls.push({ method: 'CALL', body: { url: u } }); return new Response('ok', { status: 200 }); }
     const m = /bot([^/]+)\/(\w+)$/.exec(u); if (!m) return new Response('{}', { status: 404 });
@@ -87,8 +88,9 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok(/Shoshilinch ekaningizni qayd etdim/.test(lastTo(7050).body.text), 'mijozga shoshilinchlik qayd etilgani aytildi');
   const nu = sent(7001, /SHOSHILINCH mijoz/).length; await msg(7051, 'Sayt tezligi qancha?', 141); await msg(7052, 'Menga bugun narxni aytib bering', 142);
   ok(sent(7001, /SHOSHILINCH mijoz/).length === nu, "oddiy savollar ('sayt tezligi', 'bugun narx') shoshilinch emas");
+  const safe = (t) => { const d = new Date(t + 5 * 3600e3); return d.getUTCHours() === 20 && d.getUTCMinutes() < 5 ? t + 10 * 60e3 : t; }; // 20:00-20:04 oynasi hisobotga tegishli (test vaqtga bog'liq bo'lmasligi uchun)
   const t0 = Date.now(); let nowR = t0 + 11 * 60e3; while (new Date(nowR + 5 * 3600e3).getUTCHours() < 7) nowR += 3600e3;
-  const eslB = sent(7001, /Eslatma/).length; await W.tick(env, nowR);
+  const eslB = sent(7001, /Eslatma/).length; await W.tick(env, safe(nowR));
   ok(sent(7001, /Eslatma/).length > eslB && /Tezkorlik bilan sayt/.test(sent(7001, /Eslatma/).slice(-1)[0].body.text), '10 daqiqada javob berilmasa eslatma keladi');
   // admin reply shu mijozni yopadi
   const uHead = sent(7001, /Tezkorlik bilan sayt|7050/).slice(-1)[0];
@@ -96,7 +98,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const custHead = sent(7001, /💬 <b>U7050/).slice(-1)[0];
   await hook({ message: { message_id: 150, chat: { id: 7001, type: 'private' }, from: { id: 7001, first_name: 'A' }, text: 'Salom, hoziroq bog\'lanamiz', reply_to_message: { message_id: idOf(custHead) } } });
   ok(sent(7050, /hoziroq bog'lanamiz/).length === 1, 'admin javob berdi (mijozga yetdi)');
-  const eslC = sent(7001, /Eslatma/).length; await W.tick(env, nowR + 60 * 60e3 + 3600e3);
+  const eslC = sent(7001, /Eslatma/).length; await W.tick(env, safe(nowR + 60 * 60e3 + 3600e3));
   ok(sent(7001, /Eslatma/).length === eslC, 'admin javob bergach eslatma to\'xtaydi');
   // tugma bilan yopish (forma orqali kelgan shoshilinch)
   const rUrg = await post({ type: 'brief', name: 'Forma Mijoz', phone: '+998909998877', message: 'Sayt kerak, tezkor qilib bering', extra: { Muddat: 'Shoshilinch (1 hafta)' } }, 'https://improuzbekiston.uz', '5.5.5.5');
@@ -104,7 +106,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const fid = sent(7001, /Forma Mijoz/).filter((c) => /SHOSHILINCH/.test(c.body.text)).slice(-1)[0].body.reply_markup.inline_keyboard[0][0].callback_data;
   await hook({ callback_query: { id: 'cb1', data: fid, message: { message_id: 999, chat: { id: 7001 } }, from: { id: 7001 } } });
   ok(calls.some((c) => c.method === 'answerCallbackQuery' && c.body.text === 'Qayd etildi'), "tugma bosilganda qayd etildi");
-  const eslD = sent(7001, /Forma Mijoz/).filter((c) => /Eslatma/.test(c.body.text)).length; await W.tick(env, nowR + 5 * 3600e3);
+  const eslD = sent(7001, /Forma Mijoz/).filter((c) => /Eslatma/.test(c.body.text)).length; await W.tick(env, safe(nowR + 5 * 3600e3));
   ok(sent(7001, /Forma Mijoz/).filter((c) => /Eslatma/.test(c.body.text)).length === eslD, 'tugma bosilgach eslatma yo\'q');
   await hook({ callback_query: { id: 'cb2', data: fid, message: { message_id: 999, chat: { id: 9999 } }, from: { id: 9999 } } });
   ok(calls.filter((c) => c.method === 'answerCallbackQuery').slice(-1)[0].body.text === "Ruxsat yo'q", "admin bo'lmagan odam tugmani bosa olmaydi");
@@ -125,7 +127,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const k1 = callsOf().length; await msg(7062, 'Sayt tezligi qancha?', 172); ok(callsOf().length === k1, "oddiy savolda qo'ng'iroq yo'q");
   await env.STATE.put('call:last', 0); await msg(7001, '/qongiroq', 173); ok(callsOf().length === k1 + 1 && /Qo'ng'iroq yuborildi/.test(lastTo(7001).body.text), '/qongiroq sinov qo\'ng\'irog\'ini yuboradi');
   const td2 = new Date(Date.now() + 5 * 3600e3), at20b = Date.UTC(td2.getUTCFullYear(), td2.getUTCMonth(), td2.getUTCDate() + 1, 15, 1), cB = callsOf().length;
-  await env.STATE.put('call:last', 0); await W.tick(env, at20b); const rc = callsOf().slice(-1)[0];
+  await env.STATE.put('ul', []); await env.STATE.put('call:last', 0); await W.tick(env, at20b); const rc = callsOf().slice(-1)[0];
   ok(callsOf().length > cB && /Дневной отчёт/.test(new URL(rc.body.url).searchParams.get('text')), "kunlik hisobotda qo'ng'iroq ham qilinadi");
   delete env.CALL_ANYTIME; const cN = callsOf().length; await msg(7063, 'Tezkor sayt kerak, hoziroq qilib bering', 174);
   const hNow = new Date(Date.now() + 5 * 3600e3).getUTCHours(); ok((hNow >= 8 && hNow < 22) || callsOf().length === cN, "tunda (22:00-08:00) qo'ng'iroq qilinmaydi");
@@ -143,6 +145,8 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   await msg(7001, '/qongiroq', 183); ok(pushes().length === p1 + 1 && /Sinov/.test(pushes().slice(-1)[0].body.h.Title), '/qongiroq telefon bildirishnomasini ham sinaydi');
   const td3 = new Date(Date.now() + 5 * 3600e3), at20c = Date.UTC(td3.getUTCFullYear(), td3.getUTCMonth(), td3.getUTCDate() + 2, 15, 1);
   const p2 = pushes().length; await W.tick(env, at20c); ok(pushes().length > p2 && /Kunlik hisobot/.test(pushes().slice(-1)[0].body.h.Title), 'kunlik hisobot telefonga ham yuboriladi');
+  env.PUSHBULLET_TOKEN = 'o.test'; const pbN = pushes().length; await msg(7074, 'Tezkor sayt kerak, hoziroq qilib bering', 185); const pb = calls.filter((c) => c.method === 'PB').slice(-1)[0];
+  ok(pb && pb.body.h['Access-Token'] === 'o.test' && /Shoshilinch/.test(pb.body.j.title) && !/998/.test(pb.body.j.body) && pushes().length === pbN, 'Pushbullet tokeni bo\'lsa u orqali yuboriladi (ntfy chetlab o\'tiladi)'); delete env.PUSHBULLET_TOKEN;
   delete env.NTFY_TOPIC; delete env.CALL_ANYTIME;
   console.log('Workers AI (bepul)');
   const aiRuns = []; env.AI = { run: async (model, input) => { aiRuns.push(model); return { response: "Workers AI: SEO uchun sayt tayyor, qo'shimcha sozlash kerak bo'lishi mumkin." }; } };
