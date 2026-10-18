@@ -24,6 +24,7 @@ ${fs.readFileSync(path.join(R, 'lib', 'ai.js'), 'utf8')}
 })(__ai);
 const makeAi = __ai.exports;
 const SITE = ${JSON.stringify(SITE)};
+const FULLSITE = ${JSON.stringify(site)};
 const PRICING = ${JSON.stringify(PRICING)};
 ${fs.readFileSync(path.join(R, 'worker', 'src', 'platform.mjs'), 'utf8')}
 ${fs.readFileSync(path.join(R, 'worker', 'src', 'bot.mjs'), 'utf8')}`;

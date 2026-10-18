@@ -63,10 +63,33 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   r = await api('POST', '/api/my/projects/' + pid + '/submit', { plan: 'Standart', note: 'tez' }, tok); ok(r.s === 200 && r.j.project.plan === 'Standart' && r.j.project.submittedAt, 'buyurtma yuborish');
   r = await api('DELETE', '/api/my/projects/' + pid + '/publish', null, tok); const pg2 = await W.fetch(new Request(H + '/s/gul-dokon'), env, ctx); ok(r.s === 200 && pg2.status === 404, 'joylashni bekor qilish');
   r = await api('DELETE', '/api/my/projects/' + pid, null, tok); r = await api('GET', '/api/my/projects', null, tok); ok(r.j.length === 0, 'loyihani ochirish');
+  { // veb admin panel: /api/admin/*
+    r = await api('GET', '/api/admin/stats'); ok(r.s === 401, 'admin: tokensiz 401');
+    r = await api('POST', '/api/admin/login', { password: 'wrong' }); ok(r.s === 401, 'admin: noto\'g\'ri parol');
+    r = await api('POST', '/api/admin/login', { password: 'x' }); ok(r.s === 200 && r.j.token, 'admin: kirish'); const at = r.j.token;
+    r = await api('GET', '/api/admin/stats', null, at); ok(r.s === 200 && r.j.users.total >= 2 && r.j.orders.series.length === 14, 'admin: statistika', r.j);
+    r = await api('GET', '/api/admin/users', null, at); ok(r.j.length >= 2 && r.j[0].projects !== undefined, 'admin: mijozlar');
+    const adm = r.j.find((u) => u.name === 'Ali Valiyev'); r = await api('GET', '/api/admin/users/' + adm.id, null, at); ok(r.s === 200 && r.j.user.name === 'Ali Valiyev', 'admin: mijoz tafsiloti');
+    r = await api('POST', '/api/order', { type: 'brief', name: 'Asosiy sayt mijozi', phone: '+998909998877', message: 'Sayt kerak' }); ok(r.s === 200, 'asosiy sayt buyurtmasi');
+    r = await api('GET', '/api/admin/orders', null, at); ok(r.j.length === 1 && r.j[0].type === 'brief' && !r.j[0]._k, 'admin: buyurtmalar (tenantsiz)', r.j); const oid = r.j[0].id;
+    r = await api('PUT', '/api/admin/orders', { id: oid, status: 'jarayonda', note: 'qongiroq qilindi' }, at); r = await api('GET', '/api/admin/orders', null, at); ok(r.j[0].status === 'jarayonda' && r.j[0].note === 'qongiroq qilindi', 'admin: buyurtma holati');
+    r = await api('GET', '/api/admin/orders.csv', null, at); ok(r.s === 200 && r.t.includes('Asosiy sayt mijozi'), 'admin: csv');
+    r = await api('GET', '/api/admin/projects', null, at); ok(r.j.length >= 1 && r.j[0].user && r.j[0].user.name, 'admin: loyihalar', r.j); const pj = r.j.find((p) => p.name === 'X');
+    r = await api('PUT', '/api/admin/projects/' + pj.id, { status: 'narx', price: '300$', adminNote: 'izoh', paid: false }, at); ok(r.s === 200 && r.j.project.paid === null && r.j.project.status === 'narx', 'admin: loyiha yangilash');
+    r = await api('GET', '/api/admin/projects/' + pj.id, null, at); ok(r.j.data && r.j.data.sections, 'admin: loyiha malumoti');
+    r = await api('PUT', '/api/admin/projects/' + pj.id, { paid: true }, at); ok(r.j.project.paid && r.j.project.paid.usd === 10, 'admin: tolov tasdiqi');
+    r = await api('GET', '/api/admin/site', null, at); ok(r.s === 200 && Array.isArray(r.j.sections), 'admin: sayt');
+    r = await api('PUT', '/api/admin/pricing', { currency: "so'm", plans: [{ name: 'Standart', price: '1 mln', features: ['a'] }], templatePrice: { usd: 12, rate: 13000 } }, at); r = await api('GET', '/api/pricing'); ok(r.j.plans.length === 1 && r.j.templatePrice.usd === 12, 'admin: narxlar ommaviy API ga tushadi', r.j.templatePrice);
+    r = await api('GET', '/api/admin/settings', null, at); ok(r.s === 200 && r.j.payments && r.j.manualPay, 'admin: sozlamalar');
+    r = await api('PUT', '/api/admin/settings', { manualPay: 'Humo 1111' }, at); r = await api('GET', '/api/pricing'); ok(r.j.manualPay === 'Humo 1111', 'admin: karta rekviziti');
+    r = await api('POST', '/api/admin/password', { password: 'yangi-parol' }, at); r = await api('POST', '/api/admin/login', { password: 'x' }); ok(r.s === 401, 'admin: eski parol ishlamaydi'); r = await api('POST', '/api/admin/login', { password: 'yangi-parol' }); ok(r.s === 200, 'admin: yangi parol');
+    r = await api('POST', '/api/admin/logout', {}, r.j.token); r = await api('GET', '/api/admin/stats', null, at); ok(r.s === 200, 'admin: boshqa sessiya saqlanadi');
+    r = await api('DELETE', '/api/admin/users/' + adm.id, null, at); r = await api('POST', '/api/auth/login', { id: 'ali@x.uz', password: 'newsecret1' }); ok(r.s === 401, 'admin: mijozni ochirish');
+  }
   { // admin Mini App: ikkinchi bot tokeni bilan imzolangan initData
     const crypto = require('crypto'), sign = (tokn, uid) => { const p = { auth_date: String(Math.floor(Date.now() / 1000)), user: JSON.stringify({ id: uid }) }, str = Object.keys(p).sort().map((k) => `${k}=${p[k]}`).join('\n'), sec = crypto.createHmac('sha256', 'WebAppData').update(tokn).digest(); return new URLSearchParams({ ...p, hash: crypto.createHmac('sha256', sec).update(str).digest('hex') }).toString(); };
     env.APP_BOT_TOKEN = '999:second'; const app = async (init, action, extra) => (await api('POST', '/api/app', { action, ...(extra || {}) }, null, { 'X-Init-Data': init }));
-    r = await app(sign('999:second', 7), 'users'); ok(r.s === 200 && r.j.total >= 2, 'panel: hisoblar (2-bot imzosi)', r.j);
+    r = await app(sign('999:second', 7), 'users'); ok(r.s === 200 && r.j.total >= 1, 'panel: hisoblar (2-bot imzosi)', r.j);
     r = await app(sign('1:a', 7), 'projects'); ok(r.s === 200 && r.j.projects.length >= 1 && r.j.projects[0].owner, 'panel: loyihalar');
     r = await app(sign('999:second', 99), 'users'); ok(r.s === 403, 'panel: admin emas 403');
     r = await app(sign('bad:tok', 7), 'users'); ok(r.s === 403, 'panel: noto\'g\'ri imzo 403');

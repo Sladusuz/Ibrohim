@@ -44,8 +44,16 @@ async function platformApi(req, env, ctx, url) {
   const J = (o, s = 200, x = {}) => pJson(cors, o, s, x), body = async (max = 1024 * 1024) => { const t = await req.text(); if (t.length > max) throw Object.assign(new Error('big'), { big: true }); try { return JSON.parse(t || '{}'); } catch { return {}; } };
   const me = await authUser(req, st), need = () => J({ error: 'Kirish talab qilinadi' }, 401);
   try {
-    if (route === 'GET /api/pricing') return J({ ...PRICING, payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) }, manualPay: env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: true });
+    if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: true });
     if (route === 'GET /api/site') return J(SITE);
+    if (pn.startsWith('/api/admin/') && pn !== '/api/admin/login') return adminApi(req, env, ctx, url, st, J, body, cors, route);
+    if (route === 'POST /api/admin/login') {
+      if (await limited(st, 'alog' + ip, 8, 600)) return J({ error: "Juda ko'p urinish. 10 daqiqadan so'ng qayta urining." }, 429);
+      const b = await body(4096), pw = String(b.password || ''), ov = await st.get('admpw');
+      const good = ov ? tEq(await pwHash(env, pw, ov.salt, 10000), ov.hash) : !!env.ADMIN_PASSWORD && tEq(pw, env.ADMIN_PASSWORD);
+      if (!good) return J({ error: "Parol noto'g'ri" }, 401);
+      const tok = pRnd(24); await st.put('as:' + (await pSha(tok)), 1, 12 * 3600); return J({ ok: true, token: tok });
+    }
     /* ---- hisob ---- */
     if (route === 'POST /api/auth/register') {
       if (await limited(st, 'reg' + ip, 8, 3600)) return J({ error: "Juda ko'p urinish. Keyinroq qayta urinib ko'ring." }, 429);
@@ -143,7 +151,7 @@ async function platformApi(req, env, ctx, url) {
           if (b.method === 'payme' && env.PAYME_MERCHANT_ID && env.PAYME_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: paymeUrl(env, p) });
           if (b.method === 'click' && env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: clickUrl(env, p) });
           for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Sayt sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(uzs)} so'm · #${p.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }]] } });
-          return J({ manual: true, payment: { id: p.id, usd: tp.usd, uzs }, contacts: SITE.contacts || {}, text: env.CARD_INFO || '' });
+          return J({ manual: true, payment: { id: p.id, usd: tp.usd, uzs }, contacts: SITE.contacts || {}, text: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '' });
         }
         if (act === 'export' && req.method === 'GET') {
           if (!meta.paid) return J({ error: "Yuklab olish uchun avval saytni sotib oling" }, 402);
@@ -203,5 +211,68 @@ async function platformDump(st) {
   for (const k of await st.list('pr:')) { const m = k.metadata; if (m) { const d = await st.get('pd:' + m.id); prs.push({ meta: m, data: d ? JSON.parse(d) : null }); } }
   for (const k of await st.list('o:')) { const o = await st.get(k.name); if (o) ors.push(o); }
   return { users: us, projects: prs, orders: ors };
+}
+
+// ---------- Egasining admin paneli (/api/admin/*) ----------
+const OSTAT = ['yangi', 'jarayonda', 'bajarildi', 'bekor'], PSTAT = ['qoralama', 'yuborilgan', 'korilmoqda', 'narx', 'joylandi', 'bekor'];
+async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
+  const m = /^Bearer\s+([0-9a-f]{32,64})$/.exec(req.headers.get('Authorization') || '');
+  if (!m || !(await st.get('as:' + (await pSha(m[1]))))) return J({ error: 'Kirish talab qilinadi' }, 401);
+  const pn = url.pathname, origin = url.origin, tpOf = async () => (((await st.get('pricing')) || {}).templatePrice) || PRICING.templatePrice || { usd: 10, rate: 12800 };
+  const users = async () => { const out = []; for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u) out.push(u); } return out; };
+  const projects = async () => (await st.list('pr:')).map((k) => k.metadata).filter(Boolean);
+  const orders = async () => { const out = []; for (const k of await st.list('o:')) { const o = await st.get(k.name); if (o) out.push({ ...o, _k: k.name }); } return out; };
+  const strip = (o) => { const { _k, ...r } = o; return r; };
+  const withPaid = async (p, us) => { const tp = await tpOf(), u = us && us[p.userId]; return { ...p, paid: p.paid ? { usd: tp.usd, uzs: Math.round(tp.usd * tp.rate), method: 'manual' } : null, url: siteOf(env, req, p), user: u ? { name: u.name, phone: u.phone, email: u.email } : null }; };
+  const day = 864e5, series = (arr, f) => Array.from({ length: 14 }, (_, i) => { const a = new Date(Date.now() - (13 - i) * day); a.setUTCHours(0, 0, 0, 0); const t0 = a.getTime(); return arr.filter((x) => { const t = Date.parse(f(x)); return t >= t0 && t < t0 + day; }).length; });
+  if (route === 'POST /api/admin/logout') { const mm = /^Bearer\s+([0-9a-f]+)$/.exec(req.headers.get('Authorization') || ''); if (mm) await st.put('as:' + (await pSha(mm[1])), null, 60); return J({ ok: true }); }
+  if (route === 'GET /api/admin/stats') {
+    const os = (await orders()).filter((o) => !o.tenant), us = await users(), ps = await projects(), tp = await tpOf(), paid = ps.filter((p) => p.paid);
+    return J({ orders: { total: os.length, new: os.filter((o) => o.status === 'yangi').length, sum: os.filter((o) => o.status !== 'bekor').reduce((a, o) => a + (o.total || 0), 0), series: series(os, (o) => o.date) }, users: { total: us.length, series: series(us, (u) => u.createdAt) }, projects: { total: ps.length, submitted: ps.filter((p) => p.status === 'yuborilgan').length, series: series(ps, (p) => p.createdAt), paid: paid.length, published: ps.filter((p) => p.published).length }, revenue: { usd: paid.length * tp.usd, uzs: paid.length * Math.round(tp.usd * tp.rate) } });
+  }
+  if (route === 'GET /api/admin/site') return J((await st.get('site')) || FULLSITE);
+  if (route === 'PUT /api/admin/site') { const b = await body(3 * 1024 * 1024); if (!b || !Array.isArray(b.sections)) return J({ error: "Noto'g'ri ma'lumot" }, 400); await st.put('site', b, 0); return J({ ok: true });  }
+  if (route === 'POST /api/admin/upload') {
+    const b = await body(2 * 1024 * 1024), mm = /^data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || '')); if (!mm) return J({ error: 'Faqat PNG, JPG, WEBP yoki GIF rasm yuklang' }, 400); if (mm[2].length > 1400000) return J({ error: 'Rasm 1 MB dan oshmasin' }, 413);
+    const id = Date.now().toString(36) + pRnd(3), ext = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp', 'image/gif': '.gif' }[mm[1]]; await st.put('img:' + id, { m: mm[1], d: mm[2] }, 0); return J({ url: `${origin}/uploads/${id}${ext}` });
+  }
+  if (route === 'GET /api/admin/orders') { const us = Object.fromEntries((await users()).map((u) => [u.id, u])); return J((await orders()).filter((o) => !o.tenant && !o.bot).sort((a, b) => String(b.date).localeCompare(String(a.date))).map((o) => ({ ...strip(o), userName: o.userId && us[o.userId] ? us[o.userId].name : '' }))); }
+  if (route === 'PUT /api/admin/orders') { const b = await body(8192), o = (await orders()).find((x) => x.id === b.id); if (!o) return J({ error: 'Topilmadi' }, 404); if (OSTAT.includes(b.status)) o.status = b.status; if (typeof b.note === 'string') o.note = pStr(b.note, 1000); const k = o._k; delete o._k; await st.put(k, o, 90 * 86400, { t: Date.parse(o.date), n: (o.name || '').slice(0, 40), p: (o.phone || '').slice(0, 25), ty: o.type, tn: o.tenant || '', u: o.userId || '' }); return J({ ok: true }); }
+  if (route === 'DELETE /api/admin/orders') { const o = (await orders()).find((x) => x.id === url.searchParams.get('id')); if (o) await st.put(o._k, null, 60); return J({ ok: true }); }
+  if (route === 'GET /api/admin/orders.csv') {
+    const q = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`, rows = [['ID', 'Sana', 'Turi', 'Ism', 'Telefon', 'Mahsulotlar', 'Jami', 'Holat', 'Izoh'].map(q).join(',')];
+    for (const o of await orders()) rows.push([o.id, o.date, o.type, o.name, o.phone, (o.items || []).map((i) => `${i.name} x${i.qty}`).join('; '), o.total, o.status, o.message].map(q).join(','));
+    return new Response('﻿' + rows.join('\r\n'), { headers: { 'content-type': 'text/csv; charset=utf-8', 'content-disposition': 'attachment; filename="buyurtmalar.csv"', ...cors } });
+  }
+  if (route === 'GET /api/admin/projects') { const us = Object.fromEntries((await users()).map((u) => [u.id, u])); return J(await Promise.all((await projects()).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt))).map((p) => withPaid(p, us)))); }
+  const ap = /^\/api\/admin\/projects\/([a-f0-9]{6,24})$/.exec(pn);
+  if (ap) {
+    const meta = (await projects()).find((p) => p.id === ap[1]); if (!meta) return J({ error: 'Topilmadi' }, 404); const key = 'pr:' + meta.userId + ':' + meta.id;
+    if (req.method === 'GET') { const d = await st.get('pd:' + meta.id); return J({ project: await withPaid(meta), data: d ? JSON.parse(d) : null }); }
+    if (req.method === 'PUT') { const b = await body(8192); if (PSTAT.includes(b.status)) meta.status = b.status; if (typeof b.price === 'string') meta.price = pStr(b.price, 60); if (typeof b.adminNote === 'string') meta.adminNote = pStr(b.adminNote, 1000); if (typeof b.paid === 'boolean') { meta.paid = b.paid; if (!b.paid && meta.published) { meta.published = false; if (meta.slug) await st.put('slug:' + meta.slug, null, 60); } } meta.updatedAt = new Date().toISOString(); await st.put(key, meta, 0, meta); return J({ project: await withPaid(meta) }); }
+    if (req.method === 'DELETE') { if (meta.slug) await st.put('slug:' + meta.slug, null, 60); await st.put('pd:' + meta.id, null, 60); await st.put(key, null, 60); return J({ ok: true }); }
+  }
+  if (route === 'GET /api/admin/bots') return J([]);
+  if (/^\/api\/admin\/bots\//.test(pn) || pn.startsWith('/api/admin/adminbot/')) return J({ error: "Bu funksiya hozircha mavjud emas. Admin bot @improuzbekiston_bot orqali ishlaydi." }, 400);
+  if (route === 'GET /api/admin/payments') { const out = []; for (const k of (await st.list('po:')).slice(0, 100)) { const x = await st.get(k.name); if (x) out.push({ id: x.id, projectId: x.projectId || '', project: x.note || '', user: '', phone: '', usd: 0, uzs: x.uzs, method: x.ref ? 'click' : x.tx ? 'payme' : 'karta', state: x.state, createdAt: new Date(x.createdAt).toISOString(), paidAt: x.paidAt ? new Date(x.paidAt).toISOString() : '' }); } return J(out); }
+  if (route === 'GET /api/admin/users') { const os = await orders(), ps = await projects(); return J((await users()).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).map((u) => ({ ...pubUser(u), orders: os.filter((o) => o.userId === u.id).length, projects: ps.filter((p) => p.userId === u.id).length }))); }
+  const au = /^\/api\/admin\/users\/([a-f0-9]{6,24})$/.exec(pn);
+  if (au) {
+    const u = await st.get('u:' + au[1]); if (!u) return J({ error: 'Topilmadi' }, 404);
+    if (req.method === 'GET') return J({ user: pubUser(u), orders: (await orders()).filter((o) => o.userId === u.id).map(strip), projects: await Promise.all((await projects()).filter((p) => p.userId === u.id).map((p) => withPaid(p))) });
+    if (req.method === 'DELETE') { for (const p of (await projects()).filter((x) => x.userId === u.id)) { if (p.slug) await st.put('slug:' + p.slug, null, 60); await st.put('pd:' + p.id, null, 60); await st.put('pr:' + u.id + ':' + p.id, null, 60); } await st.put('up:' + pPhoneKey(u.phone), null, 60); if (u.email) await st.put('ue:' + u.email, null, 60); await st.put('u:' + u.id, null, 60); return J({ ok: true }); }
+  }
+  if (route === 'GET /api/admin/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}) });
+  if (route === 'PUT /api/admin/pricing') {
+    const b = await body(100 * 1024), plans = (Array.isArray(b.plans) ? b.plans : []).slice(0, 12).map((p) => ({ id: pStr(p.id, 30) || pRnd(3), name: pStr(p.name, 60), price: pStr(p.price, 40), period: pStr(p.period, 40), popular: !!p.popular, features: (Array.isArray(p.features) ? p.features : []).slice(0, 10).map((x) => pStr(x, 100)).filter(Boolean) })).filter((p) => p.name), tpIn = b.templatePrice || {}, tpOld = await tpOf();
+    await st.put('pricing', { currency: pStr(b.currency, 12) || "so'm", plans, templatePrice: { usd: Math.max(0, Number(tpIn.usd) || tpOld.usd), rate: Math.max(1000, Number(tpIn.rate) || tpOld.rate) } }, 0); return J({ ok: true });
+  }
+  if (route === 'GET /api/admin/settings') {
+    const s = (await st.get('settings')) || {};
+    return J({ notify: {}, allowedOrigins: [], envAllowed: String(env.ALLOW_ORIGIN || ''), domains: [], envDomain: '', manualPay: s.manualPay || env.CARD_INFO || '', ai: { hasKey: !!env.ANTHROPIC_API_KEY, model: env.AI_MODEL || 'Workers AI' }, payments: { payme: { merchantId: env.PAYME_MERCHANT_ID || '', hasKey: !!env.PAYME_KEY }, click: { serviceId: env.CLICK_SERVICE_ID || '', merchantId: env.CLICK_MERCHANT_ID || '', hasSecret: !!env.CLICK_SECRET_KEY } }, adminBot: { connected: true, hasToken: true, chats: [], note: '@improuzbekiston_bot' }, webhooks: { payme: origin + '/pay/payme', click: origin + '/pay/click' } });
+  }
+  if (route === 'PUT /api/admin/settings') { const b = await body(32 * 1024), s = (await st.get('settings')) || {}; if (typeof b.manualPay === 'string') s.manualPay = pStr(b.manualPay, 600); await st.put('settings', s, 0); return J({ ok: true }); }
+  if (route === 'POST /api/admin/password') { const b = await body(4096), pw = String(b.password || ''); if (pw.length < 6) return J({ error: "Parol kamida 6 belgi bo'lsin" }, 400); const salt = pRnd(16); await st.put('admpw', { salt, hash: await pwHash(env, pw, salt, 10000) }, 0); return J({ ok: true }); }
+  return J({ error: 'Topilmadi' }, 404);
 }
 const makeAiOf = (env) => makeAi({ getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }) });
