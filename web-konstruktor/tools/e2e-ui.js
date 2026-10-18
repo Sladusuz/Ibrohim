@@ -27,7 +27,7 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
     page.on('pageerror', (e) => errs.push(e.message)); page.on('console', (m) => { if (m.type() === 'error' && !/fonts\.g|ERR_|40[37]/.test(m.text())) errs.push(m.text().slice(0, 140)); });
     await page.addInitScript(([t, u]) => { try { localStorage.setItem('impro_tok', t); localStorage.setItem('impro_user', JSON.stringify(u)); sessionStorage.setItem('intro', '1'); } catch (e) { /* xato sahifasi */ } }, [reg.j.token, reg.j.user]);
     await page.goto(BASE + '/yaratish.html', { waitUntil: 'load' }); await page.waitForSelector('.tc');
-    await page.locator('.tc').first().locator('button').first().click(); await page.waitForSelector('#tabs button', { timeout: 15000 }); await page.waitForTimeout(1500);
+    await page.locator('.tc').first().locator('button').first().click(); await page.waitForSelector('#tabs button', { timeout: 15000 }); await page.waitForTimeout(1500); const NAME = (await page.textContent('#ttl')).trim(), NRE = NAME.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     console.log('Sotib olish');
     await page.click('#tabs button:has-text("Tayyor")'); await page.waitForTimeout(500);
     const panel = await page.innerText('#panel');
@@ -49,13 +49,13 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
     ok(await page.$('[data-x="dl"]') !== null, "admin tasdiqlagach yuklab olish ochildi");
     const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }).catch(() => null), page.click('[data-x="dl"]')]);
     let html = ''; if (dl) html = fs.readFileSync(await dl.path(), 'utf8');
-    ok(dl && /<title>Lola Beauty<\/title>/.test(html) && /data:image\/jpeg;base64/.test(html), 'tayyor sayt (mustaqil .html) yuklab olindi', dl ? html.slice(0, 80) : 'download yo\'q');
+    ok(dl && new RegExp('<title>' + NRE.replace(/&/g, '&amp;') + '</title>').test(html) && /data:image\/jpeg;base64/.test(html), 'tayyor sayt (mustaqil .html) yuklab olindi', dl ? html.slice(0, 80) : 'download yo\'q');
 
     console.log('Joylash');
     await page.fill('#slug', 'lola-beauty'); await page.click('[data-x="pub"]'); await page.waitForSelector('a[href*="lola-beauty.example.test"]', { timeout: 6000 }).catch(() => {});
     ok(await page.$('a[href="https://lola-beauty.example.test"]') !== null, 'sayt subdomenda joylandi: lola-beauty.example.test');
     const site = await new Promise((res) => http.get({ host: 'localhost', port: PORT, path: '/', headers: { Host: 'lola-beauty.example.test' } }, (r) => { let t = ''; r.on('data', (c) => (t += c)); r.on('end', () => res({ s: r.statusCode, t })); }));
-    ok(site.s === 200 && /Lola Beauty/.test(site.t), 'subdomen sahifasi ochiladi');
+    ok(site.s === 200 && site.t.includes(NAME), 'subdomen sahifasi ochiladi');
     await page.waitForTimeout(500);
 
     console.log('Kabinet');
