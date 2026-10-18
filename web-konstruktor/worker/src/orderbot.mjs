@@ -1,6 +1,6 @@
 /* ---------- Buyurtma boti (@improuzbekiston_bot): buyurtma va to'lov faqat shu yerda; @improsupport_bot faqat yordam uchun ---------- */
-const ORDER_ON = (env) => !!(env.ORDER_BOT_TOKEN || env.APP_BOT_TOKEN);
-const orderEnv = (env) => ({ ...env, TG_TOKEN: env.ORDER_BOT_TOKEN || env.APP_BOT_TOKEN, MAIN: env.MAIN || env });
+const ORDER_ON = (env) => !!env.ORDER_BOT_TOKEN;
+const orderEnv = (env) => ({ ...env, TG_TOKEN: env.ORDER_BOT_TOKEN, MAIN: env.MAIN || env });
 const AE = (env) => env.MAIN || env; // admin xabarlari doim asosiy (yordam) bot orqali ketadi
 const payEnv = (env) => (ORDER_ON(env) ? orderEnv(env) : env); // to'lov hisob-fakturalari buyurtma bot orqali yaratiladi
 const ORDER_USER = (env) => String(env.ORDER_BOT_USERNAME || 'improuzbekiston_bot').replace(/^@/, '');
