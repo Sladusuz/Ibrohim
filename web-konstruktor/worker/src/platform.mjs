@@ -45,6 +45,7 @@ async function platformApi(req, env, ctx, url) {
   const J = (o, s = 200, x = {}) => pJson(cors, o, s, x), body = async (max = 1024 * 1024) => { const t = await req.text(); if (t.length > max) throw Object.assign(new Error('big'), { big: true }); try { return JSON.parse(t || '{}'); } catch { return {}; } };
   const me = await authUser(req, st), need = () => J({ error: 'Kirish talab qilinadi' }, 401);
   try {
+    if (/^\/api\/(tg|app)\//.test(pn)) { const r = await tbPublicApi(req, env, ctx, url, J, body); if (r) return r; }
     if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY), globalpay: GP_ON(env, 'gp') && (await st.get('gpok:gp')) !== 0, clicktg: GP_ON(env, 'click') && (await st.get('gpok:click')) !== 0 }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: false });
     if (route === 'GET /api/site') return J(SITE);
     if (route === 'POST /api/adminbot/session') { // Telegram Mini App ichidan admin kirishi (initData imzosi bo'yicha)
@@ -137,8 +138,7 @@ async function platformApi(req, env, ctx, url) {
       if (route === 'GET /api/my/orders') { const out = []; for (const k of await st.list('o:')) { const m = k.metadata || {}; if (m.u === me.id && !m.tn) { const o = await st.get(k.name); if (o) out.push(o); } } return J(out.sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 200)); }
       if (route === 'GET /api/my/leads') { const mine = new Map((await myProjects()).map((p) => [p.id, p.name])), out = []; for (const k of await st.list('o:')) { const m = k.metadata || {}; if (m.tn && mine.has(m.tn)) { const o = await st.get(k.name); if (o) out.push({ ...o, site: mine.get(m.tn) }); } } return J(out.sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 500)); }
       if (route === 'GET /api/my/referral') return J({ enabled: false, code: '', link: '', discountPct: 0, rewardUsd: 0, invited: 0, rewarded: 0, credit: 0 });
-      if (route === 'GET /api/my/bots') return J([]);
-      if (route === 'POST /api/my/bots') return J({ error: "Telegram bot konstruktori hozircha shu platformada mavjud emas. Bot buyurtma qilish uchun biz bilan bog'laning." }, 501);
+      if (pn.startsWith('/api/my/bots')) { const r = await tbMyApi(req, env, ctx, st, J, body, me, pn, origin); if (r) return r; }
       if (route === 'POST /api/my/upload') {
         if (await limited(st, 'up' + me.id, 80, 3600)) return J({ error: "Juda ko'p rasm yuklandi. Keyinroq urinib ko'ring." }, 429);
         const b = await body(2 * 1024 * 1024), m = /^data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ''));
@@ -236,7 +236,7 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
   const users = async () => { const out = []; for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u && u.hash) out.push(u); } return out; };
   const projects = async () => (await st.list('pr:')).map((k) => k.metadata).filter(Boolean);
   const orders = async () => { const out = []; for (const k of await st.list('o:')) { const o = await st.get(k.name); if (o) out.push({ ...o, _k: k.name }); } return out; };
-  const oMeta = async () => (await st.list('o:')).filter((k) => k.metadata && !k.metadata.tn).map((k) => ({ k: k.name, ...k.metadata, s: k.metadata.s || 'yangi' })).sort((a, b) => (a.k < b.k ? 1 : -1));
+  const oMeta = async () => (await st.list('o:')).filter((k) => k.metadata && !k.metadata.tn && !k.metadata.bt).map((k) => ({ k: k.name, ...k.metadata, s: k.metadata.s || 'yangi' })).sort((a, b) => (a.k < b.k ? 1 : -1));
   const uMetas = async () => (await st.list('u:')).filter((k) => k.metadata && k.metadata.n !== undefined).map((k) => ({ id: k.name.slice(2), ...k.metadata })).sort((a, b) => (b.t || 0) - (a.t || 0));
   const strip = (o) => { const { _k, ...r } = o; return r; };
   const withPaid = async (p, us, tp0) => { const tp = tp0 || (await tpOf()), u = us && us[p.userId]; return { ...p, paid: p.paid ? { usd: tp.usd, uzs: Math.round(tp.usd * tp.rate), method: 'manual' } : null, url: siteOf(env, req, p), user: u ? { name: u.name, phone: u.phone, email: u.email } : null }; };
@@ -268,8 +268,13 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
     if (req.method === 'PUT') { const b = await body(8192); if (PSTAT.includes(b.status)) meta.status = b.status; if (typeof b.price === 'string') meta.price = pStr(b.price, 60); if (typeof b.adminNote === 'string') meta.adminNote = pStr(b.adminNote, 1000); if (typeof b.paid === 'boolean') { meta.paid = b.paid; if (!b.paid && meta.published) { meta.published = false; if (meta.slug) await st.put('slug:' + meta.slug, null, 60); } } meta.updatedAt = new Date().toISOString(); await st.put(key, meta, 0, meta); return J({ project: await withPaid(meta) }); }
     if (req.method === 'DELETE') { if (meta.slug) await st.put('slug:' + meta.slug, null, 60); await st.put('pd:' + meta.id, null, 60); await st.put(key, null, 60); return J({ ok: true }); }
   }
-  if (route === 'GET /api/admin/bots') return J([]);
-  if (/^\/api\/admin\/bots\//.test(pn) || pn.startsWith('/api/admin/adminbot/')) return J({ error: "Bu funksiya hozircha mavjud emas. Admin bot @improuzbekiston_bot orqali ishlaydi." }, 400);
+  if (route === 'GET /api/admin/bots') {
+    const us = Object.fromEntries((await uMetas()).map((u) => [u.id, u])), os = (await st.list('o:')).map((k) => k.metadata).filter((m) => m && m.bt), out = [];
+    for (const k of await st.list('tb:')) { const m = k.metadata; if (!m) continue; const b = await tbGet(st, k.name.slice(3)); if (!b) continue; out.push({ id: b.id, name: b.name, username: b.username, status: b.status, owner: us[b.userId] ? us[b.userId].n : '', phone: us[b.userId] ? us[b.userId].p : '', subscribers: await tbSubs(st, b.id), orders: os.filter((x) => x.bt === b.id).length, webhook: !!b.webhookOk, miniApp: !!b.config.miniApp.enabled, createdAt: b.createdAt }); }
+    return J(out);
+  }
+  { const bm = /^\/api\/admin\/bots\/([a-f0-9]{6,24})$/.exec(pn); if (bm && req.method === 'DELETE') { const b = await tbGet(st, bm[1]); if (!b) return J({ error: 'Topilmadi' }, 404); await tbRemove(st, b); return J({ ok: true }); } }
+  if (pn.startsWith('/api/admin/adminbot/')) return J({ error: "Bu funksiya hozircha mavjud emas. Admin bot @improuzbekiston_bot orqali ishlaydi." }, 400);
   if (route === 'GET /api/admin/payments') { const out = []; for (const k of (await st.list('po:')).slice(0, 100)) { const x = await st.get(k.name); if (x) out.push({ id: x.id, projectId: x.projectId || '', project: x.note || '', user: '', phone: '', usd: 0, uzs: x.uzs, method: x.ref ? 'click' : x.tx ? 'payme' : 'karta', state: x.state, createdAt: new Date(x.createdAt).toISOString(), paidAt: x.paidAt ? new Date(x.paidAt).toISOString() : '' }); } return J(out); }
   if (route === 'GET /api/admin/users') { const om = await oMeta(), ps = await projects(), us = (await uMetas()).slice(0, 300); const out = []; for (const u of us) { let em = u.e, cr = u.t ? new Date(u.t).toISOString() : ''; if (em === undefined) { const f = await st.get('u:' + u.id); em = f ? f.email || '' : ''; cr = f ? f.createdAt : cr; } out.push({ id: u.id, name: u.n, phone: u.p, email: em, createdAt: cr, orders: om.filter((o) => o.u === u.id).length, projects: ps.filter((p) => p.userId === u.id).length }); } return J(out); }
   const au = /^\/api\/admin\/users\/([a-f0-9]{6,24})$/.exec(pn);

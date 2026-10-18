@@ -126,6 +126,7 @@ async function report(env, st, day) {
 // Cron (har 5 daqiqada): shoshilinch eslatmalar va 20:00 da kunlik hisobot
 async function tick(env, now = Date.now()) {
   ENV_REF = env;
+  await tbBroadcastTick(env).catch(() => {});
   const st = store(env), admins = await adminsOf(env, st); if (!admins.length) return;
   const h = tz(now).getUTCHours(), mi = tz(now).getUTCMinutes(), keep = [];
   for (const id of (await st.get('ul')) || []) {
@@ -1069,6 +1070,7 @@ export default {
       if (cid) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const ok = (await adminsOf(env, store(env))).includes(Number(upd.message.from && upd.message.from.id)); const w = tg(e2, 'sendMessage', { chat_id: cid, text: ok ? '📱 Admin panelni oching:' : "Bu bot faqat Impro IT adminlari uchun. Savollar: @improsupport_bot", ...(ok ? { reply_markup: { inline_keyboard: [[{ text: '📱 Admin panel', web_app: { url: PANEL_URL(env) } }]] } } : {}) }).catch(() => {}); if (ctx && ctx.waitUntil) ctx.waitUntil(w); else await w; }
       return new Response('ok');
     }
+    if (url.pathname.startsWith('/app/') && req.method === 'GET') { const r = await tbMiniApp(env, url); if (r) return r; }
     if (url.pathname === '/app' && req.method === 'GET') return new Response(APP_HTML, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
     if (url.pathname === '/api/app' && req.method === 'POST') return appApi(req, env);
     if (url.pathname === '/stats' && req.method === 'GET') return statsApi(req, env);

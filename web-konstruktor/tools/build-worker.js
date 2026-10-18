@@ -25,9 +25,11 @@ ${fs.readFileSync(path.join(R, 'lib', 'ai.js'), 'utf8')}
 const makeAi = __ai.exports;
 const SITE = ${JSON.stringify(SITE)};
 const FULLSITE = ${JSON.stringify(site)};
+const MINIAPP_HTML = ${JSON.stringify(fs.readFileSync(path.join(R, 'public', 'miniapp.html'), 'utf8'))};
 const APP_HTML = ${JSON.stringify(fs.readFileSync(path.join(R, 'worker', 'src', 'app.html'), 'utf8'))};
 const PRICING = ${JSON.stringify(PRICING)};
 ${fs.readFileSync(path.join(R, 'worker', 'src', 'platform.mjs'), 'utf8')}
+${fs.readFileSync(path.join(R, 'worker', 'src', 'tgbots.mjs'), 'utf8')}
 ${fs.readFileSync(path.join(R, 'worker', 'src', 'bot.mjs'), 'utf8')}`;
 fs.mkdirSync(path.join(R, 'worker', 'dist'), { recursive: true });
 fs.writeFileSync(path.join(R, 'worker', 'dist', 'worker.mjs'), out);
