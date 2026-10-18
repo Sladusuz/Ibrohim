@@ -166,5 +166,19 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const r4 = await (await sms('Popolnenie +9 999 000 UZS Karta 8600123412341234')).json(); ok(r4.result === 'unmatched' && sent(8001, /9 999 000/).slice(-1)[0] && /\*\*\*1234/.test(sent(8001, /9 999 000/).slice(-1)[0].body.text) && !/8600123412341234/.test(sent(8001, /9 999 000/).slice(-1)[0].body.text), 'noma\'lum kirim: adminga SMS (karta raqami yashirilgan)');
   const saveP = env.PAYME_MERCHANT_ID; delete env.PAYME_MERCHANT_ID; await msg(8001, '/tolov 1500000 Bot yaratish', 101); ok(/TEST USER/.test(lastTo(8001).body.text) && /1 500 000/.test(lastTo(8001).body.text), 'Payme yo\'q: /tolov karta rekvizitini beradi'); env.PAYME_MERCHANT_ID = saveP;
 
+  console.log('Click (Worker)');
+  const nodeMd5 = (x) => require('crypto').createHash('md5').update(x).digest('hex');
+  env.CLICK_SERVICE_ID = '777'; env.CLICK_MERCHANT_ID = '888'; env.CLICK_SECRET_KEY = 'clicksecret'; env.PAYME_MERCHANT_ID = 'merch123';
+  await msg(8001, '/tolov 800000 Click sinov', 110); const cpl = lastTo(8001).body.text, coid = (/#(\w+)/.exec(cpl) || [])[1];
+  ok(/my\.click\.uz\/services\/pay\?service_id=777&merchant_id=888&amount=800000&transaction_param=/.test(cpl), 'Click havolasi ham berildi', cpl);
+  const clk = (o) => { const f = { click_trans_id: '55', service_id: '777', click_paydoc_id: '99', merchant_trans_id: coid, amount: '800000', action: '0', error: '0', sign_time: '2026-10-19 12:00:00', ...o }; const base = `${f.click_trans_id}${f.service_id}clicksecret${f.merchant_trans_id}`; f.sign_string = f.action === '1' ? nodeMd5(`${base}${f.merchant_prepare_id}${f.amount}${f.action}${f.sign_time}`) : nodeMd5(`${base}${f.amount}${f.action}${f.sign_time}`); if (o.badsign) f.sign_string = 'x'; return W.fetch(new Request('https://w.example/pay/click', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(f) }), env, ctx).then((r) => r.json()); };
+  ok((await clk({ badsign: 1 })).error === -1, 'Click: noto\'g\'ri imzo rad');
+  ok((await clk({ amount: '1000' })).error === -2, "Click: noto'g'ri summa");
+  ok((await clk({ merchant_trans_id: 'yoq' })).error === -5, 'Click: buyurtma topilmadi');
+  const pr = await clk({}); ok(pr.error === 0 && pr.merchant_prepare_id === coid, 'Click Prepare');
+  const cm = await clk({ action: '1', merchant_prepare_id: coid }); ok(cm.error === 0, 'Click Complete');
+  ok(sent(8001, /To'lov qabul qilindi \(Click\)/).length === 1, "Click to'lovi haqida adminga xabar");
+  ok((await clk({ action: '1', merchant_prepare_id: coid })).error === -4, 'takroriy Complete: Already paid');
+
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);
 })();

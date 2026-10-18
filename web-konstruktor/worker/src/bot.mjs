@@ -610,9 +610,11 @@ async function handleUpdate(env, upd) {
   if (cmd === '/tolov') {
     const mm = /^(\d[\d\s]{2,12})\s*([\s\S]{0,100})$/.exec(arg), uzs = mm ? Number(mm[1].replace(/\s/g, '')) : 0;
     if (!uzs || uzs < 1000) return say(env, chat, "Format: <code>/tolov 2500000 Vizitka sayt, Aziz</code> (summa so'mda). Mijozga yuboriladigan Payme havolasi yaratiladi.");
+    const hasClick = !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY);
+    if (!env.PAYME_MERCHANT_ID && hasClick) { const pc = await createPayOrder(env, st, uzs, mm[2]); return say(env, chat, `💳 <b>Click to'lov havolasi</b> · ${sum(pc.uzs)} so'm\n#${pc.id}${pc.note ? '\n📝 ' + esc(pc.note) : ''}\n\n${clickUrl(env, pc)}\n\nShu havolani mijozga yuboring. To'lov tushganda bu yerga xabar keladi.`); }
     if (!env.PAYME_MERCHANT_ID) { if (!env.CARD_INFO) return say(env, chat, "Na Payme, na karta sozlanmagan (PAYME_MERCHANT_ID yoki CARD_INFO)."); return say(env, chat, `💳 <b>Mijozga yuboring</b> (${sum(uzs)} so'm):\n\nTo'lov: <b>${sum(uzs)} so'm</b>${mm[2] ? ' · ' + esc(mm[2]) : ''}\n${esc(env.CARD_INFO)}\n\nO'tkazgach chek rasmini @${(await tg(env, 'getMe', {}) || {}).username || 'improsupport_bot'} ga yuboring.`); }
     const p = await createPayOrder(env, st, uzs, mm[2]);
-    return say(env, chat, `💳 <b>To'lov havolasi</b> · ${sum(p.uzs)} so'm\n#${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}\n\n${paymeUrl(env, p)}\n\nShu havolani mijozga yuboring. To'lov tushganda bu yerga xabar keladi.`);
+    return say(env, chat, `💳 <b>To'lov havolasi</b> · ${sum(p.uzs)} so'm\n#${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}\n\n${paymeUrl(env, p)}${env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY ? '\n\nClick: ' + clickUrl(env, p) : ''}\n\nShu havolani mijozga yuboring. To'lov tushganda bu yerga xabar keladi.`);
   }
   if (cmd === '/tolovlar') {
     const ps = (await st.list('po:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 12);
@@ -974,6 +976,49 @@ async function smsApi(req, env) {
   return new Response(JSON.stringify({ ok: true, credit: true, result: await onCredit(env, st, r.amount, String(text).replace(/\d{9,}/g, (x) => '***' + x.slice(-4)).slice(0, 160)) }), { headers: { 'content-type': 'application/json' } });
 }
 
+/* ---------- Click (Shop API: Prepare/Complete) Worker'da ---------- */
+function md5(str) { // sof JS MD5 (WebCrypto MD5 ni qo'llamaydi)
+  const rl = (x, c) => (x << c) | (x >>> (32 - c)), ad = (x, y) => { const l = (x & 0xffff) + (y & 0xffff); return (((x >> 16) + (y >> 16) + (l >> 16)) << 16) | (l & 0xffff); };
+  const cm = (q, a, b, x, s, t) => ad(rl(ad(ad(a, q), ad(x, t)), s), b), ff = (a, b, c, d, x, s, t) => cm((b & c) | (~b & d), a, b, x, s, t), gg = (a, b, c, d, x, s, t) => cm((b & d) | (c & ~d), a, b, x, s, t), hh = (a, b, c, d, x, s, t) => cm(b ^ c ^ d, a, b, x, s, t), ii = (a, b, c, d, x, s, t) => cm(c ^ (b | ~d), a, b, x, s, t);
+  const u = unescape(encodeURIComponent(str)), n = u.length, w = []; for (let i = 0; i < n * 8; i += 8) w[i >> 5] = (w[i >> 5] || 0) | ((u.charCodeAt(i / 8) & 255) << (i % 32));
+  w[n >> 2] = (w[n >> 2] || 0) | (0x80 << ((n % 4) * 8)); w[(((n + 8) >> 6) << 4) + 14] = n * 8;
+  let a = 1732584193, b = -271733879, c = -1732584194, d = 271733878;
+  for (let i = 0; i < w.length; i += 16) { const x = (k) => w[i + k] || 0, oa = a, ob = b, oc = c, od = d;
+    a = ff(a, b, c, d, x(0), 7, -680876936); d = ff(d, a, b, c, x(1), 12, -389564586); c = ff(c, d, a, b, x(2), 17, 606105819); b = ff(b, c, d, a, x(3), 22, -1044525330); a = ff(a, b, c, d, x(4), 7, -176418897); d = ff(d, a, b, c, x(5), 12, 1200080426); c = ff(c, d, a, b, x(6), 17, -1473231341); b = ff(b, c, d, a, x(7), 22, -45705983); a = ff(a, b, c, d, x(8), 7, 1770035416); d = ff(d, a, b, c, x(9), 12, -1958414417); c = ff(c, d, a, b, x(10), 17, -42063); b = ff(b, c, d, a, x(11), 22, -1990404162); a = ff(a, b, c, d, x(12), 7, 1804603682); d = ff(d, a, b, c, x(13), 12, -40341101); c = ff(c, d, a, b, x(14), 17, -1502002290); b = ff(b, c, d, a, x(15), 22, 1236535329);
+    a = gg(a, b, c, d, x(1), 5, -165796510); d = gg(d, a, b, c, x(6), 9, -1069501632); c = gg(c, d, a, b, x(11), 14, 643717713); b = gg(b, c, d, a, x(0), 20, -373897302); a = gg(a, b, c, d, x(5), 5, -701558691); d = gg(d, a, b, c, x(10), 9, 38016083); c = gg(c, d, a, b, x(15), 14, -660478335); b = gg(b, c, d, a, x(4), 20, -405537848); a = gg(a, b, c, d, x(9), 5, 568446438); d = gg(d, a, b, c, x(14), 9, -1019803690); c = gg(c, d, a, b, x(3), 14, -187363961); b = gg(b, c, d, a, x(8), 20, 1163531501); a = gg(a, b, c, d, x(13), 5, -1444681467); d = gg(d, a, b, c, x(2), 9, -51403784); c = gg(c, d, a, b, x(7), 14, 1735328473); b = gg(b, c, d, a, x(12), 20, -1926607734);
+    a = hh(a, b, c, d, x(5), 4, -378558); d = hh(d, a, b, c, x(8), 11, -2022574463); c = hh(c, d, a, b, x(11), 16, 1839030562); b = hh(b, c, d, a, x(14), 23, -35309556); a = hh(a, b, c, d, x(1), 4, -1530992060); d = hh(d, a, b, c, x(4), 11, 1272893353); c = hh(c, d, a, b, x(7), 16, -155497632); b = hh(b, c, d, a, x(10), 23, -1094730640); a = hh(a, b, c, d, x(13), 4, 681279174); d = hh(d, a, b, c, x(0), 11, -358537222); c = hh(c, d, a, b, x(3), 16, -722521979); b = hh(b, c, d, a, x(6), 23, 76029189); a = hh(a, b, c, d, x(9), 4, -640364487); d = hh(d, a, b, c, x(12), 11, -421815835); c = hh(c, d, a, b, x(15), 16, 530742520); b = hh(b, c, d, a, x(2), 23, -995338651);
+    a = ii(a, b, c, d, x(0), 6, -198630844); d = ii(d, a, b, c, x(7), 10, 1126891415); c = ii(c, d, a, b, x(14), 15, -1416354905); b = ii(b, c, d, a, x(5), 21, -57434055); a = ii(a, b, c, d, x(12), 6, 1700485571); d = ii(d, a, b, c, x(3), 10, -1894986606); c = ii(c, d, a, b, x(10), 15, -1051523); b = ii(b, c, d, a, x(1), 21, -2054922799); a = ii(a, b, c, d, x(8), 6, 1873313359); d = ii(d, a, b, c, x(15), 10, -30611744); c = ii(c, d, a, b, x(6), 15, -1560198380); b = ii(b, c, d, a, x(13), 21, 1309151649); a = ii(a, b, c, d, x(4), 6, -145523070); d = ii(d, a, b, c, x(11), 10, -1120210379); c = ii(c, d, a, b, x(2), 15, 718787259); b = ii(b, c, d, a, x(9), 21, -343485551);
+    a = ad(a, oa); b = ad(b, ob); c = ad(c, oc); d = ad(d, od); }
+  return [a, b, c, d].map((v) => { let s = ''; for (let j = 0; j < 4; j++) s += ((v >> (j * 8 + 4)) & 15).toString(16) + ((v >> (j * 8)) & 15).toString(16); return s; }).join('');
+}
+const clickUrl = (env, p) => `https://my.click.uz/services/pay?service_id=${encodeURIComponent(env.CLICK_SERVICE_ID)}&merchant_id=${encodeURIComponent(env.CLICK_MERCHANT_ID)}&amount=${p.uzs}&transaction_param=${p.id}`;
+async function clickRpc(req, env) {
+  const st = store(env); let f = {}; try { const ct = req.headers.get('content-type') || ''; if (ct.includes('json')) f = await req.json(); else { const fd = await req.formData(); for (const [k, v] of fd.entries()) f[k] = String(v); } } catch { f = {}; }
+  const out = (o) => ({ click_trans_id: f.click_trans_id, merchant_trans_id: f.merchant_trans_id, ...o }), action = Number(f.action);
+  const base = `${f.click_trans_id}${f.service_id}${env.CLICK_SECRET_KEY}${f.merchant_trans_id}`, sign = action === 1 ? md5(`${base}${f.merchant_prepare_id}${f.amount}${f.action}${f.sign_time}`) : md5(`${base}${f.amount}${f.action}${f.sign_time}`);
+  if (!env.CLICK_SECRET_KEY || String(f.service_id) !== String(env.CLICK_SERVICE_ID) || !tEq(String(f.sign_string || '').toLowerCase(), sign)) return out({ error: -1, error_note: 'SIGN CHECK FAILED!' });
+  const p = f.merchant_trans_id ? await st.get('po:' + String(f.merchant_trans_id)) : null;
+  if (!p) return out({ error: -5, error_note: 'User does not exist' });
+  if (Math.abs(Number(f.amount) - p.uzs) > 0.01) return out({ error: -2, error_note: 'Incorrect parameter amount' });
+  if (action === 0) {
+    if (p.state === 'paid') return out({ error: -4, error_note: 'Already paid' });
+    if (p.click && p.click.cancelled) return out({ error: -9, error_note: 'Transaction cancelled' });
+    p.click = { transId: f.click_trans_id, prepareId: p.id, state: 'prepared' }; await payOrderPut(st, p);
+    return out({ merchant_prepare_id: p.id, error: 0, error_note: 'Success' });
+  }
+  if (action === 1) {
+    if (!p.click || String(f.merchant_prepare_id) !== String(p.click.prepareId)) return out({ error: -6, error_note: 'Transaction does not exist' });
+    if (p.state === 'paid') return out({ merchant_prepare_id: p.id, merchant_confirm_id: p.id, error: -4, error_note: 'Already paid' });
+    if (Number(f.error) < 0) { p.click.cancelled = true; await payOrderPut(st, p); return out({ merchant_prepare_id: p.id, merchant_confirm_id: p.id, error: -9, error_note: 'Transaction cancelled' }); }
+    p.state = 'paid'; p.paidAt = Date.now(); p.ref = f.click_paydoc_id; await payOrderPut(st, p);
+    await ev(st, { k: 'pay', c: 0, n: 'Click', x: sum(p.uzs) + " so'm" });
+    for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>To'lov qabul qilindi (Click)</b>\n💰 <b>${sum(p.uzs)} so'm</b>\n🧾 #${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}`);
+    await pushPhone(env, "To'lov qabul qilindi", `${sum(p.uzs)} so'm (Click)`, 4, 'moneybag');
+    return out({ merchant_prepare_id: p.id, merchant_confirm_id: p.id, error: 0, error_note: 'Success' });
+  }
+  return out({ error: -3, error_note: 'Action not found' });
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;
@@ -999,6 +1044,7 @@ export default {
     if (url.pathname === '/stats' && req.method === 'GET') return statsApi(req, env);
     if (url.pathname === '/pay/payme' && req.method === 'POST') return new Response(JSON.stringify(await paymeRpc(req, env)), { headers: { 'content-type': 'application/json' } });
     if (url.pathname === '/sms') return smsApi(req, env);
+    if (url.pathname === '/pay/click' && req.method === 'POST') return new Response(JSON.stringify(await clickRpc(req, env)), { headers: { 'content-type': 'application/json' } });
     if (url.pathname === '/err') return errApi(req, env);
     if (url.pathname === '/errors' && env.SETUP_KEY && tEq(url.searchParams.get('key') || '', env.SETUP_KEY)) { const ks = (await store(env).list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 50); return new Response(JSON.stringify(ks), { headers: { 'content-type': 'application/json' } }); }
     if (url.pathname === '/chat') return chatApi(req, env);
