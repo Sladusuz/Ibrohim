@@ -306,7 +306,7 @@
   if (tgApp) { try { tgApp.ready(); tgApp.expand(); document.documentElement.classList.add('tgapp'); } catch (e) { /* ignore */ } }
   api('GET', '/api/admin/stats').then(() => start()).catch(async () => {
     if (!tgApp) return showLogin();
-    try { await fetch('/api/adminbot/session', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ initData: tgApp.initData }) }).then(async (r) => { if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Kirish rad etildi'); }); $('#login').hidden = true; await start(); }
+    try { await fetch(API + '/api/adminbot/session', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ initData: tgApp.initData }) }).then(async (r) => { const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'Kirish rad etildi'); if (j.token) tokSet(j.token); }); $('#login').hidden = true; await start(); }
     catch (er) { showLogin(); $('#le').textContent = er.message + '. Yoki parolni kiriting.'; }
   });
 })();

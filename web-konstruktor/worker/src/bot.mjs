@@ -18,6 +18,7 @@ const d1store = (env) => {
     gc: async () => { await init(); await db.prepare('DELETE FROM kv WHERE exp > 0 AND exp < ?1').bind(Date.now()).run(); },
   };
 };
+const PANEL_URL = (env) => String(env.SITE_ORIGIN || 'https://improuzbekiston.uz').replace(/\/$/, '') + '/admin.html';
 const store = (env) => env.DB ? d1store(env) : env.STATE
   ? { get: async (k) => { const v = await env.STATE.get(k); if (v == null) return null; try { return JSON.parse(v); } catch { return null; } },
       put: (k, v, ttl, meta) => env.STATE.put(k, JSON.stringify(v), { ...(ttl ? { expirationTtl: Math.max(60, Math.floor(ttl)) } : {}), ...(meta ? { metadata: meta } : {}) }),
@@ -594,7 +595,7 @@ async function handleUpdate(env, upd) {
     const cnt = {}; for (let i = 0; i < 7; i++) for (const k of await st.list(`ev:${dkey(Date.now() - i * 864e5)}:`)) { const e = k.metadata; if (e && e.k === 'start' && e.x) cnt[e.x] = (cnt[e.x] || 0) + 1; }
     return say(env, chat, 'Format: <code>/havola instagram</code>\n\n' + (Object.keys(cnt).length ? '📈 7 kun manbalari: ' + Object.entries(cnt).map(([k, v]) => `${esc(k)} ${v}`).join(' · ') : "Hozircha manba bo'yicha mijoz yo'q."));
   }
-  if (cmd === '/panel') { if (!ENV_ORIGIN) return say(env, chat, 'Panel manzili hali aniqlanmadi, /setup ni oching.'); return say(env, chat, '📱 Admin panelini oching:', { reply_markup: { inline_keyboard: [[{ text: '📊 Panel', web_app: { url: ENV_ORIGIN + '/app' } }]] } }); }
+  if (cmd === '/panel') { if (!ENV_ORIGIN) return say(env, chat, 'Panel manzili hali aniqlanmadi, /setup ni oching.'); return say(env, chat, '📱 Admin panelini oching:', { reply_markup: { inline_keyboard: [[{ text: '📊 Panel', web_app: { url: PANEL_URL(env) } }]] } }); }
   if (cmd === '/mijozlar') { const us = (await st.list('u:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t); return say(env, chat, `👥 <b>Ro'yxatdan o'tgan mijozlar: ${us.length}</b>\n` + (us.slice(0, 40).map((u, i) => `${i + 1}. ${esc(u.n)} · ${esc(u.p)} · ${new Date(u.t + TZ).toISOString().slice(0, 10)}`).join('\n') || 'Hali yo\'q') + (us.length > 40 ? '\n… to\'liq ro\'yxat: /zaxira' : '') + '\n\nℹ️ Parollar xeshlangan holda saqlanadi, ularni hech kim (men ham) ko\'ra olmaydi. Mijoz parolni unutsa: /parolber <telefon>'); }
   if (cmd === '/parolber') { const k = pDigits(arg).slice(-9), uid = k ? await st.get('up:' + k) : null, u = uid ? await st.get('u:' + uid) : null; if (!u) return say(env, chat, "Bunday mijoz topilmadi. Format: /parolber 901234567"); const np = pRnd(4); u.salt = pRnd(16); u.it = 10000; u.hash = await pwHash(env, np, u.salt, 10000); await st.put('u:' + u.id, u, 0, { n: u.name.slice(0, 40), p: u.phone.slice(0, 25), t: Date.parse(u.createdAt) || Date.now() }); return say(env, chat, `🔑 ${esc(u.name)} uchun yangi vaqtinchalik parol: <code>${np}</code>\nMijozga yuboring, kirgach almashtirsin.`); }
   if (cmd === '/zaxira') return say(env, chat, (await backup(env, st, [chat])) ? '💾 Zaxira yuborildi.' : 'Zaxira yuborilmadi.');
@@ -1040,9 +1041,9 @@ export default {
       if (!env.WEBHOOK_SECRET || !env.TG_TOKEN) return new Response('TG_TOKEN va WEBHOOK_SECRET kerak', { status: 400 });
       try { await store(env).put('origin', url.origin); } catch { /* ixtiyoriy */ }
       const wr = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/setWebhook`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: `${url.origin}/hook/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query'], drop_pending_updates: false }) }), wj = await wr.json().catch(() => ({})), w = wj.ok ? wj.result : null;
-      await tg(env, 'setChatMenuButton', { chat_id: Number(String(env.TG_CHAT || '').split(',')[0]) || undefined, menu_button: { type: 'web_app', text: 'Panel', web_app: { url: url.origin + '/app' } } });
+      await tg(env, 'setChatMenuButton', { chat_id: Number(String(env.TG_CHAT || '').split(',')[0]) || undefined, menu_button: { type: 'web_app', text: 'Panel', web_app: { url: PANEL_URL(env) } } });
       await tg(env, 'setMyCommands', { commands: [{ command: 'start', description: 'Boshlash' }] });
-      let app = null; if (env.APP_BOT_TOKEN) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const w2 = await tg(e2, 'setWebhook', { url: `${url.origin}/hook2/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message'] }); await tg(e2, 'setChatMenuButton', { menu_button: { type: 'web_app', text: 'Panel', web_app: { url: url.origin + '/app' } } }); await tg(e2, 'setMyCommands', { commands: [{ command: 'start', description: 'Admin panelni ochish' }] }); const m2 = await tg(e2, 'getMe', {}); app = { bot: m2 && m2.username, webhook: !!w2 }; }
+      let app = null; if (env.APP_BOT_TOKEN) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const w2 = await tg(e2, 'setWebhook', { url: `${url.origin}/hook2/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message'] }); await tg(e2, 'setChatMenuButton', { menu_button: { type: 'web_app', text: 'Panel', web_app: { url: PANEL_URL(env) } } }); await tg(e2, 'setMyCommands', { commands: [{ command: 'start', description: 'Admin panelni ochish' }] }); const m2 = await tg(e2, 'getMe', {}); app = { bot: m2 && m2.username, webhook: !!w2 }; }
       const me = await tg(env, 'getMe', {});
       return new Response(JSON.stringify({ webhook: !!w, app, ...(w ? {} : { error: wj.description || 'noma\'lum' }), bot: me && me.username, store: env.DB ? 'd1' : env.STATE ? 'kv' : 'xotira', ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
     }
@@ -1057,7 +1058,7 @@ export default {
       if (req.method !== 'POST' || !env.WEBHOOK_SECRET || !tEq(url.pathname.slice(7), env.WEBHOOK_SECRET) || !tEq(req.headers.get('X-Telegram-Bot-Api-Secret-Token') || '', env.WEBHOOK_SECRET)) return new Response('no', { status: 403 });
       let upd; try { upd = await req.json(); } catch { return new Response('ok'); }
       const cid = upd && upd.message && upd.message.chat && upd.message.chat.id;
-      if (cid) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const ok = (await adminsOf(env, store(env))).includes(Number(upd.message.from && upd.message.from.id)); const w = tg(e2, 'sendMessage', { chat_id: cid, text: ok ? '📱 Admin panelni oching:' : "Bu bot faqat Impro IT adminlari uchun. Savollar: @improsupport_bot", ...(ok ? { reply_markup: { inline_keyboard: [[{ text: '📱 Admin panel', web_app: { url: url.origin + '/app' } }]] } } : {}) }).catch(() => {}); if (ctx && ctx.waitUntil) ctx.waitUntil(w); else await w; }
+      if (cid) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const ok = (await adminsOf(env, store(env))).includes(Number(upd.message.from && upd.message.from.id)); const w = tg(e2, 'sendMessage', { chat_id: cid, text: ok ? '📱 Admin panelni oching:' : "Bu bot faqat Impro IT adminlari uchun. Savollar: @improsupport_bot", ...(ok ? { reply_markup: { inline_keyboard: [[{ text: '📱 Admin panel', web_app: { url: PANEL_URL(env) } }]] } } : {}) }).catch(() => {}); if (ctx && ctx.waitUntil) ctx.waitUntil(w); else await w; }
       return new Response('ok');
     }
     if (url.pathname === '/app' && req.method === 'GET') return new Response(APP_HTML, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });

@@ -93,6 +93,9 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     r = await app(sign('1:a', 7), 'projects'); ok(r.s === 200 && r.j.projects.length >= 1 && r.j.projects[0].owner, 'panel: loyihalar');
     r = await app(sign('999:second', 99), 'users'); ok(r.s === 403, 'panel: admin emas 403');
     r = await app(sign('bad:tok', 7), 'users'); ok(r.s === 403, 'panel: noto\'g\'ri imzo 403');
+    r = await api('POST', '/api/adminbot/session', { initData: sign('999:second', 7) }); ok(r.s === 200 && r.j.token, 'panel: Mini App orqali admin kirishi'); const mt = r.j.token;
+    r = await api('GET', '/api/admin/stats', null, mt); ok(r.s === 200, 'panel: Mini App tokeni bilan statistika');
+    r = await api('POST', '/api/adminbot/session', { initData: sign('999:second', 99) }); ok(r.s === 403, 'panel: admin emas kirmaydi');
     const pr = (await app(sign('1:a', 7), 'projects')).j.projects[0]; r = await app(sign('1:a', 7), 'markpaid', { owner: pr.userId, id: pr.id }); ok(r.s === 200, 'panel: tolovni tasdiqlash');
     r = await app(sign('1:a', 7), 'porders'); ok(r.s === 200 && Array.isArray(r.j.orders), 'panel: buyurtmalar');
   }
