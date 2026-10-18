@@ -258,7 +258,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok(/javob bera olmagan savollar/.test(wk), "haftalik hisobot: bot javob bera olmagan savollar ro'yxati");
   let mon = Date.now(); for (let i = 0; i < 9; i++) { const d = new Date(mon + 5 * 3600e3); if (d.getUTCDay() === 1) break; mon += 864e5; }
   const dm = new Date(mon + 5 * 3600e3), mon0901 = Date.UTC(dm.getUTCFullYear(), dm.getUTCMonth(), dm.getUTCDate(), 4, 1);
-  const wB = sent(7001, /Haftalik hisobot/).length; await W.tick(env, mon0901); await W.tick(env, mon0901 + 60e3);
+  const wB = sent(7001, /Haftalik hisobot/).length; await S.put('repw:' + dm.toISOString().slice(0, 10), null, 60); await W.tick(env, mon0901); await W.tick(env, mon0901 + 60e3);
   ok(sent(7001, /Haftalik hisobot/).length === wB + 1, 'dushanba 09:00 da haftalik hisobot avtomatik, bir marta');
   delete env.AI;
   console.log('Lidlar, loyiha, jamoa, qayta salomlashish, savol-javob bazasi, sayt chati');

@@ -152,14 +152,18 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok(/To'lovingiz tasdiqlandi/.test(lastTo(9020).body.text) && sent(8001, /Avtomatik tasdiqlandi/).length >= 1, 'mijoz va admin avtomatik xabar oldi');
   ok((await S.get('c:9020')).tags.includes('tolagan'), "'tolagan' tegi");
   const r2 = await (await sms('Пополнение +700 000.00 UZS')).json(); ok(r2.result === 'unmatched', 'mos mijoz yo\'q: adminga xabar, SMS saqlandi');
-  await cb(9021, 'm:pay'); await msg(9021, '700000', 95); ok(/tasdiqlandi/i.test(lastTo(9021).body.text), 'mijoz summa yozganda oldingi SMS bilan avtomatik tasdiqlandi');
+  await cb(9021, 'm:pay'); await msg(9021, '700000', 95); ok(/700 001/.test(lastTo(9021).body.text) && !/tasdiqlandi/i.test(lastTo(9021).body.text), "begona (kutilmagan) kirim yangi mijozga avtomatik biriktirilmaydi: noyob summa beriladi");
   await cb(9022, 'm:pay'); await msg(9022, '300000', 96); await cb(9023, 'm:pay'); await msg(9023, '300000', 97);
-  const r3 = await (await sms('Kirim: +300 000 so\'m')).json(); ok(r3.result === 'ambiguous' && sent(8001, /bir xil summa/).length === 1, 'bir xil summa: admin hal qiladi');
+  ok(/300 001/.test(lastTo(9023).body.text) && /Aynan/.test(lastTo(9023).body.text), "bir xil summa yozgan 2-mijozga noyob summa (300 001) berildi");
+  const r3 = await (await sms("Kirim: +300 001 so'm")).json(); ok(r3.result === 'matched' && /To'lovingiz tasdiqlandi/.test(lastTo(9023).body.text), "noyob summa aynan 2-mijozni tasdiqladi");
+  const r3b = await (await sms("Kirim: +300 000 so'm")).json(); ok(r3b.result === 'matched', "asl summa aynan 1-mijozni tasdiqladi");
+  await cb(9022, 'm:pay'); await msg(9022, '450000', 102);
   await hook({ message: { message_id: 98, chat: { id: 9022, type: 'private' }, from: { id: 9022, first_name: 'U9022' }, photo: [{ file_id: 'x' }] } });
   ok(sent(8001, /To'lov cheki keldi/).length === 1, 'chek tasdiqlash tugmalari bilan keldi (qo\'lda yo\'l)');
   await cb(8001, 'pc:9022'); ok(/To'lovingiz tasdiqlandi/.test(lastTo(9022).body.text), 'qo\'lda tasdiqlash ishladi');
   await msg(8001, '/smstest Kirim +250 000.00 UZS', 99); ok(/250 000/.test(lastTo(8001).body.text), '/smstest');
   await msg(8001, '/tasdiq 9023', 100); ok(/Mijozga tasdiq yuborildi/.test(lastTo(8001).body.text), '/tasdiq buyrug\'i');
+  const r4 = await (await sms('Popolnenie +9 999 000 UZS Karta 8600123412341234')).json(); ok(r4.result === 'unmatched' && sent(8001, /9 999 000/).slice(-1)[0] && /\*\*\*1234/.test(sent(8001, /9 999 000/).slice(-1)[0].body.text) && !/8600123412341234/.test(sent(8001, /9 999 000/).slice(-1)[0].body.text), 'noma\'lum kirim: adminga SMS (karta raqami yashirilgan)');
   const saveP = env.PAYME_MERCHANT_ID; delete env.PAYME_MERCHANT_ID; await msg(8001, '/tolov 1500000 Bot yaratish', 101); ok(/TEST USER/.test(lastTo(8001).body.text) && /1 500 000/.test(lastTo(8001).body.text), 'Payme yo\'q: /tolov karta rekvizitini beradi'); env.PAYME_MERCHANT_ID = saveP;
 
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);

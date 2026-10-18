@@ -236,9 +236,9 @@ async function flowText(env, st, m, rec) {
   if (text === '/cancel') { rec.flow = null; await saveRec(st, chat, rec); return say(env, chat, "Anketa bekor qilindi. Savolingizni yozishingiz mumkin.", { reply_markup: MENU }); }
   if (f.step === 'payamt') {
     const n = Number(text.replace(/[^\d]/g, '')); if (!n || n < 1000 || n > 500000000) return say(env, chat, "Summani raqam bilan yozing, masalan: <code>1500000</code>");
-    rec.flow = null; rec.payAmt = n; rec.payWait = Date.now(); await saveRec(st, chat, rec);
-    if (await takeCredit(st, n)) { await confirmPay(env, st, chat, 'avtomatik (SMS)'); for (const a of await adminsOf(env, st)) await say(env, a, `✅ <b>Avtomatik tasdiqlandi</b>: ${esc(who(m))} <code>${chat}</code>, ${sum(n)} so'm (kartaga allaqachon tushgan edi)`); return; }
-    return say(env, chat, `💳 <b>${sum(n)} so'm</b> o'tkazing:\n\n${esc(env.CARD_INFO)}\n\nPul kelgach to'lovingiz <b>avtomatik tasdiqlanadi</b>. Xohlasangiz, chek rasmini shu yerga yuboring.`);
+    const own = await uniqueAmount(st, n); rec.flow = null; rec.payAmt = own; rec.payWait = Date.now(); await saveRec(st, chat, rec);
+    if (await takeCredit(st, own)) { await confirmPay(env, st, chat, 'avtomatik (SMS)'); for (const a of await adminsOf(env, st)) await say(env, a, `✅ <b>Avtomatik tasdiqlandi</b>: ${esc(who(m))} <code>${chat}</code>, ${sum(own)} so'm (kartaga allaqachon tushgan edi)`); return; }
+    return say(env, chat, `💳 Aynan <b>${sum(own)} so'm</b> o'tkazing${own !== n ? ` (oxirgi raqamlar to'lovingizni aniqlash uchun: summa ${sum(n)} dan ${own - n} so'mga farq qiladi)` : ''}:\n\n${esc(env.CARD_INFO)}\n\n⚠️ Summa <b>aynan shunday</b> bo'lsin. Pul kelgach to'lovingiz <b>avtomatik tasdiqlanadi</b>. Xohlasangiz, chek rasmini shu yerga yuboring.`);
   }
   if (f.step === 'site') return siteProposal(env, st, chat, rec, text);
   if (f.step === 'bkph') { const p = findPhone(text); if (!p) return say(env, chat, "Raqam noto'g'ri. Masalan: <code>90 123 45 67</code>"); rec.phone = p.phone; rec.flow = null; return bookFinish(env, st, chat, rec, who(m), f.ymd, f.hh); }
@@ -818,7 +818,7 @@ async function calcCallback(env, st, q, arg) {
 // Sog'liq nazorati: webhook yo'qolsa yoki Telegram xato bersa adminga xabar (6 soatda bir marta), imkon bo'lsa o'zi tuzatadi
 async function health(env, st, admins, now) {
   try {
-    const wi = await tg(env, 'getWebhookInfo', {}); let problem = '';
+    const wi = await tg(env, 'getWebhookInfo', {}); let problem = ''; if (wi && typeof wi !== 'object') return;
     if (!wi) problem = 'Telegram bilan aloqa yo\'q (token noto\'g\'ri bo\'lishi mumkin)';
     else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(env, 'setWebhook', { url: o + '/hook/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query'] }); problem = r ? '' : 'Webhook yo\'q edi, tiklashga urinildi: bo\'lmadi'; if (r) await st.put('hl:healed', now, 86400); } else problem = 'Webhook o\'rnatilmagan: /setup ni oching'; }
     else if (wi.last_error_date && now / 1000 - wi.last_error_date < 600) problem = 'Telegram yetkazishda xato: ' + String(wi.last_error_message || '').slice(0, 120);
@@ -946,7 +946,7 @@ function parseCredit(text) {
   n = Number(n.replace(/[.,]/g, ''));
   return n >= 1000 ? { credit: true, amount: n } : { credit: false };
 }
-async function onCredit(env, st, amount) {
+async function onCredit(env, st, amount, snip = '') {
   const now = Date.now(), pend = (await st.list('c:')).filter((k) => k.metadata && k.metadata.pa === amount && now - k.metadata.pw < 3 * 864e5), admins = await adminsOf(env, st);
   if (pend.length === 1) {
     const to = Number(pend[0].name.slice(2)); await confirmPay(env, st, to, 'avtomatik (SMS)');
@@ -955,8 +955,12 @@ async function onCredit(env, st, amount) {
   }
   if (pend.length > 1) { for (const a of admins) await say(env, a, `⚠️ Kartaga <b>${sum(amount)} so'm</b> tushdi, lekin bir xil summa kutayotgan ${pend.length} ta mijoz bor:\n` + pend.map((k) => `• ${esc((k.metadata || {}).n || 'Mijoz')} <code>${k.name.slice(2)}</code>`).join('\n') + '\n\nTasdiqlash: <code>/tasdiq ID</code>'); return 'ambiguous'; }
   await st.put('cr:' + now.toString(36), { amount, t: now }, 3 * 86400, { a: amount, t: now });
-  for (const a of admins) await say(env, a, `💰 Kartaga <b>${sum(amount)} so'm</b> tushdi (hozircha mos mijoz kutilmayapti: mijoz summani yozsa o'zi tasdiqlanadi).`);
+  for (const a of admins) await say(env, a, `💰 Kartaga <b>${sum(amount)} so'm</b> tushdi (hozircha mos mijoz kutilmayapti: mijoz shu summani yozsa o'zi tasdiqlanadi).${snip ? '\n<i>' + esc(snip) + '</i>' : ''}`);
   return 'unmatched';
+}
+async function uniqueAmount(st, n) {
+  const now = Date.now(), used = new Set(); for (const k of await st.list('c:')) { const m = k.metadata || {}; if (m.pa && now - m.pw < 3 * 864e5) used.add(m.pa); } for (const k of await st.list('cr:')) { const m = k.metadata || {}; if (m.a && now - m.t < 3 * 864e5) used.add(m.a); }
+  for (let i = 0; i < 100; i++) if (!used.has(n + i)) return n + i; return n;
 }
 async function takeCredit(st, amount) { const now = Date.now(); for (const k of await st.list('cr:')) { const m = k.metadata || {}; if (m.a === amount && now - m.t < 3 * 864e5) { await st.put(k.name, null, 60); return true; } } return false; }
 async function smsApi(req, env) {
@@ -967,7 +971,7 @@ async function smsApi(req, env) {
   const ct = req.headers.get('content-type') || ''; let text = '';
   try { if (ct.includes('json')) { const j = await req.json(); text = j.text || j.message || j.body || ''; } else if (ct.includes('form')) { const f = await req.formData(); text = f.get('text') || f.get('message') || ''; } else text = await req.text(); } catch { text = ''; }
   const r = parseCredit(String(text).slice(0, 2000)); if (!r.credit) return new Response(JSON.stringify({ ok: true, credit: false }), { headers: { 'content-type': 'application/json' } });
-  return new Response(JSON.stringify({ ok: true, credit: true, result: await onCredit(env, st, r.amount) }), { headers: { 'content-type': 'application/json' } });
+  return new Response(JSON.stringify({ ok: true, credit: true, result: await onCredit(env, st, r.amount, String(text).replace(/\d{9,}/g, (x) => '***' + x.slice(-4)).slice(0, 160)) }), { headers: { 'content-type': 'application/json' } });
 }
 
 export default {
