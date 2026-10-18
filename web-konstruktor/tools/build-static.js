@@ -79,7 +79,7 @@ for (const lang of ['ru', 'en']) {
   const lh = page({ data: JSON.stringify(ls).replace(/</g, '\\u003c'), account: true, seo: seoHead(ls, lang), lang }).replace('<title>Sayt</title>', `<title>${String((ls.company || {}).name || 'Sayt').replace(/</g, '')}: ${TITLES[lang]}</title>`);
   for (const dir of [P, OUT]) { fs.mkdirSync(path.join(dir, lang), { recursive: true }); fs.writeFileSync(path.join(dir, lang, 'index.html'), lh); }
 }
-for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
+for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'three.min.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
 if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'config.js'), path.join(OUT, 'config.js'));
 if (process.env.RELAY) fs.writeFileSync(path.join(OUT, 'config.js'), fs.readFileSync(path.join(OUT, 'config.js'), 'utf8').replace(/window\.__RELAY__ = '[^']*';/, `window.__RELAY__ = '${String(process.env.RELAY).replace(/'/g, '')}';`));
 if (!/__RELAY__/.test(fs.readFileSync(path.join(OUT, 'config.js'), 'utf8'))) fs.appendFileSync(path.join(OUT, 'config.js'), "\nwindow.__RELAY__ = '';\n");
@@ -121,7 +121,7 @@ const blogFiles = blogPosts.length ? require('./blog')({ domain: DOMAIN, name: (
 for (const dir of [P, OUT]) for (const [f, t] of Object.entries(blogFiles)) { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), t); }
 // Yangi kinematik bosh sahifa: sinov uchun /yangi/ da; HOME_ROOT=1 bo'lsa asosiy sahifa o'rniga chiqadi
 {
-  const homeMod = require('./home'), homeRoot = process.env.HOME_ROOT === '1';
+  const homeMod = require('./home2'), homeRoot = process.env.HOME_ROOT === '1';
   for (const lang of ['uz', 'ru', 'en']) {
     const ls = lang === 'uz' ? site : trSite(site, lang), hero = (ls.sections || []).find((x) => x.type === 'hero') || {};
     const hh = homeMod({ site: ls, lang, domain: DOMAIN, templates: window.TEMPLATES, posts: blogPosts, relay: process.env.RELAY || '', base: homeRoot ? '' : '/yangi', seo: { title: `${(ls.company || {}).name || 'Impro IT'}: ${TITLES[lang]}`, desc: String(hero.text || '').replace(/\*/g, '').slice(0, 200), head: seoHead(ls, lang) } });
