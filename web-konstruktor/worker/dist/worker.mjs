@@ -171,7 +171,23 @@ const URG = /(?<![\p{L}])(tezkor\p{L}*|shoshilinch\p{L}*|zudlik\p{L}*|hoziroq|bu
 const WANT = /(qilib ber\p{L}*|yasab ber\p{L}*|yarat\p{L}*|ochib ber\p{L}*|tayyorla\p{L}*|kerak|buyurtma|сделайт\p{L}*|создайт\p{L}*|нужен|нужна|нужно|закаж\p{L}*|need|build|make|create|order)/iu;
 const isUrgent = (t) => URG.test(t) && WANT.test(t);
 // Telegram ovozli qo'ng'iroq (bepul, CallMeBot): CALL_USER = telefon (+998...) yoki @username. Tunda (22:00-08:00) va kuniga 8 martadan ortiq qo'ng'iroq qilinmaydi.
+// Haqiqiy telefon qo'ng'irog'i (Twilio): TWILIO_SID, TWILIO_TOKEN, TWILIO_FROM (Twilio raqami), CALL_PHONE (+998...). Sinov hisobida faqat tasdiqlangan raqamga qo'ng'iroq qilinadi.
+async function twilioCall(env, text) {
+  if (!env.TWILIO_SID || !env.TWILIO_TOKEN || !env.TWILIO_FROM || !env.CALL_PHONE) return false;
+  const say = String(text).replace(/[<>&]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+  const twiml = `<Response><Pause length="1"/><Say language="ru-RU" voice="Polly.Tatyana">${say}</Say><Pause length="1"/><Say language="ru-RU" voice="Polly.Tatyana">${say}</Say></Response>`;
+  try {
+    const r = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${env.TWILIO_SID}/Calls.json`, { method: 'POST', headers: { Authorization: 'Basic ' + btoa(env.TWILIO_SID + ':' + env.TWILIO_TOKEN), 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ To: env.CALL_PHONE, From: env.TWILIO_FROM, Twiml: twiml, Timeout: '40' }).toString(), signal: AbortSignal.timeout(20000) });
+    if (!r.ok) await store(env).put('diag:twilio', { status: r.status, body: (await r.text().catch(() => '')).slice(0, 300), t: Date.now() }, 7 * 86400).catch(() => {});
+    return r.ok;
+  } catch { return false; }
+}
 async function callOwner(env, st, text, now = Date.now()) {
+  if (env.TWILIO_SID) { // haqiqiy qo'ng'iroq birinchi o'rinda (tunda 22:00-08:00 va kuniga 8 martadan ortiq emas)
+    const h = tz(now).getUTCHours(); if ((h < 8 || h >= 22) && !env.CALL_ANYTIME) return false;
+    if (await limited(st, 'tcall:' + dkey(now), 8, 86400, true)) return false;
+    return twilioCall(env, text);
+  }
   const to = String(env.CALL_USER || '').trim(); if (!to) return false;
   const h = tz(now).getUTCHours(); if ((h < 8 || h >= 22) && !env.CALL_ANYTIME) return false;
   if (await limited(st, 'call:' + dkey(now), 8, 86400, true)) return false;

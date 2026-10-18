@@ -27,6 +27,8 @@ async function cf(method, p, body, headers) {
   const kvs = await cf('GET', `${acc}/storage/kv/namespaces?per_page=100`);
   const kv = kvs.find((x) => x.title === 'impro-state') || (await cf('POST', `${acc}/storage/kv/namespaces`, { title: 'impro-state' }));
   const bindings = [{ type: 'kv_namespace', name: 'STATE', namespace_id: kv.id }, { type: 'ai', name: 'AI' }, // Workers AI: bepul sun'iy intellekt (kalit shart emas)
+    ...['TWILIO_SID', 'TWILIO_TOKEN'].filter((k) => E[k]).map((k) => ({ type: 'secret_text', name: k, text: E[k] })),
+    ...['TWILIO_FROM', 'CALL_PHONE'].filter((k) => E[k]).map((k) => ({ type: 'plain_text', name: k, text: E[k] })),
     ...(E.BARK_KEY ? [{ type: 'secret_text', name: 'BARK_KEY', text: E.BARK_KEY }] : []),
     ...(E.PUSHBULLET_TOKEN ? [{ type: 'secret_text', name: 'PUSHBULLET_TOKEN', text: E.PUSHBULLET_TOKEN }] : []),
     ...(E.NTFY_TOKEN ? [{ type: 'secret_text', name: 'NTFY_TOKEN', text: E.NTFY_TOKEN }] : []),

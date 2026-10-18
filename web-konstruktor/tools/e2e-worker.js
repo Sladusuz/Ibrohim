@@ -10,6 +10,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = async (url, o) => {
     const u = String(url); let body = {}; try { body = o && o.body ? JSON.parse(o.body) : {}; } catch { body = {}; }
     if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
+    if (u.includes('api.twilio.com')) { calls.push({ method: 'TWILIO', body: { url: u, h: o.headers, form: Object.fromEntries(new URLSearchParams(o.body)) } }); return new Response('{"sid":"CA1"}', { status: 201 }); }
     if (u.includes('api.day.app')) { calls.push({ method: 'BARK', body: JSON.parse(o.body) }); return new Response('{"code":200}', { status: 200 }); }
     if (u.includes('api.pushbullet.com')) { calls.push({ method: 'PB', body: { h: o.headers, j: JSON.parse(o.body) } }); return new Response('{}', { status: 200 }); }
     if (u.includes('ntfy.sh')) { calls.push({ method: 'PUSH', body: { url: u, h: o.headers, text: o.body } }); return new Response('{}', { status: 200 }); }
@@ -151,6 +152,12 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   await W.tick(env, safe(Date.now() + 3 * 3600e3)); delete env.BARK_KEY;
   env.PUSHBULLET_TOKEN = 'o.test'; const pbN = pushes().length; await msg(7074, 'Tezkor sayt kerak, hoziroq qilib bering', 185); const pb = calls.filter((c) => c.method === 'PB').slice(-1)[0];
   ok(pb && pb.body.h['Access-Token'] === 'o.test' && /Shoshilinch/.test(pb.body.j.title) && !/998/.test(pb.body.j.body) && pushes().length === pbN, 'Pushbullet tokeni bo\'lsa u orqali yuboriladi (ntfy chetlab o\'tiladi)'); delete env.PUSHBULLET_TOKEN;
+  Object.assign(env, { TWILIO_SID: 'AC123', TWILIO_TOKEN: 'tok', TWILIO_FROM: '+15005550006', CALL_PHONE: '+998336233313' });
+  await env.STATE.put('ul', []); const cmB = calls.filter((c) => c.method === 'CALL').length; await msg(7076, 'Tezkor sayt kerak, hoziroq qilib bering', 187);
+  const tw = calls.filter((c) => c.method === 'TWILIO').slice(-1)[0];
+  ok(tw && tw.body.url === 'https://api.twilio.com/2010-04-01/Accounts/AC123/Calls.json' && tw.body.h.Authorization === 'Basic ' + Buffer.from('AC123:tok').toString('base64') && tw.body.form.To === '+998336233313' && tw.body.form.From === '+15005550006' && /Срочный клиент/.test(tw.body.form.Twiml) , "Twilio: haqiqiy telefon qo'ng'irog'i (to'g'ri raqam, autentifikatsiya, matn)", tw && tw.body.form);
+  ok(calls.filter((c) => c.method === 'CALL').length === cmB, 'Twilio bor bo\'lsa CallMeBot ishlatilmaydi');
+  for (const k of ['TWILIO_SID', 'TWILIO_TOKEN', 'TWILIO_FROM', 'CALL_PHONE']) delete env[k];
   delete env.NTFY_TOPIC; delete env.CALL_ANYTIME;
   console.log('Workers AI (bepul)');
   const aiRuns = []; env.AI = { run: async (model, input) => { aiRuns.push(model); return { response: "Workers AI: SEO uchun sayt tayyor, qo'shimcha sozlash kerak bo'lishi mumkin." }; } };
