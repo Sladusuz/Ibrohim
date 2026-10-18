@@ -336,7 +336,7 @@ const makeAssistantQuick = (env, extra) => assistantOf(env, extra).quick;
 const assistantOf = (env, extra = []) => makeAssistant({ getExtra: () => extra, getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }), getSite: () => SITE, getPricing: () => PRICING, workersAi: env.AI });
 
 /* ---------- Mijoz xabari ---------- */
-const saveRec = (st, chat, rec) => st.put('c:' + chat, rec, 7 * 86400, { n: String(rec.name || '').slice(0, 40), t: Date.now(), p: rec.phone || '', g: (rec.tags || []).join(',').slice(0, 60) });
+const saveRec = (st, chat, rec) => st.put('c:' + chat, rec, 7 * 86400, { n: String(rec.name || '').slice(0, 40), t: Date.now(), p: rec.phone || '', g: (rec.tags || []).join(',').slice(0, 60), pa: rec.payAmt || 0, pw: rec.payWait || 0 });
 const isOffice = (now = Date.now()) => { const d = tz(now), h = d.getUTCHours(), w = d.getUTCDay(); return w !== 0 && h >= 9 && h < 18; }; // Dush-Shan 9:00-18:00
 const OFFLINE = { uz: "\n\n🕘 Hozir ish vaqtidan tashqari: mutaxassisimiz ish vaqtida (Dush–Shan 9:00–18:00) javob beradi.", ru: '\n\n🕘 Сейчас нерабочее время: специалист ответит в рабочие часы (Пн–Сб 9:00–18:00).', en: '\n\n🕘 We are outside working hours now: a specialist will reply during office hours (Mon–Sat 9:00–18:00).' };
 const THANKS_PHONE = { uz: "✅ Rahmat! Raqamingizni qabul qildim, mutaxassisimiz tez orada siz bilan bog'lanadi.", ru: '✅ Спасибо! Номер получил, специалист скоро свяжется с вами.', en: '✅ Thank you! I received your number, a specialist will contact you shortly.' };
@@ -391,6 +391,12 @@ async function flowFinish(env, st, chat, rec, name) {
 async function flowText(env, st, m, rec) {
   const chat = m.chat.id, text = (m.text || '').trim(), f = rec.flow;
   if (text === '/cancel') { rec.flow = null; await saveRec(st, chat, rec); return say(env, chat, "Anketa bekor qilindi. Savolingizni yozishingiz mumkin.", { reply_markup: MENU }); }
+  if (f.step === 'payamt') {
+    const n = Number(text.replace(/[^\d]/g, '')); if (!n || n < 1000 || n > 500000000) return say(env, chat, "Summani raqam bilan yozing, masalan: <code>1500000</code>");
+    rec.flow = null; rec.payAmt = n; rec.payWait = Date.now(); await saveRec(st, chat, rec);
+    if (await takeCredit(st, n)) { await confirmPay(env, st, chat, 'avtomatik (SMS)'); for (const a of await adminsOf(env, st)) await say(env, a, `✅ <b>Avtomatik tasdiqlandi</b>: ${esc(who(m))} <code>${chat}</code>, ${sum(n)} so'm (kartaga allaqachon tushgan edi)`); return; }
+    return say(env, chat, `💳 <b>${sum(n)} so'm</b> o'tkazing:\n\n${esc(env.CARD_INFO)}\n\nPul kelgach to'lovingiz <b>avtomatik tasdiqlanadi</b>. Xohlasangiz, chek rasmini shu yerga yuboring.`);
+  }
   if (f.step === 'site') return siteProposal(env, st, chat, rec, text);
   if (f.step === 'bkph') { const p = findPhone(text); if (!p) return say(env, chat, "Raqam noto'g'ri. Masalan: <code>90 123 45 67</code>"); rec.phone = p.phone; rec.flow = null; return bookFinish(env, st, chat, rec, who(m), f.ymd, f.hh); }
   if (f.step === 'name') { f.d.name = text.slice(0, 80); f.step = 'dl'; await saveRec(st, chat, rec); return say(env, chat, '3/5. Qachon tayyor bo\'lishi kerak?', { reply_markup: kbOf('dl', DEADLINES) }); }
@@ -614,16 +620,14 @@ async function handleCallback(env, st, q) {
   if (d === 'm:pay') {
     await ans(); const rec = (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) };
     if (!env.CARD_INFO) return say(env, chat, "To'lov rekvizitlari hozir mavjud emas. Mutaxassisimiz siz bilan bog'lanib, to'lov usulini aytadi.");
-    rec.payWait = Date.now(); await saveRec(st, chat, rec);
-    return say(env, chat, `💳 <b>To'lov rekvizitlari</b>\n\n${esc(env.CARD_INFO)}\n\nO'tkazma qilgach, <b>chek rasmini (skrinshotni) shu yerga yuboring</b>: to'lovni tekshirib, tasdiqlaymiz.`);
+    rec.flow = { step: 'payamt', d: {} }; await saveRec(st, chat, rec);
+    return say(env, chat, "💳 <b>To'lov</b>\nQancha to'laysiz? Summani so'mda yozing (masalan: <code>1500000</code>). Bekor qilish: /cancel");
   }
   const pcm = /^(pc|px):(-?\d+)$/.exec(d);
   if (pcm) {
     if (!isAdmin) return ans("Ruxsat yo'q");
     const to = Number(pcm[2]), rec = (await st.get('c:' + to)) || {};
-    if (pcm[1] === 'pc') {
-      addTag(rec, 'tolagan'); delete rec.payWait; await saveRec(st, to, rec); await ev(st, { k: 'pay', c: to, n: rec.name || 'Mijoz', x: "karta orqali" });
-      await say(env, to, "✅ <b>To'lovingiz tasdiqlandi.</b> Rahmat! Mutaxassisimiz ishni boshlaydi va siz bilan bog'lanadi.");
+    if (pcm[1] === 'pc') { await confirmPay(env, st, to, 'karta orqali');
     } else await say(env, to, "To'lovni tasdiqlab bo'lmadi. Iltimos, chekni qayta yuboring yoki mutaxassisimiz bilan bog'laning.");
     await ans(pcm[1] === 'pc' ? 'Tasdiqlandi' : 'Rad etildi');
     return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: pcm[1] === 'pc' ? '✅ Tasdiqlandi' : '❌ Rad etildi', callback_data: 'noop' }]] } });
@@ -754,10 +758,10 @@ async function handleUpdate(env, upd) {
     return say(env, chat, q.length ? '🎓 <b>Bot javob bera olmagan savollar</b>\n' + q.map((x, i) => `${i + 1}. ${esc(x)}`).join('\n') + '\n\nO\'rgatish: <code>/oqit 1 Javob matni</code>\nOlib tashlash: <code>/oqit ochir 1</code>' : "Hozircha javobsiz savol yo'q.");
   }
   if (cmd === '/xatolar') { const ks = (await st.list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 12); return say(env, chat, ks.length ? '🐞 <b>Sayt xatolari</b> (14 kun)\n' + ks.map((e) => `• ×${e.n} ${esc(e.m.slice(0, 90))}\n   ${esc(e.u.slice(-60))}`).join('\n') : "✅ Saytda xato qayd etilmagan."); }
+  if (cmd === '/smstest') { const r = parseCredit(arg); return say(env, chat, r.credit ? `✅ Kirim sifatida taniladi: <b>${sum(r.amount)} so'm</b>` : "Kirim sifatida tanilmadi (chiqim yoki noma'lum format)."); }
   if (cmd === '/tasdiq') {
     const to = Number(arg.trim()); if (!to) return say(env, chat, "Format: <code>/tasdiq 123456</code> (mijoz ID, xabar sarlavhasida ko'rinadi)");
-    const rec = (await st.get('c:' + to)) || {}; addTag(rec, 'tolagan'); delete rec.payWait; await saveRec(st, to, rec); await ev(st, { k: 'pay', c: to, n: rec.name || 'Mijoz', x: 'karta orqali' });
-    const okc = await say(env, to, "✅ <b>To'lovingiz tasdiqlandi.</b> Rahmat! Mutaxassisimiz ishni boshlaydi va siz bilan bog'lanadi.");
+    const okc = await confirmPay(env, st, to, 'karta orqali');
     return say(env, chat, okc ? '✅ Mijozga tasdiq yuborildi.' : "Yuborilmadi (mijoz botni bloklagan yoki ID noto'g'ri).");
   }
   if (cmd === '/tolov') {
@@ -785,7 +789,7 @@ async function handleUpdate(env, upd) {
     let a = null; try { a = await assistantOf(env).answer({ text: arg.slice(0, 800), history: [] }); } catch { a = null; }
     return say(env, chat, a && a.text ? `🧪 <b>Mijoz ko'radigan javob</b>${a.ai ? '' : ' (qoida)'}${a.handoff ? ' ⚠️ operatorga uzatiladi' : ''}:\n\n${esc(a.text)}` : 'Javob olinmadi.');
   }
-  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /xatolar — saytdagi xatolar ro'yxati\n• /tolov summa izoh — to'lov havolasi/rekvizit, /tasdiq ID — karta to'lovini tasdiqlash, /tolovlar — ro'yxat\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
+  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /xatolar — saytdagi xatolar ro'yxati\n• /smstest SMS matni — bank SMS'i kirim sifatida taniladimi\n• /tolov summa izoh — to'lov havolasi/rekvizit, /tasdiq ID — karta to'lovini tasdiqlash, /tolovlar — ro'yxat\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
   if (cmd === '/start' || cmd === '/help') return say(env, chat, help);
   if (!m.reply_to_message) return say(env, chat, help); // admin oddiy matn yozdi: nima qilish kerakligini ko'rsatamiz
 }
@@ -1079,6 +1083,50 @@ async function paymeRpc(req, env) {
   }
 }
 
+// To'lovni tasdiqlash (admin tugmasi, /tasdiq yoki SMS orqali avtomatik)
+async function confirmPay(env, st, to, how) {
+  const rec = (await st.get('c:' + to)) || {}, amt = rec.payAmt || 0; addTag(rec, 'tolagan'); delete rec.payWait; delete rec.payAmt; await saveRec(st, to, rec);
+  await ev(st, { k: 'pay', c: to, n: rec.name || 'Mijoz', x: (amt ? sum(amt) + " so'm, " : '') + how });
+  return say(env, to, "✅ <b>To'lovingiz tasdiqlandi.</b> Rahmat! Mutaxassisimiz ishni boshlaydi va siz bilan bog'lanadi.");
+}
+// Bank SMS'idan kirim summasini ajratish (kirim bo'lmasa credit:false)
+function parseCredit(text) {
+  const t = String(text || '').replace(/\u00a0/g, ' '), low = t.toLowerCase();
+  const debit = /(списан|спис\.|снят|покупк|оплат|yechildi|yechib|xarid|to'lov uchun|purchase|payment|debit|chiqim|spisanie)/i.test(low);
+  const credit = /(пополнен|поступ|зачисл|kirim|tushdi|tushgan|to'ldirildi|popolnen|credit|перевод.*получ|pul o'tkazma|\+\s?\d)/i.test(low);
+  if (debit && !/\+\s?\d/.test(t)) return { credit: false };
+  if (!credit) return { credit: false };
+  const m = /\+\s?(\d[\d ,.]*\d|\d)/.exec(t) || /(?:пополнен\w*|поступил\w*|зачислен\w*|kirim|tushdi|tushgan|popolnenie)[^\d]{0,20}(\d[\d ,.]*\d|\d)/i.exec(t);
+  if (!m) return { credit: false };
+  let n = m[1].replace(/ /g, '');
+  if (/[.,]\d{2}$/.test(n) && n.length > 3) n = n.slice(0, -3);
+  n = Number(n.replace(/[.,]/g, ''));
+  return n >= 1000 ? { credit: true, amount: n } : { credit: false };
+}
+async function onCredit(env, st, amount) {
+  const now = Date.now(), pend = (await st.list('c:')).filter((k) => k.metadata && k.metadata.pa === amount && now - k.metadata.pw < 3 * 864e5), admins = await adminsOf(env, st);
+  if (pend.length === 1) {
+    const to = Number(pend[0].name.slice(2)); await confirmPay(env, st, to, 'avtomatik (SMS)');
+    for (const a of admins) await say(env, a, `✅ <b>Avtomatik tasdiqlandi</b>\n💰 ${sum(amount)} so'm tushdi\n👤 ${esc((pend[0].metadata || {}).n || 'Mijoz')} <code>${to}</code>`);
+    return 'matched';
+  }
+  if (pend.length > 1) { for (const a of admins) await say(env, a, `⚠️ Kartaga <b>${sum(amount)} so'm</b> tushdi, lekin bir xil summa kutayotgan ${pend.length} ta mijoz bor:\n` + pend.map((k) => `• ${esc((k.metadata || {}).n || 'Mijoz')} <code>${k.name.slice(2)}</code>`).join('\n') + '\n\nTasdiqlash: <code>/tasdiq ID</code>'); return 'ambiguous'; }
+  await st.put('cr:' + now.toString(36), { amount, t: now }, 3 * 86400, { a: amount, t: now });
+  for (const a of admins) await say(env, a, `💰 Kartaga <b>${sum(amount)} so'm</b> tushdi (hozircha mos mijoz kutilmayapti: mijoz summani yozsa o'zi tasdiqlanadi).`);
+  return 'unmatched';
+}
+async function takeCredit(st, amount) { const now = Date.now(); for (const k of await st.list('cr:')) { const m = k.metadata || {}; if (m.a === amount && now - m.t < 3 * 864e5) { await st.put(k.name, null, 60); return true; } } return false; }
+async function smsApi(req, env) {
+  if (req.method !== 'POST') return new Response('no', { status: 405 });
+  const url = new URL(req.url), key = url.searchParams.get('key') || req.headers.get('X-Key') || '';
+  if (!env.SMS_KEY || !tEq(key, env.SMS_KEY)) return new Response('no', { status: 403 });
+  const st = store(env); if (await limited(st, 'sms', 80, 3600)) return new Response('limit', { status: 429 });
+  const ct = req.headers.get('content-type') || ''; let text = '';
+  try { if (ct.includes('json')) { const j = await req.json(); text = j.text || j.message || j.body || ''; } else if (ct.includes('form')) { const f = await req.formData(); text = f.get('text') || f.get('message') || ''; } else text = await req.text(); } catch { text = ''; }
+  const r = parseCredit(String(text).slice(0, 2000)); if (!r.credit) return new Response(JSON.stringify({ ok: true, credit: false }), { headers: { 'content-type': 'application/json' } });
+  return new Response(JSON.stringify({ ok: true, credit: true, result: await onCredit(env, st, r.amount) }), { headers: { 'content-type': 'application/json' } });
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;
@@ -1103,6 +1151,7 @@ export default {
     if (url.pathname === '/api/app' && req.method === 'POST') return appApi(req, env);
     if (url.pathname === '/stats' && req.method === 'GET') return statsApi(req, env);
     if (url.pathname === '/pay/payme' && req.method === 'POST') return new Response(JSON.stringify(await paymeRpc(req, env)), { headers: { 'content-type': 'application/json' } });
+    if (url.pathname === '/sms') return smsApi(req, env);
     if (url.pathname === '/err') return errApi(req, env);
     if (url.pathname === '/errors' && env.SETUP_KEY && tEq(url.searchParams.get('key') || '', env.SETUP_KEY)) { const ks = (await store(env).list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 50); return new Response(JSON.stringify(ks), { headers: { 'content-type': 'application/json' } }); }
     if (url.pathname === '/chat') return chatApi(req, env);
