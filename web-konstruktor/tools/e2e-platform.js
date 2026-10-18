@@ -63,5 +63,15 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   r = await api('POST', '/api/my/projects/' + pid + '/submit', { plan: 'Standart', note: 'tez' }, tok); ok(r.s === 200 && r.j.project.plan === 'Standart' && r.j.project.submittedAt, 'buyurtma yuborish');
   r = await api('DELETE', '/api/my/projects/' + pid + '/publish', null, tok); const pg2 = await W.fetch(new Request(H + '/s/gul-dokon'), env, ctx); ok(r.s === 200 && pg2.status === 404, 'joylashni bekor qilish');
   r = await api('DELETE', '/api/my/projects/' + pid, null, tok); r = await api('GET', '/api/my/projects', null, tok); ok(r.j.length === 0, 'loyihani ochirish');
+  { // admin Mini App: ikkinchi bot tokeni bilan imzolangan initData
+    const crypto = require('crypto'), sign = (tokn, uid) => { const p = { auth_date: String(Math.floor(Date.now() / 1000)), user: JSON.stringify({ id: uid }) }, str = Object.keys(p).sort().map((k) => `${k}=${p[k]}`).join('\n'), sec = crypto.createHmac('sha256', 'WebAppData').update(tokn).digest(); return new URLSearchParams({ ...p, hash: crypto.createHmac('sha256', sec).update(str).digest('hex') }).toString(); };
+    env.APP_BOT_TOKEN = '999:second'; const app = async (init, action, extra) => (await api('POST', '/api/app', { action, ...(extra || {}) }, null, { 'X-Init-Data': init }));
+    r = await app(sign('999:second', 7), 'users'); ok(r.s === 200 && r.j.total >= 2, 'panel: hisoblar (2-bot imzosi)', r.j);
+    r = await app(sign('1:a', 7), 'projects'); ok(r.s === 200 && r.j.projects.length >= 1 && r.j.projects[0].owner, 'panel: loyihalar');
+    r = await app(sign('999:second', 99), 'users'); ok(r.s === 403, 'panel: admin emas 403');
+    r = await app(sign('bad:tok', 7), 'users'); ok(r.s === 403, 'panel: noto\'g\'ri imzo 403');
+    const pr = (await app(sign('1:a', 7), 'projects')).j.projects[0]; r = await app(sign('1:a', 7), 'markpaid', { owner: pr.userId, id: pr.id }); ok(r.s === 200, 'panel: tolovni tasdiqlash');
+    r = await app(sign('1:a', 7), 'porders'); ok(r.s === 200 && Array.isArray(r.j.orders), 'panel: buyurtmalar');
+  }
   console.log(`\n${pass} PASS, ${fail} FAIL`); process.exit(fail ? 1 : 0);
 })().catch((e) => { console.error(e); process.exit(1); });
