@@ -62,7 +62,7 @@
       const CONTACT_F = [
         { k: 'phone', t: 'text', label: 'Telefon', max: 40, ph: '+998 90 123 45 67' }, { k: 'email', t: 'text', label: 'Email', max: 80, hint: 'Buyurtma va xabarlar shu emailga tushadi' },
         { k: 'address', t: 'text', label: 'Manzil', max: 160 }, { k: 'hours', t: 'text', label: 'Ish vaqti', max: 80 },
-        { k: 'telegram', t: 'text', label: 'Telegram', max: 80, ph: '@username' }, { k: 'instagram', t: 'text', label: 'Instagram', max: 80, ph: '@username' },
+        { k: 'telegram', t: 'text', label: 'Telegram', max: 80, ph: '@username' }, { k: 'instagram', t: 'text', label: 'Instagram', max: 80, ph: '@username' }, { k: 'whatsapp', t: 'text', label: 'WhatsApp (raqam)', max: 30, ph: '+998901234567' },
       ];
       const ORD_F = [
         { k: 'enabled', t: 'tog', label: 'Savat va buyurtma', hint: "Yoqilsa, katalogdagi mahsulotlar savatga qo'shiladi" },

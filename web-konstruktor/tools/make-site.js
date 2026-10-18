@@ -8,12 +8,13 @@ for (const f of fs.readdirSync(path.join(__dirname, '..', 'public')).filter((x) 
 const d = window.getTemplate('kompaniya');
 d.template = 'impro';
 d.company = { name: 'Impro IT', logo: 'I', tagline: 'Veb-sayt, mobil ilova va Telegram botlar. Tez, sifatli, kafolat bilan.' };
-d.theme = Object.assign(d.theme, { preset: 'dark', font: 'display', radius: 'round', bg: 'plain', look: 'cinema', motion: true, switcher: false, fab: true });
+d.theme = Object.assign(d.theme, { preset: 'dark', font: 'display', radius: 'round', bg: 'plain', look: 'cinema', motion: true, switcher: true, fab: true });
 d.nav = { style: 'pill', cta: 'Bepul maslahat', ctaLink: '#brief-open', search: false };
+d.analytics = { ga: process.env.GA || '', ym: process.env.YM || '', fb: '' }; // GA=G-XXXX YM=12345678 node tools/make-site.js
 d.account = { enabled: true, requireOrder: true, requireBooking: false };
 d.orders = { enabled: true, currency: "so'm", freeShipFrom: 0, deliveryFee: 0 };
-d.contacts = { phone: '+998 33 623 33 13', email: 'chempme@gmail.com', address: "Toshkent, Amir Temur ko'chasi 1", hours: 'Dush–Shan, 9:00–18:00', telegram: '', instagram: '' };
-d.footer = { text: 'Barcha huquqlar himoyalangan.', links: [{ label: 'Sayt yaratish', url: '/yaratish.html' }, { label: 'Telegram bot', url: '/bot.html' }, { label: 'Kabinet', url: '/kabinet.html' }, { label: 'Oferta', url: '/offerta.html' }, { label: 'Maxfiylik', url: '/maxfiylik.html' }, { label: 'Qaytarish', url: '/qaytarish.html' }] };
+d.contacts = { phone: '+998 33 623 33 13', email: 'info@improuzbekiston.uz', address: "Toshkent, Amir Temur ko'chasi 1", hours: 'Dush–Shan, 9:00–18:00', telegram: '@improsupport_bot', instagram: '@improuzbekiston_uz', whatsapp: '+998336233313' };
+d.footer = { text: 'Barcha huquqlar himoyalangan.', links: [{ label: 'Sayt yaratish', url: '/yaratish.html' }, { label: 'Telegram bot', url: '/bot.html' }, { label: 'Blog', url: '/blog/' }, { label: 'Kabinet', url: '/kabinet.html' }, { label: 'Oferta', url: '/offerta.html' }, { label: 'Maxfiylik', url: '/maxfiylik.html' }, { label: 'Qaytarish', url: '/qaytarish.html' }] };
 const hero = d.sections.find((s) => s.type === 'hero');
 Object.assign(hero, { image: '', trust: [], badge: "Yangi loyihalar uchun ochiqmiz", titleStart: 'Biznesingiz uchun *kelajak* saytlari', words: [], titleEnd: '', text: "Impro IT: veb-sayt, mobil ilova va Telegram botlarni g'oyadan ishga tushirishgacha tez, sifatli va kafolat bilan tayyorlaymiz. Xohlasangiz, saytni o'zingiz ham yarata olasiz.", cta1Text: 'Loyihani buyurtma qilish', cta1Link: '#brief-open', cta2Text: "Saytni o'zim yarataman", cta2Link: '/yaratish.html' });
 const out = [];
@@ -23,7 +24,7 @@ for (const s of d.sections) {
   if (s.id === 'xizmat') {
     const tb = (s.items || []).find((x) => /Telegram bot/i.test(x.title)); if (tb) { tb.link = '/bot.html'; tb.text = "Buyurtma, bron va to'lovlarni avtomatlashtiring. O'zingiz ham bot yaratishingiz mumkin: katalog va mini do'kon bilan."; }
     out.push({ id: 'shablon', type: 'showcase', enabled: true, navLabel: 'Shablonlar', eyebrow: 'Tayyor shablonlar', title: "Kasbingizga mos sayt, *bir necha daqiqada*", text: "Shablonni tanlang, ma'lumotlaringizni kiriting va tayyor saytni yuklab oling. Hammasi o'zbek tilida.",
-      items: window.TEMPLATES.slice(0, 14).map((t) => ({ title: t.name, tag: t.cat, image: t.thumb, link: `/yaratish.html?t=${t.id}` })) });
+      items: window.TEMPLATES.slice(0, 14).map((t) => ({ title: t.name, tag: t.cat, image: t.thumb, link: `/demo/${t.id}/` })) });
     out.push({ id: 'yaratish', type: 'bento', enabled: true, navLabel: 'Sayt yaratish', eyebrow: "O'zingiz yarating", title: "Saytingiz va botingizni *o'zingiz* yarating", text: "Kod yozish shart emas: shablonni tanlang, tahrirlang va tayyor mahsulotni oling.",
       items: [
         { title: 'Sayt konstruktori', text: "32 ta shablon, jonli tahrirlash. Tayyor saytni yuklab oling yoki o'z subdomeningizda e'lon qiling.", value: '32 shablon', kind: 'hl', size: 'l', icon: 'globe', link: '/yaratish.html' },
@@ -43,6 +44,7 @@ for (const s of d.sections) {
     ] });
   }
 }
+out.push({ id: 'hamkor', type: 'cta', fx: false, enabled: true, navLabel: '', eyebrow: 'Hamkorlik', title: "Dizayner yoki agentlikmisiz? *Birga* ishlaymiz", text: "Mijozlaringiz uchun sayt, bot va ilovalarni biz bilan tayyorlang: hamkorlarga alohida narx va tezkor yordam beramiz.", buttonText: "Hamkor bo'lish", buttonLink: 'https://t.me/improsupport_bot', countdownTo: '', image: '' });
 const bi = out.findIndex((s) => s.id === 'narx');
 out.splice(bi + 1, 0, {
   id: 'brief', type: 'brief', enabled: true, navLabel: 'Buyurtma', eyebrow: 'Loyihani boshlang', title: 'Xohishlaringizni ayting, biz amalga oshiramiz',
@@ -79,6 +81,17 @@ out.splice(bi + 1, 0, {
 });
 d.sections = out;
 Object.assign(d.sections.find((s) => s.type === 'contact'), { form: 'message', askAddress: false, payOptions: [], submitText: 'Yuborish', title: 'Savolingiz bormi?', text: "Qisqa savol bo'lsa, shu yerga yozing. Loyiha buyurtma qilmoqchi bo'lsangiz, yuqoridagi anketani to'ldiring." });
+const faq = d.sections.find((q) => q.type === 'faq');
+if (faq) faq.items = [
+  { q: "Loyiha qancha vaqtda tayyor bo'ladi?", a: "Vizitka sayt 1–2 hafta, onlayn do'kon 3–5 hafta, mobil ilova 2–3 oy. Aniq muddat suhbatdan keyin shartnomada belgilanadi." },
+  { q: 'Narx qanday hisoblanadi?', a: "Loyiha hajmiga qarab. Anketani to'ldirsangiz, 1 kun ichida aniq narx va muddat bilan taklif yuboramiz." },
+  { q: 'Tayyor sayt shabloni qancha turadi?', a: "Shablonni bepul tanlab, tahrirlab, natijani ko'rasiz. Tayyor saytni yuklab olish yoki o'z subdomeningizda e'lon qilish uchun bir martalik $10 to'lanadi." },
+  { q: "Qanday to'lov usullari bor?", a: "Payme, Click yoki bank kartasiga o'tkazma. Katta loyihalarda to'lov bosqichma-bosqich, shartnoma asosida amalga oshiriladi." },
+  { q: "O'z domenimni ulay olamanmi?", a: "Ha. Saytingizni bizning subdomenimizda e'lon qilishingiz yoki o'z domeningizni (masalan, sizningbiznes.uz) ulashingiz mumkin." },
+  { q: "Telegram bot yaratish qiyinmi?", a: "Yo'q. Bot konstruktorida @BotFather bergan tokenni kiritasiz: katalog, savat va Telegram ichidagi mini do'kon darrov ishlaydi, kod yozish shart emas." },
+  { q: 'Mavjud saytni yangilab bera olasizmi?', a: "Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz." },
+  { q: 'Ishga tushgandan keyin yordam berasizmi?', a: "Ha, texnik yordam va xatolarni tuzatish bo'yicha shartlar shartnomada aniq yoziladi; oylik yordam paketi ham mavjud." },
+];
 for (const id of ['biz', 'yaratish']) { const x = d.sections.find((q) => q.id === id); if (x) x.navLabel = ''; } // menyu 7 tadan oshmasin
 // Namunaviy (to'qima) portfolio va sharhlar haqiqiy ma'lumot kiritilguncha o'chirib qo'yiladi (admin paneldan yoqiladi)
 for (const id of ['ishlar', 'fikr', 'raqam']) { const x = d.sections.find((q) => q.id === id); if (x) x.enabled = false; }

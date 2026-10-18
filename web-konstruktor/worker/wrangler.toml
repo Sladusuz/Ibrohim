@@ -1,0 +1,8 @@
+name = "impro-relay"
+main = "relay.js"
+compatibility_date = "2024-11-01"
+
+[vars]
+ALLOW_ORIGIN = "https://improuzbekiston.uz,https://www.improuzbekiston.uz"
+# TG_CHAT = "123456789"        # sizning Telegram chat ID raqamingiz
+# TG_TOKEN: maxfiy, buyruq bilan kiritiladi:  npx wrangler secret put TG_TOKEN

@@ -102,10 +102,29 @@ const readRaw = (req, limit = 64 * 1024) => new Promise((resolve, reject) => {
   req.on('data', (c) => { size += c.length; if (size > limit) { reject(Object.assign(new Error('Hajm juda katta'), { code: 413 })); req.destroy(); return; } chunks.push(c); });
   req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8'))); req.on('error', reject);
 });
+const r2 = (n) => Math.round(Number(n) * 100) / 100;
+const refCfg = () => { const c = Object.assign({ enabled: true, discountPct: 20, rewardUsd: 3 }, db.settings().referral); return { enabled: c.enabled !== false, discountPct: Math.min(90, Math.max(0, Number(c.discountPct) || 0)), rewardUsd: Math.max(0, Number(c.rewardUsd) || 0) }; };
+const refCodeOf = (u) => { if (u.ref) return u.ref; const users = db.users(), me = users.find((x) => x.id === u.id); let c; do { c = crypto.randomBytes(3).toString('hex').toUpperCase(); } while (users.some((x) => x.ref === c)); me.ref = c; db.saveUsers(users); return c; };
+// Sotib olish narxi: do'st taklifi bo'yicha birinchi xarid chegirmasi va bonus balans hisobga olinadi
+const priceFor = (u, tp) => {
+  const rc = refCfg(); let usd = Number(tp.usd) || 0, pct = 0;
+  if (rc.enabled && u.refBy && !db.projects().some((p) => p.userId === u.id && p.paid)) { pct = rc.discountPct; usd = usd * (1 - pct / 100); }
+  const credit = r2(Math.min(Math.max(0, Number(u.credit) || 0), Math.max(0, usd - 1)));
+  return { base: Number(tp.usd) || 0, usd: r2(usd - credit), pct, credit };
+};
 const pay = require('./lib/pay')({
   readJSON, writeJSON, file: F('payments.json'), newId, getSettings: () => db.settings(),
   onPaid: (pm) => {
     const all = db.projects(), meta = all.find((x) => x.id === pm.projectId);
+    const wasFirst = !all.some((x) => x.userId === pm.userId && x.paid);
+    try { // referal: ishlatilgan bonusni yechish va taklif qilgan mijozga mukofot berish
+      const users = db.users(), u = users.find((x) => x.id === pm.userId), rc = refCfg();
+      if (u) {
+        if (pm.credit) u.credit = r2(Math.max(0, (Number(u.credit) || 0) - pm.credit));
+        if (wasFirst && rc.enabled && u.refBy && !u.refRewarded) { const r = users.find((x) => x.ref === u.refBy && x.id !== u.id); if (r) { r.credit = r2((Number(r.credit) || 0) + rc.rewardUsd); u.refRewarded = true; notifyTelegram(`Referal mukofoti: ${r.name} (${r.phone}) +$${rc.rewardUsd}`); } }
+        db.saveUsers(users);
+      }
+    } catch { /* referal xatosi to'lovni to'xtatmasin */ }
     if (meta) { meta.paid = { at: new Date().toISOString(), usd: pm.usd, uzs: pm.uzs, method: pm.method, paymentId: pm.id }; meta.updatedAt = meta.paid.at; db.saveProjects(all); }
     notifyTelegram(`To'lov qabul qilindi (${pm.method})\n${meta ? meta.name : pm.projectId}\n$${pm.usd} = ${pm.uzs} so'm`);
   },
@@ -223,7 +242,8 @@ async function api(req, res, url) {
     if (users.some((u) => phoneKey(u.phone) === phoneKey(phone))) return send(res, 409, { error: "Bu telefon raqam bilan hisob mavjud. Iltimos, kiring." });
     if (email && users.some((u) => u.email && u.email === email)) return send(res, 409, { error: 'Bu email bilan hisob mavjud. Iltimos, kiring.' });
     const salt = crypto.randomBytes(16).toString('hex');
-    const u = { id: newId(6), name, phone, email, salt, hash: hashPw(pw, salt), createdAt: new Date().toISOString() };
+    const refIn = str(b.ref, 12).toUpperCase(), rf = refIn && users.find((x) => x.ref === refIn);
+    const u = { id: newId(6), name, phone, email, salt, hash: hashPw(pw, salt), createdAt: new Date().toISOString(), refBy: rf ? refIn : '' };
     users.push(u); db.saveUsers(users);
     notifyTelegram(`Yangi mijoz ro'yxatdan o'tdi\n${name}\n${phone}${email ? '\n' + email : ''}`);
     return send(res, 200, { token: makeUserToken(u.id), user: pubUser(u) });
@@ -352,6 +372,10 @@ async function api(req, res, url) {
       const mine = new Map(db.projects().filter((p) => p.userId === me.id).map((p) => [p.id, p.name]));
       return send(res, 200, db.orders().filter((o) => o.tenant && mine.has(o.tenant)).slice(0, 500).map((o) => ({ ...o, site: mine.get(o.tenant) })));
     }
+    if (route === 'GET /api/my/referral') {
+      const rc = refCfg(), code = refCodeOf(me), users = db.users(), mine = users.find((x) => x.id === me.id) || me, tp = db.pricing().templatePrice || { usd: 10, rate: 12800 };
+      return send(res, 200, { enabled: rc.enabled, code, link: `${originOf(req)}/yaratish.html?ref=${code}`, discountPct: rc.discountPct, rewardUsd: rc.rewardUsd, invited: users.filter((x) => x.refBy === code).length, rewarded: users.filter((x) => x.refBy === code && x.refRewarded).length, credit: r2(mine.credit || 0), next: priceFor(mine, tp) });
+    }
     if (route === 'GET /api/my/projects') return send(res, 200, db.projects().filter((p) => p.userId === me.id).map((p) => ({ ...p, url: p.published ? siteUrl(p) : '' })));
     if (route === 'POST /api/my/projects') {
       if (limited(me.id, 'pcreate', 20, 3600e3)) return send(res, 429, { error: "Juda ko'p yangi loyiha. Keyinroq urinib ko'ring." });
@@ -414,12 +438,13 @@ async function api(req, res, url) {
         const method = ['payme', 'click'].includes(b.method) && avail[b.method] ? b.method : 'manual';
         const ret = `${originOf(req)}/yaratish.html?p=${meta.id}&paid=1`;
         if (method === 'manual') {
-          const ex = pay.list().find((x) => x.projectId === meta.id && x.method === 'manual' && x.state === 'pending') || pay.create({ projectId: meta.id, userId: me.id, usd: tp.usd, rate: tp.rate, method: 'manual' });
+          const pr = priceFor(me, tp);
+          const ex = pay.list().find((x) => x.projectId === meta.id && x.method === 'manual' && x.state === 'pending' && x.usd === pr.usd) || pay.create({ projectId: meta.id, userId: me.id, usd: pr.usd, rate: tp.rate, method: 'manual', credit: pr.credit, pct: pr.pct });
           adminBot.notifyPayment(ex, meta, me);
-          notifyTelegram(`Shablon sotib olish so'rovi (qo'lda to'lov)\nMijoz: ${me.name} (${me.phone})\nSayt: ${meta.name}\nSumma: $${tp.usd} (${ex.uzs} so'm)`);
+          notifyTelegram(`Shablon sotib olish so'rovi (qo'lda to'lov)\nMijoz: ${me.name} (${me.phone})\nSayt: ${meta.name}\nSumma: $${ex.usd} (${ex.uzs} so'm)`);
           return send(res, 200, { manual: true, payment: { id: ex.id, usd: ex.usd, uzs: ex.uzs }, contacts: db.site().contacts || {}, text: db.settings().manualPay || '' });
         }
-        const pmt = pay.create({ projectId: meta.id, userId: me.id, usd: tp.usd, rate: tp.rate, method });
+        const pr2 = priceFor(me, tp), pmt = pay.create({ projectId: meta.id, userId: me.id, usd: pr2.usd, rate: tp.rate, method, credit: pr2.credit, pct: pr2.pct });
         return send(res, 200, { payment: { id: pmt.id, usd: pmt.usd, uzs: pmt.uzs }, payUrl: pay.checkoutUrl(pmt, ret) });
       }
       if (act === 'export' && req.method === 'GET') {
@@ -573,6 +598,7 @@ async function api(req, res, url) {
         notify: { telegramBotToken: str(n.telegramBotToken, 120), telegramChatId: str(n.telegramChatId, 40) },
         allowedOrigins: (Array.isArray(b.allowedOrigins) ? b.allowedOrigins : st.allowedOrigins || []).slice(0, 10).map((x) => str(x, 200).replace(/\/$/, '')).filter((x) => /^https?:\/\/[^\s]+$/.test(x)),
         domains: (Array.isArray(b.domains) ? b.domains : st.domains || []).slice(0, 5).map((x) => str(x, 100).toLowerCase().replace(/^https?:\/\//, '').replace(/\/.*$/, '')).filter(goodDomain),
+        referral: b.referral ? { enabled: b.referral.enabled !== false, discountPct: Math.min(90, Math.max(0, Number(b.referral.discountPct) || 0)), rewardUsd: Math.max(0, Number(b.referral.rewardUsd) || 0) } : st.referral,
         manualPay: typeof b.manualPay === 'string' ? str(b.manualPay, 600) : st.manualPay || '',
         ai: { key: keep(aiIn.key, aiOld.key, 200), model: str(aiIn.model, 60) || aiOld.model || '' },
         payments: { payme: { merchantId: str(pmIn.merchantId, 60) || '', key: keep(pmIn.key, pmOld.key, 120) }, click: { serviceId: str(ckIn.serviceId, 40) || '', merchantId: str(ckIn.merchantId, 40) || '', secretKey: keep(ckIn.secretKey, ckOld.secretKey, 120) } },
@@ -607,7 +633,7 @@ function serveFile(res, file, cache) {
     fs.createReadStream(file).pipe(res);
   });
 }
-const PAGES = { '/': 'index.html', '/yaratish': 'yaratish.html', '/kabinet': 'kabinet.html', '/admin': 'admin.html', '/bot': 'bot.html', '/ru': 'ru/index.html', '/ru/': 'ru/index.html', '/en': 'en/index.html', '/en/': 'en/index.html' };
+const PAGES = { '/': 'index.html', '/yaratish': 'yaratish.html', '/kabinet': 'kabinet.html', '/admin': 'admin.html', '/bot': 'bot.html', '/blog': 'blog/index.html', '/ru': 'ru/index.html', '/ru/': 'ru/index.html', '/en': 'en/index.html', '/en/': 'en/index.html' };
 const server = http.createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost'); let p;
@@ -651,7 +677,7 @@ const server = http.createServer(async (req, res) => {
     }
     if (p.startsWith('/uploads/')) return serveFile(res, path.join(UPLOADS, path.basename(p)), true);
     if (p === '/pricing.json') return send(res, 200, db.pricing());
-    if (PAGES[p]) p = '/' + PAGES[p];
+    if (PAGES[p]) p = '/' + PAGES[p]; else if (p.endsWith('/') && p.length > 1) p += 'index.html';
     const file = path.normalize(path.join(PUBLIC, p));
     if (!file.startsWith(PUBLIC + path.sep)) return send(res, 404, 'Sahifa topilmadi');
     return serveFile(res, file, /^\/img\//.test(p));

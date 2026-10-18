@@ -18,7 +18,7 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 (async () => {
   const calls = [];
-  const mock = http.createServer((req, res) => { let b = ''; req.on('data', (c) => (b += c)); req.on('end', () => { const m = /^\/bot([^/]+)\/(\w+)$/.exec(req.url); let body = {}; try { body = JSON.parse(b || '{}'); } catch { /* ignore */ } res.setHeader('content-type', 'application/json'); if (!m || m[1] !== TOKEN) return res.end(JSON.stringify({ ok: false, description: 'Unauthorized' })); calls.push({ method: m[2], body }); res.end(JSON.stringify({ ok: true, result: true })); }); });
+  const mock = http.createServer((req, res) => { let b = ''; req.on('data', (c) => (b += c)); req.on('end', () => { const m = /^\/bot([^/]+)\/(\w+)$/.exec(req.url); let body = {}; try { body = JSON.parse(b || '{}'); } catch { /* ignore */ } res.setHeader('content-type', 'application/json'); if (!m || m[1] !== TOKEN) return res.end(JSON.stringify({ ok: false, description: 'Unauthorized' })); calls.push({ method: m[2], body }); res.end(JSON.stringify({ ok: true, result: /^(sendMessage|copyMessage)$/.test(m[2]) ? { message_id: 5000 + calls.length } : true })); }); });
   await new Promise((r) => mock.listen(0, r));
   const srv = spawn('node', ['server.js'], { cwd: ROOT, env: { ...process.env, PORT, DATA_DIR: DATA, ADMIN_PASSWORD: ADMIN, TG_API_BASE: `http://localhost:${mock.address().port}`, PUBLIC_URL: 'https://example.test', TELEGRAM_BOT_TOKEN: TOKEN }, stdio: 'ignore' });
   for (let i = 0; i < 40; i++) { try { if ((await fetch(BASE + '/healthz')).ok) break; } catch { /* wait */ } await wait(250); }
@@ -39,11 +39,27 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const S = { id: 7002, first_name: 'Begona' }, sc = { id: 7002, type: 'private' };
 
     console.log('Kirish va xavfsizlik');
-    await msg('/stats'); ok(/faqat administrator uchun/.test(last().body.text) && last().body.chat_id === 7001, 'kirmagan odamga buyruq bajarilmaydi, /login so\'raladi');
-    for (let i = 0; i < 6; i++) await msg('/orders'); ok(sent('sendMessage').filter((c) => c.body.chat_id === 7001).length <= 3, 'kirmagan odamga ortiqcha javob (spam) berilmaydi');
+    await msg('/stats'); ok(/operator ulanmagan/.test(last().body.text) && !/Statistika/.test(last().body.text) && last().body.chat_id === 7001, 'kirmagan odamga admin buyruq bajarilmaydi (support sifatida qaraladi)');
+    for (let i = 0; i < 14; i++) await msg('/orders'); ok(/Juda ko'p xabar/.test(last().body.text), 'kirmagan odamning spami cheklanadi');
     await msg('/login xato-parol', 11); ok(/Parol noto'g'ri/.test(last().body.text) && sent('deleteMessage', (b) => b.message_id === 11).length === 1, "noto'g'ri parol rad etildi, xabar chatdan o'chirildi");
     await msg('/stats'); ok(!/Statistika/.test(last().body.text), 'noto\'g\'ri parolda ham kirmaydi');
     await msg('/login ' + ADMIN, 12); ok(/Admin sifatida kirdingiz/.test(last().body.text) && sent('deleteMessage', (b) => b.message_id === 12).length === 1, 'to\'g\'ri parol bilan kirdi, parol xabari o\'chirildi');
+    console.log('Mijoz yozishmasi (support)');
+    const cm = (text, id) => upd({ message: { message_id: id, chat: sc, from: S, text } });
+    const n0 = sent('sendMessage').length;
+    await cm('/start', 21); ok(/yordam botiga/.test(last().body.text) && last().body.chat_id === 7002, 'mijozga /start salomlashuv');
+    await cm('Salom, sayt narxi qancha?', 22);
+    const toAdmin = sent('sendMessage', (b) => b.chat_id === 7001 && /Begona/.test(b.text) && /sayt narxi qancha/.test(b.text)).pop();
+    ok(!!toAdmin, 'mijoz xabari adminga yetib bordi (ismi bilan)');
+    ok(/qabul qilindi/.test(last().body.text) && last().body.chat_id === 7002, 'mijozga tasdiq yuborildi');
+    const headId = 5000 + calls.indexOf(calls.filter((c) => c.method === 'sendMessage' && c.body === toAdmin.body).pop()) + 1;
+    await upd({ message: { message_id: 30, chat, from: A, text: 'Salom! 10$ dan boshlanadi.', reply_to_message: { message_id: headId } } });
+    const back = sent('sendMessage', (b) => b.chat_id === 7002 && /Impro IT:/.test(b.text) && /10\$ dan boshlanadi/.test(b.text)).pop();
+    ok(!!back, 'admin reply qilsa, javob mijozga qaytdi', sent('sendMessage').slice(-2).map((c) => c.body));
+    const nb = sent('sendMessage').length; await upd({ message: { message_id: 31, chat, from: A, text: 'oddiy xabar' } });
+    ok(sent('sendMessage').length === nb || !/Impro IT:/.test((last() || { body: { text: '' } }).body.text), 'oddiy admin xabari mijozga ketmaydi');
+    await upd({ message: { message_id: 23, chat: sc, from: S, photo: [{ file_id: 'x' }], caption: 'rasm' } });
+    ok(sent('copyMessage', (b) => b.chat_id === 7001 && b.from_chat_id === 7002).length === 1, 'mijoz rasmi adminga nusxalandi');
     const st1 = await J('/api/admin/settings', { headers: { cookie } }); ok(st1.j.adminBot.chats.length === 1 && st1.j.adminBot.chats[0].id === 7001, 'qurilma sozlamalarda ko\'rinadi');
     let bruteStop = false; for (let i = 0; i < 7; i++) { await upd({ message: { message_id: 50 + i, chat: sc, from: S, text: '/login noto\'g\'ri' + i } }); if (/Juda ko'p urinish/.test(last().body.text)) bruteStop = true; }
     ok(bruteStop, 'parol terish urinishlari cheklanadi (brute-force himoyasi)');

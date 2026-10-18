@@ -286,3 +286,8 @@ body:has(.sw) .fab{bottom:78px}
 @media(max-width:640px){.langsw{font-size:11px}.langsw a{padding:4px 7px}}
 .bw [hidden],.bk[hidden]{display:none!important}
 .ctab[data-fx] p,.ctab.fx p,[data-fx] .ctab p,.ctab p{color:rgba(255,255,255,.9);text-shadow:0 1px 16px rgba(0,0,0,.55)}[data-site=light] .ctab p{color:inherit;text-shadow:none}
+.fb-b.wa{background:#25d366;color:#fff}
+.demobar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:14px;padding:8px 8px 8px 20px;border-radius:99px;background:rgba(8,12,24,.86);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14);color:#eef1ff;font-size:14px;box-shadow:0 14px 40px rgba(0,0,0,.45);max-width:calc(100vw - 24px);white-space:nowrap}
+.demobar .dl{color:#9fb0d6;text-decoration:none;font-size:13px;padding-right:12px}.demobar .dl:hover{color:#fff}
+body:has(.demobar) .fab{bottom:86px}
+@media(max-width:640px){.demobar{gap:8px;padding:6px 6px 6px 14px;font-size:12.5px;bottom:10px}.demobar .dl{display:none}}

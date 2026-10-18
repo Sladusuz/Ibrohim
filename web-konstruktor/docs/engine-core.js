@@ -251,6 +251,7 @@
     const brief = !!E.actions['brief-open'] && S.sections.some((s) => on(s) && s.type === 'brief');
     if (brief) L.push(`<a class="fb-b main" href="#brief-open" aria-label="Bepul maslahat">${icon('edit')}<span>Bepul maslahat</span></a>`);
     if (c.telegram) { const u = String(c.telegram).replace(/^@/, '').replace(/^https?:\/\/t\.me\//, ''); L.push(`<a class="fb-b tg" href="https://t.me/${esc(u)}" target="_blank" rel="noopener" aria-label="Telegram">${icon('send')}</a>`); }
+    if (c.whatsapp && /\d{9}/.test(String(c.whatsapp))) L.push(`<a class="fb-b wa" href="https://wa.me/${String(c.whatsapp).replace(/\D/g, '')}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('support')}</a>`);
     if (c.phone) L.push(`<a class="fb-b ph" href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}" aria-label="Qo'ng'iroq">${icon('tel')}</a>`);
     if (!L.length) return;
     const d = document.createElement('div'); d.id = 'fab'; d.className = 'fab'; d.innerHTML = L.join(''); document.body.appendChild(d);
@@ -276,9 +277,14 @@
   };
   // Serverga yuborish; server bo'lmasa pochtaga o'tadi. Natija: {ok, id} yoki {mail:true}
   E.send = async function (payload) {
+    if (window.__DEMO__) throw new Error("Bu namunaviy sayt: so'rov yuborilmaydi. Shablonni tanlab, o'z ma'lumotlaringizni kiriting.");
     const embedded = !!window.__SITE__;
     const API = String(window.__API__ || '').replace(/\/$/, '');
     const viaServer = !!(window.Auth && window.Auth.enabled);
+    const RELAY = String(window.__RELAY__ || '').trim();
+    if (embedded && !API && !viaServer && RELAY) { // statik sayt: Telegram'ga xavfsiz oraliq (Cloudflare Worker) orqali
+      try { const r = await fetch(RELAY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, site: (S.company && S.company.name) || '', lang: document.documentElement.lang || '', page: location.href }) }); if (r.ok) return { ok: true, id: 'tg' }; } catch { /* pochtaga o'tamiz */ }
+    }
     if (embedded && !API && !viaServer) { E.mailto(payload); return { mail: true }; }
     try {
       let j;

@@ -7,6 +7,7 @@
   const KEY = 'impro_tok', UKEY = 'impro_user';
   const ls = { get(k) { try { return localStorage.getItem(k); } catch { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch { /* ignore */ } }, del(k) { try { localStorage.removeItem(k); } catch { /* ignore */ } } };
   const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  try { const q = new URLSearchParams(location.search).get('ref'); if (q && /^[A-Za-z0-9]{4,12}$/.test(q)) ls.set('impro_ref', q); } catch { /* ignore */ }
   let user = null; try { user = JSON.parse(ls.get(UKEY) || 'null'); } catch { user = null; }
   const subs = [];
 
@@ -33,7 +34,7 @@
       try { const j = await Auth.request('/api/me'); Auth._set(j.user, null); } catch (e) { if (e.status === 401) Auth._set(null); }
       return user;
     },
-    async register(d) { const j = await Auth.request('/api/auth/register', { method: 'POST', body: d }); Auth._set(j.user, j.token); return j.user; },
+    async register(d) { let ref = ''; try { ref = localStorage.getItem('impro_ref') || ''; } catch { /* ignore */ } const j = await Auth.request('/api/auth/register', { method: 'POST', body: ref ? { ...d, ref } : d }); try { localStorage.removeItem('impro_ref'); } catch { /* ignore */ } Auth._set(j.user, j.token); return j.user; },
     async login(d) { const j = await Auth.request('/api/auth/login', { method: 'POST', body: d }); Auth._set(j.user, j.token); return j.user; },
     logout() { Auth._set(null); },
     /* ---------- Kirish / ro'yxatdan o'tish oynasi ---------- */

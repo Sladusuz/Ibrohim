@@ -609,6 +609,11 @@ body:has(.sw) .fab{bottom:78px}
 @media(max-width:640px){.langsw{font-size:11px}.langsw a{padding:4px 7px}}
 .bw [hidden],.bk[hidden]{display:none!important}
 .ctab[data-fx] p,.ctab.fx p,[data-fx] .ctab p,.ctab p{color:rgba(255,255,255,.9);text-shadow:0 1px 16px rgba(0,0,0,.55)}[data-site=light] .ctab p{color:inherit;text-shadow:none}
+.fb-b.wa{background:#25d366;color:#fff}
+.demobar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:14px;padding:8px 8px 8px 20px;border-radius:99px;background:rgba(8,12,24,.86);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.14);color:#eef1ff;font-size:14px;box-shadow:0 14px 40px rgba(0,0,0,.45);max-width:calc(100vw - 24px);white-space:nowrap}
+.demobar .dl{color:#9fb0d6;text-decoration:none;font-size:13px;padding-right:12px}.demobar .dl:hover{color:#fff}
+body:has(.demobar) .fab{bottom:86px}
+@media(max-width:640px){.demobar{gap:8px;padding:6px 6px 6px 14px;font-size:12.5px;bottom:10px}.demobar .dl{display:none}}
 </style>
 </head>
 <body>
@@ -943,6 +948,7 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     const brief = !!E.actions['brief-open'] && S.sections.some((s) => on(s) && s.type === 'brief');
     if (brief) L.push(`<a class="fb-b main" href="#brief-open" aria-label="Bepul maslahat">${icon('edit')}<span>Bepul maslahat</span></a>`);
     if (c.telegram) { const u = String(c.telegram).replace(/^@/, '').replace(/^https?:\/\/t\.me\//, ''); L.push(`<a class="fb-b tg" href="https://t.me/${esc(u)}" target="_blank" rel="noopener" aria-label="Telegram">${icon('send')}</a>`); }
+    if (c.whatsapp && /\d{9}/.test(String(c.whatsapp))) L.push(`<a class="fb-b wa" href="https://wa.me/${String(c.whatsapp).replace(/\D/g, '')}" target="_blank" rel="noopener" aria-label="WhatsApp">${icon('support')}</a>`);
     if (c.phone) L.push(`<a class="fb-b ph" href="tel:${esc(String(c.phone).replace(/[^\d+]/g, ''))}" aria-label="Qo'ng'iroq">${icon('tel')}</a>`);
     if (!L.length) return;
     const d = document.createElement('div'); d.id = 'fab'; d.className = 'fab'; d.innerHTML = L.join(''); document.body.appendChild(d);
@@ -968,9 +974,14 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
   };
   // Serverga yuborish; server bo'lmasa pochtaga o'tadi. Natija: {ok, id} yoki {mail:true}
   E.send = async function (payload) {
+    if (window.__DEMO__) throw new Error("Bu namunaviy sayt: so'rov yuborilmaydi. Shablonni tanlab, o'z ma'lumotlaringizni kiriting.");
     const embedded = !!window.__SITE__;
     const API = String(window.__API__ || '').replace(/\/$/, '');
     const viaServer = !!(window.Auth && window.Auth.enabled);
+    const RELAY = String(window.__RELAY__ || '').trim();
+    if (embedded && !API && !viaServer && RELAY) { // statik sayt: Telegram'ga xavfsiz oraliq (Cloudflare Worker) orqali
+      try { const r = await fetch(RELAY, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, site: (S.company && S.company.name) || '', lang: document.documentElement.lang || '', page: location.href }) }); if (r.ok) return { ok: true, id: 'tg' }; } catch { /* pochtaga o'tamiz */ }
+    }
     if (embedded && !API && !viaServer) { E.mailto(payload); return { mail: true }; }
     try {
       let j;
@@ -2238,5 +2249,6 @@ void main(){
 
 
 <script>E.boot();</script>
+
 </body>
 </html>

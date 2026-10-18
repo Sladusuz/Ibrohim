@@ -52,3 +52,11 @@ Oxirida ekranda **admin paroli** chiqadi (u serverda `/root/impro-admin-parol.tx
 
 ## Statik sayt serverga qanday ulanadi (faqat boshqa joyda turgan sayt uchun)
 Agar sayt GitHub Pages da qolsa va server alohida manzilda bo'lsa: `docs/config.js` ga `window.__API__ = 'https://server-manzili';` yozing va admin paneldagi *Sozlamalar → Boshqa domenlardagi saytlar* ga sayt manzilini qo'shing. A yo'lida bu kerak emas.
+
+## Qo'shimcha sozlamalar (yangi imkoniyatlar)
+
+- **Yordam boti (support) va admin bot:** `TELEGRAM_BOT_TOKEN` ni serverning env faylida saqlang (`/etc/impro.env` yoki `.env`), repoga yozmang. Botga `/login PAROL` yozing: shundan so'ng sizga so'rovlar keladi. Mijozlar botga yozsa, xabar sizga boradi; siz xabarga *reply* qilsangiz, javob mijozga qaytadi.
+- **Server bo'lmaganda (GitHub Pages):** so'rovlarni Telegramga yetkazish uchun `worker/README.md` bo'yicha Cloudflare Worker o'rnating va `RELAY=https://...workers.dev node tools/build-static.js` bilan quring.
+- **Referal dasturi:** `data/settings.json` → `referral: { enabled, discountPct (20), rewardUsd (3) }` yoki admin sozlamalari API orqali.
+- **Statistika va qidiruv:** `GA=G-XXXX YM=12345678 node tools/make-site.js`, `GSC=... YANDEX_VERIFY=... node tools/build-static.js`.
+- **Blog:** maqolalar `tools/blog.json` da; qo'shgandan keyin `node tools/build-static.js`.

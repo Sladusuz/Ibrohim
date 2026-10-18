@@ -16,7 +16,7 @@
     "radius": "round",
     "bg": "plain",
     "heads": "left",
-    "switcher": false,
+    "switcher": true,
     "fab": true
   },
   "nav": {
@@ -38,11 +38,12 @@
   },
   "contacts": {
     "phone": "+998 33 623 33 13",
-    "email": "chempme@gmail.com",
+    "email": "info@improuzbekiston.uz",
     "address": "Toshkent, Amir Temur ko'chasi 1",
     "hours": "Dush–Shan, 9:00–18:00",
-    "telegram": "",
-    "instagram": ""
+    "telegram": "@improsupport_bot",
+    "instagram": "@improuzbekiston_uz",
+    "whatsapp": "+998336233313"
   },
   "footer": {
     "text": "Barcha huquqlar himoyalangan.",
@@ -54,6 +55,10 @@
       {
         "label": "Telegram bot",
         "url": "/bot.html"
+      },
+      {
+        "label": "Blog",
+        "url": "/blog/"
       },
       {
         "label": "Kabinet",
@@ -200,85 +205,85 @@
           "title": "Restoran / kafe",
           "tag": "Xizmat",
           "image": "/img/tpl/restoran.jpg",
-          "link": "/yaratish.html?t=restoran"
+          "link": "/demo/restoran/"
         },
         {
           "title": "IT kompaniya / agentlik",
           "tag": "Biznes",
           "image": "/img/tpl/kompaniya.jpg",
-          "link": "/yaratish.html?t=kompaniya"
+          "link": "/demo/kompaniya/"
         },
         {
           "title": "Onlayn market",
           "tag": "Savdo",
           "image": "/img/tpl/market.jpg",
-          "link": "/yaratish.html?t=market"
+          "link": "/demo/market/"
         },
         {
           "title": "Elektronika do'koni",
           "tag": "Savdo",
           "image": "/img/tpl/elektronika.jpg",
-          "link": "/yaratish.html?t=elektronika"
+          "link": "/demo/elektronika/"
         },
         {
           "title": "Kiyim butigi",
           "tag": "Savdo",
           "image": "/img/tpl/kiyim.jpg",
-          "link": "/yaratish.html?t=kiyim"
+          "link": "/demo/kiyim/"
         },
         {
           "title": "Gul do'koni",
           "tag": "Savdo",
           "image": "/img/tpl/gul.jpg",
-          "link": "/yaratish.html?t=gul"
+          "link": "/demo/gul/"
         },
         {
           "title": "Mebel salon",
           "tag": "Savdo",
           "image": "/img/tpl/mebel.jpg",
-          "link": "/yaratish.html?t=mebel"
+          "link": "/demo/mebel/"
         },
         {
           "title": "Kafe va qandolat",
           "tag": "Xizmat",
           "image": "/img/tpl/kafe.jpg",
-          "link": "/yaratish.html?t=kafe"
+          "link": "/demo/kafe/"
         },
         {
           "title": "Fast-food va yetkazib berish",
           "tag": "Xizmat",
           "image": "/img/tpl/fastfood.jpg",
-          "link": "/yaratish.html?t=fastfood"
+          "link": "/demo/fastfood/"
         },
         {
           "title": "Go'zallik saloni",
           "tag": "Go'zallik va salomatlik",
           "image": "/img/tpl/salon.jpg",
-          "link": "/yaratish.html?t=salon"
+          "link": "/demo/salon/"
         },
         {
           "title": "Barbershop",
           "tag": "Go'zallik va salomatlik",
           "image": "/img/tpl/barber.jpg",
-          "link": "/yaratish.html?t=barber"
+          "link": "/demo/barber/"
         },
         {
           "title": "Tibbiyot markazi",
           "tag": "Go'zallik va salomatlik",
           "image": "/img/tpl/klinika.jpg",
-          "link": "/yaratish.html?t=klinika"
+          "link": "/demo/klinika/"
         },
         {
           "title": "Stomatologiya",
           "tag": "Go'zallik va salomatlik",
           "image": "/img/tpl/stomatolog.jpg",
-          "link": "/yaratish.html?t=stomatolog"
+          "link": "/demo/stomatolog/"
         },
         {
           "title": "Yoga va spa",
           "tag": "Go'zallik va salomatlik",
           "image": "/img/tpl/yoga.jpg",
-          "link": "/yaratish.html?t=yoga"
+          "link": "/demo/yoga/"
         }
       ]
     },
@@ -937,12 +942,28 @@
           "a": "Loyiha hajmiga qarab. Anketani to'ldirsangiz, 1 kun ichida aniq narx va muddat bilan taklif yuboramiz."
         },
         {
-          "q": "Tayyor saytga kafolat berasizmi?",
-          "a": "Ha, 6 oy bepul texnik yordam va xatolarni tuzatish kafolati beramiz."
+          "q": "Tayyor sayt shabloni qancha turadi?",
+          "a": "Shablonni bepul tanlab, tahrirlab, natijani ko'rasiz. Tayyor saytni yuklab olish yoki o'z subdomeningizda e'lon qilish uchun bir martalik $10 to'lanadi."
+        },
+        {
+          "q": "Qanday to'lov usullari bor?",
+          "a": "Payme, Click yoki bank kartasiga o'tkazma. Katta loyihalarda to'lov bosqichma-bosqich, shartnoma asosida amalga oshiriladi."
+        },
+        {
+          "q": "O'z domenimni ulay olamanmi?",
+          "a": "Ha. Saytingizni bizning subdomenimizda e'lon qilishingiz yoki o'z domeningizni (masalan, sizningbiznes.uz) ulashingiz mumkin."
+        },
+        {
+          "q": "Telegram bot yaratish qiyinmi?",
+          "a": "Yo'q. Bot konstruktorida @BotFather bergan tokenni kiritasiz: katalog, savat va Telegram ichidagi mini do'kon darrov ishlaydi, kod yozish shart emas."
         },
         {
           "q": "Mavjud saytni yangilab bera olasizmi?",
           "a": "Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz."
+        },
+        {
+          "q": "Ishga tushgandan keyin yordam berasizmi?",
+          "a": "Ha, texnik yordam va xatolarni tuzatish bo'yicha shartlar shartnomada aniq yoziladi; oylik yordam paketi ham mavjud."
         }
       ]
     },
@@ -975,8 +996,27 @@
       "payOptions": [],
       "submitText": "Yuborish",
       "mapUrl": ""
+    },
+    {
+      "id": "hamkor",
+      "type": "cta",
+      "fx": false,
+      "enabled": true,
+      "navLabel": "",
+      "eyebrow": "Hamkorlik",
+      "title": "Dizayner yoki agentlikmisiz? *Birga* ishlaymiz",
+      "text": "Mijozlaringiz uchun sayt, bot va ilovalarni biz bilan tayyorlang: hamkorlarga alohida narx va tezkor yordam beramiz.",
+      "buttonText": "Hamkor bo'lish",
+      "buttonLink": "https://t.me/improsupport_bot",
+      "countdownTo": "",
+      "image": ""
     }
   ],
+  "analytics": {
+    "ga": "",
+    "ym": "",
+    "fb": ""
+  },
   "account": {
     "enabled": true,
     "requireOrder": true,

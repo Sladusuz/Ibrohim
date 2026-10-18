@@ -91,6 +91,8 @@
   }
 
   /* ---------- Narxlar va yuborish ---------- */
+  let refInfo = null;
+  async function loadRef() { refInfo = null; if (useAcc && window.Auth && Auth.user()) { try { refInfo = await Auth.request('/api/my/referral'); } catch { /* ignore */ } } }
   async function loadPricing() {
     if (window.__SERVER__ === true || (Auth && Auth.api)) try { const r = await fetch((Auth && Auth.api) + '/api/pricing'); if (r.ok) { pricing = await r.json(); return; } } catch { /* ignore */ }
     try { const r = await fetch('/pricing.json'); if (r.ok) pricing = await r.json(); } catch { /* ignore */ }
@@ -114,7 +116,8 @@
     return `<a class="b g w" style="margin-top:8px" href="tel:${esc(String(tel).replace(/[^\d+]/g, ''))}">${icon('tel')} ${esc(tel)}</a>${c.telegram ? `<a class="b g w" style="margin-top:8px" target="_blank" rel="noopener" href="https://t.me/${esc(String(c.telegram).replace(/^@/, ''))}">Telegram: ${esc(c.telegram)}</a>` : ''}`;
   };
   function buyBox() {
-    const price = `<div class="pricebox"><div><b>$${esc(String(tp().usd))}</b><span>bir martalik to'lov</span></div><small>≈ ${money(Math.round(tp().usd * tp().rate))} so'm</small></div>
+    const nx = refInfo && refInfo.next && refInfo.next.usd < tp().usd ? refInfo.next : null, eff = nx ? nx.usd : tp().usd;
+    const price = `<div class="pricebox"><div><b>$${esc(String(eff))}</b>${nx ? ` <s style="opacity:.55;font-size:.6em">$${esc(String(tp().usd))}</s>` : ''}<span>bir martalik to'lov</span></div><small>≈ ${money(Math.round(eff * tp().rate))} so'm</small></div>${nx ? `<div class="guide" style="margin:8px 0">${nx.pct ? `🎁 Do'st taklifi: birinchi xaridga <b>−${nx.pct}%</b>. ` : ''}${nx.credit ? `Bonus balansdan <b>$${esc(String(nx.credit))}</b> hisobga olindi.` : ''}</div>` : ''}
       <ul class="incl"><li>Tayyor saytni yuklab olish (bitta mustaqil fayl)</li><li>Subdomenda joylash: <b>nomingiz.${esc(pricing.rootDomain || 'improuzbekiston.uz')}</b></li><li>O'z domeningizni ulash</li><li>Telefonga ilova kabi o'rnatiladi, Google uchun SEO sozlangan</li><li>Statistika va kelgan buyurtmalar kabinetda</li></ul>`;
     if (!useAcc) return `${price}<p class="hint">Sotib olish uchun biz bilan bog'laning, saytingizni darrov tayyorlab beramiz.</p>${contactBtns()}<button class="b g w" style="margin-top:8px" data-x="mail">Pochta orqali so'rov yuborish</button><div class="hint">Tayyor sayt faqat to'lovdan keyin beriladi. Oldindan ko'rish va tahrirlash bepul.</div>`;
     const pm = pricing.payMethods || {};
@@ -364,7 +367,7 @@
         const u = await Auth.modal({ closable: false, title: 'Sayt yaratish uchun kiring', text: "Hisob ochsangiz, saytlaringiz saqlanadi va istalgan qurilmadan davom ettira olasiz." });
         if (!u) return;
       }
-      userBar();
+      userBar(); await loadRef();
       try { myProjects = await Auth.request('/api/my/projects'); } catch { myProjects = []; }
     }
     const q = new URLSearchParams(location.search);

@@ -15,9 +15,9 @@ module.exports = function makePay({ readJSON, writeJSON, file, newId, getSetting
   const clickCfg = () => { const c = cfg().click; return { serviceId: env('CLICK_SERVICE_ID') || c.serviceId || '', merchantId: env('CLICK_MERCHANT_ID') || c.merchantId || '', secretKey: env('CLICK_SECRET_KEY') || c.secretKey || '' }; };
   const methods = () => ({ payme: !!(paymeCfg().merchantId && paymeCfg().key), click: !!(clickCfg().serviceId && clickCfg().merchantId && clickCfg().secretKey) });
 
-  function create({ projectId, userId, usd, rate, method }) {
+  function create({ projectId, userId, usd, rate, method, credit, pct }) {
     const uzs = Math.round(Number(usd) * Number(rate));
-    const p = { id: newId(5), kind: 'template', projectId, userId, usd: Number(usd), uzs, method, state: 'pending', createdAt: new Date().toISOString(), tx: null, click: null };
+    const p = { id: newId(5), kind: 'template', projectId, userId, usd: Number(usd), uzs, method, state: 'pending', createdAt: new Date().toISOString(), tx: null, click: null, credit: credit || 0, pct: pct || 0 };
     const all = list(); all.unshift(p); save(all);
     return p;
   }
