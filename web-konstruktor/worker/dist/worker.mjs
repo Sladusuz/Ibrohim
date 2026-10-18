@@ -983,12 +983,7 @@ async function handleCallback(env, st, q) {
     if (bsm[1] !== 'g') for (const a of await adminsOf(env, st)) await say(env, a, bsm[1] === 'o' ? `📄 <b>Taklif so'raldi</b>: ${esc(nm)} <code>${chat}</code> ${esc(rec.phone || '')}` : `👎 <b>Uchrashuv yoqmadi</b>: ${esc(nm)} <code>${chat}</code> ${esc(rec.phone || '')}. Bog'lanib ko'ring.`);
     return say(env, chat, bsm[1] === 'o' ? "✅ Taklif tayyorlab, tez orada yuboramiz." : bsm[1] === 'b' ? "Fikringiz uchun rahmat. Kamchiliklarni to'g'rilaymiz, siz bilan bog'lanamiz." : 'Rahmat! Savolingiz bo\'lsa, yozing 🙂');
   }
-  if (d === 'm:pay') {
-    await ans(); const rec = (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) };
-    if (!env.CARD_INFO) return say(env, chat, "To'lov rekvizitlari hozir mavjud emas. Mutaxassisimiz siz bilan bog'lanib, to'lov usulini aytadi.");
-    rec.flow = { step: 'payamt', d: {} }; await saveRec(st, chat, rec);
-    return say(env, chat, "💳 <b>To'lov</b>\nQancha to'laysiz? Summani so'mda yozing (masalan: <code>1500000</code>). Bekor qilish: /cancel");
-  }
+  if (d === 'm:pay') { await ans(); return startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) }); }
   const ppm = /^pp:([a-f0-9]{6,24}):([a-f0-9]{6,24})$/.exec(d);
   if (ppm) { if (!isAdmin) return ans("Ruxsat yo'q"); const k = 'pr:' + ppm[2] + ':' + ppm[1], m = await st.get(k); if (!m) return ans('Loyiha topilmadi'); m.paid = true; await st.put(k, m, 0, m); await ans('Tasdiqlandi'); return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: "✅ To'lov tasdiqlandi", callback_data: 'noop' }]] } }); }
   const pcm = /^(pc|px):(-?\d+)$/.exec(d);
@@ -1057,7 +1052,7 @@ async function handleUpdate(env, upd) {
     return say(env, chat, "✅ <b>Admin sifatida kirdingiz.</b>\nMijoz xabarlari va sayt so'rovlari shu yerga keladi. Mijozga javob berish uchun xabarga <b>reply</b> qiling.\n/auto on|off — avtomatik javob\n/logout — chiqish");
   }
   const admins = await adminsOf(env, st);
-  if (!admins.includes(chat)) return supportIn(env, st, m);
+  if (!admins.includes(chat)) { if (cmd === '/tolov') return startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who(m) }); return supportIn(env, st, m); }
   if (cmd === '/logout') { await st.put('admins', ((await st.get('admins')) || []).filter((x) => x !== chat)); return say(env, chat, 'Chiqdingiz. Qayta kirish uchun /login.'); }
   if (cmd === '/auto') {
     if (/^(on|yoq|yoqish|1)$/i.test(arg)) await st.put('auto', 'on'); else if (/^(off|o'?chir|ochir|0)$/i.test(arg)) await st.put('auto', 'off');
@@ -1138,7 +1133,8 @@ async function handleUpdate(env, upd) {
   }
   if (cmd === '/tolov') {
     const mm = /^(\d[\d\s]{2,12})\s*([\s\S]{0,100})$/.exec(arg), uzs = mm ? Number(mm[1].replace(/\s/g, '')) : 0;
-    if (!uzs || uzs < 1000) return say(env, chat, "Format: <code>/tolov 2500000 Vizitka sayt, Aziz</code> (summa so'mda). Mijozga yuboriladigan Payme havolasi yaratiladi.");
+    if (!uzs || uzs < 1000) return startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who(m) }, "\n\n<i>Admin: mijozga to'lov havolasi yuborish uchun</i> <code>/tolov 2500000 Vizitka sayt, Aziz</code>");
+    if (GP_ON(env) && !env.PAYME_MERCHANT_ID) { const pg = await createPayOrder(env, st, uzs, mm[2]), lk = await gpLink(env, pg, "Impro IT: to'lov"); return say(env, chat, lk.url ? `💳 <b>To'lov havolasi</b> · ${sum(pg.uzs)} so'm\n#${pg.id}${pg.note ? '\n📝 ' + esc(pg.note) : ''}\n\n${lk.url}\n\nMijozga yuboring: Telegram ichida to'laydi, to'lov o'zi tasdiqlanadi.` : `Havola yaratilmadi: ${esc(lk.error)}`); }
     const hasClick = !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY);
     if (!env.PAYME_MERCHANT_ID && hasClick) { const pc = await createPayOrder(env, st, uzs, mm[2]); return say(env, chat, `💳 <b>Click to'lov havolasi</b> · ${sum(pc.uzs)} so'm\n#${pc.id}${pc.note ? '\n📝 ' + esc(pc.note) : ''}\n\n${clickUrl(env, pc)}\n\nShu havolani mijozga yuboring. To'lov tushganda bu yerga xabar keladi.`); }
     if (!env.PAYME_MERCHANT_ID) { if (!env.CARD_INFO) return say(env, chat, "Na Payme, na karta sozlanmagan (PAYME_MERCHANT_ID yoki CARD_INFO)."); return say(env, chat, `💳 <b>Mijozga yuboring</b> (${sum(uzs)} so'm):\n\nTo'lov: <b>${sum(uzs)} so'm</b>${mm[2] ? ' · ' + esc(mm[2]) : ''}\n${esc(env.CARD_INFO)}\n\nO'tkazgach chek rasmini @${(await tg(env, 'getMe', {}) || {}).username || 'improsupport_bot'} ga yuboring.`); }
@@ -1573,6 +1569,11 @@ async function gpPaid(env, m) {
   if (p.projectId) await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Saytingizni endi joylash yoki yuklab olish mumkin. Saytga qaytib sahifani yangilang.");
   else { const rec = (await st.get('c:' + chat)) || {}; rec.payAmt = p.uzs; await saveRec(st, chat, rec); await confirmPay(env, st, chat, 'GlobalPay'); }
   for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>GlobalPay: to'lov qabul qilindi</b>\n${sum(p.uzs)} so'm · ${esc(who2)}${p.projectId ? '\n🌐 Sayt sotib olindi' : ''}\n${esc(p.note || '')}`);
+}
+async function startPay(env, st, chat, rec, hint) {
+  if (!env.CARD_INFO && !GP_ON(env)) return say(env, chat, "To'lov rekvizitlari hozir mavjud emas. Mutaxassisimiz siz bilan bog'lanib, to'lov usulini aytadi.");
+  rec.flow = { step: 'payamt', d: {} }; await saveRec(st, chat, rec);
+  return say(env, chat, "💳 <b>To'lov</b>\nQancha to'laysiz? Summani so'mda yozing (masalan: <code>1500000</code>). Bekor qilish: /cancel" + (hint || ''));
 }
 async function markProjectPaid(st, p) { if (!p.projectId || !p.ownerId) return; const k = 'pr:' + p.ownerId + ':' + p.projectId, m = await st.get(k); if (m) { m.paid = true; m.updatedAt = new Date().toISOString(); await st.put(k, m, 0, m); } }
 export default {

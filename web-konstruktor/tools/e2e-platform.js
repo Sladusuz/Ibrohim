@@ -70,6 +70,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     r = await api('GET', '/api/pricing'); ok(r.j.payMethods.globalpay && r.j.payMethods.clicktg, 'tolov usullari: globalpay va clicktg');
     r = await api('POST', '/api/auth/register', { name: 'To\'lovchi', phone: '+998941112233', password: 'secret12' }); const pt = r.j.token, puid = r.j.user.id;
     r = await api('POST', '/api/my/projects', { name: 'P', data }, pt); const ppid = r.j.project.id;
+    env.GLOBALPAY_TOKEN = '111:TEST:gp';
     for (const [mth, tok] of [['globalpay', '111:TEST:gp'], ['clicktg', '398062629:TEST:click']]) { tgc.length = 0; r = await api('POST', '/api/my/projects/' + ppid + '/checkout', { method: mth }, pt); const c = tgc.find((q) => q.method === 'createInvoiceLink'); ok(r.s === 200 && r.j.payUrl === 'https://t.me/$inv123' && c && c.body.provider_token === tok && c.body.currency === 'UZS' && c.body.prices[0].amount === 12800000, 'checkout ' + mth, c && c.body); }
     const S = W.store(env), poKeys = (await S.list('po:')), pay = (await Promise.all(poKeys.map((k) => S.get(k.name)))).find((q) => q.projectId === ppid);
     tgc.length = 0; await W.handleUpdate(env, { pre_checkout_query: { id: 'q1', invoice_payload: 'po:' + pay.id, currency: 'UZS', total_amount: pay.uzs * 100 } }); ok(tgc.some((c) => c.method === 'answerPreCheckoutQuery' && c.body.ok === true), 'pre_checkout: togri summa qabul');
@@ -79,6 +80,11 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     r = await api('POST', '/api/my/projects/' + ppid + '/publish', { slug: 'tolov-test' }, pt); ok(r.s === 200, 'tolovdan keyin joylash ochiladi', r.j);
     ok(tgc.some((c) => c.method === 'sendMessage' && /GlobalPay|to'lov qabul/i.test(c.body.text)), 'adminga va mijozga xabar');
     tgc.length = 0; await W.handleUpdate(env, { message: { message_id: 6, chat: { id: 555, type: 'private' }, from: { id: 555 }, successful_payment: { currency: 'UZS', total_amount: pay.uzs * 100, invoice_payload: 'po:' + pay.id, telegram_payment_charge_id: 'tc1' } } }); ok(!tgc.some((c) => c.method === 'sendMessage'), 'takroriy tolov ikki marta hisoblanmaydi');
+    env.GLOBALPAY_TOKEN = '';
+    { const msg = (id, text) => W.handleUpdate(env, { message: { message_id: id, chat: { id: 777, type: 'private' }, from: { id: 777, first_name: 'Mijoz' }, text } });
+      tgc.length = 0; await msg(1, '/tolov'); ok(tgc.some((c) => c.method === 'sendMessage' && c.body.chat_id === 777 && /Qancha to'laysiz/.test(c.body.text)), 'bot: mijoz /tolov yozsa summa soraydi');
+      tgc.length = 0; await msg(2, '250000'); const inv = tgc.find((c) => c.method === 'sendInvoice'); ok(inv && inv.body.chat_id === 777 && inv.body.provider_token === '398062629:TEST:click' && inv.body.prices[0].amount === 25000000, 'bot: summadan keyin Telegram hisob-faktura yuboriladi', inv && inv.body);
+      tgc.length = 0; await W.handleUpdate(env, { message: { message_id: 3, chat: { id: 7, type: 'private' }, from: { id: 7 }, text: '/tolov 500000 Vizitka sayt' } }); ok(tgc.some((c) => c.method === 'sendMessage' && /t\.me\/\$inv123/.test(c.body.text)), 'bot: admin /tolov summa -> mijozga havola'); }
     delete env.GLOBALPAY_TOKEN; delete env.CLICK_TG_TOKEN;
   }
   { // veb admin panel: /api/admin/*
