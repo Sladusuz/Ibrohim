@@ -64,6 +64,10 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok(/telefon raqamingizni yozing/.test(lastTo(7021).body.text) && !/HANDOFF/.test(lastTo(7021).body.text) && sent(7001, /Operator kerak/).length === 2, 'AI handoff belgisi mijozga ko\'rinmaydi, admin ogohlantirildi');
   delete env.ANTHROPIC_API_KEY;
 
+  console.log('Admin yordami');
+  await msg(7001, 'salom, bu test', 120); ok(/Siz adminsiz/.test(lastTo(7001).body.text) && /\/test/.test(lastTo(7001).body.text), 'admin oddiy matn yozsa yo\'riqnoma oladi (jim qolmaydi)');
+  const nCust = sent(7002).length; await msg(7001, '/test narx qancha?', 121);
+  ok(/Mijoz ko'radigan javob/.test(lastTo(7001).body.text) && /Start sayt/.test(lastTo(7001).body.text) && sent(7002).length === nCust, "/test botning javobini adminga ko'rsatadi, mijozlarga yubormaydi");
   console.log('Sayt formasi (relay)');
   const post = (body, origin = 'https://improuzbekiston.uz', ip = '1.1.1.1') => W.fetch(new Request('https://w.example/', { method: 'POST', headers: { 'content-type': 'application/json', Origin: origin, 'CF-Connecting-IP': ip }, body: JSON.stringify(body) }), env, ctx);
   const r1 = await post({ type: 'message', name: 'Test Mijoz', phone: '+998901112233', message: '<b>salom</b>', site: 'Impro IT', page: 'https://improuzbekiston.uz/' });

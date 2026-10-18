@@ -86,7 +86,14 @@ async function handleUpdate(env, upd) {
   }
   if (m.reply_to_message && !text.startsWith('/') && await supportOut(env, st, m)) return;
   if (m.reply_to_message && !text && await supportOut(env, st, m)) return;
-  if (cmd === '/start' || cmd === '/help') return say(env, chat, "<b>Admin</b>\nMijoz xabariga <b>reply</b> qilsangiz, javob mijozga ketadi.\n/auto on|off — avtomatik javob\n/logout — chiqish");
+  if (cmd === '/test') { // admin botni mijoz sifatida sinab ko'radi (hech kimga yuborilmaydi)
+    if (!arg) return say(env, chat, 'Format: <code>/test narx qancha?</code>');
+    let a = null; try { a = await assistantOf(env).answer({ text: arg.slice(0, 800), history: [] }); } catch { a = null; }
+    return say(env, chat, a && a.text ? `🧪 <b>Mijoz ko'radigan javob</b>${a.ai ? '' : ' (qoida)'}${a.handoff ? ' ⚠️ operatorga uzatiladi' : ''}:\n\n${esc(a.text)}` : 'Javob olinmadi.');
+  }
+  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
+  if (cmd === '/start' || cmd === '/help') return say(env, chat, help);
+  if (!m.reply_to_message) return say(env, chat, help); // admin oddiy matn yozdi: nima qilish kerakligini ko'rsatamiz
 }
 
 /* ---------- Statik saytdan kelgan so'rov ---------- */
