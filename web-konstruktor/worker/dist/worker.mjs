@@ -951,13 +951,23 @@ async function errApi(req, env) {
   if (req.method !== 'POST' || !okO) return new Response('no', { status: 403, headers: cors });
   const st = store(env);
   if (await limited(st, 'eip:' + (req.headers.get('CF-Connecting-IP') || 'x'), 15, 3600) || await limited(st, 'eall', 300, 3600)) return new Response('limit', { status: 429, headers: cors });
-  let p; try { p = JSON.parse(await req.text()); } catch { return new Response('bad', { status: 400, headers: cors }); }
+  const raw = await req.text(); if (raw.length > 400000) return new Response('big', { status: 413, headers: cors });
+  let p; try { p = JSON.parse(raw); } catch { return new Response('bad', { status: 400, headers: cors }); }
   const m = String(p.m || '').slice(0, 300); if (!m) return new Response('bad', { status: 400, headers: cors });
   const key = 'err:' + hash36(m + '|' + (p.s || '') + '|' + (p.l || 0)), cur = await st.get(key), now = Date.now(), page = String(p.u || '').slice(0, 200);
-  const rec = cur || { m, s: String(p.s || '').slice(0, 200), l: Number(p.l) || 0, st: String(p.st || '').slice(0, 500), u: page, ua: String(p.ua || '').slice(0, 120), w: Number(p.w) || 0, f: now, n: 0 };
+  const rec = cur || { m, s: String(p.s || '').slice(0, 200), l: Number(p.l) || 0, st: String(p.st || '').slice(0, 500), u: page, ua: String(p.ua || '').slice(0, 120), w: Number(p.w) || 0, h: Number(p.h) || 0, c: Number(p.c) || 0, sec: String(p.sec || '').slice(0, 120), el: String(p.el || '').slice(0, 160), lang: String(p.lang || '').slice(0, 5), f: now, n: 0 };
   rec.n++; rec.t = now; rec.u = page || rec.u;
   await st.put(key, rec, 14 * 86400, { t: now, m: m.slice(0, 120), u: page.slice(0, 90), n: rec.n, s: String(rec.s).slice(-60), l: rec.l });
-  if (rec.n === 1) { for (const a of await adminsOf(env, st)) await say(env, a, `🐞 <b>Saytda xato</b>\n${esc(m)}\n📄 ${esc(page)}\n🧩 ${esc(rec.s.slice(-80))}${rec.l ? ':' + rec.l : ''}\n📱 ${esc(rec.ua.slice(0, 60))} · ${rec.w}px`, { disable_notification: true }); }
+  if (rec.n === 1) {
+    const cap = `🐞 <b>Saytda xato</b>\n<b>${esc(m)}</b>\n\n📄 Sahifa: ${esc(page)}\n🧩 Fayl: ${esc(rec.s.slice(-80) || '—')}${rec.l ? ` · qator ${rec.l}${rec.c ? ':' + rec.c : ''}` : ''}\n📍 Ekran joyi: ${esc(rec.sec || '—')}${rec.el ? `\n🔗 Element: <code>${esc(rec.el)}</code>` : ''}\n📱 ${esc(rec.ua.slice(0, 70))} · ${rec.w}×${rec.h}${rec.lang ? ' · ' + esc(rec.lang) : ''}${rec.st ? `\n\n<code>${esc(rec.st.slice(0, 380))}</code>` : ''}`.slice(0, 1020);
+    let img = null; const mm = /^data:image\/jpeg;base64,([A-Za-z0-9+/=]+)$/.exec(String(p.img || ''));
+    if (mm && mm[1].length < 300000) { try { const bin = atob(mm[1]), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); img = new Blob([u8], { type: 'image/jpeg' }); } catch { img = null; } }
+    for (const a of await adminsOf(env, st)) {
+      let ok = false;
+      if (img) { const fd = new FormData(); fd.append('chat_id', String(a)); fd.append('caption', cap); fd.append('parse_mode', 'HTML'); fd.append('photo', img, 'xato.jpg'); try { const r = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd }); ok = !!((await r.json().catch(() => ({}))).ok); } catch { ok = false; } }
+      if (!ok) await say(env, a, cap, { disable_notification: true });
+    }
+  }
   return new Response('ok', { status: 200, headers: cors });
 }
 

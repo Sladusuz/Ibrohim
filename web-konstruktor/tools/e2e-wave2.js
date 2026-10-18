@@ -109,12 +109,14 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
 
   console.log('Sayt xatolari');
   const er = (body, origin = 'https://improuzbekiston.uz') => W.fetch(new Request('https://w.example/err', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'text/plain' }, body: JSON.stringify(body) }), env, ctx);
-  const e1 = { m: 'x is not defined', s: 'https://improuzbekiston.uz/engine.bundle.js', l: 12, u: 'https://improuzbekiston.uz/ru/', ua: 'UA', w: 390 };
-  ok((await er(e1)).status === 200 && sent(8001, /Saytda xato/).length === 1, 'xato adminga keldi');
-  await er(e1); ok(sent(8001, /Saytda xato/).length === 1, 'takror xabar bermaydi');
+  const jpg = 'data:image/jpeg;base64,' + Buffer.from([255, 216, 255, 224, 0, 16]).toString('base64');
+  const e1 = { img: jpg, sec: 'section#narx @scroll 800px', c: 7, h: 800, m: 'x is not defined', s: 'https://improuzbekiston.uz/engine.bundle.js', l: 12, u: 'https://improuzbekiston.uz/ru/', ua: 'UA', w: 390 };
+  ok((await er(e1)).status === 200, 'xato qabul qilindi'); const ph = calls.filter((c) => c.method === 'sendPhoto' && c.body.chat_id === 8001); ok(ph.length === 1, 'rasm bilan yuborildi', calls.slice(-3).map((c) => c.method));
+  await er(e1); ok(calls.filter((c) => c.method === 'sendPhoto' && c.body.chat_id === 8001).length === 1, 'takror xabar bermaydi');
+  await er({ m: 'rasmsiz xato', s: 'a.js', l: 3, sec: 'nav', u: 'https://improuzbekiston.uz/' }); ok(sent(8001, /rasmsiz xato[\s\S]*Ekran joyi: nav/).length === 1, 'rasmsiz ham aniq joy bilan yuboriladi');
   ok((await er(e1, 'https://evil.com')).status === 403, 'begona sayt rad etiladi');
   await msg(8001, '/xatolar', 60); ok(/×2 x is not defined/.test(lastTo(8001).body.text), '/xatolar ro\'yxat', lastTo(8001).body.text);
-  const ej = await (await W.fetch(new Request('https://w.example/errors?key=setupkey123'), env, ctx)).json(); ok(ej.length === 1 && ej[0].n === 2, '/errors JSON');
+  const ej = await (await W.fetch(new Request('https://w.example/errors?key=setupkey123'), env, ctx)).json(); ok(ej.length === 2 && ej.some((x) => x.n === 2), '/errors JSON');
   ok((await W.fetch(new Request('https://w.example/errors?key=x'), env, ctx)).status !== 200 || true, '/errors kalitsiz');
 
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);

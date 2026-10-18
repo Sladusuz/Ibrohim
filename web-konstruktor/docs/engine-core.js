@@ -482,17 +482,28 @@
   };
 })();
 
-/* Xato hisoboti: sayt xatolari yordam botiga boradi (bir sahifada 3 tagacha, takrorlarsiz) */
+/* Xato hisoboti: sayt xatolari (aniq joyi va ekran rasmi bilan) yordam botiga boradi */
 (function () {
   const seen = {}; let n = 0;
-  const send = (m, src, line, stack) => {
+  const where = () => { try { const el = document.elementFromPoint(innerWidth / 2, innerHeight / 2); const sec = el && el.closest('section,[id],header,footer,nav'); return (sec ? (sec.tagName.toLowerCase() + (sec.id ? '#' + sec.id : '') + (sec.className && typeof sec.className === 'string' ? '.' + sec.className.trim().split(/\s+/)[0] : '')) : '') + ' @scroll ' + Math.round(scrollY) + 'px'; } catch (e) { return ''; } };
+  const shot = () => new Promise((res) => {
+    const done = (v) => res(v), t = setTimeout(() => done(''), 9000);
+    try {
+      const go = () => { const top = Math.min(Math.round(scrollY), 5000), pr = 0.5; return window.htmlToImage.toCanvas(document.body, { pixelRatio: pr, width: innerWidth, height: top + innerHeight, canvasWidth: innerWidth, canvasHeight: top + innerHeight, skipFonts: true, filter: (e) => !/^(INPUT|TEXTAREA|IFRAME|VIDEO|CANVAS|SCRIPT)$/.test(e.tagName || '') }).then((c) => { const o = document.createElement('canvas'); o.width = Math.round(innerWidth * pr); o.height = Math.round(innerHeight * pr); o.getContext('2d').drawImage(c, 0, Math.round(top * pr), o.width, o.height, 0, 0, o.width, o.height); clearTimeout(t); done(o.toDataURL('image/jpeg', 0.55)); }).catch(() => { clearTimeout(t); done(''); }); };
+      if (window.htmlToImage) return go();
+      const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js'; sc.setAttribute('data-noerr', '1'); sc.onload = go; sc.onerror = () => { clearTimeout(t); done(''); }; document.head.appendChild(sc);
+    } catch (e) { clearTimeout(t); done(''); }
+  });
+  const send = async (m, src, line, stack, col, el) => {
     try {
       const RELAY = String(window.__RELAY__ || '').replace(/\/$/, ''); if (!RELAY || n >= 3) return;
       m = String(m || '').slice(0, 300); src = String(src || ''); if (!m || /^Script error\.?$/i.test(m) || /ResizeObserver|extension:\/\/|moz-extension|Non-Error promise rejection/i.test(m + src)) return;
       const k = m + '|' + src + '|' + line; if (seen[k]) return; seen[k] = 1; n++;
-      fetch(RELAY + '/err', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ m, s: src.slice(0, 200), l: line || 0, st: String(stack || '').slice(0, 500), u: location.href.slice(0, 200), ua: navigator.userAgent.slice(0, 120), w: innerWidth }) }).catch(() => {});
+      const body = { m, s: src.slice(0, 200), l: line || 0, c: col || 0, st: String(stack || '').slice(0, 600), u: location.href.slice(0, 200), ua: navigator.userAgent.slice(0, 120), w: innerWidth, h: innerHeight, sec: where(), el: el || '', lang: document.documentElement.lang || '' };
+      if (n === 1) body.img = await shot();
+      fetch(RELAY + '/err', { method: 'POST', keepalive: !body.img, headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(body) }).catch(() => {});
     } catch (e) { /* hisobot o'zi xato bermasin */ }
   };
-  addEventListener('error', (e) => { if (e.target && e.target !== window && e.target.src) return send('Resurs yuklanmadi: ' + (e.target.src || e.target.href), '', 0); send(e.message, e.filename, e.lineno, e.error && e.error.stack); }, true);
+  addEventListener('error', (e) => { const t = e.target; if (t && t !== window && (t.src || t.href)) return t.getAttribute && t.getAttribute('data-noerr') ? 0 : send('Resurs yuklanmadi: ' + (t.src || t.href), '', 0, '', 0, String(t.outerHTML || '').slice(0, 160)); send(e.message, e.filename, e.lineno, e.error && e.error.stack, e.colno); }, true);
   addEventListener('unhandledrejection', (e) => { const r = e.reason; send('Promise: ' + (r && r.message || r), '', 0, r && r.stack); });
 })();
