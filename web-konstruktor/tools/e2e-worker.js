@@ -10,6 +10,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = async (url, o) => {
     const u = String(url); let body = {}; try { body = o && o.body ? JSON.parse(o.body) : {}; } catch { body = {}; }
     if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
+    if (u.includes('api.day.app')) { calls.push({ method: 'BARK', body: JSON.parse(o.body) }); return new Response('{"code":200}', { status: 200 }); }
     if (u.includes('api.pushbullet.com')) { calls.push({ method: 'PB', body: { h: o.headers, j: JSON.parse(o.body) } }); return new Response('{}', { status: 200 }); }
     if (u.includes('ntfy.sh')) { calls.push({ method: 'PUSH', body: { url: u, h: o.headers, text: o.body } }); return new Response('{}', { status: 200 }); }
     if (u.includes('api.callmebot.com')) { calls.push({ method: 'CALL', body: { url: u } }); return new Response('ok', { status: 200 }); }
@@ -145,6 +146,9 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   await msg(7001, '/qongiroq', 183); ok(pushes().length === p1 + 1 && /Sinov/.test(pushes().slice(-1)[0].body.h.Title), '/qongiroq telefon bildirishnomasini ham sinaydi');
   const td3 = new Date(Date.now() + 5 * 3600e3), at20c = Date.UTC(td3.getUTCFullYear(), td3.getUTCMonth(), td3.getUTCDate() + 2, 15, 1);
   const p2 = pushes().length; await W.tick(env, at20c); ok(pushes().length > p2 && /Kunlik hisobot/.test(pushes().slice(-1)[0].body.h.Title), 'kunlik hisobot telefonga ham yuboriladi');
+  env.BARK_KEY = 'barkkey123'; await msg(7075, 'Tezkor sayt kerak, hoziroq qilib bering', 186); const bk = calls.filter((c) => c.method === 'BARK').slice(-1)[0];
+  ok(bk && bk.body.device_key === 'barkkey123' && bk.body.level === 'critical' && bk.body.call === '1' && !/998/.test(JSON.stringify(bk.body)), 'Bark: shoshilinch mijozda critical + call=1 (qo\'ng\'iroqdek jiringlaydi), shaxsiy ma\'lumotsiz');
+  await W.tick(env, safe(Date.now() + 3 * 3600e3)); delete env.BARK_KEY;
   env.PUSHBULLET_TOKEN = 'o.test'; const pbN = pushes().length; await msg(7074, 'Tezkor sayt kerak, hoziroq qilib bering', 185); const pb = calls.filter((c) => c.method === 'PB').slice(-1)[0];
   ok(pb && pb.body.h['Access-Token'] === 'o.test' && /Shoshilinch/.test(pb.body.j.title) && !/998/.test(pb.body.j.body) && pushes().length === pbN, 'Pushbullet tokeni bo\'lsa u orqali yuboriladi (ntfy chetlab o\'tiladi)'); delete env.PUSHBULLET_TOKEN;
   delete env.NTFY_TOPIC; delete env.CALL_ANYTIME;

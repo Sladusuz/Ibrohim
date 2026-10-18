@@ -42,6 +42,13 @@ async function callOwner(env, st, text, now = Date.now()) {
 // Shaxsiy ma'lumot (telefon, matn) yuborilmaydi: faqat ogohlantirish, tafsilot Telegramda.
 async function pushPhone(env, title, text, priority = 5, tags = 'rotating_light') {
   let sent = false;
+  if (env.BARK_KEY) { // Bark (iPhone, bepul): level=critical + call=1 telefon qo'ng'irog'iday jiringlaydi (jim rejim va Focus'ni ham chetlab o'tadi)
+    try {
+      const lvl = priority >= 5 ? 'critical' : priority === 4 ? 'timeSensitive' : 'active';
+      const r = await fetch('https://api.day.app/push', { method: 'POST', headers: { 'content-type': 'application/json; charset=utf-8' }, body: JSON.stringify({ device_key: env.BARK_KEY, title: String(title), body: String(text), group: 'Impro IT', level: lvl, ...(priority >= 5 ? { volume: 10, call: '1' } : {}), url: 'https://t.me/improsupport_bot' }), signal: AbortSignal.timeout(15000) });
+      sent = r.ok; if (!r.ok) await store(env).put('diag:bark', { status: r.status, body: (await r.text().catch(() => '')).slice(0, 200), t: Date.now() }, 7 * 86400).catch(() => {});
+    } catch { /* boshqa kanallarga o'tamiz */ }
+  }
   if (env.PUSHBULLET_TOKEN) { // Pushbullet (bepul akkaunt tokeni): ntfy.sh Cloudflare IP'larini cheklagani uchun muqobil
     try { const r = await fetch('https://api.pushbullet.com/v2/pushes', { method: 'POST', headers: { 'Access-Token': env.PUSHBULLET_TOKEN, 'content-type': 'application/json' }, body: JSON.stringify({ type: 'note', title: String(title), body: String(text) }), signal: AbortSignal.timeout(15000) }); sent = r.ok; if (!r.ok) await store(env).put('diag:pushbullet', { status: r.status, body: (await r.text().catch(() => '')).slice(0, 200), t: Date.now() }, 7 * 86400).catch(() => {}); } catch { /* ntfy ga o'tamiz */ }
   }
