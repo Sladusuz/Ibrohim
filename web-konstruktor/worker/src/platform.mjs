@@ -45,7 +45,7 @@ async function platformApi(req, env, ctx, url) {
   const J = (o, s = 200, x = {}) => pJson(cors, o, s, x), body = async (max = 1024 * 1024) => { const t = await req.text(); if (t.length > max) throw Object.assign(new Error('big'), { big: true }); try { return JSON.parse(t || '{}'); } catch { return {}; } };
   const me = await authUser(req, st), need = () => J({ error: 'Kirish talab qilinadi' }, 401);
   try {
-    if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY), globalpay: GP_ON(env, 'gp') && (await st.get('gpok:gp')) !== 0, clicktg: GP_ON(env, 'click') && (await st.get('gpok:click')) !== 0 }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: true });
+    if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY), globalpay: GP_ON(env, 'gp') && (await st.get('gpok:gp')) !== 0, clicktg: GP_ON(env, 'click') && (await st.get('gpok:click')) !== 0 }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: false });
     if (route === 'GET /api/site') return J(SITE);
     if (route === 'POST /api/adminbot/session') { // Telegram Mini App ichidan admin kirishi (initData imzosi bo'yicha)
       const b = await body(8192), u = await verifyInit(env, String(b.initData || ''));
@@ -99,7 +99,8 @@ async function platformApi(req, env, ctx, url) {
       me.salt = pRnd(16); me.it = 10000; me.hash = await pwHash(env, np, me.salt, 10000); await st.put('u:' + me.id, me, 0, uMeta(me)); return J({ ok: true });
     }
     /* ---- AI ---- */
-    if (route === 'POST /api/ai/generate') {
+    if (route === 'POST /api/ai/generate') return J({ error: 'Bu funksiya o\'chirilgan' }, 410);
+    if (false) {
       if (!me) return need(); if (await limited(st, 'ai' + me.id, 8, 3600)) return J({ error: "AI so'rovlari soatiga 8 ta. Keyinroq urinib ko'ring." }, 429);
       const b = await body(64 * 1024), d = pStr(b.description, 1500); if (d.length < 8) return J({ error: 'Biznesingiz haqida kamida bir jumla yozing' }, 400);
       try { return J({ ok: true, ...(await makeAiOf(env).generate(d, b.templates)) }); } catch (e) { return J({ error: e.message }, 400); }

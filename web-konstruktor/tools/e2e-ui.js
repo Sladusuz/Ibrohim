@@ -27,14 +27,7 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
     page.on('pageerror', (e) => errs.push(e.message)); page.on('console', (m) => { if (m.type() === 'error' && !/fonts\.g|ERR_|40[37]/.test(m.text())) errs.push(m.text().slice(0, 140)); });
     await page.addInitScript(([t, u]) => { try { localStorage.setItem('impro_tok', t); localStorage.setItem('impro_user', JSON.stringify(u)); sessionStorage.setItem('intro', '1'); } catch (e) { /* xato sahifasi */ } }, [reg.j.token, reg.j.user]);
     await page.goto(BASE + '/yaratish.html', { waitUntil: 'load' }); await page.waitForSelector('.tc');
-    console.log('AI yordamchi');
-    await page.fill('#aiq', "Chilonzorda go'zallik saloni, 5 ta usta, soch va manikyur"); await page.click('#aiGo');
-    await page.waitForSelector('#tabs button', { timeout: 15000 }).catch(() => {});
-    await page.waitForTimeout(2200);
-    const fr = page.frames().find((f) => f.url().includes('shablon.html'));
-    const body = fr ? await fr.evaluate(() => document.body.innerText) : '';
-    ok(/Lola Beauty/.test(body), 'AI: sayt nomi qo\'llandi'); ok(/kayfiyat/.test(body), 'AI: bosh sarlavha yozildi'); ok(/Tajribali ustalar/.test(body), 'AI: tavsif yozildi');
-
+    await page.locator('.tc').first().locator('button').first().click(); await page.waitForSelector('#tabs button', { timeout: 15000 }); await page.waitForTimeout(1500);
     console.log('Sotib olish');
     await page.click('#tabs button:has-text("Tayyor")'); await page.waitForTimeout(500);
     const panel = await page.innerText('#panel');
