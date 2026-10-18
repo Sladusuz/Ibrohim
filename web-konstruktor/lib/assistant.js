@@ -128,5 +128,5 @@ ${kb(F)}`;
     if (workersAi) { try { return await viaWorkersAi(F, history, text); } catch { /* AI ishlamasa qoidalarga o'tamiz */ } }
     return { ...rules(F, text, lang), ai: false };
   }
-  return { answer, enabled, facts, kb };
+  return { answer, enabled, facts, kb, detect };
 };
