@@ -58,6 +58,8 @@ ${lang ? "<script>if('serviceWorker' in navigator&&location.protocol==='https:')
 </body>
 </html>`;
 
+// 0) Admin panel DEMO sahifasi: namunaviy ma'lumot bilan (serversiz), haqiqiy panel esa /admin.html
+fs.writeFileSync(path.join(P, 'admin-demo.html'), rd('admin.html').replace('<title>Admin panel</title>', '<title>Admin panel (demo)</title>').replace('<script src="/config.js"></script>', '<script>window.__API__ = \'\';</script>').replace('<script src="/admin.js"></script>', '<script src="/admin-demo.js"></script>\n<script src="/admin.js"></script>').replace('<p>Davom etish uchun parolni kiriting.</p>', '<p>Demo rejimi.</p>').replace('<a href="/" target="_blank" rel="noopener">Saytni ochish ↗</a><a href="/admin-demo.html">Namuna ma\'lumot bilan ko\'rish</a>', '<a href="/admin.html">Haqiqiy panel →</a>'));
 // 1) Shablon: konstruktor shundan tayyor sayt yasaydi (hisob va server yo'q, mustaqil)
 fs.writeFileSync(path.join(P, 'shablon.html'), page({ data: MARK, account: false }));
 // 2) Asosiy sahifa (server rejimi): ma'lumotni /api/site dan oladi
@@ -77,7 +79,7 @@ for (const lang of ['ru', 'en']) {
   const lh = page({ data: JSON.stringify(ls).replace(/</g, '\\u003c'), account: true, seo: seoHead(ls, lang), lang }).replace('<title>Sayt</title>', `<title>${String((ls.company || {}).name || 'Sayt').replace(/</g, '')}: ${TITLES[lang]}</title>`);
   for (const dir of [P, OUT]) { fs.mkdirSync(path.join(dir, lang), { recursive: true }); fs.writeFileSync(path.join(dir, lang, 'index.html'), lh); }
 }
-for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'three.min.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html', 'admin.js', 'admin.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
+for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'three.min.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html', 'admin.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
 if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'config.js'), path.join(OUT, 'config.js'));
 if (process.env.RELAY) fs.writeFileSync(path.join(OUT, 'config.js'), fs.readFileSync(path.join(OUT, 'config.js'), 'utf8').replace(/window\.__RELAY__ = '[^']*';/, `window.__RELAY__ = '${String(process.env.RELAY).replace(/'/g, '')}';`));
 if (!/__RELAY__/.test(fs.readFileSync(path.join(OUT, 'config.js'), 'utf8'))) fs.appendFileSync(path.join(OUT, 'config.js'), "\nwindow.__RELAY__ = '';\n");
