@@ -197,4 +197,11 @@ async function serveUpload(req, env, url) {
   const bin = atob(o.d), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
   return new Response(u8, { headers: { 'content-type': o.m, 'cache-control': 'public, max-age=31536000, immutable', 'access-control-allow-origin': '*' } });
 }
+async function platformDump(st) {
+  const us = [], prs = [], ors = [];
+  for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u) us.push(u); }
+  for (const k of await st.list('pr:')) { const m = k.metadata; if (m) { const d = await st.get('pd:' + m.id); prs.push({ meta: m, data: d ? JSON.parse(d) : null }); } }
+  for (const k of await st.list('o:')) { const o = await st.get(k.name); if (o) ors.push(o); }
+  return { users: us, projects: prs, orders: ors };
+}
 const makeAiOf = (env) => makeAi({ getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }) });

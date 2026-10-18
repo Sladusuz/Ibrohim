@@ -595,6 +595,8 @@ async function handleUpdate(env, upd) {
     return say(env, chat, 'Format: <code>/havola instagram</code>\n\n' + (Object.keys(cnt).length ? '📈 7 kun manbalari: ' + Object.entries(cnt).map(([k, v]) => `${esc(k)} ${v}`).join(' · ') : "Hozircha manba bo'yicha mijoz yo'q."));
   }
   if (cmd === '/panel') { if (!ENV_ORIGIN) return say(env, chat, 'Panel manzili hali aniqlanmadi, /setup ni oching.'); return say(env, chat, '📱 Admin panelini oching:', { reply_markup: { inline_keyboard: [[{ text: '📊 Panel', web_app: { url: ENV_ORIGIN + '/app' } }]] } }); }
+  if (cmd === '/mijozlar') { const us = (await st.list('u:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t); return say(env, chat, `👥 <b>Ro'yxatdan o'tgan mijozlar: ${us.length}</b>\n` + (us.slice(0, 40).map((u, i) => `${i + 1}. ${esc(u.n)} · ${esc(u.p)} · ${new Date(u.t + TZ).toISOString().slice(0, 10)}`).join('\n') || 'Hali yo\'q') + (us.length > 40 ? '\n… to\'liq ro\'yxat: /zaxira' : '') + '\n\nℹ️ Parollar xeshlangan holda saqlanadi, ularni hech kim (men ham) ko\'ra olmaydi. Mijoz parolni unutsa: /parolber <telefon>'); }
+  if (cmd === '/parolber') { const k = pDigits(arg).slice(-9), uid = k ? await st.get('up:' + k) : null, u = uid ? await st.get('u:' + uid) : null; if (!u) return say(env, chat, "Bunday mijoz topilmadi. Format: /parolber 901234567"); const np = pRnd(4); u.salt = pRnd(16); u.it = 10000; u.hash = await pwHash(env, np, u.salt, 10000); await st.put('u:' + u.id, u, 0, { n: u.name.slice(0, 40), p: u.phone.slice(0, 25), t: Date.parse(u.createdAt) || Date.now() }); return say(env, chat, `🔑 ${esc(u.name)} uchun yangi vaqtinchalik parol: <code>${np}</code>\nMijozga yuboring, kirgach almashtirsin.`); }
   if (cmd === '/zaxira') return say(env, chat, (await backup(env, st, [chat])) ? '💾 Zaxira yuborildi.' : 'Zaxira yuborilmadi.');
   if (cmd === '/oqit') {
     const q = (await st.get('unq')) || [], mm = /^(\d+)\s+([\s\S]{3,380})$/.exec(arg);
@@ -797,7 +799,7 @@ async function backup(env, st, admins) {
   const ls = await listLeads(st), cs = (await st.list('c:')).map((k) => ({ id: k.name.slice(2), ...(k.metadata || {}) })), kb = (await st.get('kb')) || [];
   const csv = ['Sana,Ism,Telefon,Manba,Teg,Havola,Izoh', ...ls.map((l) => [new Date(l.t + TZ).toISOString().replace('T', ' ').slice(0, 16), l.n, l.p, l.s, l.g, l.r, l.x].map(csvCell).join(','))].join('\n');
   let ok = 0;
-  for (const a of admins) { if (await sendDoc(env, a, `zaxira-lidlar-${dkey()}.csv`, csv, `💾 Zaxira: ${ls.length} lid, ${cs.length} mijoz, ${kb.length} bilim`)) ok++; await sendDoc(env, a, `zaxira-baza-${dkey()}.json`, JSON.stringify({ kb, customers: cs, leads: ls }, null, 1)); }
+  for (const a of admins) { if (await sendDoc(env, a, `zaxira-lidlar-${dkey()}.csv`, csv, `💾 Zaxira: ${ls.length} lid, ${cs.length} mijoz, ${kb.length} bilim`)) ok++; await sendDoc(env, a, `zaxira-baza-${dkey()}.json`, JSON.stringify({ kb, customers: cs, leads: ls }, null, 1)); await sendDoc(env, a, `zaxira-platforma-${dkey()}.json`, JSON.stringify(await platformDump(st), null, 1), "🔐 Mijoz hisoblari, loyihalar va buyurtmalar (maxfiy: parol xeshlari bor)"); }
   return ok;
 }
 // Javobsiz savollar: bot o'rganishi uchun (/oqit)
