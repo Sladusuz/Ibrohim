@@ -42,7 +42,7 @@ const page = ({ data, account, seo, lang = '' }) => `<!doctype html>
 <title>Sayt</title>
 <meta name="description" content="">
 ${FONTS}
-${seo || ''}${lang ? '<link rel="manifest" href="/manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><link rel="apple-touch-icon" href="/img/icon-192.png">' : ''}<style>${css}</style>
+${seo || ''}${lang ? '<link rel="manifest" href="/manifest.webmanifest"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Impro IT"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="apple-touch-icon" href="/img/icon-512.png">' : ''}<style>${css}</style>
 </head>
 <body>
 <div id="prog"></div><div class="aurora" id="aurora"><i></i><i></i><i></i></div><div class="gridbg" id="gridbg"></div><canvas id="bg"></canvas><div id="glow"></div>
