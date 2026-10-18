@@ -3,4 +3,4 @@
 // Bo'sh qoldirilsa: buyurtmalar pochta orqali yuboriladi.
 window.__API__ = '';
 
-window.__RELAY__ = '';
+window.__RELAY__ = 'https://impro-bot.impro-6c9a2d.workers.dev';

@@ -3,4 +3,4 @@
 // Bo'sh qoldirilsa: buyurtmalar pochta orqali yuboriladi.
 window.__API__ = '';
 // Statik saytdan Telegram'ga so'rov yuboruvchi Cloudflare Worker manzili (worker/README.md). Bo'sh bo'lsa pochta ishlatiladi.
-window.__RELAY__ = '';
+window.__RELAY__ = 'https://impro-bot.impro-6c9a2d.workers.dev';

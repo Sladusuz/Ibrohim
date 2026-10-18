@@ -19,7 +19,7 @@ async function cf(method, p, body, headers) {
 (async () => {
   require('./build-worker.js');
   const code = fs.readFileSync(path.join(__dirname, '..', 'worker', 'dist', 'worker.mjs'), 'utf8');
-  const secrets = { WEBHOOK_SECRET: rnd(24), SETUP_KEY: rnd(18) };
+  const secrets = { WEBHOOK_SECRET: E.WEBHOOK_SECRET || rnd(24), SETUP_KEY: E.SETUP_KEY || rnd(18) };
   if (E.DRY) { console.log('DRY: kod', Math.round(code.length / 1024) + 'KB, maxfiy qiymatlar', Object.keys({ ...secrets, TG_TOKEN: 1, ADMIN_PASSWORD: 1 }).join(', ')); return; }
   const accId = E.CF_ACCOUNT_ID || (await cf('GET', '/accounts'))[0].id, acc = `/accounts/${accId}`;
   let sub; try { sub = (await cf('GET', `${acc}/workers/subdomain`)).subdomain; } catch { sub = ''; }
@@ -38,7 +38,7 @@ async function cf(method, p, body, headers) {
   await cf('POST', `${acc}/workers/scripts/${NAME}/subdomain`, { enabled: true });
   const url = `https://${NAME}.${sub}.workers.dev`;
   let res = { error: 'javob yo\'q' }; // yangi workers.dev manzili bir necha daqiqada ishga tushadi: qayta urinamiz
-  for (let i = 0; i < 24; i++) { await new Promise((r) => setTimeout(r, 5000)); res = await fetch(`${url}/setup?key=${encodeURIComponent(secrets.SETUP_KEY)}`).then((r) => r.json()).catch((e) => ({ error: e.message })); if (!res.error) break; }
+  for (let i = 0; i < (E.NO_SETUP ? 0 : 24); i++) { await new Promise((r) => setTimeout(r, 5000)); res = await fetch(`${url}/setup?key=${encodeURIComponent(secrets.SETUP_KEY)}`).then((r) => r.json()).catch((e) => ({ error: e.message })); if (!res.error) break; }
   console.log('Worker manzili:', url); console.log('Sozlash natijasi:', JSON.stringify(res));
   console.log(`Saytga ulash: RELAY=${url} node tools/build-static.js\nTelegram: botga /login <ADMIN_PASSWORD> yozing.`);
 })().catch((e) => { console.error('XATO:', e.message); process.exit(1); });
