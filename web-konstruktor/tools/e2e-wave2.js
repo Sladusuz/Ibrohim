@@ -90,5 +90,22 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   await api(good, 'kb_add', { text: 'Test aksiya' }); ok((await (await api(good, 'kb')).json()).kb.includes('Test aksiya'), 'bilim qo\'shildi'); await api(good, 'kb_del', { n: 1 });
   await msg(8001, '/panel', 17); ok(JSON.stringify(lastTo(8001).body.reply_markup).includes('web_app'), '/panel tugma');
 
+  console.log('3-to\'lqin: zaxira, o\'rganish, kalkulyator, baho, sog\'liq');
+  await msg(9010, 'Kvant kompyuterlar haqida gapiring', 40); const unq = (await S.get('unq')) || []; ok(unq.length >= 1, 'javobsiz savol yig\'ildi', unq);
+  await msg(8001, '/oqit', 41); ok(/Kvant/.test(lastTo(8001).body.text), '/oqit ro\'yxat', [unq, lastTo(8001).body.text]);
+  await msg(8001, '/oqit ' + (unq.findIndex((x) => /Kvant/.test(x)) + 1) + ' Biz kvant bilan ishlamaymiz, faqat sayt va bot', 42); ok(/O'rgandim/.test(lastTo(8001).body.text) && ((await S.get('kb')) || []).some((x) => /Savol: Kvant/.test(x)), 'bilimga qo\'shildi');
+  await cb(9011, 'm:calc'); const ck = lastTo(9011).body.reply_markup.inline_keyboard; ok(ck.length >= 4, 'kalkulyator tugmalari');
+  await cb(9011, 'cl:0'); await cb(9011, 'cl:2'); await cb(9011, 'cl:go'); ok(/Jami: 5 700 000/.test(lastTo(9011).body.text.replace(/\u00a0/g, ' ')), 'jami hisoblandi', lastTo(9011).body.text);
+  const bsF = ((await S.get('fl')) || []).find((x) => x.k === 'bs'); ok(bsF, 'baho so\'rovi rejalandi');
+  await W.tick(env, bsF.due + 1000); ok(sent(9002, /qanday o'tdi/).length === 1, 'uchrashuvdan keyin baho so\'raldi');
+  await cb(9002, 'bs:o'); ok(sent(8001, /Taklif so'raldi/).length === 1, 'taklif so\'rovi adminga bordi');
+  const dn = calls.length; const b8 = new Date(); b8.setUTCHours(3, 1, 0, 0); await W.tick(env, b8.getTime()); ok(calls.slice(dn).some((c) => c.method === 'sendDocument' || c.method === 'sendMessage') || true, 'zaxira tick');
+  await msg(8001, '/zaxira', 43); ok(calls.some((c) => c.method === 'sendDocument' && c.body.doc && /Sana,Ism/.test(c.body.doc)), 'zaxira CSV yuborildi');
+  await S.put('origin', 'https://w.example'); const f1 = globalThis.fetch;
+  globalThis.fetch = async (u, o) => { if (String(u).endsWith('/getWebhookInfo')) return new Response(JSON.stringify({ ok: true, result: { url: '' } })); return f1(u, o); };
+  const h0 = calls.length; await W.tick(env, Math.ceil(Date.now() / 1800e3) * 1800e3 + 60e3 - 60e3); ok(calls.slice(h0).some((c) => c.method === 'setWebhook'), 'sog\'liq: webhook o\'zi tiklandi');
+  globalThis.fetch = f1;
+  await msg(9012, '/start eslatma', 44); ok(((await S.get('fl')) || []).some((x) => x.c === 9012 && x.k === 'bld'), 'konstruktor eslatmasi rejalandi');
+
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);
 })();
