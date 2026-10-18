@@ -119,6 +119,16 @@ const FAV = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><
 let blogPosts = []; try { blogPosts = JSON.parse(fs.readFileSync(path.join(__dirname, 'blog.json'), 'utf8')); } catch { /* blog hali yo'q */ }
 const blogFiles = blogPosts.length ? require('./blog')({ domain: DOMAIN, name: (site.company || {}).name, posts: blogPosts }) : {};
 for (const dir of [P, OUT]) for (const [f, t] of Object.entries(blogFiles)) { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), t); }
+// Yangi kinematik bosh sahifa: sinov uchun /yangi/ da; HOME_ROOT=1 bo'lsa asosiy sahifa o'rniga chiqadi
+{
+  const homeMod = require('./home'), homeRoot = process.env.HOME_ROOT === '1';
+  for (const lang of ['uz', 'ru', 'en']) {
+    const ls = lang === 'uz' ? site : trSite(site, lang), hero = (ls.sections || []).find((x) => x.type === 'hero') || {};
+    const hh = homeMod({ site: ls, lang, domain: DOMAIN, templates: window.TEMPLATES, posts: blogPosts, relay: process.env.RELAY || '', base: homeRoot ? '' : '/yangi', seo: { title: `${(ls.company || {}).name || 'Impro IT'}: ${TITLES[lang]}`, desc: String(hero.text || '').replace(/\*/g, '').slice(0, 200), head: seoHead(ls, lang) } });
+    const rel = homeRoot ? (lang === 'uz' ? 'index.html' : `${lang}/index.html`) : (lang === 'uz' ? 'yangi/index.html' : `${lang}/yangi/index.html`);
+    for (const dir of [P, OUT]) { fs.mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true }); fs.writeFileSync(path.join(dir, rel), hh); }
+  }
+}
 const invFiles = require('./investor')({ domain: DOMAIN, site, templates: window.TEMPLATES, posts: blogPosts, relay: process.env.RELAY || '' });
 for (const dir of [P, OUT]) for (const [f, t] of Object.entries(invFiles)) { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), t); }
 const urls = ['', 'ru/', 'en/', 'investor/', 'ru/investor/', 'en/investor/', 'yaratish.html', 'bot.html', ...(blogPosts.length ? ['blog/', ...blogPosts.map((b) => `blog/${b.slug}/`)] : []), 'offerta.html', 'maxfiylik.html', 'qaytarish.html'];
