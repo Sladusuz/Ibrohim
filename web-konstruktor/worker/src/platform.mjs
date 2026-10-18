@@ -9,6 +9,7 @@ const pGoodPhone = (s) => /^[+\d][\d\s()\-]{6,}$/.test(String(s || '').trim()) &
 const pGoodEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(s || ''));
 const pStr = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
 const pGoodSlug = (v) => /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(v) && !PLAT_RESERVED.has(v) && !/--/.test(v);
+const uMeta = (u) => ({ n: String(u.name || '').slice(0, 40), p: String(u.phone || '').slice(0, 25), t: Date.parse(u.createdAt) || Date.now(), e: String(u.email || '').slice(0, 60) });
 const pubUser = (u) => ({ id: u.id, name: u.name, phone: u.phone, email: u.email || '', createdAt: u.createdAt });
 const pPages = (env) => String(env.SITE_ORIGIN || 'https://improuzbekiston.uz').replace(/\/$/, '');
 async function pwHash(env, pw, salt, it) {
@@ -70,7 +71,7 @@ async function platformApi(req, env, ctx, url) {
       if (await st.get('up:' + pPhoneKey(phone))) return J({ error: "Bu telefon raqam bilan hisob mavjud. Iltimos, kiring." }, 409);
       if (email && (await st.get('ue:' + email))) return J({ error: 'Bu email bilan hisob mavjud. Iltimos, kiring.' }, 409);
       const salt = pRnd(16), u = { id: pRnd(6), name, phone, email, salt, it: 10000, hash: await pwHash(env, pw, salt, 10000), createdAt: new Date().toISOString() };
-      await st.put('u:' + u.id, u, 0, { n: name.slice(0, 40), p: phone.slice(0, 25), t: Date.now() }); await st.put('up:' + pPhoneKey(phone), u.id, 0); if (email) await st.put('ue:' + email, u.id, 0);
+      await st.put('u:' + u.id, u, 0, uMeta(u)); await st.put('up:' + pPhoneKey(phone), u.id, 0); if (email) await st.put('ue:' + email, u.id, 0);
       ctx && ctx.waitUntil(Promise.all((await adminsOf(env, st)).map((a) => say(env, a, `👤 <b>Yangi mijoz ro'yxatdan o'tdi</b>\n${esc(name)}\n${esc(phone)}${email ? '\n' + esc(email) : ''}`, { disable_notification: true }))).catch(() => {}));
       return J({ token: await newSession(st, u.id), user: pubUser(u) });
     }
@@ -89,13 +90,13 @@ async function platformApi(req, env, ctx, url) {
       if (phone && pPhoneKey(phone) !== pPhoneKey(me.phone)) { const o = await st.get('up:' + pPhoneKey(phone)); if (o && o !== me.id) return J({ error: 'Bu telefon raqam band' }, 409); }
       if (me.email && me.email !== email) await st.put('ue:' + me.email, null, 60); if (email) await st.put('ue:' + email, me.id, 0);
       if (phone && pPhoneKey(phone) !== pPhoneKey(me.phone)) { await st.put('up:' + pPhoneKey(me.phone), null, 60); await st.put('up:' + pPhoneKey(phone), me.id, 0); }
-      me.name = name; me.email = email; if (phone) me.phone = phone; await st.put('u:' + me.id, me, 0, { n: me.name.slice(0, 40), p: me.phone.slice(0, 25), t: Date.now() }); return J({ user: pubUser(me) });
+      me.name = name; me.email = email; if (phone) me.phone = phone; await st.put('u:' + me.id, me, 0, uMeta(me)); return J({ user: pubUser(me) });
     }
     if (route === 'POST /api/me/password') {
       if (!me) return need(); const b = await body(4096); if (await limited(st, 'chpw' + ip, 8, 600)) return J({ error: "Juda ko'p urinish" }, 429);
       if (!tEq(await pwHash(env, String(b.old || ''), me.salt, me.it), me.hash)) return J({ error: "Joriy parol noto'g'ri" }, 400);
       const np = String(b.password || ''); if (np.length < 6) return J({ error: "Yangi parol kamida 6 belgi bo'lsin" }, 400);
-      me.salt = pRnd(16); me.it = 10000; me.hash = await pwHash(env, np, me.salt, 10000); await st.put('u:' + me.id, me, 0, { n: me.name.slice(0, 40), p: me.phone.slice(0, 25), t: Date.now() }); return J({ ok: true });
+      me.salt = pRnd(16); me.it = 10000; me.hash = await pwHash(env, np, me.salt, 10000); await st.put('u:' + me.id, me, 0, uMeta(me)); return J({ ok: true });
     }
     /* ---- AI ---- */
     if (route === 'POST /api/ai/generate') {
@@ -113,7 +114,7 @@ async function platformApi(req, env, ctx, url) {
       if (name.length < 2) return J({ error: 'Ismingizni kiriting' }, 400); if (!pGoodPhone(phone)) return J({ error: "Telefon raqamini to'g'ri kiriting" }, 400);
       if (type === 'order' && !items.length) return J({ error: "Savat bo'sh" }, 400);
       const o = { id: pRnd(4), date: new Date().toISOString(), userId: me ? me.id : '', tenant: sid || '', type, name, phone, message: pStr(b.message, type === 'brief' ? 3000 : 1000), items, extra, shipping: Math.max(0, Number(b.shipping) || 0), total: items.reduce((a, i) => a + i.price * i.qty, 0), status: 'yangi' };
-      await st.put('o:' + Date.now().toString(36) + o.id, o, 90 * 86400, { t: Date.now(), n: name.slice(0, 40), p: phone.slice(0, 25), ty: type, tn: sid || '', u: o.userId });
+      await st.put('o:' + Date.now().toString(36) + o.id, o, 90 * 86400, { t: Date.now(), n: name.slice(0, 40), p: phone.slice(0, 25), ty: type, tn: sid || '', u: o.userId, s: 'yangi', tt: o.total });
       if (sid) await bump(st, sid, 'o');
       const kind = { order: '🛒 Yangi buyurtma', booking: '📅 Yangi ariza', message: '✉️ Yangi xabar', brief: "📝 Yangi loyiha so'rovi" }[type];
       ctx && ctx.waitUntil(Promise.all((await adminsOf(env, st)).map((a) => say(env, a, `<b>${kind}</b>${sid ? ' · sayt ' + esc(slug) : ''}\n👤 ${esc(name)}\n📞 ${esc(phone)}${items.length ? '\n🧾 ' + items.slice(0, 20).map((i) => `${esc(i.name)} ×${i.qty}`).join(', ') : ''}${o.message ? '\n\n' + esc(o.message.slice(0, 1200)) : ''}`, sid ? { disable_notification: true } : undefined))).catch(() => {}));
@@ -234,13 +235,15 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
   const users = async () => { const out = []; for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u && u.hash) out.push(u); } return out; };
   const projects = async () => (await st.list('pr:')).map((k) => k.metadata).filter(Boolean);
   const orders = async () => { const out = []; for (const k of await st.list('o:')) { const o = await st.get(k.name); if (o) out.push({ ...o, _k: k.name }); } return out; };
+  const oMeta = async () => (await st.list('o:')).filter((k) => k.metadata && !k.metadata.tn).map((k) => ({ k: k.name, ...k.metadata, s: k.metadata.s || 'yangi' })).sort((a, b) => (a.k < b.k ? 1 : -1));
+  const uMetas = async () => (await st.list('u:')).filter((k) => k.metadata && k.metadata.n !== undefined).map((k) => ({ id: k.name.slice(2), ...k.metadata })).sort((a, b) => (b.t || 0) - (a.t || 0));
   const strip = (o) => { const { _k, ...r } = o; return r; };
-  const withPaid = async (p, us) => { const tp = await tpOf(), u = us && us[p.userId]; return { ...p, paid: p.paid ? { usd: tp.usd, uzs: Math.round(tp.usd * tp.rate), method: 'manual' } : null, url: siteOf(env, req, p), user: u ? { name: u.name, phone: u.phone, email: u.email } : null }; };
+  const withPaid = async (p, us, tp0) => { const tp = tp0 || (await tpOf()), u = us && us[p.userId]; return { ...p, paid: p.paid ? { usd: tp.usd, uzs: Math.round(tp.usd * tp.rate), method: 'manual' } : null, url: siteOf(env, req, p), user: u ? { name: u.name, phone: u.phone, email: u.email } : null }; };
   const day = 864e5, series = (arr, f) => Array.from({ length: 14 }, (_, i) => { const a = new Date(Date.now() - (13 - i) * day); a.setUTCHours(0, 0, 0, 0); const t0 = a.getTime(); return arr.filter((x) => { const t = Date.parse(f(x)); return t >= t0 && t < t0 + day; }).length; });
   if (route === 'POST /api/admin/logout') { const mm = /^Bearer\s+([0-9a-f]+)$/.exec(req.headers.get('Authorization') || ''); if (mm) await st.put('as:' + (await pSha(mm[1])), null, 60); return J({ ok: true }); }
   if (route === 'GET /api/admin/stats') {
-    const os = (await orders()).filter((o) => !o.tenant), us = await users(), ps = await projects(), tp = await tpOf(), paid = ps.filter((p) => p.paid);
-    return J({ orders: { total: os.length, new: os.filter((o) => o.status === 'yangi').length, sum: os.filter((o) => o.status !== 'bekor').reduce((a, o) => a + (o.total || 0), 0), series: series(os, (o) => o.date) }, users: { total: us.length, series: series(us, (u) => u.createdAt) }, projects: { total: ps.length, submitted: ps.filter((p) => p.status === 'yuborilgan').length, series: series(ps, (p) => p.createdAt), paid: paid.length, published: ps.filter((p) => p.published).length }, revenue: { usd: paid.length * tp.usd, uzs: paid.length * Math.round(tp.usd * tp.rate) } });
+    const os = await oMeta(), us = await uMetas(), ps = await projects(), tp = await tpOf(), paid = ps.filter((p) => p.paid), day2 = (t) => new Date(t).toISOString();
+    return J({ orders: { total: os.length, new: os.filter((o) => o.s === 'yangi').length, sum: os.filter((o) => o.s !== 'bekor').reduce((a, o) => a + (o.tt || 0), 0), series: series(os, (o) => day2(o.t)) }, users: { total: us.length, series: series(us, (u) => day2(u.t)) }, projects: { total: ps.length, submitted: ps.filter((p) => p.status === 'yuborilgan').length, series: series(ps, (p) => p.createdAt), paid: paid.length, published: ps.filter((p) => p.published).length }, revenue: { usd: paid.length * tp.usd, uzs: paid.length * Math.round(tp.usd * tp.rate) } });
   }
   if (route === 'GET /api/admin/site') return J((await st.get('site')) || FULLSITE);
   if (route === 'PUT /api/admin/site') { const b = await body(3 * 1024 * 1024); if (!b || !Array.isArray(b.sections)) return J({ error: "Noto'g'ri ma'lumot" }, 400); await st.put('site', b, 0); return J({ ok: true });  }
@@ -248,8 +251,8 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
     const b = await body(2 * 1024 * 1024), mm = /^data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || '')); if (!mm) return J({ error: 'Faqat PNG, JPG, WEBP yoki GIF rasm yuklang' }, 400); if (mm[2].length > 1400000) return J({ error: 'Rasm 1 MB dan oshmasin' }, 413);
     const id = Date.now().toString(36) + pRnd(3), ext = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp', 'image/gif': '.gif' }[mm[1]]; await st.put('img:' + id, { m: mm[1], d: mm[2] }, 0); return J({ url: `${origin}/uploads/${id}${ext}` });
   }
-  if (route === 'GET /api/admin/orders') { const us = Object.fromEntries((await users()).map((u) => [u.id, u])); return J((await orders()).filter((o) => !o.tenant && !o.bot).sort((a, b) => String(b.date).localeCompare(String(a.date))).map((o) => ({ ...strip(o), userName: o.userId && us[o.userId] ? us[o.userId].name : '' }))); }
-  if (route === 'PUT /api/admin/orders') { const b = await body(8192), o = (await orders()).find((x) => x.id === b.id); if (!o) return J({ error: 'Topilmadi' }, 404); if (OSTAT.includes(b.status)) o.status = b.status; if (typeof b.note === 'string') o.note = pStr(b.note, 1000); const k = o._k; delete o._k; await st.put(k, o, 90 * 86400, { t: Date.parse(o.date), n: (o.name || '').slice(0, 40), p: (o.phone || '').slice(0, 25), ty: o.type, tn: o.tenant || '', u: o.userId || '' }); return J({ ok: true }); }
+  if (route === 'GET /api/admin/orders') { const lim = Math.min(200, Math.max(1, Number(url.searchParams.get('limit')) || 80)), ms = (await oMeta()).slice(0, lim), us = Object.fromEntries((await uMetas()).map((u) => [u.id, u])); const out = []; for (const m of ms) { const o = await st.get(m.k); if (o) out.push({ ...o, status: o.status || 'yangi', userName: o.userId && us[o.userId] ? us[o.userId].n : '' }); } return J(out); }
+  if (route === 'PUT /api/admin/orders') { const b = await body(8192), o = (await orders()).find((x) => x.id === b.id); if (!o) return J({ error: 'Topilmadi' }, 404); if (OSTAT.includes(b.status)) o.status = b.status; if (typeof b.note === 'string') o.note = pStr(b.note, 1000); const k = o._k; delete o._k; await st.put(k, o, 90 * 86400, { t: Date.parse(o.date), n: (o.name || '').slice(0, 40), p: (o.phone || '').slice(0, 25), ty: o.type, tn: o.tenant || '', u: o.userId || '', s: o.status, tt: o.total || 0 }); return J({ ok: true }); }
   if (route === 'DELETE /api/admin/orders') { const o = (await orders()).find((x) => x.id === url.searchParams.get('id')); if (o) await st.put(o._k, null, 60); return J({ ok: true }); }
   if (route === 'GET /api/admin/orders.csv') {
     const q = (v) => `"${String(v == null ? '' : v).replace(/"/g, '""')}"`, rows = [['ID', 'Sana', 'Turi', 'Ism', 'Telefon', 'Mahsulotlar', 'Jami', 'Holat', 'Izoh'].map(q).join(',')];
@@ -267,7 +270,7 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
   if (route === 'GET /api/admin/bots') return J([]);
   if (/^\/api\/admin\/bots\//.test(pn) || pn.startsWith('/api/admin/adminbot/')) return J({ error: "Bu funksiya hozircha mavjud emas. Admin bot @improuzbekiston_bot orqali ishlaydi." }, 400);
   if (route === 'GET /api/admin/payments') { const out = []; for (const k of (await st.list('po:')).slice(0, 100)) { const x = await st.get(k.name); if (x) out.push({ id: x.id, projectId: x.projectId || '', project: x.note || '', user: '', phone: '', usd: 0, uzs: x.uzs, method: x.ref ? 'click' : x.tx ? 'payme' : 'karta', state: x.state, createdAt: new Date(x.createdAt).toISOString(), paidAt: x.paidAt ? new Date(x.paidAt).toISOString() : '' }); } return J(out); }
-  if (route === 'GET /api/admin/users') { const os = await orders(), ps = await projects(); return J((await users()).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt))).map((u) => ({ ...pubUser(u), orders: os.filter((o) => o.userId === u.id).length, projects: ps.filter((p) => p.userId === u.id).length }))); }
+  if (route === 'GET /api/admin/users') { const om = await oMeta(), ps = await projects(), us = (await uMetas()).slice(0, 300); const out = []; for (const u of us) { let em = u.e, cr = u.t ? new Date(u.t).toISOString() : ''; if (em === undefined) { const f = await st.get('u:' + u.id); em = f ? f.email || '' : ''; cr = f ? f.createdAt : cr; } out.push({ id: u.id, name: u.n, phone: u.p, email: em, createdAt: cr, orders: om.filter((o) => o.u === u.id).length, projects: ps.filter((p) => p.userId === u.id).length }); } return J(out); }
   const au = /^\/api\/admin\/users\/([a-f0-9]{6,24})$/.exec(pn);
   if (au) {
     const u = await st.get('u:' + au[1]); if (!u) return J({ error: 'Topilmadi' }, 404);
