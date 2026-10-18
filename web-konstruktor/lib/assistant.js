@@ -3,7 +3,8 @@
 // mijoz savoliga uz/ru/en tilida javob beradi. Claude API kaliti bo'lsa AI ishlatadi, bo'lmasa qoidalar asosida javob beradi.
 // Javob bera olmasa yoki mijoz operator so'rasa: handoff=true (operatorga uzatiladi).
 module.exports = function makeAssistant({ getSettings, getSite, getPricing }) {
-  const cfg = () => { const a = getSettings().ai || {}; return { key: process.env.ANTHROPIC_API_KEY || a.key || '', model: process.env.AI_MODEL || a.model || 'claude-sonnet-5-5', base: (process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/$/, '') }; };
+  const penv = (typeof process !== 'undefined' && process.env) || {};
+  const cfg = () => { const a = getSettings().ai || {}; return { key: penv.ANTHROPIC_API_KEY || a.key || '', model: penv.AI_MODEL || a.model || 'claude-sonnet-5-5', base: (penv.ANTHROPIC_BASE_URL || a.base || 'https://api.anthropic.com').replace(/\/$/, '') }; };
   const enabled = () => !!cfg().key;
   const money = (n) => Number(n || 0).toLocaleString('ru-RU').replace(/[  ]/g, ' ');
   const plain = (s) => String(s == null ? '' : s).replace(/\*/g, '').replace(/\s+/g, ' ').trim();

@@ -1,8 +1,13 @@
-name = "impro-relay"
-main = "relay.js"
+name = "impro-bot"
+main = "dist/worker.mjs"
 compatibility_date = "2024-11-01"
 
 [vars]
 ALLOW_ORIGIN = "https://improuzbekiston.uz,https://www.improuzbekiston.uz"
-# TG_CHAT = "123456789"        # sizning Telegram chat ID raqamingiz
-# TG_TOKEN: maxfiy, buyruq bilan kiritiladi:  npx wrangler secret put TG_TOKEN
+
+# KV (suhbat holati uchun): `npx wrangler kv namespace create STATE` bergan id ni yozing
+# [[kv_namespaces]]
+# binding = "STATE"
+# id = "..."
+
+# Maxfiy qiymatlar (buyruq bilan): npx wrangler secret put TG_TOKEN  (va WEBHOOK_SECRET, SETUP_KEY, ADMIN_PASSWORD, ANTHROPIC_API_KEY)

@@ -61,3 +61,4 @@ Agar sayt GitHub Pages da qolsa va server alohida manzilda bo'lsa: `docs/config.
 - **Statistika va qidiruv:** `GA=G-XXXX YM=12345678 node tools/make-site.js`, `GSC=... YANDEX_VERIFY=... node tools/build-static.js`.
 - **Blog:** maqolalar `tools/blog.json` da; qo'shgandan keyin `node tools/build-static.js`.
 - **Botning avtomatik javobi:** mijoz savoliga bot o'zi javob beradi (uz/ru/en). `ANTHROPIC_API_KEY` bo'lsa Claude (AI) javob beradi, bo'lmasa qoidalar asosida (narx, muddat, $10 shablon, bot, to'lov, aloqa). Bilmasa yoki operator so'ralsa, sizga "⚠️ Operator kerak" keladi. Siz xabarga reply qilsangiz, bot shu mijoz bilan 2 soat jim turadi. Botda `/auto on|off` bilan yoqish/o'chirish.
+- **Serversiz bot (Cloudflare Worker):** `worker/README.md` ga qarang. Test: `node tools/e2e-worker.js`.

@@ -1,0 +1,77 @@
+'use strict';
+// Cloudflare Worker (yordam boti + forma relay) ni sinaydi: soxta Telegram, Claude va KV bilan.
+const path = require('path');
+let pass = 0, fail = 0;
+const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fail++; console.log('  FAIL', m, x === undefined ? '' : JSON.stringify(x).slice(0, 260)); } };
+(async () => {
+  require('./build-worker.js');
+  const W = (await import(path.join(__dirname, '..', 'worker', 'dist', 'worker.mjs') + '?t=' + Date.now())).default;
+  const calls = []; let n = 100, aiMode = false;
+  globalThis.fetch = async (url, o) => {
+    const u = String(url), body = o && o.body ? JSON.parse(o.body) : {};
+    if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
+    const m = /bot([^/]+)\/(\w+)$/.exec(u); if (!m) return new Response('{}', { status: 404 });
+    calls.push({ method: m[2], body });
+    return new Response(JSON.stringify({ ok: true, result: /^(sendMessage|copyMessage)$/.test(m[2]) ? { message_id: ++n } : true }), { status: 200 });
+  };
+  const kv = new Map();
+  const env = { TG_TOKEN: '123:abc', WEBHOOK_SECRET: 'whsec_abcdefghijklmnop', SETUP_KEY: 'setupkey123', ADMIN_PASSWORD: 'pass-1234', ALLOW_ORIGIN: 'https://improuzbekiston.uz', STATE: { get: async (k) => (kv.has(k) ? kv.get(k) : null), put: async (k, v) => { kv.set(k, v); } } };
+  const pending = []; const ctx = { waitUntil: (p) => pending.push(p) };
+  const hook = async (upd, sec = env.WEBHOOK_SECRET, hdr = env.WEBHOOK_SECRET) => { const r = await hookRaw(upd, sec, hdr); await Promise.all(pending.splice(0)); return r; };
+  const hookRaw = (upd, sec, hdr) => W.fetch(new Request(`https://w.example/hook/${sec}`, { method: 'POST', headers: { 'content-type': 'application/json', ...(hdr ? { 'X-Telegram-Bot-Api-Secret-Token': hdr } : {}) }, body: JSON.stringify(upd) }), env, ctx);
+  const msg = (chat, text, id, extra) => hook({ message: { message_id: id, chat: { id: chat, type: 'private' }, from: { id: chat, first_name: 'U' + chat }, text, ...extra } });
+  const sent = (chat, re) => calls.filter((c) => c.method === 'sendMessage' && c.body.chat_id === chat && (!re || re.test(c.body.text)));
+  const lastTo = (chat) => sent(chat).slice(-1)[0];
+
+  console.log('Webhook xavfsizligi');
+  ok((await hook({}, 'xato')).status === 403 && (await hook({}, env.WEBHOOK_SECRET, 'xato')).status === 403 && (await hook({}, env.WEBHOOK_SECRET, '')).status === 403, "noto'g'ri yoki yo'q maxfiy kalit rad etiladi");
+  ok((await hook({})).status === 200, "to'g'ri kalit qabul qilinadi");
+  ok((await W.fetch(new Request('https://w.example/setup?key=x'), env, ctx)).status === 403, "/setup noto'g'ri kalit bilan rad etiladi");
+  const su = await (await W.fetch(new Request('https://w.example/setup?key=setupkey123'), env, ctx)).json();
+  const sw = calls.find((c) => c.method === 'setWebhook');
+  ok(su.webhook && sw && sw.body.url === 'https://w.example/hook/whsec_abcdefghijklmnop' && sw.body.secret_token === env.WEBHOOK_SECRET && su.kv, '/setup webhookni o\'rnatdi', su);
+
+  console.log('Mijoz va operator');
+  await msg(7002, '/start', 1); ok(/yordam botiga/.test(lastTo(7002).body.text), "mijozga salomlashuv");
+  await msg(7002, 'narx qancha?', 2); ok(/operator ulanmagan/.test(lastTo(7002).body.text), 'operator ulanmagan bo\'lsa telefon beriladi');
+  await msg(7001, '/login xato', 3); ok(/Parol noto'g'ri/.test(lastTo(7001).body.text) && calls.some((c) => c.method === 'deleteMessage' && c.body.message_id === 3), "noto'g'ri parol rad etildi, xabar o'chirildi");
+  await msg(7001, '/login pass-1234', 4); ok(/Admin sifatida kirdingiz/.test(lastTo(7001).body.text), "to'g'ri parol bilan admin bo'ldi");
+  await msg(7002, 'Salom, sayt narxi qancha?', 5);
+  const head = sent(7001, /Begona|U7002/).slice(-1)[0];
+  ok(head && /sayt narxi qancha/.test(head.body.text), 'mijoz xabari adminga yetdi');
+  const cr = sent(7002, /Start sayt/).slice(-1)[0];
+  ok(cr && /2 500 000/.test(cr.body.text) && /\$10/.test(cr.body.text), 'bot narxga o\'zi javob berdi (qoidalar rejimi)');
+  ok(sent(7001, /Bot javobi/).length === 1, 'admin bot javobini ko\'rdi');
+  const headIdx = calls.indexOf(head), headId = 101 + calls.slice(0, headIdx + 1).filter((c) => /^(sendMessage|copyMessage)$/.test(c.method)).length - 1;
+  await hook({ message: { message_id: 20, chat: { id: 7001, type: 'private' }, from: { id: 7001, first_name: 'A' }, text: "Salom! 10$ dan boshlanadi.", reply_to_message: { message_id: headId } } });
+  ok(sent(7002, /Impro IT:/).some((c) => /10\$ dan boshlanadi/.test(c.body.text)), 'admin reply mijozga qaytdi');
+  const c1 = sent(7002).length; await msg(7002, 'Rahmat, bot qancha turadi?', 6);
+  ok(sent(7002).length === c1 && sent(7001, /bot qancha turadi/).length === 1, 'operator yozgandan keyin bot jim, xabar adminga boradi');
+  await msg(7003, 'Kvant kompyuterlar haqida gapiring', 7);
+  ok(/mutaxassisga yubordim/.test(lastTo(7003).body.text) && sent(7001, /Operator kerak/).length === 1, "bilmagan savol operatorga uzatildi");
+  await msg(7004, 'Сколько стоит сайт?', 8); ok(/от 2 500 000/.test(lastTo(7004).body.text), 'ruscha javob');
+  await msg(7001, '/auto off', 9); await msg(7005, 'narx qancha?', 10);
+  ok(/qabul qilindi/.test(lastTo(7005).body.text) && !/Start sayt/.test(lastTo(7005).body.text), "/auto off: faqat tasdiq");
+  await msg(7001, '/auto on', 11);
+  await hook({ message: { message_id: 30, chat: { id: 7006, type: 'private' }, from: { id: 7006, first_name: 'P' }, photo: [{ file_id: 'x' }], caption: 'rasm' } });
+  ok(calls.filter((c) => c.method === 'copyMessage' && c.body.chat_id === 7001 && c.body.from_chat_id === 7006).length === 1, 'mijoz rasmi adminga nusxalandi');
+  let spam = 0; for (let i = 0; i < 14; i++) { await msg(7010, 'narx?', 40 + i); } ok(/Juda ko'p xabar/.test(lastTo(7010).body.text), 'spam cheklanadi');
+
+  console.log('AI rejimi');
+  env.ANTHROPIC_API_KEY = 'sk-test'; aiMode = 'ok';
+  await msg(7020, 'Ilova qancha turadi?', 60); ok(/AI javob/.test(lastTo(7020).body.text), 'kalit bo\'lsa Claude javob beradi');
+  aiMode = 'handoff'; await msg(7021, 'Murakkab loyiha bor', 61);
+  ok(/telefon raqamingizni yozing/.test(lastTo(7021).body.text) && !/HANDOFF/.test(lastTo(7021).body.text) && sent(7001, /Operator kerak/).length === 2, 'AI handoff belgisi mijozga ko\'rinmaydi, admin ogohlantirildi');
+  delete env.ANTHROPIC_API_KEY;
+
+  console.log('Sayt formasi (relay)');
+  const post = (body, origin = 'https://improuzbekiston.uz', ip = '1.1.1.1') => W.fetch(new Request('https://w.example/', { method: 'POST', headers: { 'content-type': 'application/json', Origin: origin, 'CF-Connecting-IP': ip }, body: JSON.stringify(body) }), env, ctx);
+  const r1 = await post({ type: 'message', name: 'Test Mijoz', phone: '+998901112233', message: '<b>salom</b>', site: 'Impro IT', page: 'https://improuzbekiston.uz/' });
+  ok(r1.status === 200 && r1.headers.get('Access-Control-Allow-Origin') === 'https://improuzbekiston.uz', 'forma qabul qilindi (CORS to\'g\'ri)');
+  const rl = sent(7001, /Test Mijoz/).slice(-1)[0]; ok(rl && /📞 \+998901112233/.test(rl.body.text) && /&lt;b&gt;salom/.test(rl.body.text), 'adminga yetdi, HTML ekranlandi');
+  ok((await post({ name: 'A', phone: '1' })).status === 400, "ism/telefon noto'g'ri bo'lsa rad etiladi");
+  ok((await post({ name: 'Test', phone: '+998901112233' }, 'https://evil.example')).status === 403, "begona sayt (Origin) rad etiladi");
+  ok((await W.fetch(new Request('https://w.example/', { method: 'OPTIONS', headers: { Origin: 'https://improuzbekiston.uz' } }), env, ctx)).status === 204, 'CORS preflight');
+  let last = 200; for (let i = 0; i < 9; i++) last = (await post({ name: 'Test', phone: '+998901112233' }, 'https://improuzbekiston.uz', '9.9.9.9')).status; ok(last === 429, 'bir IP dan ko\'p so\'rov cheklanadi');
+  console.log(`\nNatija: ${pass} PASS, ${fail} FAIL`); process.exit(fail ? 1 : 0);
+})().catch((e) => { console.log('XATO', e); process.exit(1); });
