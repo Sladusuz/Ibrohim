@@ -40,27 +40,15 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
     await page.addInitScript(([t, u]) => { localStorage.setItem('impro_tok', t); localStorage.setItem('impro_user', JSON.stringify(u)); sessionStorage.setItem('intro', '1'); }, [reg.j.token, reg.j.user]);
     await page.goto(BASE + '/', { waitUntil: 'load' });
     await page.waitForSelector('.hero', { timeout: 8000 });
-    ok(await page.$('.hero .fxc') !== null || await page.$('.hero.nofx, .hfx.nofx') !== null || await page.$('.hero-cinema') !== null, 'hero va fon chizildi');
-    ok((await page.$$('main > section')).length >= 8, "bo'limlar chizildi");
+    ok(await page.$('#gl') !== null && await page.$('h1') !== null, 'hero va 3D fon chizildi');
+    ok((await page.$$('main section')).length >= 6, "bo'limlar chizildi");
     await page.waitForTimeout(800);
     ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2), 'gorizontal scroll yo\'q');
 
-    console.log('Anketa (master)');
-    await page.click('.hero a[href="#brief-open"]');
-    await page.waitForSelector('.bw', { timeout: 5000 }).catch(() => {});
-    ok(await page.$('.bw') !== null, 'anketa oynasi ochildi');
-    await page.click('.bw .opt[data-b="svc"] >> nth=1').catch(() => {});
-    await page.waitForTimeout(500);
-    for (let step = 0; step < 8 && !(await page.$('.bwok')); step++) {
-      const f = async (k, v) => { const el = await page.$(`.bw [data-bi="${k}"]`); if (el && !(await el.inputValue().catch(() => ''))) await el.fill(v); };
-      await f('bizName', 'Test Biznes'); await f('cname', 'Test Mijoz'); await f('cphone', ph);
-      const ag = await page.$('.bw [data-bi="agree"]'); if (ag && !(await ag.isChecked())) await page.click('.bw .agree').catch(() => {});
-      await page.click('#bwf button:not(.bk)').catch(() => {});
-      await page.waitForTimeout(450);
-    }
-    await page.waitForSelector('.bwok', { timeout: 6000 }).catch(() => {});
-    if (!(await page.$('.bwok'))) await page.screenshot({ path: path.join(os.tmpdir(), 'e2e-wizard-fail.png') });
-    ok(await page.$('.bwok') !== null, "anketa yuborildi, 'qabul qilindi' sahifasi chiqdi");
+    console.log("Aloqa formasi (bosh sahifa)");
+    await page.fill('#f input[name=n]', 'Test Mijoz'); await page.fill('#f input[name=p]', ph); await page.fill('#f textarea', 'Test biznes uchun sayt kerak');
+    await page.click('#f button[type=submit]'); await page.waitForFunction(() => /Yuborildi|✅/.test(document.querySelector('#st').textContent), null, { timeout: 6000 }).catch(() => {});
+    ok(/Yuborildi/.test(await page.textContent('#st')), "forma yuborildi, 'Yuborildi' xabari chiqdi");
 
     console.log('Admin');
     const al = await J('/api/admin/login', { method: 'POST', body: { password: ADMIN } });
@@ -68,8 +56,7 @@ const J = async (u, o = {}) => { const r = await fetch(BASE + u, { ...o, headers
     const cookie = (al.r.headers.get('set-cookie') || '').split(';')[0];
     const ords = await J('/api/admin/orders', { headers: { cookie } });
     const list = ords.j.orders || ords.j || [];
-    ok(Array.isArray(list) && list.some((o) => o.type === 'brief'), 'adminda anketa (brief) buyurtmasi ko\'rinadi');
-    ok(Array.isArray(list) && list.some((o) => o.type === 'message'), "adminda xabar ko'rinadi");
+        ok(Array.isArray(list) && list.some((o) => o.type === 'message'), "adminda xabar ko'rinadi");
     const ap = await b.newPage({ viewport: { width: 1440, height: 900 } });
     ap.on('pageerror', (e) => errs.push('admin: ' + e.message));
     await ap.goto(BASE + '/admin', { waitUntil: 'load' });

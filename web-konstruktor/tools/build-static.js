@@ -119,9 +119,10 @@ const FAV = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><
 let blogPosts = []; try { blogPosts = JSON.parse(fs.readFileSync(path.join(__dirname, 'blog.json'), 'utf8')); } catch { /* blog hali yo'q */ }
 const blogFiles = blogPosts.length ? require('./blog')({ domain: DOMAIN, name: (site.company || {}).name, posts: blogPosts }) : {};
 for (const dir of [P, OUT]) for (const [f, t] of Object.entries(blogFiles)) { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), t); }
-// Yangi kinematik bosh sahifa: sinov uchun /yangi/ da; HOME_ROOT=1 bo'lsa asosiy sahifa o'rniga chiqadi
+// Yangi kinematik bosh sahifa (asosiy). HOME_ROOT=0 bo'lsa sinov uchun /yangi/ da chiqadi; eski /yangi/ havolalari bosh sahifaga yo'naltiriladi
+const homeRoot_ = process.env.HOME_ROOT !== '0';
 {
-  const homeMod = require('./home2'), homeRoot = process.env.HOME_ROOT === '1';
+  const homeMod = require('./home2'), homeRoot = process.env.HOME_ROOT !== '0';
   for (const lang of ['uz', 'ru', 'en']) {
     const ls = lang === 'uz' ? site : trSite(site, lang), hero = (ls.sections || []).find((x) => x.type === 'hero') || {};
     const hh = homeMod({ site: ls, lang, domain: DOMAIN, templates: window.TEMPLATES, posts: blogPosts, relay: process.env.RELAY || '', base: homeRoot ? '' : '/yangi', seo: { title: `${(ls.company || {}).name || 'Impro IT'}: ${TITLES[lang]}`, desc: String(hero.text || '').replace(/\*/g, '').slice(0, 200), head: seoHead(ls, lang) } });
@@ -129,6 +130,7 @@ for (const dir of [P, OUT]) for (const [f, t] of Object.entries(blogFiles)) { fs
     for (const dir of [P, OUT]) { fs.mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true }); fs.writeFileSync(path.join(dir, rel), hh); }
   }
 }
+if (homeRoot_) { for (const lg of ['uz', 'ru', 'en']) { const rel = lg === 'uz' ? 'yangi/index.html' : `${lg}/yangi/index.html`, to = lg === 'uz' ? '/' : `/${lg}/`; for (const dir of [P, OUT]) { fs.mkdirSync(path.dirname(path.join(dir, rel)), { recursive: true }); fs.writeFileSync(path.join(dir, rel), `<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><link rel="canonical" href="https://${DOMAIN}${to}"><meta http-equiv="refresh" content="0;url=${to}"><script>location.replace('${to}')</script>`); } } }
 const invFiles = require('./investor')({ domain: DOMAIN, site, templates: window.TEMPLATES, posts: blogPosts, relay: process.env.RELAY || '' });
 for (const dir of [P, OUT]) for (const [f, t] of Object.entries(invFiles)) { fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true }); fs.writeFileSync(path.join(dir, f), t); }
 const urls = ['', 'ru/', 'en/', 'investor/', 'ru/investor/', 'en/investor/', 'yaratish.html', 'bot.html', ...(blogPosts.length ? ['blog/', ...blogPosts.map((b) => `blog/${b.slug}/`)] : []), 'offerta.html', 'maxfiylik.html', 'qaytarish.html'];
@@ -140,7 +142,7 @@ for (const dir of [P, OUT]) { for (const [f, t] of Object.entries(legal)) fs.wri
 fs.writeFileSync(path.join(OUT, '404.html'), nf);
 if (fs.existsSync(path.join(__dirname, '..', 'download', 'Impro-IT.apk'))) fs.copyFileSync(path.join(__dirname, '..', 'download', 'Impro-IT.apk'), path.join(OUT, 'Impro-IT.apk'));
 // Ilova (Capacitor) bilan bog'lash: native.js hamma sahifada, oddiy brauzerda hech narsa qilmaydi
-fs.copyFileSync(path.join(__dirname, 'app-native.js'), path.join(OUT, 'native.js'));
+fs.copyFileSync(path.join(__dirname, 'app-native.js'), path.join(OUT, 'native.js')); fs.copyFileSync(path.join(__dirname, 'app-native.js'), path.join(P, 'native.js'));
 (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (e.name.endsWith('.html') && e.name !== 'offline.html') { const h = fs.readFileSync(p, 'utf8'); if (!h.includes('/native.js') && h.includes('</body>')) fs.writeFileSync(p, h.replace('</body>', '<script src="/native.js" defer></script></body>')); } } })(OUT);
 if (process.env.CNAME) fs.writeFileSync(path.join(OUT, 'CNAME'), process.env.CNAME + '\n');
 console.log('public/shablon.html, public/index.html va docs/ tayyor');

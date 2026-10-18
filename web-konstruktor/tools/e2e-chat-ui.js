@@ -20,9 +20,9 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
       const m = outbox; outbox = []; return r.fulfill({ status: 200, headers: h, body: JSON.stringify({ msgs: m }) });
     });
     await p.addInitScript(() => { sessionStorage.setItem('intro', '1'); window.__CHAT_POLL__ = 400; });
-    await p.goto(BASE + url); await p.waitForSelector('.fb-b.chatb', { timeout: 8000 });
+    await p.goto(BASE + url); await p.waitForSelector('#chb', { timeout: 8000 });
     ok(true, 'chat tugmasi suzuvchi tugmalar orasida ko\'rinadi');
-    await p.click('.fb-b.chatb'); await p.waitForSelector('#chatw:not([hidden])');
+    await p.click('#chb'); await p.waitForSelector('#chatw:not([hidden])');
     ok(want.hello.test(await p.innerText('#chatw .cw-m')), 'salomlashuv matni (' + lang + ')');
     ok(want.ph.test(await p.getAttribute('#chatw input', 'placeholder')), "yozuv joyi tilga mos (" + lang + ')');
     await p.fill('#chatw input', 'Narx qancha?'); await p.press('#chatw input', 'Enter');
@@ -37,7 +37,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     await p.click('#chatw .cw-x'); ok(await p.$eval('#chatw', (e) => e.hidden), 'yopiladi');
     ok(await p.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2), "gorizontal siljish yo'q");
     ok(errs.length === 0, "konsolda xato yo'q", errs);
-    await p.setViewportSize({ width: 390, height: 780 }); await p.click('.fb-b.chatb'); await p.waitForSelector('#chatw:not([hidden])');
+    await p.setViewportSize({ width: 390, height: 780 }); await p.click('#chb'); await p.waitForSelector('#chatw:not([hidden])');
     const bb = await p.$eval('#chatw', (e) => { const r = e.getBoundingClientRect(); return { l: r.left, r: r.right, w: innerWidth }; });
     ok(bb.l >= 0 && bb.r <= bb.w, 'telefonda chat oynasi ekranga sig\'adi');
     await p.screenshot({ path: path.join(process.env.SHOT_DIR || require('os').tmpdir(), `chat-${lang}-m.png`) });
