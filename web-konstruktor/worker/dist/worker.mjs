@@ -169,7 +169,7 @@ const tz = (t = Date.now()) => new Date(t + TZ);
 const dkey = (t = Date.now()) => tz(t).toISOString().slice(0, 10);
 const hm = (t) => tz(t).toISOString().slice(11, 16);
 // Hodisa yozuvi: har biri alohida kalit (yozuv to'qnashuvi bo'lmaydi), ma'lumot metadata'da
-async function ev(st, e) { try { await st.put(`ev:${dkey()}:${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, 1, 3 * 86400, { t: Date.now(), k: e.k, c: e.c || 0, n: String(e.n || '').slice(0, 40), p: String(e.p || '').slice(0, 25), x: String(e.x || '').replace(/\s+/g, ' ').slice(0, 110) }); } catch { /* hisobot ixtiyoriy */ } }
+async function ev(st, e) { try { await st.put(`ev:${dkey()}:${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`, 1, 9 * 86400, { t: Date.now(), k: e.k, c: e.c || 0, n: String(e.n || '').slice(0, 40), p: String(e.p || '').slice(0, 25), x: String(e.x || '').replace(/\s+/g, ' ').slice(0, 110) }); } catch { /* hisobot ixtiyoriy */ } }
 const URG = /(?<![\p{L}])(tezkor\p{L}*|shoshilinch\p{L}*|zudlik\p{L}*|hoziroq|bugun|ertagayoq|ertaga|tez|срочн\p{L}*|быстрее|сегодня|завтра|urgent\p{L}*|asap|as soon as|today|tomorrow)(?![\p{L}])/iu;
 const WANT = /(qilib ber\p{L}*|yasab ber\p{L}*|yarat\p{L}*|ochib ber\p{L}*|tayyorla\p{L}*|kerak|buyurtma|сделайт\p{L}*|создайт\p{L}*|нужен|нужна|нужно|закаж\p{L}*|need|build|make|create|order)/iu;
 const isUrgent = (t) => URG.test(t) && WANT.test(t);
@@ -265,6 +265,18 @@ async function tick(env, now = Date.now()) {
     }
   }
   if (keep.length !== ((await st.get('ul')) || []).length) await st.put('ul', keep); // KV yozuv kvotasini tejash: faqat o'zgarsa
+  const fl = (await st.get('fl')) || [], left = [];
+  for (const it of fl) {
+    if (it.due > now) { left.push(it); continue; }
+    const rec = (await st.get('c:' + it.c)) || {};
+    if ((await st.get('hu:' + it.c)) || (await st.get('ban:' + it.c)) || (it.k === 'price' && rec.phone)) continue; // endi kerak emas
+    if (!isOffice(now)) { left.push(it); continue; } // ish vaqtigacha kutamiz
+    const lg = rec.lang || 'uz'; await say(env, it.c, FOLLOW[it.k][lg] || FOLLOW[it.k].uz);
+    if (it.k === 'ph') for (const a of admins) await say(env, a, `⏰ <b>Mijoz telefon qoldirgan, 1 soatdan beri javobsiz</b>\n👤 ${esc(it.n || 'Mijoz')} · 📞 ${esc(it.p || rec.phone || '')}\nBog'laning yoki xabariga <b>reply</b> qiling.`);
+    if (it.k === 'ph') await pushPhone(env, 'Javobsiz mijoz', 'Telefon qoldirgan mijozga 1 soatdan beri javob berilmadi. Telegramni oching.', 4, 'alarm_clock');
+  }
+  if (left.length !== fl.length) await st.put('fl', left);
+  if (h === 9 && mi < 5 && tz(now).getUTCDay() === 1 && !(await st.get('repw:' + dkey(now)))) { await st.put('repw:' + dkey(now), 1, 2 * 86400); const wt = await weekly(env, st, now); for (const a of admins) await say(env, a, wt); }
   if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await pushPhone(env, 'Kunlik hisobot', `Suhbatlar: ${S.chats}, saytdan so'rovlar: ${S.leads.length}, shoshilinch: ${S.urg.length}, operator kerak: ${S.hand.length}. Batafsil Telegramda.`, 3, 'bar_chart'); await callOwner(env, st, `Дневной отчёт. Диалогов ${S.chats}. Заявок с сайта ${S.leads.length}. Срочных ${S.urg.length}. Нужен оператор ${S.hand.length}. Подробности в Телеграме.`, now); }
 }
 
@@ -282,7 +294,7 @@ const makeAssistantQuick = (env, extra) => assistantOf(env, extra).quick;
 const assistantOf = (env, extra = []) => makeAssistant({ getExtra: () => extra, getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }), getSite: () => SITE, getPricing: () => PRICING, workersAi: env.AI });
 
 /* ---------- Mijoz xabari ---------- */
-const saveRec = (st, chat, rec) => st.put('c:' + chat, rec, 7 * 86400, { n: String(rec.name || '').slice(0, 40), t: Date.now(), p: rec.phone || '' });
+const saveRec = (st, chat, rec) => st.put('c:' + chat, rec, 7 * 86400, { n: String(rec.name || '').slice(0, 40), t: Date.now(), p: rec.phone || '', g: (rec.tags || []).join(',').slice(0, 60) });
 const isOffice = (now = Date.now()) => { const d = tz(now), h = d.getUTCHours(), w = d.getUTCDay(); return w !== 0 && h >= 9 && h < 18; }; // Dush-Shan 9:00-18:00
 const OFFLINE = { uz: "\n\n🕘 Hozir ish vaqtidan tashqari: mutaxassisimiz ish vaqtida (Dush–Shan 9:00–18:00) javob beradi.", ru: '\n\n🕘 Сейчас нерабочее время: специалист ответит в рабочие часы (Пн–Сб 9:00–18:00).', en: '\n\n🕘 We are outside working hours now: a specialist will reply during office hours (Mon–Sat 9:00–18:00).' };
 const THANKS_PHONE = { uz: "✅ Rahmat! Raqamingizni qabul qildim, mutaxassisimiz tez orada siz bilan bog'lanadi.", ru: '✅ Спасибо! Номер получил, специалист скоро свяжется с вами.', en: '✅ Thank you! I received your number, a specialist will contact you shortly.' };
@@ -291,10 +303,82 @@ function findPhone(text) {
   const d = m[0].replace(/\D/g, ''), n = d.length === 9 ? '998' + d : d;
   return /^998\d{9}$/.test(n) ? { phone: '+' + n, rest: (text.slice(0, m.index) + ' ' + text.slice(m.index + m[0].length)).replace(/[\s,.;:!?()+-]+/g, ' ').trim() } : null;
 }
-const MENU = { inline_keyboard: [[{ text: '💰 Narxlar', callback_data: 'm:price' }, { text: '⏱ Muddatlar', callback_data: 'm:time' }], [{ text: '🌐 Sayt yaratish', url: 'https://improuzbekiston.uz/yaratish.html' }, { text: '🤖 Bot yaratish', url: 'https://improuzbekiston.uz/bot.html' }], [{ text: '📞 Aloqa', callback_data: 'm:contact' }, { text: '👤 Operator', callback_data: 'm:human' }]] };
+const MENU = { inline_keyboard: [[{ text: '💰 Narxlar', callback_data: 'm:price' }, { text: '⏱ Muddatlar', callback_data: 'm:time' }], [{ text: '🌐 Sayt yaratish', url: 'https://improuzbekiston.uz/yaratish.html' }, { text: '🤖 Bot yaratish', url: 'https://improuzbekiston.uz/bot.html' }], [{ text: '📞 Aloqa', callback_data: 'm:contact' }, { text: '👤 Operator', callback_data: 'm:human' }], [{ text: '📝 Buyurtma berish (anketa)', callback_data: 'm:order' }]] };
 const FEEDBACK = { inline_keyboard: [[{ text: '👍', callback_data: 'fb:g' }, { text: '👎', callback_data: 'fb:b' }]] };
+/* ---------- Ovoz, tarjima, anketa, teglar, qayta aloqa ---------- */
+const b64 = (u8) => { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
+// Ovozli xabarni matnga aylantirish (Workers AI Whisper): bo'lmasa '' qaytadi va xabar adminga nusxalanadi
+async function transcribe(env, m) {
+  const f = m.voice || m.audio; if (!env.AI || !f || (f.duration || 0) > 90 || (f.file_size || 0) > 2.5e6) return '';
+  try {
+    const g = await tg(env, 'getFile', { file_id: f.file_id}); if (!g || !g.file_path) return '';
+    const r = await fetch(`https://api.telegram.org/file/bot${env.TG_TOKEN}/${g.file_path}`); if (!r.ok) return '';
+    const buf = new Uint8Array(await r.arrayBuffer());
+    let out; try { out = await env.AI.run('@cf/openai/whisper-large-v3-turbo', { audio: b64(buf) }); } catch { out = await env.AI.run('@cf/openai/whisper', { audio: [...buf] }); }
+    return String((out && out.text) || '').trim().slice(0, 800);
+  } catch { return ''; }
+}
+// Rus/ingliz tilidagi mijoz xabarini adminga o'zbekcha ko'rsatish
+async function translateUz(env, text) {
+  if (!env.AI || !text) return '';
+  try { const r = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', { messages: [{ role: 'system', content: "Translate the user's message into Uzbek (Latin script). Output ONLY the translation, nothing else." }, { role: 'user', content: String(text).slice(0, 500) }], max_tokens: 200, temperature: 0 }); return String((r && r.response) || '').trim().slice(0, 400); } catch { return ''; }
+}
+const addTag = (rec, tag) => { rec.tags = [...new Set([...(rec.tags || []), tag])].slice(0, 6); };
+// Qayta aloqa navbati: {c, k: 'ph'|'price', due, n, p}
+async function scheduleFollow(st, it) { try { const l = ((await st.get('fl')) || []).filter((x) => !(x.c === it.c && x.k === it.k)); l.push(it); await st.put('fl', l.slice(-100)); } catch { /* ixtiyoriy */ } }
+const FOLLOW = { ph: { uz: "⏳ Kutganingiz uchun rahmat! Mutaxassisimiz tez orada siz bilan bog'lanadi.", ru: '⏳ Спасибо за ожидание! Специалист скоро свяжется с вами.', en: '⏳ Thank you for waiting! A specialist will contact you shortly.' }, price: { uz: "👋 Sizga yordam kerakmi? Telefon raqamingizni yozib qoldiring, mutaxassisimiz bepul maslahat beradi.", ru: '👋 Нужна помощь? Оставьте номер телефона, специалист бесплатно проконсультирует.', en: '👋 Need help? Leave your phone number and a specialist will give you a free consultation.' } };
+// Anketa (suhbat): xizmat → nom → muddat → byudjet → telefon
+const SERVICES = ['Veb-sayt', "Onlayn do'kon", 'Telegram bot', 'Mobil ilova', 'UI/UX dizayn', 'Boshqa'], DEADLINES = ['Shoshilinch (1 hafta)', '2–3 hafta', '1 oy', 'Shoshilmayman'], BUDGETS = ["1–3 mln so'm", "3–7 mln so'm", "7–15 mln so'm", "15 mln so'mdan ko'p", 'Maslahat kerak'];
+const kbOf = (p, arr) => ({ inline_keyboard: arr.map((x, i) => [{ text: x, callback_data: `o:${p}:${i}` }]) });
+async function flowStart(env, st, chat, rec) {
+  rec.flow = { step: 'svc', d: {} }; await saveRec(st, chat, rec);
+  return say(env, chat, '📝 <b>Buyurtma anketasi</b> (5 ta qisqa savol, bekor qilish: /cancel)\n\n1/5. Qanday xizmat kerak?', { reply_markup: kbOf('svc', SERVICES) });
+}
+async function flowFinish(env, st, chat, rec, name) {
+  const d = rec.flow.d; rec.flow = null; rec.phone = d.ph; addTag(rec, 'anketa'); addTag(rec, 'issiq'); await saveRec(st, chat, rec);
+  const txt = `📝 <b>Yangi anketa (bot)</b>\n👤 ${esc(name)}${chat ? ` <code>${chat}</code>` : ''}\n🔧 ${esc(d.svc)}\n🏢 ${esc(d.name)}\n⏱ ${esc(d.dl)}\n💰 ${esc(d.bd)}\n📞 <b>${esc(d.ph)}</b>`;
+  await ev(st, { k: 'lead', c: chat, n: name, p: d.ph, x: `anketa: ${d.svc}, ${d.dl}` });
+  const map = {};
+  for (const a of await adminsOf(env, st)) { const h = await say(env, a, txt + '\n\nJavob berish uchun shu xabarga <b>reply</b> qiling.', { reply_markup: { inline_keyboard: [[{ text: `📞 ${d.ph}`, url: 'https://t.me/' + d.ph }]] } }); if (h) map[a + ':' + h.message_id] = chat; }
+  await Promise.all(Object.entries(map).map(([k, v]) => st.put('m:' + k, v, 30 * 86400)));
+  if (/^Shoshilinch/.test(d.dl)) await raiseUrgent(env, st, { chat, name, phone: d.ph, text: `Anketa: ${d.svc}, ${d.name}, ${d.dl}` });
+  await scheduleFollow(st, { c: chat, k: 'ph', due: Date.now() + 3600e3, n: name, p: d.ph });
+  return say(env, chat, '✅ Anketa qabul qilindi! Mutaxassisimiz tez orada bog\'lanadi.' + (isOffice() ? '' : OFFLINE.uz));
+}
+async function flowText(env, st, m, rec) {
+  const chat = m.chat.id, text = (m.text || '').trim(), f = rec.flow;
+  if (text === '/cancel') { rec.flow = null; await saveRec(st, chat, rec); return say(env, chat, "Anketa bekor qilindi. Savolingizni yozishingiz mumkin.", { reply_markup: MENU }); }
+  if (f.step === 'name') { f.d.name = text.slice(0, 80); f.step = 'dl'; await saveRec(st, chat, rec); return say(env, chat, '3/5. Qachon tayyor bo\'lishi kerak?', { reply_markup: kbOf('dl', DEADLINES) }); }
+  if (f.step === 'ph') {
+    const p = findPhone(text); if (!p) return say(env, chat, "Raqam noto'g'ri. Iltimos, masalan shunday yozing: <code>90 123 45 67</code>");
+    f.d.ph = p.phone; return flowFinish(env, st, chat, rec, who(m));
+  }
+  return say(env, chat, 'Iltimos, yuqoridagi tugmalardan birini tanlang (yoki /cancel).');
+}
+async function flowCallback(env, st, q, p, i) {
+  const chat = q.message.chat.id, rec = (await st.get('c:' + chat)) || { hist: [] }, f = rec.flow;
+  if (!f) return say(env, chat, "Anketa yopilgan. Qayta boshlash: /anketa");
+  const n = Number(i);
+  if (p === 'svc' && f.step === 'svc' && SERVICES[n]) { f.d.svc = SERVICES[n]; f.step = 'name'; await saveRec(st, chat, rec); return say(env, chat, '2/5. Biznes yoki kompaniyangiz nomi? (yozib yuboring)'); }
+  if (p === 'dl' && f.step === 'dl' && DEADLINES[n]) { f.d.dl = DEADLINES[n]; f.step = 'bd'; await saveRec(st, chat, rec); return say(env, chat, '4/5. Taxminiy byudjet?', { reply_markup: kbOf('bd', BUDGETS) }); }
+  if (p === 'bd' && f.step === 'bd' && BUDGETS[n]) { f.d.bd = BUDGETS[n]; f.step = 'ph'; await saveRec(st, chat, rec); return say(env, chat, '5/5. Telefon raqamingizni yozing (masalan <code>90 123 45 67</code>):'); }
+}
+// Haftalik hisobot: o'tgan 7 kun
+async function weekly(env, st, now = Date.now()) {
+  const all = []; for (let i = 0; i < 7; i++) all.push(...(await st.list(`ev:${dkey(now - i * 864e5)}:`)).map((k) => k.metadata).filter(Boolean));
+  const n = (k) => all.filter((e) => e.k === k).length, msgs = all.filter((e) => e.k === 'msg'), chats = new Set(msgs.map((e) => e.c));
+  const TOP = [['Narx', /narx|qancha|price|cost|цена|стоим|сколько/i], ['Muddat', /muddat|vaqt|срок|когда|deadline|how long/i], ['Telegram bot', /bot|бот/i], ['Sayt / shablon', /sayt|shablon|сайт|шаблон|site|template/i], ['Mobil ilova', /ilova|приложен|app/i], ["To'lov", /to'?lov|payme|click|оплат|pay/i], ['Domen / hosting', /domen|hosting|домен/i], ['SEO / Google', /seo|google|qidiruv/i]];
+  const top = TOP.map(([t, re]) => [t, msgs.filter((e) => re.test(e.x)).length]).filter((x) => x[1]).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const unans = all.filter((e) => e.k === 'handoff' && e.x && !/^telefon:/.test(e.x)).slice(-6);
+  const L = [`📈 <b>Haftalik hisobot</b> · ${dkey(now - 6 * 864e5).split('-').reverse().join('.')} – ${dkey(now).split('-').reverse().join('.')}`, '',
+    `👥 Mijozlar: <b>${chats.size}</b> (xabarlar: ${msgs.length})`, `🤖 Bot o'zi javob bergan: <b>${n('bot') + n('menu')}</b>`, `⚠️ Operator kerak bo'lgan: <b>${n('handoff')}</b>`, `📝 So'rovlar va telefonlar: <b>${n('lead')}</b>`, `🔥 Shoshilinch: <b>${n('urgent')}</b>`, ...(n('good') + n('bad') ? [`👍 ${n('good')} · 👎 ${n('bad')}`] : [])];
+  if (top.length) L.push('', '<b>Eng ko\'p so\'ralgan mavzular:</b>', ...top.map(([t, c]) => `• ${t}: ${c}`));
+  if (unans.length) L.push('', "<b>Bot javob bera olmagan savollar</b> (<code>/bilim</code> bilan o'rgating):", ...unans.map((e) => `• «${esc(String(e.x).slice(0, 80))}»`));
+  if (!all.length) L.push('', "Bu hafta ma'lumot yo'q.");
+  return L.join('\n').slice(0, 4000);
+}
 async function supportIn(env, st, m) {
-  const chat = m.chat.id, text = (m.text || '').trim();
+  const chat = m.chat.id; let text = (m.text || '').trim();
   if (text === '/start' || text === '/help') {
     return say(env, chat, "👋 <b>Impro IT</b> yordam botiga xush kelibsiz!\n\nSavolingizni shu yerga yozing (o'zbek, rus yoki ingliz tilida): bot darrov javob beradi, murakkab savollarni mutaxassisimiz o'zi hal qiladi. Rasm yoki fayl ham yuborishingiz mumkin. Tez javob uchun quyidagi tugmalardan foydalaning:", { reply_markup: MENU });
   }
@@ -302,14 +386,22 @@ async function supportIn(env, st, m) {
   if (await st.get('ban:' + chat)) return;
   const admins = await adminsOf(env, st);
   const rec = (await st.get('c:' + chat)) || { hist: [] };
+  if (text === '/anketa') return flowStart(env, st, chat, rec);
+  if (rec.flow && m.text) return flowText(env, st, m, rec);
+  if ((m.voice || m.audio) && !m.text) { const tr = await transcribe(env, m); if (tr) { m = { ...m, text: tr, _voice: true }; text = tr; } }
   rec.name = who(m);
   const urgent = !!m.text && isUrgent(text);
   const ph = m.text ? findPhone(text) : null, lang0 = makeAssistantDetect(env)(text);
+  rec.lang = lang0;
+  const tl = m.text && lang0 !== 'uz' ? await translateUz(env, text) : '';
+  if (urgent) addTag(rec, 'shoshilinch');
+  if (ph) { addTag(rec, 'issiq'); if (!(await st.get('hu:' + chat))) await scheduleFollow(st, { c: chat, k: 'ph', due: Date.now() + 3600e3, n: who(m), p: ph.phone }); }
+  if (m.text && /narx|qancha|price|cost|цена|стоим|сколько/i.test(text) && !rec.phone && !ph && !rec.fuPrice) { rec.fuPrice = 1; await scheduleFollow(st, { c: chat, k: 'price', due: Date.now() + 24 * 3600e3, n: who(m) }); }
   if (ph) { rec.phone = ph.phone; await ev(st, { k: 'lead', c: chat, n: who(m), p: ph.phone, x: ph.rest || 'telefon qoldirdi' }); }
   await ev(st, { k: 'msg', c: chat, n: who(m), x: m.text ? text : '[fayl/rasm]' });
   const map = {};
   for (const a of admins) {
-    const head = await say(env, a, `💬 <b>${esc(who(m))}</b> <code>${chat}</code>${ph ? `\n📞 <b>Telefon qoldirdi: ${esc(ph.phone)}</b>` : rec.phone ? `\n📞 ${esc(rec.phone)}` : ''}\nJavob berish uchun shu xabarga <b>reply</b> qiling.` + (m.text ? `\n\n${esc(text.slice(0, 3500))}` : ''));
+    const head = await say(env, a, `💬 <b>${esc(who(m))}</b> <code>${chat}</code>${m._voice ? '\n🎤 <i>ovozli xabar (matnga aylantirildi)</i>' : ''}${ph ? `\n📞 <b>Telefon qoldirdi: ${esc(ph.phone)}</b>` : rec.phone ? `\n📞 ${esc(rec.phone)}` : ''}\nJavob berish uchun shu xabarga <b>reply</b> qiling.` + (m.text ? `\n\n${esc(text.slice(0, 3500))}` : '') + (tl ? `\n\n🌐 <i>${esc(tl)}</i>` : ''));
     if (head) map[a + ':' + head.message_id] = chat;
     if (!m.text) { const cp = await tg(env, 'copyMessage', { chat_id: a, from_chat_id: chat, message_id: m.message_id, reply_to_message_id: head && head.message_id }); if (cp) map[a + ':' + cp.message_id] = chat; }
   }
@@ -359,6 +451,9 @@ async function handleCallback(env, st, q) {
     await ev(st, { k: d === 'fb:g' ? 'good' : 'bad', c: chat, n: who({ from: q.from }), x: '' }); await ans(d === 'fb:g' ? 'Rahmat! 👍' : 'Fikringiz uchun rahmat, yaxshilaymiz');
     return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: d === 'fb:g' ? '👍 Rahmat!' : '👎 Qayd etildi', callback_data: 'noop' }]] } });
   }
+  if (d === 'm:order') { await ans(); return flowStart(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) }); }
+  const oc = /^o:(svc|dl|bd):(\d+)$/.exec(d);
+  if (oc) { await ans(); return flowCallback(env, st, q, oc[1], oc[2]); }
   const bc = /^bc:(\w+)$/.exec(d);
   if (bc) { // ommaviy xabarni tasdiqlash (faqat admin)
     if (!isAdmin) return ans("Ruxsat yo'q");
@@ -398,9 +493,16 @@ async function handleUpdate(env, upd) {
   if (m.reply_to_message && !text.startsWith('/') && await supportOut(env, st, m)) return;
   if (m.reply_to_message && !text && await supportOut(env, st, m)) return;
   if (cmd === '/mijozlar') {
-    const ks = (await st.list('c:')).map((k) => ({ id: k.name.slice(2), ...(k.metadata || {}) })).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 12);
-    return say(env, chat, ks.length ? `👥 <b>Oxirgi mijozlar</b> (7 kun)\n` + ks.map((k) => `• <b>${esc(k.n || 'Mijoz')}</b> <code>${k.id}</code>${k.p ? ' · ' + esc(k.p) : ''} · ${hm(k.t || 0)}`).join('\n') + '\n\nJavob: <code>/javob ID matn</code>' : "Hozircha mijoz yo'q.");
+    const flt = arg.replace(/^#/, '').toLowerCase().trim(), ks = (await st.list('c:')).map((k) => ({ id: k.name.slice(2), ...(k.metadata || {}) })).filter((k) => !flt || String(k.g || '').split(',').includes(flt)).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 12);
+    return say(env, chat, ks.length ? `👥 <b>Oxirgi mijozlar</b> (7 kun${flt ? ', #' + esc(flt) : ''})\n` + ks.map((k) => `• <b>${esc(k.n || 'Mijoz')}</b> <code>${k.id}</code>${k.p ? ' · ' + esc(k.p) : ''}${k.g ? ' · ' + String(k.g).split(',').map((x) => '#' + esc(x)).join(' ') : ''} · ${hm(k.t || 0)}`).join('\n') + '\n\nJavob: <code>/javob ID matn</code> · Teg: <code>/teg ID issiq</code>' : "Hozircha mijoz yo'q.");
   }
+  if (cmd === '/teg') {
+    const mm = /^(\d+)\s+(-?)#?([\p{L}\p{N}_]{2,20})$/u.exec(arg); if (!mm) return say(env, chat, 'Format: <code>/teg 123456 issiq</code> (olib tashlash: <code>/teg 123456 -issiq</code>)');
+    const rec = await st.get('c:' + mm[1]); if (!rec) return say(env, chat, 'Mijoz topilmadi (7 kundan oldin yozgan bo\'lishi mumkin).');
+    if (mm[2]) rec.tags = (rec.tags || []).filter((x) => x !== mm[3].toLowerCase()); else addTag(rec, mm[3].toLowerCase());
+    await saveRec(st, Number(mm[1]), rec); return say(env, chat, `🏷 ${esc(rec.name || mm[1])}: ${(rec.tags || []).map((x) => '#' + esc(x)).join(' ') || 'teg yo\'q'}`);
+  }
+  if (cmd === '/haftalik') return say(env, chat, await weekly(env, st));
   if (cmd === '/javob') {
     const mm = /^(\d+)\s+([\s\S]{1,3500})$/.exec(arg); if (!mm) return say(env, chat, 'Format: <code>/javob 123456 Salom, ...</code>');
     const to = Number(mm[1]), r = await say(env, to, `💬 <b>Impro IT:</b>\n${esc(mm[2])}`);
@@ -421,10 +523,11 @@ async function handleUpdate(env, upd) {
     return say(env, chat, `✅ Qo'shildi (${kb.length}). Endi bot mijozlarga shu ma'lumotni ham aytadi.`);
   }
   if (cmd === '/xabar') { // so'nggi mijozlarga ommaviy xabar (tasdiq bilan)
-    if (!arg) return say(env, chat, "Format: <code>/xabar Matn...</code> (so'nggi 7 kundagi mijozlarga yuboriladi)");
-    const to = (await st.list('c:')).map((k) => Number(k.name.slice(2))).filter(Boolean), id = Date.now().toString(36);
-    await st.put('bc:' + id, { text: arg.slice(0, 1500), to }, 1800);
-    return say(env, chat, `📣 <b>Ko'rib chiqing</b> (${to.length} ta mijozga ketadi):\n\n${esc(arg.slice(0, 1500))}`, { reply_markup: { inline_keyboard: [[{ text: `✅ Yuborish (${Math.min(to.length, 45)})`, callback_data: 'bc:' + id }]] } });
+    const tm = /^#([\p{L}\p{N}_]+)\s+([\s\S]+)$/u.exec(arg), body = tm ? tm[2] : arg, tag = tm ? tm[1].toLowerCase() : '';
+    if (!body) return say(env, chat, "Format: <code>/xabar Matn...</code> yoki <code>/xabar #issiq Matn...</code> (so'nggi 7 kundagi mijozlarga)");
+    const to = (await st.list('c:')).filter((k) => !tag || String((k.metadata || {}).g || '').split(',').includes(tag)).map((k) => Number(k.name.slice(2))).filter(Boolean), id = Date.now().toString(36);
+    await st.put('bc:' + id, { text: body.slice(0, 1500), to }, 1800);
+    return say(env, chat, `📣 <b>Ko'rib chiqing</b> (${to.length} ta mijozga${tag ? ', #' + esc(tag) : ''} ketadi):\n\n${esc(body.slice(0, 1500))}`, { reply_markup: { inline_keyboard: [[{ text: `✅ Yuborish (${Math.min(to.length, 45)})`, callback_data: 'bc:' + id }]] } });
   }
   if (cmd === '/qongiroq') {
     const pushed = await pushPhone(env, 'Sinov', "Bu Impro IT botining sinov bildirishnomasi. Telefon ovozli ogohlantirish ishlayapti.", 5, 'white_check_mark');
@@ -439,7 +542,7 @@ async function handleUpdate(env, upd) {
     let a = null; try { a = await assistantOf(env).answer({ text: arg.slice(0, 800), history: [] }); } catch { a = null; }
     return say(env, chat, a && a.text ? `🧪 <b>Mijoz ko'radigan javob</b>${a.ai ? '' : ' (qoida)'}${a.handoff ? ' ⚠️ operatorga uzatiladi' : ''}:\n\n${esc(a.text)}` : 'Javob olinmadi.');
   }
-  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha)\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
+  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
   if (cmd === '/start' || cmd === '/help') return say(env, chat, help);
   if (!m.reply_to_message) return say(env, chat, help); // admin oddiy matn yozdi: nima qilish kerakligini ko'rsatamiz
 }

@@ -10,6 +10,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = async (url, o) => {
     const u = String(url); let body = {}; try { body = o && o.body ? JSON.parse(o.body) : {}; } catch { body = {}; }
     if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
+    if (u.includes('/file/bot')) return new Response(new Uint8Array([1, 2, 3, 4]), { status: 200 });
     if (u.includes('api.twilio.com')) { calls.push({ method: 'TWILIO', body: { url: u, h: o.headers, form: Object.fromEntries(new URLSearchParams(o.body)) } }); return new Response('{"sid":"CA1"}', { status: 201 }); }
     if (u.includes('api.day.app')) { calls.push({ method: 'BARK', body: JSON.parse(o.body) }); return new Response('{"code":200}', { status: 200 }); }
     if (u.includes('api.pushbullet.com')) { calls.push({ method: 'PB', body: { h: o.headers, j: JSON.parse(o.body) } }); return new Response('{}', { status: 200 }); }
@@ -17,7 +18,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     if (u.includes('api.callmebot.com')) { calls.push({ method: 'CALL', body: { url: u } }); return new Response('ok', { status: 200 }); }
     const m = /bot([^/]+)\/(\w+)$/.exec(u); if (!m) return new Response('{}', { status: 404 });
     calls.push({ method: m[2], body });
-    return new Response(JSON.stringify({ ok: true, result: /^(sendMessage|copyMessage)$/.test(m[2]) ? { message_id: ++n } : true }), { status: 200 });
+    return new Response(JSON.stringify({ ok: true, result: /^(sendMessage|copyMessage)$/.test(m[2]) ? { message_id: ++n } : m[2] === 'getFile' ? { file_path: 'voice/x.ogg' } : true }), { status: 200 });
   };
   const kv = new Map();
   const env = { TG_TOKEN: '123:abc', WEBHOOK_SECRET: 'whsec_abcdefghijklmnop', SETUP_KEY: 'setupkey123', ADMIN_PASSWORD: 'pass-1234', ALLOW_ORIGIN: 'https://improuzbekiston.uz', STATE: { get: async (k) => (kv.has(k) ? kv.get(k).v : null), put: async (k, v, o) => { kv.set(k, { v, meta: o && o.metadata }); }, list: async ({ prefix }) => ({ keys: [...kv.entries()].filter(([k]) => k.startsWith(prefix)).map(([name, e]) => ({ name, metadata: e.meta })), list_complete: true }) } };
@@ -190,6 +191,67 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const d2 = new Date(Date.now() + 5 * 3600e3), off = d2.getUTCDay() === 0 || d2.getUTCHours() < 9 || d2.getUTCHours() >= 18;
   await msg(7085, 'Kvant kompyuterlar haqida gapiring', 203); ok(/ish vaqtidan tashqari/.test(lastTo(7085).body.text) === off, 'ish vaqtidan tashqari bo\'lsa mijozga ertalab javob berilishi aytiladi' + (off ? '' : ' (hozir ish vaqti: aytilmaydi)'));
   await msg(7001, '/hisobot', 204); ok(/👍 1 · 👎 1/.test(lastTo(7001).body.text), "hisobotda javob baholari ko'rinadi");
+  console.log('Ovoz, tarjima, anketa, teglar, qayta aloqa, haftalik hisobot');
+  let whisperFail = false;
+  env.AI = { run: async (model, input) => {
+    if (/whisper/.test(model)) { if (whisperFail) throw new Error('boom'); return { text: 'Salom, sayt narxi qancha turadi?' }; }
+    if (/Translate/.test(input.messages[0].content)) return { response: 'TARJIMA: sayt qancha turadi' };
+    return { response: 'AI javob: Start sayt 2 500 000 so\'mdan boshlanadi.' };
+  } };
+  await msg(7090, 'dummy', 300);
+  const vm = (chat, mid, extra) => hook({ message: { message_id: mid, chat: { id: chat, type: 'private' }, from: { id: chat, first_name: 'V' + chat }, ...extra } });
+  await vm(7091, 301, { voice: { file_id: 'f1', duration: 5, file_size: 2000 } });
+  ok(sent(7001, /ovozli xabar/).slice(-1)[0] && /sayt narxi qancha turadi/.test(sent(7001, /ovozli xabar/).slice(-1)[0].body.text), 'ovozli xabar matnga aylantirildi va adminga ko\'rsatildi');
+  ok(/Start sayt/.test(lastTo(7091).body.text), "bot ovozli savolga javob berdi");
+  whisperFail = true; const cpB = calls.filter((c) => c.method === 'copyMessage').length;
+  await vm(7092, 302, { voice: { file_id: 'f2', duration: 5, file_size: 2000 } });
+  ok(calls.filter((c) => c.method === 'copyMessage').length === cpB + 1 && /qabul qilindi/.test(lastTo(7092).body.text), "matnga aylanmasa: ovoz adminga nusxalanadi, mijozga tasdiq");
+  whisperFail = false;
+  await msg(7093, 'Сколько стоит сайт?', 303);
+  ok(/🌐 <i>TARJIMA: sayt qancha turadi/.test(sent(7001, /U7093/).slice(-1)[0].body.text), "ruscha xabar adminga o'zbekcha tarjima bilan boradi");
+  // anketa
+  const A0 = sent(7001).length;
+  await msg(7094, '/anketa', 310); ok(JSON.stringify(lastTo(7094).body.reply_markup).includes('o:svc:0') && /1\/5/.test(lastTo(7094).body.text), '/anketa: 1/5 savol tugmalar bilan');
+  await cb(7094, 'o:svc:2'); ok(/2\/5/.test(lastTo(7094).body.text), '2/5: biznes nomi');
+  await msg(7094, 'Lola Beauty', 311); ok(/3\/5/.test(lastTo(7094).body.text) && JSON.stringify(lastTo(7094).body.reply_markup).includes('o:dl:0'), '3/5: muddat tugmalari');
+  await cb(7094, 'o:dl:0'); ok(/4\/5/.test(lastTo(7094).body.text), '4/5: byudjet');
+  await cb(7094, 'o:bd:1'); ok(/5\/5/.test(lastTo(7094).body.text), '5/5: telefon');
+  await msg(7094, '123', 312); ok(/Raqam noto'g'ri/.test(lastTo(7094).body.text), "noto'g'ri raqam qayta so'raladi");
+  ok(sent(7001).length === A0, 'anketa davomida har bir javob adminga uzatilmaydi (faqat yakunida)');
+  await msg(7094, '90 111 22 33', 313);
+  const an = sent(7001, /Yangi anketa/).slice(-1)[0];
+  ok(an && /Telegram bot/.test(an.body.text) && /Lola Beauty/.test(an.body.text) && /Shoshilinch \(1 hafta\)/.test(an.body.text) && /\+998901112233/.test(an.body.text), "anketa yakunlandi: admin barcha ma'lumotni oldi");
+  ok(/Anketa qabul qilindi/.test(lastTo(7094).body.text) && /Anketa: Telegram bot, Lola Beauty/.test(sent(7001, /SHOSHILINCH mijoz/).slice(-1)[0].body.text), 'mijozga tasdiq; shoshilinch muddat tanlansa 🔥 ham ketdi');
+  await msg(7095, '/anketa', 314); await msg(7095, '/cancel', 315); ok(/bekor qilindi/.test(lastTo(7095).body.text), '/cancel anketani to\'xtatadi');
+  // teglar va filtrli xabar
+  await msg(7001, '/mijozlar #anketa', 320); ok(/7094/.test(lastTo(7001).body.text) && !/7093/.test(lastTo(7001).body.text) && /#anketa/.test(lastTo(7001).body.text), "/mijozlar #teg: faqat tegli mijozlar");
+  await msg(7001, '/teg 7093 qiziqmadi', 321); ok(/#qiziqmadi/.test(lastTo(7001).body.text), '/teg qo\'shdi');
+  await msg(7001, '/teg 7093 -qiziqmadi', 322); ok(!/#qiziqmadi/.test(lastTo(7001).body.text), "/teg -nom olib tashladi");
+  await msg(7001, '/xabar #anketa Anketangiz uchun rahmat, tez orada qo\'ng\'iroq qilamiz', 323);
+  const bcm2 = lastTo(7001); ok(/1 ta mijozga, #anketa/.test(bcm2.body.text), "/xabar #teg: faqat tegli mijozlar soni ko'rsatiladi");
+  const n94 = sent(7094).length, n93 = sent(7093).length; await cb(7001, bcm2.body.reply_markup.inline_keyboard[0][0].callback_data);
+  ok(sent(7094).length === n94 + 1 && sent(7093).length === n93, "ommaviy xabar faqat tegli mijozga yetdi");
+  // qayta aloqa
+  const officeAt = (from) => { let t = from; for (let i = 0; i < 24 * 8; i++, t += 3600e3) { const d = new Date(t + 5 * 3600e3); if (d.getUTCDay() !== 0 && d.getUTCHours() >= 10 && d.getUTCHours() < 17) return t; } };
+  await msg(7096, 'Menga sayt kerak, raqamim 93 222 33 44', 330);
+  await msg(7097, 'Narx qancha?', 331);
+  await msg(7098, 'Menga sayt kerak, raqamim 93 333 44 55', 332); await msg(7001, '/javob 7098 Hozir qo\'ng\'iroq qilaman', 333);
+  const fa = officeAt(Date.now() + 2 * 3600e3), nf96 = sent(7096).length, nf97 = sent(7097).length, nf98 = sent(7098).length; await W.tick(env, safe(fa));
+  ok(sent(7096).length === nf96 + 1 && /Kutganingiz uchun rahmat/.test(lastTo(7096).body.text) && sent(7001, /1 soatdan beri javobsiz/).some((c) => /\+998932223344/.test(c.body.text)), "telefon qoldirgan va 1 soat javob olmagan mijozga avtomatik xabar + adminga eslatma");
+  ok(sent(7098).length === nf98, 'operator javob bergan mijozga qayta aloqa yuborilmaydi');
+  ok(sent(7097).length === nf97, 'narx so\'ragan mijozga 24 soatdan oldin yozilmaydi');
+  const fb2 = officeAt(Date.now() + 26 * 3600e3); await W.tick(env, safe(fb2));
+  ok(sent(7097).length === nf97 + 1 && /Sizga yordam kerakmi/.test(lastTo(7097).body.text), "narx so'ragan, telefon qoldirmagan mijozga 24 soatdan keyin yordam taklifi");
+  const nf97b = sent(7097).length; await W.tick(env, safe(fb2 + 3600e3)); ok(sent(7097).length === nf97b, 'qayta aloqa bir marta yuboriladi');
+  // haftalik
+  await msg(7001, '/haftalik', 340);
+  const wk = lastTo(7001).body.text; ok(/Haftalik hisobot/.test(wk) && /Eng ko'p so'ralgan mavzular/.test(wk) && /Narx: \d+/.test(wk), 'haftalik hisobot: mavzular statistikasi');
+  ok(/javob bera olmagan savollar/.test(wk), "haftalik hisobot: bot javob bera olmagan savollar ro'yxati");
+  let mon = Date.now(); for (let i = 0; i < 9; i++) { const d = new Date(mon + 5 * 3600e3); if (d.getUTCDay() === 1) break; mon += 864e5; }
+  const dm = new Date(mon + 5 * 3600e3), mon0901 = Date.UTC(dm.getUTCFullYear(), dm.getUTCMonth(), dm.getUTCDate(), 4, 1);
+  const wB = sent(7001, /Haftalik hisobot/).length; await W.tick(env, mon0901); await W.tick(env, mon0901 + 60e3);
+  ok(sent(7001, /Haftalik hisobot/).length === wB + 1, 'dushanba 09:00 da haftalik hisobot avtomatik, bir marta');
+  delete env.AI;
   console.log('Workers AI (bepul)');
   const aiRuns = []; env.AI = { run: async (model, input) => { aiRuns.push(model); return { response: "Workers AI: SEO uchun sayt tayyor, qo'shimcha sozlash kerak bo'lishi mumkin." }; } };
   await msg(7040, 'Sayt SEO uchun yaxshimi?', 130); ok(/Workers AI: SEO/.test(lastTo(7040).body.text) && aiRuns.length === 1, "kalitsiz ham Workers AI mijoz savoliga javob beradi");
