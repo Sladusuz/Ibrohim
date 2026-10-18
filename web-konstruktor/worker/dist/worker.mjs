@@ -732,6 +732,17 @@ async function handleUpdate(env, upd) {
     return say(env, chat, q.length ? '🎓 <b>Bot javob bera olmagan savollar</b>\n' + q.map((x, i) => `${i + 1}. ${esc(x)}`).join('\n') + '\n\nO\'rgatish: <code>/oqit 1 Javob matni</code>\nOlib tashlash: <code>/oqit ochir 1</code>' : "Hozircha javobsiz savol yo'q.");
   }
   if (cmd === '/xatolar') { const ks = (await st.list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 12); return say(env, chat, ks.length ? '🐞 <b>Sayt xatolari</b> (14 kun)\n' + ks.map((e) => `• ×${e.n} ${esc(e.m.slice(0, 90))}\n   ${esc(e.u.slice(-60))}`).join('\n') : "✅ Saytda xato qayd etilmagan."); }
+  if (cmd === '/tolov') {
+    const mm = /^(\d[\d\s]{2,12})\s*([\s\S]{0,100})$/.exec(arg), uzs = mm ? Number(mm[1].replace(/\s/g, '')) : 0;
+    if (!uzs || uzs < 1000) return say(env, chat, "Format: <code>/tolov 2500000 Vizitka sayt, Aziz</code> (summa so'mda). Mijozga yuboriladigan Payme havolasi yaratiladi.");
+    if (!env.PAYME_MERCHANT_ID) return say(env, chat, "Payme sozlanmagan (PAYME_MERCHANT_ID).");
+    const p = await createPayOrder(env, st, uzs, mm[2]);
+    return say(env, chat, `💳 <b>To'lov havolasi</b> · ${sum(p.uzs)} so'm\n#${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}\n\n${paymeUrl(env, p)}\n\nShu havolani mijozga yuboring. To'lov tushganda bu yerga xabar keladi.`);
+  }
+  if (cmd === '/tolovlar') {
+    const ps = (await st.list('po:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 12);
+    return say(env, chat, ps.length ? '💳 <b>Oxirgi to\'lovlar</b>\n' + ps.map((x) => `• ${x.s === 'paid' ? '✅' : x.s === 'refunded' ? '↩️' : '⏳'} ${sum(x.u)} so'm ${esc(x.n || '')}`).join('\n') : "Hozircha to'lov yo'q.");
+  }
   if (cmd === '/kanal') return say(env, chat, '📣 ' + (await channelPost(env, st)));
   if (cmd === '/qongiroq') {
     const pushed = await pushPhone(env, 'Sinov', "Bu Impro IT botining sinov bildirishnomasi. Telefon ovozli ogohlantirish ishlayapti.", 5, 'white_check_mark');
@@ -746,7 +757,7 @@ async function handleUpdate(env, upd) {
     let a = null; try { a = await assistantOf(env).answer({ text: arg.slice(0, 800), history: [] }); } catch { a = null; }
     return say(env, chat, a && a.text ? `🧪 <b>Mijoz ko'radigan javob</b>${a.ai ? '' : ' (qoida)'}${a.handoff ? ' ⚠️ operatorga uzatiladi' : ''}:\n\n${esc(a.text)}` : 'Javob olinmadi.');
   }
-  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /xatolar — saytdagi xatolar ro'yxati\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
+  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /xatolar — saytdagi xatolar ro'yxati\n• /tolov summa izoh — Payme to'lov havolasi, /tolovlar — to'lovlar ro'yxati\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
   if (cmd === '/start' || cmd === '/help') return say(env, chat, help);
   if (!m.reply_to_message) return say(env, chat, help); // admin oddiy matn yozdi: nima qilish kerakligini ko'rsatamiz
 }
@@ -982,6 +993,64 @@ async function statsApi(req, env) {
   return new Response(JSON.stringify({ chats: new Set(all.filter((e) => e.k === 'msg').map((e) => e.c)).size, leads: all.filter((e) => e.k === 'lead').length, bot: all.filter((e) => e.k === 'bot' || e.k === 'menu').length, days }), { headers: cors });
 }
 
+/* ---------- Payme (Merchant API) to'g'ridan-to'g'ri Worker'da: VDS shart emas ---------- */
+const PERR = (code, ru, uz, en, data) => ({ code, message: { ru, uz, en }, data });
+const PE = { auth: PERR(-32504, 'Недостаточно привилегий', 'Ruxsat yetarli emas', 'Insufficient privilege'), method: PERR(-32601, 'Метод не найден', 'Metod topilmadi', 'Method not found'), order: PERR(-31050, 'Заказ не найден', 'Buyurtma topilmadi', 'Order not found', 'order_id'), amount: PERR(-31001, 'Неверная сумма', "Noto'g'ri summa", 'Wrong amount'), cant: PERR(-31008, 'Невозможно выполнить операцию', "Amalni bajarib bo'lmaydi", 'Unable to complete operation'), nf: PERR(-31003, 'Транзакция не найдена', 'Tranzaksiya topilmadi', 'Transaction not found') };
+const PTIMEOUT = 12 * 3600e3, tx_ = (p) => ({ create_time: p.tx.createTime, perform_time: p.tx.performTime || 0, cancel_time: p.tx.cancelTime || 0, transaction: p.id, state: p.tx.state, reason: p.tx.reason == null ? null : p.tx.reason });
+const sum = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+async function payOrderPut(st, p) { await st.put('po:' + p.id, p, 0, { t: p.createdAt, u: p.uzs, s: p.state, n: String(p.note || '').slice(0, 60) }); }
+async function createPayOrder(env, st, uzs, note) {
+  const p = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), uzs: Math.round(uzs), note: String(note || '').slice(0, 120), state: 'pending', createdAt: Date.now(), tx: null };
+  await payOrderPut(st, p); return p;
+}
+const paymeUrl = (env, p) => 'https://checkout.paycom.uz/' + btoa(`m=${env.PAYME_MERCHANT_ID};ac.order_id=${p.id};a=${p.uzs * 100};l=uz`);
+async function paymeRpc(req, env) {
+  const st = store(env); let body = {}; try { body = await req.json(); } catch { /* bo'sh */ }
+  const id = body.id, reply = (result) => ({ result, id }), fail = (e, data) => ({ error: data ? { ...e, data } : e, id });
+  const m = /^Basic\s+(\S+)$/.exec(req.headers.get('Authorization') || ''); let cred = ''; try { cred = m ? atob(m[1]) : ''; } catch { cred = ''; }
+  if (!env.PAYME_KEY || !tEq(cred, 'Paycom:' + env.PAYME_KEY)) return fail(PE.auth);
+  const params = body.params || {}, getO = async (oid) => (oid ? await st.get('po:' + String(oid)) : null), byTx = async (tid) => { const oid = tid && (await st.get('ptx:' + tid)); return oid ? await getO(oid) : null; };
+  const checkOrder = async (prm) => { const p = await getO(prm.account && prm.account.order_id); if (!p) return { e: fail(PE.order, 'order_id') }; if (p.state === 'paid' || p.state === 'refunded') return { e: fail(PE.cant) }; if (Number(prm.amount) !== p.uzs * 100) return { e: fail(PE.amount) }; return { p }; };
+  const admins = async () => adminsOf(env, st);
+  switch (body.method) {
+    case 'CheckPerformTransaction': { const r = await checkOrder(params); return r.e || reply({ allow: true }); }
+    case 'CreateTransaction': {
+      const ex = await byTx(params.id);
+      if (ex) { if (ex.tx.state !== 1) return fail(PE.cant); if (Date.now() - ex.tx.createTime > PTIMEOUT) { ex.tx.state = -1; ex.tx.reason = 4; ex.tx.cancelTime = Date.now(); await payOrderPut(st, ex); return fail(PE.cant); } return reply(tx_(ex)); }
+      const r = await checkOrder(params); if (r.e) return r.e;
+      if (r.p.tx && r.p.tx.state === 1) return fail(PE.cant);
+      r.p.tx = { id: params.id, time: params.time, state: 1, createTime: Date.now() }; await payOrderPut(st, r.p); await st.put('ptx:' + params.id, r.p.id, 0);
+      return reply(tx_(r.p));
+    }
+    case 'PerformTransaction': {
+      const p = await byTx(params.id); if (!p) return fail(PE.nf);
+      if (p.tx.state === 1) {
+        if (Date.now() - p.tx.createTime > PTIMEOUT) { p.tx.state = -1; p.tx.reason = 4; p.tx.cancelTime = Date.now(); await payOrderPut(st, p); return fail(PE.cant); }
+        p.tx.state = 2; p.tx.performTime = Date.now(); p.state = 'paid'; await payOrderPut(st, p);
+        await ev(st, { k: 'pay', c: 0, n: 'Payme', x: sum(p.uzs) + " so'm" });
+        for (const a of await admins()) await say(env, a, `💳 <b>To'lov qabul qilindi (Payme)</b>\n💰 <b>${sum(p.uzs)} so'm</b>\n🧾 #${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}`);
+        await pushPhone(env, "To'lov qabul qilindi", `${sum(p.uzs)} so'm (Payme)`, 4, 'moneybag');
+        return reply(tx_(p));
+      }
+      if (p.tx.state === 2) return reply(tx_(p));
+      return fail(PE.cant);
+    }
+    case 'CancelTransaction': {
+      const p = await byTx(params.id); if (!p) return fail(PE.nf);
+      if (p.tx.state === 1) { p.tx.state = -1; p.tx.reason = params.reason; p.tx.cancelTime = Date.now(); await payOrderPut(st, p); return reply(tx_(p)); }
+      if (p.tx.state === 2) { p.tx.state = -2; p.tx.reason = params.reason; p.tx.cancelTime = Date.now(); p.state = 'refunded'; await payOrderPut(st, p); for (const a of await admins()) await say(env, a, `↩️ <b>To'lov qaytarildi (Payme)</b>\n💰 ${sum(p.uzs)} so'm · #${p.id}`); return reply(tx_(p)); }
+      return reply(tx_(p));
+    }
+    case 'CheckTransaction': { const p = await byTx(params.id); return p ? reply(tx_(p)) : fail(PE.nf); }
+    case 'GetStatement': {
+      const from = Number(params.from) || 0, to = Number(params.to) || Date.now(), out = [];
+      for (const k of await st.list('po:')) { const p = await st.get(k.name); if (p && p.tx && p.tx.createTime >= from && p.tx.createTime <= to) out.push({ id: p.tx.id, time: p.tx.time, amount: p.uzs * 100, account: { order_id: p.id }, ...tx_(p) }); }
+      return reply({ transactions: out });
+    }
+    default: return fail(PE.method);
+  }
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;
@@ -1005,6 +1074,7 @@ export default {
     if (url.pathname === '/app' && req.method === 'GET') return new Response(APP_HTML, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
     if (url.pathname === '/api/app' && req.method === 'POST') return appApi(req, env);
     if (url.pathname === '/stats' && req.method === 'GET') return statsApi(req, env);
+    if (url.pathname === '/pay/payme' && req.method === 'POST') return new Response(JSON.stringify(await paymeRpc(req, env)), { headers: { 'content-type': 'application/json' } });
     if (url.pathname === '/err') return errApi(req, env);
     if (url.pathname === '/errors' && env.SETUP_KEY && tEq(url.searchParams.get('key') || '', env.SETUP_KEY)) { const ks = (await store(env).list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 50); return new Response(JSON.stringify(ks), { headers: { 'content-type': 'application/json' } }); }
     if (url.pathname === '/chat') return chatApi(req, env);

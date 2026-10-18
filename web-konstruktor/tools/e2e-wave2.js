@@ -121,5 +121,24 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
 
   console.log('Investor');
   const sj2 = await (await W.fetch(new Request('https://w.example/stats', { headers: { Origin: 'https://improuzbekiston.uz' } }), env, ctx)).json(); ok(sj2.days.length === 7 && typeof sj2.chats === 'number' && !JSON.stringify(sj2).includes('900'), '/stats ommaviy yig\'ma sonlar', sj2);
+  console.log('Payme (Worker)');
+  env.PAYME_MERCHANT_ID = 'merch123'; env.PAYME_KEY = 'secretkey';
+  await msg(8001, '/tolov 2500000 Vizitka sayt', 70); const pl = lastTo(8001).body.text, oid = (/#(\w+)/.exec(pl) || [])[1], pu = (/https:\/\/checkout\.paycom\.uz\/(\S+)/.exec(pl) || [])[1];
+  ok(oid && pu && atob(pu).includes('m=merch123;ac.order_id=' + oid + ';a=250000000'), "to'lov havolasi yaratildi", pl);
+  const rpc = async (method, params, auth = 'Basic ' + btoa('Paycom:secretkey')) => (await (await W.fetch(new Request('https://w.example/pay/payme', { method: 'POST', headers: { Authorization: auth, 'content-type': 'application/json' }, body: JSON.stringify({ id: 1, method, params }) }), env, ctx)).json());
+  ok((await rpc('CheckPerformTransaction', {}, 'Basic ' + btoa('Paycom:xato'))).error.code === -32504, 'noto\'g\'ri kalit rad');
+  ok((await rpc('CheckPerformTransaction', { amount: 100, account: { order_id: oid } })).error.code === -31001, "noto'g'ri summa");
+  ok((await rpc('CheckPerformTransaction', { amount: 250000000, account: { order_id: 'yoq' } })).error.code === -31050, 'buyurtma topilmadi');
+  ok((await rpc('CheckPerformTransaction', { amount: 250000000, account: { order_id: oid } })).result.allow === true, 'CheckPerform ok');
+  const ct = await rpc('CreateTransaction', { id: 'tx1', time: Date.now(), amount: 250000000, account: { order_id: oid } }); ok(ct.result && ct.result.state === 1, 'CreateTransaction');
+  ok((await rpc('CreateTransaction', { id: 'tx2', time: Date.now(), amount: 250000000, account: { order_id: oid } })).error.code === -31008, "ikkinchi tranzaksiya rad");
+  const pf = await rpc('PerformTransaction', { id: 'tx1' }); ok(pf.result && pf.result.state === 2, 'PerformTransaction');
+  ok(sent(8001, /To'lov qabul qilindi/).length === 1, "to'lov haqida adminga xabar");
+  ok((await rpc('PerformTransaction', { id: 'tx1' })).result.state === 2, 'takroriy Perform bir xil javob');
+  ok((await rpc('CheckTransaction', { id: 'tx1' })).result.state === 2, 'CheckTransaction');
+  ok((await rpc('GetStatement', { from: 0, to: Date.now() + 1000 })).result.transactions.length === 1, 'GetStatement');
+  const cn = await rpc('CancelTransaction', { id: 'tx1', reason: 5 }); ok(cn.result.state === -2, "to'langandan keyin bekor = qaytarish");
+  await msg(8001, '/tolovlar', 71); ok(/↩️/.test(lastTo(8001).body.text), '/tolovlar ro\'yxati');
+
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);
 })();

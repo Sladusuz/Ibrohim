@@ -32,6 +32,8 @@ async function cf(method, p, body, headers) {
   const bindings = [{ type: 'd1', name: 'DB', id: d1.uuid }, { type: 'kv_namespace', name: 'STATE', namespace_id: kv.id }, { type: 'ai', name: 'AI' }, // Workers AI: bepul sun'iy intellekt (kalit shart emas)
     ...['TWILIO_SID', 'TWILIO_TOKEN'].filter((k) => E[k]).map((k) => ({ type: 'secret_text', name: k, text: E[k] })),
     ...['TWILIO_FROM', 'CALL_PHONE'].filter((k) => E[k]).map((k) => ({ type: 'plain_text', name: k, text: E[k] })),
+    ...(E.PAYME_MERCHANT_ID ? [{ type: 'plain_text', name: 'PAYME_MERCHANT_ID', text: E.PAYME_MERCHANT_ID }] : []),
+    ...(E.PAYME_KEY ? [{ type: 'secret_text', name: 'PAYME_KEY', text: E.PAYME_KEY }] : []),
     ...(E.BARK_KEY ? [{ type: 'secret_text', name: 'BARK_KEY', text: E.BARK_KEY }] : []),
     ...(E.PUSHBULLET_TOKEN ? [{ type: 'secret_text', name: 'PUSHBULLET_TOKEN', text: E.PUSHBULLET_TOKEN }] : []),
     ...(E.NTFY_TOKEN ? [{ type: 'secret_text', name: 'NTFY_TOKEN', text: E.NTFY_TOKEN }] : []),
