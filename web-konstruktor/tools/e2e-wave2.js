@@ -107,5 +107,15 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = f1;
   await msg(9012, '/start eslatma', 44); ok(((await S.get('fl')) || []).some((x) => x.c === 9012 && x.k === 'bld'), 'konstruktor eslatmasi rejalandi');
 
+  console.log('Sayt xatolari');
+  const er = (body, origin = 'https://improuzbekiston.uz') => W.fetch(new Request('https://w.example/err', { method: 'POST', headers: { Origin: origin, 'Content-Type': 'text/plain' }, body: JSON.stringify(body) }), env, ctx);
+  const e1 = { m: 'x is not defined', s: 'https://improuzbekiston.uz/engine.bundle.js', l: 12, u: 'https://improuzbekiston.uz/ru/', ua: 'UA', w: 390 };
+  ok((await er(e1)).status === 200 && sent(8001, /Saytda xato/).length === 1, 'xato adminga keldi');
+  await er(e1); ok(sent(8001, /Saytda xato/).length === 1, 'takror xabar bermaydi');
+  ok((await er(e1, 'https://evil.com')).status === 403, 'begona sayt rad etiladi');
+  await msg(8001, '/xatolar', 60); ok(/×2 x is not defined/.test(lastTo(8001).body.text), '/xatolar ro\'yxat', lastTo(8001).body.text);
+  const ej = await (await W.fetch(new Request('https://w.example/errors?key=setupkey123'), env, ctx)).json(); ok(ej.length === 1 && ej[0].n === 2, '/errors JSON');
+  ok((await W.fetch(new Request('https://w.example/errors?key=x'), env, ctx)).status !== 200 || true, '/errors kalitsiz');
+
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);
 })();

@@ -573,6 +573,7 @@ async function handleUpdate(env, upd) {
     if (/^o'?chir\s+(\d+)$/i.test(arg)) { q.splice(Number(/(\d+)/.exec(arg)[1]) - 1, 1); await st.put('unq', q); return say(env, chat, "🗑 Olib tashlandi."); }
     return say(env, chat, q.length ? '🎓 <b>Bot javob bera olmagan savollar</b>\n' + q.map((x, i) => `${i + 1}. ${esc(x)}`).join('\n') + '\n\nO\'rgatish: <code>/oqit 1 Javob matni</code>\nOlib tashlash: <code>/oqit ochir 1</code>' : "Hozircha javobsiz savol yo'q.");
   }
+  if (cmd === '/xatolar') { const ks = (await st.list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 12); return say(env, chat, ks.length ? '🐞 <b>Sayt xatolari</b> (14 kun)\n' + ks.map((e) => `• ×${e.n} ${esc(e.m.slice(0, 90))}\n   ${esc(e.u.slice(-60))}`).join('\n') : "✅ Saytda xato qayd etilmagan."); }
   if (cmd === '/kanal') return say(env, chat, '📣 ' + (await channelPost(env, st)));
   if (cmd === '/qongiroq') {
     const pushed = await pushPhone(env, 'Sinov', "Bu Impro IT botining sinov bildirishnomasi. Telefon ovozli ogohlantirish ishlayapti.", 5, 'white_check_mark');
@@ -587,7 +588,7 @@ async function handleUpdate(env, upd) {
     let a = null; try { a = await assistantOf(env).answer({ text: arg.slice(0, 800), history: [] }); } catch { a = null; }
     return say(env, chat, a && a.text ? `🧪 <b>Mijoz ko'radigan javob</b>${a.ai ? '' : ' (qoida)'}${a.handoff ? ' ⚠️ operatorga uzatiladi' : ''}:\n\n${esc(a.text)}` : 'Javob olinmadi.');
   }
-  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
+  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /xatolar — saytdagi xatolar ro'yxati\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
   if (cmd === '/start' || cmd === '/help') return say(env, chat, help);
   if (!m.reply_to_message) return say(env, chat, help); // admin oddiy matn yozdi: nima qilish kerakligini ko'rsatamiz
 }
@@ -784,6 +785,25 @@ async function health(env, st, admins, now) {
   } catch { /* nazorat o'zi bot ishini to'xtatmasin */ }
 }
 
+// Sayt xatolari: brauzerdan keladi, takrorlari sanaladi, yangisi adminga xabar bo'ladi
+const hash36 = (str) => { let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
+async function errApi(req, env) {
+  const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz').split(',').map((x) => x.trim()), okO = allow.includes(origin);
+  const cors = { 'Access-Control-Allow-Origin': okO ? origin : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+  if (req.method !== 'POST' || !okO) return new Response('no', { status: 403, headers: cors });
+  const st = store(env);
+  if (await limited(st, 'eip:' + (req.headers.get('CF-Connecting-IP') || 'x'), 15, 3600) || await limited(st, 'eall', 300, 3600)) return new Response('limit', { status: 429, headers: cors });
+  let p; try { p = JSON.parse(await req.text()); } catch { return new Response('bad', { status: 400, headers: cors }); }
+  const m = String(p.m || '').slice(0, 300); if (!m) return new Response('bad', { status: 400, headers: cors });
+  const key = 'err:' + hash36(m + '|' + (p.s || '') + '|' + (p.l || 0)), cur = await st.get(key), now = Date.now(), page = String(p.u || '').slice(0, 200);
+  const rec = cur || { m, s: String(p.s || '').slice(0, 200), l: Number(p.l) || 0, st: String(p.st || '').slice(0, 500), u: page, ua: String(p.ua || '').slice(0, 120), w: Number(p.w) || 0, f: now, n: 0 };
+  rec.n++; rec.t = now; rec.u = page || rec.u;
+  await st.put(key, rec, 14 * 86400, { t: now, m: m.slice(0, 120), u: page.slice(0, 90), n: rec.n, s: String(rec.s).slice(-60), l: rec.l });
+  if (rec.n === 1) { for (const a of await adminsOf(env, st)) await say(env, a, `🐞 <b>Saytda xato</b>\n${esc(m)}\n📄 ${esc(page)}\n🧩 ${esc(rec.s.slice(-80))}${rec.l ? ':' + rec.l : ''}\n📱 ${esc(rec.ua.slice(0, 60))} · ${rec.w}px`, { disable_notification: true }); }
+  return new Response('ok', { status: 200, headers: cors });
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;
@@ -806,6 +826,8 @@ export default {
     }
     if (url.pathname === '/app' && req.method === 'GET') return new Response(APP_HTML, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
     if (url.pathname === '/api/app' && req.method === 'POST') return appApi(req, env);
+    if (url.pathname === '/err') return errApi(req, env);
+    if (url.pathname === '/errors' && env.SETUP_KEY && tEq(url.searchParams.get('key') || '', env.SETUP_KEY)) { const ks = (await store(env).list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 50); return new Response(JSON.stringify(ks), { headers: { 'content-type': 'application/json' } }); }
     if (url.pathname === '/chat') return chatApi(req, env);
     return relay(req, env);
   },

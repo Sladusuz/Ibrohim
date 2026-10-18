@@ -481,3 +481,18 @@
       .catch(() => { $('#app').innerHTML = '<div class="err"><h2>Sayt vaqtincha ishlamayapti</h2><p>Iltimos, birozdan so\'ng qayta urinib ko\'ring.</p></div>'; });
   };
 })();
+
+/* Xato hisoboti: sayt xatolari yordam botiga boradi (bir sahifada 3 tagacha, takrorlarsiz) */
+(function () {
+  const seen = {}; let n = 0;
+  const send = (m, src, line, stack) => {
+    try {
+      const RELAY = String(window.__RELAY__ || '').replace(/\/$/, ''); if (!RELAY || n >= 3) return;
+      m = String(m || '').slice(0, 300); src = String(src || ''); if (!m || /^Script error\.?$/i.test(m) || /ResizeObserver|extension:\/\/|moz-extension|Non-Error promise rejection/i.test(m + src)) return;
+      const k = m + '|' + src + '|' + line; if (seen[k]) return; seen[k] = 1; n++;
+      fetch(RELAY + '/err', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({ m, s: src.slice(0, 200), l: line || 0, st: String(stack || '').slice(0, 500), u: location.href.slice(0, 200), ua: navigator.userAgent.slice(0, 120), w: innerWidth }) }).catch(() => {});
+    } catch (e) { /* hisobot o'zi xato bermasin */ }
+  };
+  addEventListener('error', (e) => { if (e.target && e.target !== window && e.target.src) return send('Resurs yuklanmadi: ' + (e.target.src || e.target.href), '', 0); send(e.message, e.filename, e.lineno, e.error && e.error.stack); }, true);
+  addEventListener('unhandledrejection', (e) => { const r = e.reason; send('Promise: ' + (r && r.message || r), '', 0, r && r.stack); });
+})();
