@@ -188,7 +188,7 @@ function findPhone(text) {
   const d = m[0].replace(/\D/g, ''), n = d.length === 9 ? '998' + d : d;
   return /^998\d{9}$/.test(n) ? { phone: '+' + n, rest: (text.slice(0, m.index) + ' ' + text.slice(m.index + m[0].length)).replace(/[\s,.;:!?()+-]+/g, ' ').trim() } : null;
 }
-const MENU = { inline_keyboard: [[{ text: '💰 Narxlar', callback_data: 'm:price' }, { text: '⏱ Muddatlar', callback_data: 'm:time' }], [{ text: '🌐 Sayt yaratish', url: 'https://improuzbekiston.uz/yaratish.html' }, { text: '🤖 Bot yaratish', url: 'https://improuzbekiston.uz/bot.html' }], [{ text: '📞 Aloqa', callback_data: 'm:contact' }, { text: '👤 Operator', callback_data: 'm:human' }], [{ text: '🎯 Menga mos sayt tanlang', callback_data: 'm:site' }, { text: '📅 Uchrashuv', callback_data: 'm:book' }, { text: '🧮 Narx hisobi', callback_data: 'm:calc' }], [{ text: '📝 Buyurtma berish (anketa)', callback_data: 'm:order' }]] };
+const MENU = { inline_keyboard: [[{ text: '💰 Narxlar', callback_data: 'm:price' }, { text: '⏱ Muddatlar', callback_data: 'm:time' }], [{ text: '🌐 Sayt yaratish', url: 'https://improuzbekiston.uz/yaratish.html' }, { text: '🤖 Bot yaratish', url: 'https://improuzbekiston.uz/bot.html' }], [{ text: '📞 Aloqa', callback_data: 'm:contact' }, { text: '👤 Operator', callback_data: 'm:human' }], [{ text: '🎯 Menga mos sayt tanlang', callback_data: 'm:site' }, { text: '📅 Uchrashuv', callback_data: 'm:book' }, { text: '🧮 Narx hisobi', callback_data: 'm:calc' }], [{ text: '📝 Buyurtma berish (anketa)', callback_data: 'm:order' }], [{ text: "💳 To'lov qilish", callback_data: 'm:pay' }]] };
 const FEEDBACK = { inline_keyboard: [[{ text: '👍', callback_data: 'fb:g' }, { text: '👎', callback_data: 'fb:b' }]] };
 /* ---------- Ovoz, tarjima, anketa, teglar, qayta aloqa ---------- */
 const b64 = (u8) => { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
@@ -378,6 +378,11 @@ async function supportIn(env, st, m) {
     if (!m.text) { const cp = await tg(env, 'copyMessage', { chat_id: a, from_chat_id: chat, message_id: m.message_id, reply_to_message_id: head && head.message_id }); if (cp) map[a + ':' + cp.message_id] = chat; }
   }
   const saveMap = () => Promise.all(Object.entries(map).map(([k, v]) => st.put('m:' + k, v, 30 * 86400)));
+  if (!m.text && rec.payWait && Date.now() - rec.payWait < 3 * 864e5) { // to'lov cheki
+    await saveRec(st, chat, rec); await saveMap();
+    for (const a of admins) await say(env, a, `🧾 <b>To'lov cheki keldi</b>\n👤 ${esc(who(m))} <code>${chat}</code>${rec.phone ? '\n📞 ' + esc(rec.phone) : ''}\nChekni yuqoridagi xabardan ko'ring va tasdiqlang:`, { reply_markup: { inline_keyboard: [[{ text: '✅ Tasdiqlash', callback_data: 'pc:' + chat }, { text: '❌ Rad etish', callback_data: 'px:' + chat }]] } });
+    return say(env, chat, "🧾 Chekingiz qabul qilindi. Tekshirib, tez orada tasdiqlaymiz.");
+  }
   if (ph && ph.rest.replace(/[^\p{L}]/gu, '').length < 12) { // faqat telefon raqami: rahmat deymiz va operatorga uzatamiz
     await saveRec(st, chat, rec); await saveMap(); await ev(st, { k: 'handoff', c: chat, n: who(m), x: 'telefon: ' + ph.phone });
     if (urgent) await raiseUrgent(env, st, { chat, name: who(m), phone: ph.phone, text });
@@ -448,6 +453,23 @@ async function handleCallback(env, st, q) {
     await ev(st, { k: bsm[1] === 'b' ? 'bad' : 'good', c: chat, n: nm, x: 'uchrashuv' });
     if (bsm[1] !== 'g') for (const a of await adminsOf(env, st)) await say(env, a, bsm[1] === 'o' ? `📄 <b>Taklif so'raldi</b>: ${esc(nm)} <code>${chat}</code> ${esc(rec.phone || '')}` : `👎 <b>Uchrashuv yoqmadi</b>: ${esc(nm)} <code>${chat}</code> ${esc(rec.phone || '')}. Bog'lanib ko'ring.`);
     return say(env, chat, bsm[1] === 'o' ? "✅ Taklif tayyorlab, tez orada yuboramiz." : bsm[1] === 'b' ? "Fikringiz uchun rahmat. Kamchiliklarni to'g'rilaymiz, siz bilan bog'lanamiz." : 'Rahmat! Savolingiz bo\'lsa, yozing 🙂');
+  }
+  if (d === 'm:pay') {
+    await ans(); const rec = (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) };
+    if (!env.CARD_INFO) return say(env, chat, "To'lov rekvizitlari hozir mavjud emas. Mutaxassisimiz siz bilan bog'lanib, to'lov usulini aytadi.");
+    rec.payWait = Date.now(); await saveRec(st, chat, rec);
+    return say(env, chat, `💳 <b>To'lov rekvizitlari</b>\n\n${esc(env.CARD_INFO)}\n\nO'tkazma qilgach, <b>chek rasmini (skrinshotni) shu yerga yuboring</b>: to'lovni tekshirib, tasdiqlaymiz.`);
+  }
+  const pcm = /^(pc|px):(-?\d+)$/.exec(d);
+  if (pcm) {
+    if (!isAdmin) return ans("Ruxsat yo'q");
+    const to = Number(pcm[2]), rec = (await st.get('c:' + to)) || {};
+    if (pcm[1] === 'pc') {
+      addTag(rec, 'tolagan'); delete rec.payWait; await saveRec(st, to, rec); await ev(st, { k: 'pay', c: to, n: rec.name || 'Mijoz', x: "karta orqali" });
+      await say(env, to, "✅ <b>To'lovingiz tasdiqlandi.</b> Rahmat! Mutaxassisimiz ishni boshlaydi va siz bilan bog'lanadi.");
+    } else await say(env, to, "To'lovni tasdiqlab bo'lmadi. Iltimos, chekni qayta yuboring yoki mutaxassisimiz bilan bog'laning.");
+    await ans(pcm[1] === 'pc' ? 'Tasdiqlandi' : 'Rad etildi');
+    return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: pcm[1] === 'pc' ? '✅ Tasdiqlandi' : '❌ Rad etildi', callback_data: 'noop' }]] } });
   }
   if (d === 'm:order') { await ans(); return flowStart(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) }); }
   const oc = /^o:(svc|dl|bd):(\d+)$/.exec(d);
@@ -575,10 +597,16 @@ async function handleUpdate(env, upd) {
     return say(env, chat, q.length ? '🎓 <b>Bot javob bera olmagan savollar</b>\n' + q.map((x, i) => `${i + 1}. ${esc(x)}`).join('\n') + '\n\nO\'rgatish: <code>/oqit 1 Javob matni</code>\nOlib tashlash: <code>/oqit ochir 1</code>' : "Hozircha javobsiz savol yo'q.");
   }
   if (cmd === '/xatolar') { const ks = (await st.list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 12); return say(env, chat, ks.length ? '🐞 <b>Sayt xatolari</b> (14 kun)\n' + ks.map((e) => `• ×${e.n} ${esc(e.m.slice(0, 90))}\n   ${esc(e.u.slice(-60))}`).join('\n') : "✅ Saytda xato qayd etilmagan."); }
+  if (cmd === '/tasdiq') {
+    const to = Number(arg.trim()); if (!to) return say(env, chat, "Format: <code>/tasdiq 123456</code> (mijoz ID, xabar sarlavhasida ko'rinadi)");
+    const rec = (await st.get('c:' + to)) || {}; addTag(rec, 'tolagan'); delete rec.payWait; await saveRec(st, to, rec); await ev(st, { k: 'pay', c: to, n: rec.name || 'Mijoz', x: 'karta orqali' });
+    const okc = await say(env, to, "✅ <b>To'lovingiz tasdiqlandi.</b> Rahmat! Mutaxassisimiz ishni boshlaydi va siz bilan bog'lanadi.");
+    return say(env, chat, okc ? '✅ Mijozga tasdiq yuborildi.' : "Yuborilmadi (mijoz botni bloklagan yoki ID noto'g'ri).");
+  }
   if (cmd === '/tolov') {
     const mm = /^(\d[\d\s]{2,12})\s*([\s\S]{0,100})$/.exec(arg), uzs = mm ? Number(mm[1].replace(/\s/g, '')) : 0;
     if (!uzs || uzs < 1000) return say(env, chat, "Format: <code>/tolov 2500000 Vizitka sayt, Aziz</code> (summa so'mda). Mijozga yuboriladigan Payme havolasi yaratiladi.");
-    if (!env.PAYME_MERCHANT_ID) return say(env, chat, "Payme sozlanmagan (PAYME_MERCHANT_ID).");
+    if (!env.PAYME_MERCHANT_ID) { if (!env.CARD_INFO) return say(env, chat, "Na Payme, na karta sozlanmagan (PAYME_MERCHANT_ID yoki CARD_INFO)."); return say(env, chat, `💳 <b>Mijozga yuboring</b> (${sum(uzs)} so'm):\n\nTo'lov: <b>${sum(uzs)} so'm</b>${mm[2] ? ' · ' + esc(mm[2]) : ''}\n${esc(env.CARD_INFO)}\n\nO'tkazgach chek rasmini @${(await tg(env, 'getMe', {}) || {}).username || 'improsupport_bot'} ga yuboring.`); }
     const p = await createPayOrder(env, st, uzs, mm[2]);
     return say(env, chat, `💳 <b>To'lov havolasi</b> · ${sum(p.uzs)} so'm\n#${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}\n\n${paymeUrl(env, p)}\n\nShu havolani mijozga yuboring. To'lov tushganda bu yerga xabar keladi.`);
   }
@@ -600,7 +628,7 @@ async function handleUpdate(env, upd) {
     let a = null; try { a = await assistantOf(env).answer({ text: arg.slice(0, 800), history: [] }); } catch { a = null; }
     return say(env, chat, a && a.text ? `🧪 <b>Mijoz ko'radigan javob</b>${a.ai ? '' : ' (qoida)'}${a.handoff ? ' ⚠️ operatorga uzatiladi' : ''}:\n\n${esc(a.text)}` : 'Javob olinmadi.');
   }
-  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /xatolar — saytdagi xatolar ro'yxati\n• /tolov summa izoh — Payme to'lov havolasi, /tolovlar — to'lovlar ro'yxati\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
+  const help = "<b>Siz adminsiz.</b> Mijoz xabarlari va sayt so'rovlari shu yerga keladi.\n• Mijozga javob: uning xabariga <b>reply</b> qiling\n• /hisobot — bugungi hisobot (/hisobot kecha), /haftalik — haftalik hisobot\n• /lidlar — oxirgi lidlar, /eksport — barcha lidlar (CSV fayl)\n• /teg ID issiq — mijozga teg; /mijozlar #issiq; /xabar #issiq matn\n• /mijozlar — oxirgi mijozlar, /javob ID matn — ID bo'yicha javob\n• /bilim matn — botni o'rgatish (aksiya, narx...), /bilim — ro'yxat\n• /xabar matn — mijozlarga ommaviy xabar (tasdiq bilan)\n• /ban ID, /unban ID — bloklash\n• /xatolar — saytdagi xatolar ro'yxati\n• /tolov summa izoh — to'lov havolasi/rekvizit, /tasdiq ID — karta to'lovini tasdiqlash, /tolovlar — ro'yxat\n• /oqit — botni javobsiz savollar bo'yicha o'rgatish, /zaxira — ma'lumot zaxirasi (har kuni 08:00 o'zi ham keladi)\n• /panel — Mini App paneli, /uchrashuvlar — band qilingan uchrashuvlar\n• /havola nom — manba havolasi, /kanal — kanalga blog post\n• /qongiroq — sinov qo'ng'irog'i\n• /test savol — botning mijozga javobini sinash\n• /auto on|off — avtomatik javob\n• /logout — chiqish\n\nBotni mijoz sifatida sinash uchun boshqa Telegram akkauntdan yozing yoki /test dan foydalaning.";
   if (cmd === '/start' || cmd === '/help') return say(env, chat, help);
   if (!m.reply_to_message) return say(env, chat, help); // admin oddiy matn yozdi: nima qilish kerakligini ko'rsatamiz
 }

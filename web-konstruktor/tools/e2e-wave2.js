@@ -140,5 +140,15 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const cn = await rpc('CancelTransaction', { id: 'tx1', reason: 5 }); ok(cn.result.state === -2, "to'langandan keyin bekor = qaytarish");
   await msg(8001, '/tolovlar', 71); ok(/↩️/.test(lastTo(8001).body.text), '/tolovlar ro\'yxati');
 
+  console.log("Karta to'lovi + chek tasdiqlash");
+  env.CARD_INFO = '💳 8600 0000 0000 0000\n👤 TEST USER\n🏦 NBU';
+  await cb(9020, 'm:pay'); ok(/8600 0000 0000 0000/.test(lastTo(9020).body.text) && /chek/i.test(lastTo(9020).body.text), 'mijozga karta rekvizitlari ko\'rsatildi');
+  await hook({ message: { message_id: 90, chat: { id: 9020, type: 'private' }, from: { id: 9020, first_name: 'U9020' }, photo: [{ file_id: 'x' }] } });
+  ok(/Chekingiz qabul qilindi/.test(lastTo(9020).body.text) && sent(8001, /To'lov cheki keldi/).length === 1, 'chek adminga tasdiqlash tugmalari bilan keldi');
+  await cb(8001, 'pc:9020'); ok(/To'lovingiz tasdiqlandi/.test(lastTo(9020).body.text), 'tasdiqlangach mijozga xabar ketdi');
+  ok((await S.get('c:9020')).tags.includes('tolagan'), "mijozga 'tolagan' tegi qo'yildi");
+  await msg(8001, '/tasdiq 9020', 91); ok(/Mijozga tasdiq yuborildi/.test(lastTo(8001).body.text), '/tasdiq buyrug\'i');
+  const saveP = env.PAYME_MERCHANT_ID; delete env.PAYME_MERCHANT_ID; await msg(8001, '/tolov 1500000 Bot yaratish', 92); ok(/TEST USER/.test(lastTo(8001).body.text) && /1 500 000/.test(lastTo(8001).body.text), 'Payme yo\'q: /tolov karta rekvizitini beradi'); env.PAYME_MERCHANT_ID = saveP;
+
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);
 })();
