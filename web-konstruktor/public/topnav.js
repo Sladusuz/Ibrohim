@@ -10,3 +10,10 @@
   window.addEventListener('resize', () => { if (innerWidth > 720) set(false); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
 })();
+
+// Muharrir (telefon): Tahrirlash / Ko'rish almashtirgich
+(function () {
+  const m = document.getElementById('mvt'); if (!m) return; document.body.dataset.view = 'edit';
+  m.addEventListener('click', (e) => { const b = e.target.closest('button[data-v]'); if (!b) return; document.body.dataset.view = b.dataset.v; m.querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b)); try { navigator.vibrate && navigator.vibrate(8); } catch { /* ixtiyoriy */ } });
+  new MutationObserver(() => { if (document.body.dataset.mode !== 'editor') { document.body.dataset.view = 'edit'; m.querySelectorAll('button').forEach((x, i) => x.classList.toggle('on', i === 0)); } }).observe(document.body, { attributes: true, attributeFilter: ['data-mode'] });
+})();

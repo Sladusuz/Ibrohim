@@ -71,3 +71,22 @@ input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0
 }
 @media(max-width:380px){.top .lg .t{display:none}}
 .top .tb .b.s{display:inline-flex;align-items:center;justify-content:center;line-height:1.2;min-height:40px}
+
+/* ---------- Muharrir: telefonda "Tahrirlash | Ko'rish" almashtirgich (sayt to'liq ekranda ko'rinadi) ---------- */
+.mvt{display:none}
+@media(max-width:900px){
+  body.ui[data-mode=editor]{height:100dvh}
+  body[data-mode=editor] .split{position:relative;flex-direction:column;min-height:0}
+  body[data-mode=editor] .side{width:100%;height:auto;flex:1;border:0;min-height:0}
+  body[data-mode=editor] .prev{flex:1;padding:0;display:none;min-height:0}
+  body[data-mode=editor][data-view=view] .side{display:none}
+  body[data-mode=editor][data-view=view] .prev{display:block}
+  body[data-mode=editor] .prev .fr{border-radius:0;border:0;box-shadow:none;height:100%;max-width:100%}
+  body[data-mode=editor] .prev .fb{display:none}
+  body[data-mode=editor] .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:10px 12px;flex:none}body[data-mode=editor] .tabs::-webkit-scrollbar{display:none}
+  body[data-mode=editor] .tabs button{flex:none;padding:10px 15px;font-size:14px}
+  body[data-mode=editor] .panel{padding:4px 14px calc(100px + env(safe-area-inset-bottom))}
+  body[data-mode=editor] .mvt{display:flex;position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:60;background:#15110af0;border-radius:99px;padding:5px;gap:4px;box-shadow:0 14px 34px #0007;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+  .mvt button{padding:13px 22px;border-radius:99px;color:#e6dfd0;font-weight:700;font-size:15px;background:transparent;border:0;white-space:nowrap}
+  .mvt button.on{background:linear-gradient(135deg,#e6d3a3,#c8a86a);color:#15110a}
+}
