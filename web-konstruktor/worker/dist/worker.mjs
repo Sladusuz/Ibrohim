@@ -971,6 +971,16 @@ async function errApi(req, env) {
   return new Response('ok', { status: 200, headers: cors });
 }
 
+// Ommaviy jonli ko'rsatkichlar (faqat yig'ma sonlar, shaxsiy ma'lumotsiz): investor sahifasi uchun
+async function statsApi(req, env) {
+  const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz').split(',').map((x) => x.trim());
+  const cors = { 'Access-Control-Allow-Origin': allow.includes(origin) ? origin : 'https://improuzbekiston.uz', Vary: 'Origin', 'Cache-Control': 'public, max-age=300', 'Content-Type': 'application/json' };
+  const st = store(env); if (await limited(st, 'sip:' + (req.headers.get('CF-Connecting-IP') || 'x'), 30, 600)) return new Response('{}', { status: 429, headers: cors });
+  const days = []; let all = [];
+  for (let i = 6; i >= 0; i--) { const t = Date.now() - i * 864e5, ev7 = (await st.list(`ev:${dkey(t)}:`)).map((k) => k.metadata).filter(Boolean); all = all.concat(ev7); days.push({ d: dkey(t).slice(8) + '.' + dkey(t).slice(5, 7), n: ev7.filter((e) => e.k === 'msg').length }); }
+  return new Response(JSON.stringify({ chats: new Set(all.filter((e) => e.k === 'msg').map((e) => e.c)).size, leads: all.filter((e) => e.k === 'lead').length, bot: all.filter((e) => e.k === 'bot' || e.k === 'menu').length, days }), { headers: cors });
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;
@@ -993,6 +1003,7 @@ export default {
     }
     if (url.pathname === '/app' && req.method === 'GET') return new Response(APP_HTML, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
     if (url.pathname === '/api/app' && req.method === 'POST') return appApi(req, env);
+    if (url.pathname === '/stats' && req.method === 'GET') return statsApi(req, env);
     if (url.pathname === '/err') return errApi(req, env);
     if (url.pathname === '/errors' && env.SETUP_KEY && tEq(url.searchParams.get('key') || '', env.SETUP_KEY)) { const ks = (await store(env).list('err:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t).slice(0, 50); return new Response(JSON.stringify(ks), { headers: { 'content-type': 'application/json' } }); }
     if (url.pathname === '/chat') return chatApi(req, env);

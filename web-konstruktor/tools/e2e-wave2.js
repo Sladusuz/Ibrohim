@@ -119,5 +119,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const ej = await (await W.fetch(new Request('https://w.example/errors?key=setupkey123'), env, ctx)).json(); ok(ej.length === 2 && ej.some((x) => x.n === 2), '/errors JSON');
   ok((await W.fetch(new Request('https://w.example/errors?key=x'), env, ctx)).status !== 200 || true, '/errors kalitsiz');
 
+  console.log('Investor');
+  const sj2 = await (await W.fetch(new Request('https://w.example/stats', { headers: { Origin: 'https://improuzbekiston.uz' } }), env, ctx)).json(); ok(sj2.days.length === 7 && typeof sj2.chats === 'number' && !JSON.stringify(sj2).includes('900'), '/stats ommaviy yig\'ma sonlar', sj2);
   console.log(`\n${pass} o'tdi, ${fail} xato`); process.exit(fail ? 1 : 0);
 })();

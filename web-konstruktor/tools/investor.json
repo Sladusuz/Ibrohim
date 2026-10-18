@@ -1,0 +1,6 @@
+{
+  "team": [],
+  "ask": null,
+  "traction": [],
+  "note": "team: [{name, role, bio}], ask: {amount: '$100 000', use: ['Mahsulot 40%', ...]}, traction: [{label, value}] — to'ldirilsa sahifada avtomatik chiqadi; bo'sh bo'lsa bo'lim ko'rinmaydi"
+}
