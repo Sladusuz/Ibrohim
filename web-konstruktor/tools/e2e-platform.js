@@ -28,7 +28,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   let r = await api('GET', '/api/pricing'); ok(r.s === 200 && r.j.templatePrice && r.h.get('access-control-allow-origin') === 'https://improuzbekiston.uz', 'pricing + CORS', r.j);
   r = await api('POST', '/api/auth/register', { name: 'A', phone: '1', password: '123' }); ok(r.s === 400, 'noto\'g\'ri royxat rad');
   r = await api('POST', '/api/auth/register', { name: 'Ali Valiyev', phone: '+998 90 123 45 67', email: 'ali@x.uz', password: 'secret12' }); ok(r.s === 200 && r.j.token && r.j.user.name === 'Ali Valiyev' && !r.t.includes('hash'), 'royxatdan otish', r.j);
-  const tok = r.j.token; ok(tgc.some((c) => c.method === 'sendMessage' && /Yangi mijoz/.test(c.body.text)), 'admin ga xabar');
+  const tok = r.j.token, me0 = r.j.user; ok(tgc.some((c) => c.method === 'sendMessage' && /Yangi mijoz/.test(c.body.text)), 'admin ga xabar');
   r = await api('POST', '/api/auth/register', { name: 'Ali 2', phone: '90 123 45 67', password: 'secret12' }); ok(r.s === 409, 'takroriy telefon 409');
   r = await api('POST', '/api/auth/login', { id: '901234567', password: 'bad' }); ok(r.s === 401, 'noto\'g\'ri parol 401');
   r = await api('POST', '/api/auth/login', { id: 'ALI@x.uz', password: 'secret12' }); ok(r.s === 200 && r.j.token, 'email bilan kirish');
@@ -37,15 +37,20 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   r = await api('POST', '/api/me/password', { old: 'secret12', password: 'newsecret1' }, tok); ok(r.s === 200, 'parol almashtirish');
   r = await api('POST', '/api/auth/login', { id: 'ali@x.uz', password: 'newsecret1' }); ok(r.s === 200, 'yangi parol bilan kirish');
   const data = { company: { name: 'Gul Do\'kon </script>', tagline: 'Gullar' }, sections: [{ type: 'hero', text: 'Salom *dunyo*' }, { type: 'products', items: [] }], theme: {} };
-  r = await api('POST', '/api/my/projects', { name: 'Gul', template: 'gul', data }, tok); ok(r.s === 200 && r.j.project.id && r.j.project.paid === true, 'loyiha yaratish', r.j); const pid = r.j.project.id;
+  r = await api('POST', '/api/my/projects', { name: 'Gul', template: 'gul', data }, tok); ok(r.s === 200 && r.j.project.id && r.j.project.paid === false, 'loyiha yaratish (tolovsiz)', r.j); const pid = r.j.project.id;
   r = await api('GET', '/api/my/projects', null, tok); ok(r.j.length === 1 && r.j[0].name === 'Gul', 'loyihalar royxati', r.j);
   r = await api('GET', '/api/my/projects/' + pid, null, tok); ok(r.j.data.sections.length === 2, 'loyihani olish');
   data.sections[0].text = 'Yangi matn'; r = await api('PUT', '/api/my/projects/' + pid, { data, name: 'Gul 2' }, tok); ok(r.s === 200 && r.j.project.name === 'Gul 2', 'saqlash');
+  r = await api('POST', '/api/my/projects/' + pid + '/publish', { slug: 'gul-dokon' }, tok); ok(r.s === 402, 'tolovsiz joylash 402');
+  r = await api('GET', '/api/my/projects/' + pid + '/export', null, tok); ok(r.s === 402, 'tolovsiz eksport 402');
+  r = await api('POST', '/api/my/projects/' + pid + '/checkout', { method: 'card' }, tok); ok(r.s === 200 && r.j.manual && r.j.payment.uzs === 128000, 'tolov sorovi (karta)', r.j);
+  ok(tgc.some((c) => c.method === 'sendMessage' && /sotib olish/.test(c.body.text) && JSON.stringify(c.body.reply_markup).includes('pp:')), 'adminga tasdiqlash tugmasi');
+  { const S = W.store(env), k = 'pr:' + me0.id + ':' + pid, m = await S.get(k); m.paid = true; await S.put(k, m, 0, m); }
   r = await api('POST', '/api/my/projects/' + pid + '/publish', { slug: 'admin' }, tok); ok(r.s === 400, 'zahiralangan manzil rad');
   r = await api('POST', '/api/my/projects/' + pid + '/publish', { slug: 'gul-dokon' }, tok); ok(r.s === 200 && /\/s\/gul-dokon$/.test(r.j.project.url), 'joylash', r.j);
   const pg = await W.fetch(new Request(H + '/s/gul-dokon'), env, ctx); const html = await pg.text(); ok(pg.status === 200 && html.includes('Yangi matn') && !html.includes('</script>","tagline') && html.includes('window.__TENANT__'), 'saytni ochish', html.slice(0, 120));
   r = await api('POST', '/api/auth/register', { name: 'Boshqa', phone: '+998931112233', password: 'secret12' }); const tok2 = r.j.token;
-  r = await api('POST', '/api/my/projects', { name: 'X', data }, tok2); const pid2 = r.j.project.id;
+  r = await api('POST', '/api/my/projects', { name: 'X', data }, tok2); const pid2 = r.j.project.id; { const S = W.store(env), u2 = (await api('GET', '/api/me', null, tok2)).j.user, k = 'pr:' + u2.id + ':' + pid2, m = await S.get(k); m.paid = true; await S.put(k, m, 0, m); }
   r = await api('POST', '/api/my/projects/' + pid2 + '/publish', { slug: 'gul-dokon' }, tok2); ok(r.s === 409, 'band manzil 409');
   r = await api('GET', '/api/my/projects/' + pid, null, tok2); ok(r.s === 404, 'begona loyiha 404');
   r = await api('POST', '/api/order', { type: 'order', name: 'Mijoz', phone: '+998901112233', items: [{ id: 'a', name: 'Atirgul', price: 15000, qty: 2 }] }, null, { Referer: 'https://w.example/s/gul-dokon' }); ok(r.s === 200 && r.j.ok, 'sayt buyurtmasi');

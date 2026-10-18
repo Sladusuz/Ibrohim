@@ -115,8 +115,8 @@ async function platformApi(req, env, ctx, url) {
         if (await limited(st, 'pc' + me.id, 20, 3600)) return J({ error: "Juda ko'p yangi loyiha. Keyinroq urinib ko'ring." }, 429);
         if ((await myProjects()).length >= 25) return J({ error: "Loyihalar soni chegarasi (25). Keraksizini o'chiring." }, 400);
         const b = await body(1500 * 1024); if (!b.data || typeof b.data !== 'object' || !Array.isArray(b.data.sections)) return J({ error: "Noto'g'ri loyiha" }, 400);
-        const id = pRnd(6), now = new Date().toISOString(), json = JSON.stringify(b.data), free = !env.PAID_REQUIRED;
-        const meta = { id, userId: me.id, name: pStr(b.name || (b.data.company && b.data.company.name), 80) || 'Yangi sayt', template: pStr(b.template || b.data.template, 30), status: 'qoralama', plan: '', price: '', note: '', adminNote: '', createdAt: now, updatedAt: now, submittedAt: '', size: json.length, paid: free, published: false, slug: '' };
+        const id = pRnd(6), now = new Date().toISOString(), json = JSON.stringify(b.data);
+        const meta = { id, userId: me.id, name: pStr(b.name || (b.data.company && b.data.company.name), 80) || 'Yangi sayt', template: pStr(b.template || b.data.template, 30), status: 'qoralama', plan: '', price: '', note: '', adminNote: '', createdAt: now, updatedAt: now, submittedAt: '', size: json.length, paid: false, published: false, slug: '' };
         await st.put('pd:' + id, json, 0); await st.put('pr:' + me.id + ':' + id, meta, 0, meta); return J({ project: meta });
       }
       if (route === 'GET /api/my/orders') { const out = []; for (const k of await st.list('o:')) { const m = k.metadata || {}; if (m.u === me.id && !m.tn) { const o = await st.get(k.name); if (o) out.push(o); } } return J(out.sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 200)); }
