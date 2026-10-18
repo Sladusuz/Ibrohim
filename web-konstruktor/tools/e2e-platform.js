@@ -10,7 +10,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = async (url, o) => {
     const u = String(url);
     if (u.endsWith('/shablon.html')) return new Response(fs.readFileSync(path.join(__dirname, '..', 'docs', 'shablon.html'), 'utf8'), { status: 200 });
-    const m = /bot([^/]+)\/(\w+)$/.exec(u); if (m) { let b = {}; try { b = JSON.parse(o.body); } catch { /* */ } tgc.push({ method: m[2], body: b }); return new Response(JSON.stringify({ ok: true, result: { message_id: 1 } })); }
+    const m = /bot([^/]+)\/(\w+)$/.exec(u); if (m) { let b = {}; try { b = JSON.parse(o.body); } catch { /* */ } tgc.push({ method: m[2], body: b }); return new Response(JSON.stringify({ ok: true, result: m[2] === 'createInvoiceLink' ? 'https://t.me/$inv123' : { message_id: 1 } })); }
     return new Response('{}', { status: 404 });
   };
   const kv = new Map();
@@ -63,6 +63,22 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   r = await api('POST', '/api/my/projects/' + pid + '/submit', { plan: 'Standart', note: 'tez' }, tok); ok(r.s === 200 && r.j.project.plan === 'Standart' && r.j.project.submittedAt, 'buyurtma yuborish');
   r = await api('DELETE', '/api/my/projects/' + pid + '/publish', null, tok); const pg2 = await W.fetch(new Request(H + '/s/gul-dokon'), env, ctx); ok(r.s === 200 && pg2.status === 404, 'joylashni bekor qilish');
   r = await api('DELETE', '/api/my/projects/' + pid, null, tok); r = await api('GET', '/api/my/projects', null, tok); ok(r.j.length === 0, 'loyihani ochirish');
+  { // Telegram to'lovlari: GlobalPay va Click (provider_token)
+    env.GLOBALPAY_TOKEN = '111:TEST:gp'; env.CLICK_TG_TOKEN = '398062629:TEST:click';
+    r = await api('GET', '/api/pricing'); ok(r.j.payMethods.globalpay && r.j.payMethods.clicktg, 'tolov usullari: globalpay va clicktg');
+    r = await api('POST', '/api/auth/register', { name: 'To\'lovchi', phone: '+998941112233', password: 'secret12' }); const pt = r.j.token, puid = r.j.user.id;
+    r = await api('POST', '/api/my/projects', { name: 'P', data }, pt); const ppid = r.j.project.id;
+    for (const [mth, tok] of [['globalpay', '111:TEST:gp'], ['clicktg', '398062629:TEST:click']]) { tgc.length = 0; r = await api('POST', '/api/my/projects/' + ppid + '/checkout', { method: mth }, pt); const c = tgc.find((q) => q.method === 'createInvoiceLink'); ok(r.s === 200 && r.j.payUrl === 'https://t.me/$inv123' && c && c.body.provider_token === tok && c.body.currency === 'UZS' && c.body.prices[0].amount === 12800000, 'checkout ' + mth, c && c.body); }
+    const S = W.store(env), poKeys = (await S.list('po:')), pay = (await Promise.all(poKeys.map((k) => S.get(k.name)))).find((q) => q.projectId === ppid);
+    tgc.length = 0; await W.handleUpdate(env, { pre_checkout_query: { id: 'q1', invoice_payload: 'po:' + pay.id, currency: 'UZS', total_amount: pay.uzs * 100 } }); ok(tgc.some((c) => c.method === 'answerPreCheckoutQuery' && c.body.ok === true), 'pre_checkout: togri summa qabul');
+    tgc.length = 0; await W.handleUpdate(env, { pre_checkout_query: { id: 'q2', invoice_payload: 'po:' + pay.id, currency: 'UZS', total_amount: 5 } }); ok(tgc.some((c) => c.method === 'answerPreCheckoutQuery' && c.body.ok === false), 'pre_checkout: notogri summa rad');
+    r = await api('POST', '/api/my/projects/' + ppid + '/publish', { slug: 'tolov-test' }, pt); ok(r.s === 402, 'tolovdan oldin joylab bolmaydi');
+    tgc.length = 0; await W.handleUpdate(env, { message: { message_id: 5, chat: { id: 555, type: 'private' }, from: { id: 555, first_name: 'Tolovchi' }, successful_payment: { currency: 'UZS', total_amount: pay.uzs * 100, invoice_payload: 'po:' + pay.id, telegram_payment_charge_id: 'tc1', provider_payment_charge_id: 'pc1' } } });
+    r = await api('POST', '/api/my/projects/' + ppid + '/publish', { slug: 'tolov-test' }, pt); ok(r.s === 200, 'tolovdan keyin joylash ochiladi', r.j);
+    ok(tgc.some((c) => c.method === 'sendMessage' && /GlobalPay|to'lov qabul/i.test(c.body.text)), 'adminga va mijozga xabar');
+    tgc.length = 0; await W.handleUpdate(env, { message: { message_id: 6, chat: { id: 555, type: 'private' }, from: { id: 555 }, successful_payment: { currency: 'UZS', total_amount: pay.uzs * 100, invoice_payload: 'po:' + pay.id, telegram_payment_charge_id: 'tc1' } } }); ok(!tgc.some((c) => c.method === 'sendMessage'), 'takroriy tolov ikki marta hisoblanmaydi');
+    delete env.GLOBALPAY_TOKEN; delete env.CLICK_TG_TOKEN;
+  }
   { // veb admin panel: /api/admin/*
     r = await api('GET', '/api/admin/stats'); ok(r.s === 401, 'admin: tokensiz 401');
     r = await api('POST', '/api/admin/login', { password: 'wrong' }); ok(r.s === 401, 'admin: noto\'g\'ri parol');

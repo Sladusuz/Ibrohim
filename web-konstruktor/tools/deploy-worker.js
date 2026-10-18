@@ -39,6 +39,8 @@ async function cf(method, p, body, headers) {
     ...(E.SMS_KEY ? [{ type: 'secret_text', name: 'SMS_KEY', text: E.SMS_KEY }] : []),
     ...(E.CARD_INFO ? [{ type: 'plain_text', name: 'CARD_INFO', text: E.CARD_INFO }] : []),
     ...(E.PAYME_KEY ? [{ type: 'secret_text', name: 'PAYME_KEY', text: E.PAYME_KEY }] : []),
+    ...(E.CLICK_TG_TOKEN ? [{ type: 'secret_text', name: 'CLICK_TG_TOKEN', text: E.CLICK_TG_TOKEN }] : []),
+    ...(E.GLOBALPAY_TOKEN ? [{ type: 'secret_text', name: 'GLOBALPAY_TOKEN', text: E.GLOBALPAY_TOKEN }] : []),
     ...(E.APP_BOT_TOKEN ? [{ type: 'secret_text', name: 'APP_BOT_TOKEN', text: E.APP_BOT_TOKEN }] : []),
     ...(E.BARK_KEY ? [{ type: 'secret_text', name: 'BARK_KEY', text: E.BARK_KEY }] : []),
     ...(E.PUSHBULLET_TOKEN ? [{ type: 'secret_text', name: 'PUSHBULLET_TOKEN', text: E.PUSHBULLET_TOKEN }] : []),

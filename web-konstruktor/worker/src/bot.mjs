@@ -237,6 +237,7 @@ async function flowText(env, st, m, rec) {
   if (text === '/cancel') { rec.flow = null; await saveRec(st, chat, rec); return say(env, chat, "Anketa bekor qilindi. Savolingizni yozishingiz mumkin.", { reply_markup: MENU }); }
   if (f.step === 'payamt') {
     const n = Number(text.replace(/[^\d]/g, '')); if (!n || n < 1000 || n > 500000000) return say(env, chat, "Summani raqam bilan yozing, masalan: <code>1500000</code>");
+    if (GP_ON(env)) { rec.flow = null; await saveRec(st, chat, rec); const p = await createPayOrder(env, st, n, `Bot: ${who(m)} (${chat})`); const r = await tg(env, 'sendInvoice', { chat_id: chat, ...gpParams(env, p, "Impro IT: to'lov") }); if (r) return say(env, chat, "Yuqoridagi «To'lash» tugmasini bosing. To'lov Telegram ichida, karta bilan xavfsiz bajariladi." + (env.CARD_INFO ? '\n\nYoki kartaga o\'tkazish uchun /tolov ni qayta bosing.' : '')); p.state = 'failed'; await payOrderPut(st, p); }
     const own = await uniqueAmount(st, n); rec.flow = null; rec.payAmt = own; rec.payWait = Date.now(); await saveRec(st, chat, rec);
     if (await takeCredit(st, own)) { await confirmPay(env, st, chat, 'avtomatik (SMS)'); for (const a of await adminsOf(env, st)) await say(env, a, `✅ <b>Avtomatik tasdiqlandi</b>: ${esc(who(m))} <code>${chat}</code>, ${sum(own)} so'm (kartaga allaqachon tushgan edi)`); return; }
     return say(env, chat, `💳 Aynan <b>${sum(own)} so'm</b> o'tkazing${own !== n ? ` (oxirgi raqamlar to'lovingizni aniqlash uchun: summa ${sum(n)} dan ${own - n} so'mga farq qiladi)` : ''}:\n\n${esc(env.CARD_INFO)}\n\n⚠️ Summa <b>aynan shunday</b> bo'lsin. Pul kelgach to'lovingiz <b>avtomatik tasdiqlanadi</b>. Xohlasangiz, chek rasmini shu yerga yuboring.`);
@@ -521,6 +522,8 @@ async function handleCallback(env, st, q) {
 async function handleUpdate(env, upd) {
   ENV_REF = env;
   if (upd && upd.callback_query) return handleCallback(env, store(env), upd.callback_query);
+  if (upd && upd.pre_checkout_query) return gpPreCheckout(env, upd.pre_checkout_query);
+  if (upd && upd.message && upd.message.successful_payment) return gpPaid(env, upd.message);
   const m = upd && upd.message; if (!m || !m.chat || m.chat.type !== 'private') return;
   const st = store(env), chat = m.chat.id, text = (m.text || '').trim();
   const cmd = (text.split(/\s+/)[0] || '').replace(/@\w+$/, '').toLowerCase(), arg = text.slice((text.split(/\s+/)[0] || '').length).trim();
@@ -835,7 +838,7 @@ async function health(env, st, admins, now) {
   try {
     const wi = await tg(env, 'getWebhookInfo', {}); let problem = ''; if (wi && typeof wi !== 'object') return;
     if (!wi) problem = 'Telegram bilan aloqa yo\'q (token noto\'g\'ri bo\'lishi mumkin)';
-    else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(env, 'setWebhook', { url: o + '/hook/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query'] }); problem = r ? '' : 'Webhook yo\'q edi, tiklashga urinildi: bo\'lmadi'; if (r) await st.put('hl:healed', now, 86400); } else problem = 'Webhook o\'rnatilmagan: /setup ni oching'; }
+    else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(env, 'setWebhook', { url: o + '/hook/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'] }); problem = r ? '' : 'Webhook yo\'q edi, tiklashga urinildi: bo\'lmadi'; if (r) await st.put('hl:healed', now, 86400); } else problem = 'Webhook o\'rnatilmagan: /setup ni oching'; }
     else if (wi.last_error_date && now / 1000 - wi.last_error_date < 600) problem = 'Telegram yetkazishda xato: ' + String(wi.last_error_message || '').slice(0, 120);
     if (!problem) { await st.put('hl:ok', now, 3600); return; }
     if (await st.get('hl:alert')) return; await st.put('hl:alert', 1, 6 * 3600);
@@ -1032,6 +1035,24 @@ async function clickRpc(req, env) {
   return out({ error: -3, error_note: 'Action not found' });
 }
 
+// GlobalPay (Telegram to'lovlari): provider_token BotFather orqali beriladi, to'lov Telegram ichida bajariladi
+const PROVTOK = (env, k) => (k === 'click' ? env.CLICK_TG_TOKEN : env.GLOBALPAY_TOKEN) || '';
+const GP_ON = (env, k) => (k ? !!PROVTOK(env, k) : !!(env.GLOBALPAY_TOKEN || env.CLICK_TG_TOKEN));
+const gpParams = (env, p, title, k) => ({ title: String(title || "Impro IT: to'lov").slice(0, 32), description: String(p.note || "Impro IT xizmati uchun to'lov").slice(0, 200), payload: 'po:' + p.id, provider_token: PROVTOK(env, k || (env.GLOBALPAY_TOKEN ? 'gp' : 'click')), currency: 'UZS', prices: [{ label: "To'lov", amount: Math.round(p.uzs * 100) }] });
+async function gpLink(env, p, title, k) { const r = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/createInvoiceLink`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(gpParams(env, p, title, k)) }).then((x) => x.json()).catch((e) => ({ ok: false, description: e.message })); return r.ok ? { url: r.result } : { error: r.description || 'xato' }; }
+async function gpPreCheckout(env, q) {
+  const st = store(env), p = await st.get('po:' + String(q.invoice_payload || '').replace(/^po:/, '')), ok = !!p && p.state === 'pending' && q.currency === 'UZS' && Number(q.total_amount) === Math.round(p.uzs * 100);
+  return tg(env, 'answerPreCheckoutQuery', ok ? { pre_checkout_query_id: q.id, ok: true } : { pre_checkout_query_id: q.id, ok: false, error_message: "To'lov topilmadi yoki muddati o'tgan. Qaytadan urinib ko'ring." });
+}
+async function gpPaid(env, m) {
+  const st = store(env), sp = m.successful_payment, p = await st.get('po:' + String(sp.invoice_payload || '').replace(/^po:/, '')); if (!p) return;
+  if (p.state === 'paid') return;
+  p.state = 'paid'; p.paidAt = Date.now(); p.ref = 'gp:' + (sp.provider_payment_charge_id || sp.telegram_payment_charge_id || ''); await payOrderPut(st, p); await markProjectPaid(st, p);
+  const chat = m.chat.id, who2 = [m.from && m.from.first_name, m.from && m.from.username && '@' + m.from.username].filter(Boolean).join(' ');
+  if (p.projectId) await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Saytingizni endi joylash yoki yuklab olish mumkin. Saytga qaytib sahifani yangilang.");
+  else { const rec = (await st.get('c:' + chat)) || {}; rec.payAmt = p.uzs; await saveRec(st, chat, rec); await confirmPay(env, st, chat, 'GlobalPay'); }
+  for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>GlobalPay: to'lov qabul qilindi</b>\n${sum(p.uzs)} so'm · ${esc(who2)}${p.projectId ? '\n🌐 Sayt sotib olindi' : ''}\n${esc(p.note || '')}`);
+}
 async function markProjectPaid(st, p) { if (!p.projectId || !p.ownerId) return; const k = 'pr:' + p.ownerId + ':' + p.projectId, m = await st.get(k); if (m) { m.paid = true; m.updatedAt = new Date().toISOString(); await st.put(k, m, 0, m); } }
 export default {
   async fetch(req, env, ctx) {
@@ -1040,12 +1061,13 @@ export default {
       if (!tEq(url.searchParams.get('key') || '', env.SETUP_KEY)) return new Response('no', { status: 403 });
       if (!env.WEBHOOK_SECRET || !env.TG_TOKEN) return new Response('TG_TOKEN va WEBHOOK_SECRET kerak', { status: 400 });
       try { await store(env).put('origin', url.origin); } catch { /* ixtiyoriy */ }
-      const wr = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/setWebhook`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: `${url.origin}/hook/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query'], drop_pending_updates: false }) }), wj = await wr.json().catch(() => ({})), w = wj.ok ? wj.result : null;
+      const wr = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/setWebhook`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: `${url.origin}/hook/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'], drop_pending_updates: false }) }), wj = await wr.json().catch(() => ({})), w = wj.ok ? wj.result : null;
       await tg(env, 'setChatMenuButton', { chat_id: Number(String(env.TG_CHAT || '').split(',')[0]) || undefined, menu_button: { type: 'web_app', text: 'Panel', web_app: { url: PANEL_URL(env) } } });
       await tg(env, 'setMyCommands', { commands: [{ command: 'start', description: 'Boshlash' }] });
+      let gp = {}; for (const k of ['gp', 'click']) if (GP_ON(env, k)) { const probe = await gpLink(env, { id: 'probe', uzs: 1000, note: 'sinov' }, 'Sinov', k); gp[k] = probe.url ? 'ok' : probe.error; try { await store(env).put('gpok:' + k, probe.url ? 1 : 0); } catch { /* ixtiyoriy */ } }
       let app = null; if (env.APP_BOT_TOKEN) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const w2 = await tg(e2, 'setWebhook', { url: `${url.origin}/hook2/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message'] }); await tg(e2, 'setChatMenuButton', { menu_button: { type: 'web_app', text: 'Panel', web_app: { url: PANEL_URL(env) } } }); await tg(e2, 'setMyCommands', { commands: [{ command: 'start', description: 'Admin panelni ochish' }] }); const m2 = await tg(e2, 'getMe', {}); app = { bot: m2 && m2.username, webhook: !!w2 }; }
       const me = await tg(env, 'getMe', {});
-      return new Response(JSON.stringify({ webhook: !!w, app, ...(w ? {} : { error: wj.description || 'noma\'lum' }), bot: me && me.username, store: env.DB ? 'd1' : env.STATE ? 'kv' : 'xotira', ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify({ webhook: !!w, app, globalpay: gp, ...(w ? {} : { error: wj.description || 'noma\'lum' }), bot: me && me.username, store: env.DB ? 'd1' : env.STATE ? 'kv' : 'xotira', ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
     }
     if (url.pathname.startsWith('/hook/')) {
       if (req.method !== 'POST' || !env.WEBHOOK_SECRET || !tEq(url.pathname.slice(6), env.WEBHOOK_SECRET) || !tEq(req.headers.get('X-Telegram-Bot-Api-Secret-Token') || '', env.WEBHOOK_SECRET)) return new Response('no', { status: 403 });
