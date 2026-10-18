@@ -17,13 +17,35 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const api = async (method, p, body, tok, hdr) => { const r = await W.fetch(new Request(H + p, { method, headers: { 'content-type': 'application/json', Origin: 'https://improuzbekiston.uz', ...(tok ? { Authorization: 'Bearer ' + tok } : {}), ...(hdr || {}) }, body: body ? JSON.stringify(body) : undefined }), env, ctx); await Promise.all(pend.splice(0)); let j = null, t = ''; try { t = await r.clone().text(); j = JSON.parse(t); } catch { /* */ } return { s: r.status, j, t }; };
   let r = await api('POST', '/api/auth/register', { name: "Do'kon egasi", phone: '+998901230000', password: 'secret12' }); const tok = r.j.token, uid = r.j.user.id;
   r = await api('POST', '/api/my/bots', { token: 'xato', name: 'X' }, tok); ok(r.s === 400 && /Token noto'g'ri/.test(r.j.error), "noto'g'ri token rad etiladi");
-  r = await api('POST', '/api/my/bots', { token: BT, name: 'Baraka Market' }, tok); ok(r.s === 200 && r.j.bot && r.j.bot.username === 'baraka_test_bot' && r.j.webhook === true, 'bot ulandi (getMe + setWebhook)', r.j);
-  const bot = r.j.bot, sw = calls.find((c) => c.method === 'setWebhook'); ok(sw && sw.tok === BT && sw.body.url.startsWith(`${H}/api/tg/${bot.id}/`) && sw.body.secret_token, 'webhook manzili to\'g\'ri', sw && sw.body.url); const secret = sw.body.secret_token;
+  r = await api('POST', '/api/my/bots', { token: BT, name: 'Baraka Market' }, tok); ok(r.s === 200 && r.j.bot && r.j.bot.username === 'baraka_test_bot' && r.j.webhook === false && r.j.bot.status === 'kutilmoqda', "bot yaratildi, to'lovgacha ulanmaydi", r.j);
+  const bot = r.j.bot; ok(!calls.some((c) => c.method === 'setWebhook'), "to'lovdan oldin webhook o'rnatilmaydi"); ok(r.j.bot.price.dueUsd === 15 && r.j.bot.price.items.length === 1, 'asosiy bot narxi $15', r.j.bot.price);
   ok(!r.t.includes(BT), 'token javobda ochiq ko\'rinmaydi'); ok(r.j.bot.claimLink.includes('?start='), 'egalik havolasi bor');
   r = await api('POST', '/api/my/bots', { token: BT, name: 'Dublikat' }, tok); ok(r.s === 400 && /allaqachon/.test(r.j.error), 'takroriy bot rad etiladi');
   const cfg = { title: 'Baraka Market', welcome: 'Xush kelibsiz!', currency: "so'm", contact: { phone: '+998 90 111 22 33', address: 'Toshkent', hours: '9-18' }, buttons: [{ text: '🛍 Katalog', type: 'catalog' }, { text: '📞 Aloqa', type: 'contact' }, { text: 'Narx', type: 'text', value: 'Narxlar katalogda' }], replies: [{ keyword: 'yetkazib', answer: 'Yetkazib berish bepul' }], miniApp: { enabled: true, title: "Do'kon", accent: '#16a34a' }, products: [{ id: 'p1', name: 'Olma', price: 12000, category: 'Meva', active: true }, { id: 'p2', name: 'Nok', price: 18000, category: 'Meva', active: true }, { id: 'p3', name: 'Sut', price: 9000, category: 'Sut', active: true }, { id: 'p4', name: 'Yashirin', price: 1, category: 'Sut', active: false }] };
   r = await api('PUT', '/api/my/bots/' + bot.id, { config: cfg }, tok); ok(r.s === 200 && r.j.config.products.length === 4, 'sozlamalar saqlandi');
-  ok(calls.some((c) => c.method === 'setChatMenuButton' && c.body.menu_button && c.body.menu_button.type === 'web_app' && c.body.menu_button.web_app.url === `${H}/app/${bot.id}`), 'mini ilova menyu tugmasi o\'rnatildi');
+  ok(r.j.price.dueUsd === 55 && r.j.price.items.map((i) => i.k).join() === 'base,catalog,mini' && !calls.some((c) => c.method === 'setWebhook'), "narx: asosiy 15 + katalog 20 + mini ilova 20 = $55 (to'lovgacha ulanmaydi)", r.j.price);
+  r = await api('POST', '/api/pricing'.replace('POST', ''), null); r = await api('GET', '/api/pricing'); ok(r.j.botPrices && r.j.botPrices.base === 15 && r.j.botPrices.catalog === 20 && r.j.botPrices.mini === 20, 'ommaviy narxlar: bot 15/20/20', r.j.botPrices);
+  r = await api('POST', '/api/my/bots/' + bot.id + '/connect', {}, tok); ok(r.s === 402, "to'lovsiz qayta ulab bo'lmaydi");
+  let page0 = await W.fetch(new Request(`${H}/app/${bot.id}`), env, ctx); ok(page0.status === 404, "to'lovgacha mini ilova ochilmaydi");
+  calls.length = 0; r = await api('POST', '/api/my/bots/' + bot.id + '/checkout', { method: 'manual' }, tok); ok(r.s === 200 && r.j.manual && r.j.payment.usd === 55 && r.j.payment.uzs === 55 * 12800, "to'lov so'rovi: $55", r.j);
+  const adminMsg = calls.find((c) => c.method === 'sendMessage' && c.body.chat_id === 7 && /Bot sotib olish/.test(c.body.text)); ok(adminMsg && /pb:/.test(JSON.stringify(adminMsg.body.reply_markup)), 'adminga tasdiqlash tugmasi bor');
+  const cbData = adminMsg.body.reply_markup.inline_keyboard[0][0].callback_data;
+  // faqat asosiy bot to'langan holat: katalog va mini ilova yopiq
+  calls.length = 0; await W.handleUpdate(env, { callback_query: { id: 'cqb', data: 'pb:' + bot.id + ':base', from: { id: 7 }, message: { chat: { id: 7 }, message_id: 3 } } });
+  ok(calls.some((c) => c.method === 'setWebhook' && c.tok === BT), "asosiy bot to'langach webhook o'rnatildi"); const secret0 = calls.find((c) => c.method === 'setWebhook').body.secret_token;
+  r = await api('GET', `/api/app/${bot.id}/config`); ok(r.s === 200 && r.j.products.length === 0 && r.j.enabled === false, "katalog va mini ilova to'lanmagan: yopiq (mahsulotlar chiqmaydi)", r.j);
+  r = await api('GET', '/api/my/bots/' + bot.id, null, tok); ok(r.j.price.dueUsd === 40 && r.j.price.active === true && r.j.status === 'faol', "qolgan to'lov $40, bot faol", r.j.price);
+  r = await api('POST', `/api/app/${bot.id}/order`, { initData: 'x', name: 'Ali', phone: '+998901112233', items: [{ id: 'p1', qty: 1 }] }); ok(r.s === 401, 'soxta initData rad');
+  calls.length = 0; await W.handleUpdate(env, { callback_query: { id: 'cqc', data: cbData, from: { id: 7 }, message: { chat: { id: 7 }, message_id: 4 } } });
+  r = await api('GET', `/api/app/${bot.id}/config`); ok(r.j.products.length === 3 && r.j.enabled === true, "hammasi to'langach katalog va mini ilova ochildi", r.j);
+  ok(calls.some((c) => c.method === 'setChatMenuButton' && c.body.menu_button.type === 'web_app'), "mini ilova menyu tugmasi o'rnatildi");
+  r = await api('GET', '/api/my/bots/' + bot.id, null, tok); ok(r.j.price.dueUsd === 0, "to'lov qoldig'i yo'q");
+  // GlobalPay / Click Telegram to'lovi: yangi qo'shilgan imkoniyat (mini ilova o'chirib-yoqilsa qayta to'lov so'ralmaydi)
+  env.CLICK_TG_TOKEN = '398062629:TEST:click';
+  r = await api('POST', '/api/my/bots/' + bot.id + '/checkout', { method: 'clicktg' }, tok); ok(r.j.paid === true, "to'langan bo'lsa qayta to'lov so'ralmaydi");
+  delete env.CLICK_TG_TOKEN;
+  const cfg2 = JSON.parse(JSON.stringify(cfg)); cfg2.products = []; cfg2.miniApp.enabled = false; r = await api('PUT', '/api/my/bots/' + bot.id, { config: cfg2 }, tok); ok(r.j.price.dueUsd === 0 && r.j.price.items.length === 1, 'imkoniyat o\'chirilsa narx tushadi'); r = await api('PUT', '/api/my/bots/' + bot.id, { config: cfg }, tok); ok(r.j.price.dueUsd === 0, "qayta yoqilsa to'langani saqlanadi");
+  const secret = secret0; const sw = { body: { url: `${H}/api/tg/${bot.id}/${secret}`, secret_token: secret } };
   // webhook
   const hook = async (upd, sec = secret, hdr = secret) => { const x = await api('POST', `/api/tg/${bot.id}/${sec}`, upd, null, hdr ? { 'X-Telegram-Bot-Api-Secret-Token': hdr } : {}); return x; };
   r = await hook({ message: { message_id: 1, chat: { id: 500, type: 'private' }, from: { id: 500, first_name: 'Mijoz', username: 'mijoz1' }, text: '/start' } }, 'a'.repeat(32)); ok(r.s === 403, 'noto\'g\'ri sir rad etiladi');

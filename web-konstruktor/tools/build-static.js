@@ -8,7 +8,7 @@ const MARK = '/*__DATA__*/null';
 const rd = (f) => fs.readFileSync(path.join(P, f), 'utf8');
 
 const css = (rd('style.css') + '\n' + rd('motion.css')).replace(/\[data-theme=/g, '[data-site=');
-const libs = ['icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'motion.js', 'brief.js'].map(rd).join('\n');
+const libs = ['icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'inline-edit.js', 'motion.js', 'brief.js'].map(rd).join('\n');
 const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">';
 
 // opts.account: config.js + auth.js ulanadi (asosiy sayt); opts.data: ma'lumot ichiga joylanadi

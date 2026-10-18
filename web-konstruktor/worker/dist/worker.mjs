@@ -278,7 +278,7 @@ async function platformApi(req, env, ctx, url) {
   const me = await authUser(req, st), need = () => J({ error: 'Kirish talab qilinadi' }, 401);
   try {
     if (/^\/api\/(tg|app)\//.test(pn)) { const r = await tbPublicApi(req, env, ctx, url, J, body); if (r) return r; }
-    if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY), globalpay: GP_ON(env, 'gp') && (await st.get('gpok:gp')) !== 0, clicktg: GP_ON(env, 'click') && (await st.get('gpok:click')) !== 0 }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: false });
+    if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), botPrices: (await tbPrices(st)).usd, payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY), globalpay: GP_ON(env, 'gp') && (await st.get('gpok:gp')) !== 0, clicktg: GP_ON(env, 'click') && (await st.get('gpok:click')) !== 0 }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: false });
     if (route === 'GET /api/site') return J(SITE);
     if (route === 'POST /api/adminbot/session') { // Telegram Mini App ichidan admin kirishi (initData imzosi bo'yicha)
       const b = await body(8192), u = await verifyInit(env, String(b.initData || ''));
@@ -502,9 +502,10 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
   }
   if (route === 'GET /api/admin/bots') {
     const us = Object.fromEntries((await uMetas()).map((u) => [u.id, u])), os = (await st.list('o:')).map((k) => k.metadata).filter((m) => m && m.bt), out = [];
-    for (const k of await st.list('tb:')) { const m = k.metadata; if (!m) continue; const b = await tbGet(st, k.name.slice(3)); if (!b) continue; out.push({ id: b.id, name: b.name, username: b.username, status: b.status, owner: us[b.userId] ? us[b.userId].n : '', phone: us[b.userId] ? us[b.userId].p : '', subscribers: await tbSubs(st, b.id), orders: os.filter((x) => x.bt === b.id).length, webhook: !!b.webhookOk, miniApp: !!b.config.miniApp.enabled, createdAt: b.createdAt }); }
+    for (const k of await st.list('tb:')) { const m = k.metadata; if (!m) continue; const b = await tbGet(st, k.name.slice(3)); if (!b) continue; out.push({ id: b.id, name: b.name, username: b.username, status: b.status, owner: us[b.userId] ? us[b.userId].n : '', phone: us[b.userId] ? us[b.userId].p : '', subscribers: await tbSubs(st, b.id), orders: os.filter((x) => x.bt === b.id).length, paid: (b.paidF || []).includes('base'), dueUsd: tbPriceInfo(b, await tbPrices(st)).dueUsd, webhook: !!b.webhookOk, miniApp: !!b.config.miniApp.enabled, createdAt: b.createdAt }); }
     return J(out);
   }
+  { const bp = /^\/api\/admin\/bots\/([a-f0-9]{6,24})\/paid$/.exec(pn); if (bp && req.method === 'POST') { const b = await tbGet(st, bp[1]); if (!b) return J({ error: 'Topilmadi' }, 404); await markBotPaid(st, { botId: b.id, parts: tbPriceInfo(b, await tbPrices(st)).dueKeys }); return J({ ok: true }); } }
   { const bm = /^\/api\/admin\/bots\/([a-f0-9]{6,24})$/.exec(pn); if (bm && req.method === 'DELETE') { const b = await tbGet(st, bm[1]); if (!b) return J({ error: 'Topilmadi' }, 404); await tbRemove(st, b); return J({ ok: true }); } }
   if (pn.startsWith('/api/admin/adminbot/')) return J({ error: "Bu funksiya hozircha mavjud emas. Admin bot @improuzbekiston_bot orqali ishlaydi." }, 400);
   if (route === 'GET /api/admin/payments') { const out = []; for (const k of (await st.list('po:')).slice(0, 100)) { const x = await st.get(k.name); if (x) out.push({ id: x.id, projectId: x.projectId || '', project: x.note || '', user: '', phone: '', usd: 0, uzs: x.uzs, method: x.ref ? 'click' : x.tx ? 'payme' : 'karta', state: x.state, createdAt: new Date(x.createdAt).toISOString(), paidAt: x.paidAt ? new Date(x.paidAt).toISOString() : '' }); } return J(out); }
@@ -555,10 +556,16 @@ function tbClean(c, prev) {
   const seen = new Set(); out.products.forEach((p) => { while (seen.has(p.id)) p.id = pRnd(3); seen.add(p.id); });
   return out;
 }
-const tbPub = (b, origin) => ({ id: b.id, name: b.name, username: b.username, status: b.status, tokenHint: b.token ? '••••' + b.token.slice(-4) : '', config: b.config, claim: b.claim, ownerLinked: !!b.ownerChat, webhook: !!b.webhookOk, createdAt: b.createdAt, appUrl: `${origin}/app/${b.id}`, link: `https://t.me/${b.username}`, claimLink: `https://t.me/${b.username}?start=${b.claim}` });
+const tbPub = (b, origin, pr) => ({ price: pr ? tbPriceInfo(b, pr) : undefined, id: b.id, name: b.name, username: b.username, status: b.status, tokenHint: b.token ? '••••' + b.token.slice(-4) : '', config: b.config, claim: b.claim, ownerLinked: !!b.ownerChat, webhook: !!b.webhookOk, createdAt: b.createdAt, appUrl: `${origin}/app/${b.id}`, link: `https://t.me/${b.username}`, claimLink: `https://t.me/${b.username}?start=${b.claim}` });
 const tbPublicConfig = (b) => ({ title: b.config.miniApp.title || b.config.title, shop: b.config.title, currency: b.config.currency, accent: b.config.miniApp.accent, about: b.config.about, contact: b.config.contact, enabled: b.config.miniApp.enabled, products: b.config.products.filter((p) => p.active).map((p) => ({ id: p.id, name: p.name, price: p.price, description: p.description, image: p.image, category: p.category })) });
+const TB_LABEL = { base: 'Asosiy bot (menyu, avto-javob, aloqa)', catalog: 'Katalog va savat', mini: 'Mini ilova (Telegram ichidagi do\'kon)' };
+const tbParts = (c) => ['base', ...(c.products.length ? ['catalog'] : []), ...(c.miniApp.enabled ? ['mini'] : [])];
+async function tbPrices(st) { const pr = (await st.get('pricing')) || {}; return { usd: { base: 15, catalog: 20, mini: 20, ...(pr.botPrices || {}) }, rate: (pr.templatePrice || (typeof PRICING !== 'undefined' && PRICING.templatePrice) || { rate: 12800 }).rate || 12800 }; }
+const tbPriceInfo = (b, pr) => { const paid = b.paidF || [], items = tbParts(b.config).map((k) => ({ k, label: TB_LABEL[k], usd: pr.usd[k], paid: paid.includes(k) })), due = items.filter((x) => !x.paid), dueUsd = due.reduce((a, x) => a + x.usd, 0); return { items, dueKeys: due.map((x) => x.k), dueUsd, uzs: Math.round(dueUsd * pr.rate), active: paid.includes('base') }; };
+// Faqat to'langan imkoniyatlar ishlaydi: katalog to'lanmagan bo'lsa mahsulotlar yashirin, mini ilova to'lanmagan bo'lsa o'chiq
+const tbEffBot = (b) => { const paid = b.paidF || [], c = JSON.parse(JSON.stringify(b.config)); if (!paid.includes('catalog')) c.products = []; if (!paid.includes('mini')) c.miniApp.enabled = false; return { ...b, config: c }; };
 const tbGet = (st, id) => st.get('tb:' + String(id).replace(/[^a-f0-9]/g, ''));
-async function tbSave(st, b) { await st.put('tb:' + b.id, b, 0, { u: b.userId, n: String(b.name || '').slice(0, 40), un: b.username || '', s: b.status, t: Date.parse(b.createdAt) || Date.now() }); }
+async function tbSave(st, b) { await st.put('tb:' + b.id, b, 0, { u: b.userId, n: String(b.name || '').slice(0, 40), un: b.username || '', s: b.status, pd: (b.paidF || []).includes('base') ? 1 : 0, t: Date.parse(b.createdAt) || Date.now() }); }
 async function tbSubs(st, id) { return (await st.list('tbu:' + id + ':')).length; }
 async function tbOrdersOf(st, id) { return (await st.list('o:')).filter((k) => k.metadata && k.metadata.bt === id); }
 async function tbConnect(b, origin) {
@@ -573,10 +580,16 @@ async function tbCreate(env, st, userId, token, name, origin) {
   if (!/^\d{6,12}:[\w-]{30,50}$/.test(token)) throw new Error("Token noto'g'ri. @BotFather bergan token shu ko'rinishda bo'ladi: 123456789:AA...");
   for (const k of await st.list('tb:')) { const o = await st.get(k.name); if (o && o.token === token) throw new Error('Bu bot allaqachon ulangan'); }
   let me; try { me = await tbTg(token, 'getMe'); } catch { throw new Error("Token ishlamadi. @BotFather da tokenni qayta tekshiring."); }
-  const b = { id: pRnd(6), userId, token, secret: pRnd(16), claim: pRnd(4), username: me.username || '', name: tbCut(name, 60) || me.first_name || me.username, status: 'faol', ownerChat: 0, webhookOk: false, createdAt: new Date().toISOString() };
+  const b = { id: pRnd(6), userId, token, secret: pRnd(16), claim: pRnd(4), username: me.username || '', name: tbCut(name, 60) || me.first_name || me.username, status: 'kutilmoqda', paidF: [], ownerChat: 0, webhookOk: false, createdAt: new Date().toISOString() };
   b.config = tbClean({ title: b.name, welcome: tbDefaults(b.name).welcome }, null);
-  let res = { webhook: false, warn: '' }; try { res = await tbConnect(b, origin); } catch (e) { res = { webhook: false, warn: e.message }; }
-  await tbSave(st, b); return { bot: tbPub(b, origin), ...res };
+  await tbSave(st, b); return { bot: tbPub(b, origin, await tbPrices(st)), webhook: false, warn: '' };
+}
+async function markBotPaid(st, p) {
+  const b = await tbGet(st, p.botId); if (!b) return; const had = (b.paidF || []).includes('base');
+  b.paidF = [...new Set([...(b.paidF || []), ...(p.parts || [])])]; if (b.paidF.includes('base')) b.status = 'faol';
+  let warn = ''; if (!had && b.paidF.includes('base')) { try { await tbConnect(b, ENV_ORIGIN || 'https://impro-bot.impro-6c9a2d.workers.dev'); } catch (e) { warn = e.message; } } else if (b.paidF.includes('base')) { try { await tbConnect(b, ENV_ORIGIN || 'https://impro-bot.impro-6c9a2d.workers.dev'); } catch { /* ixtiyoriy */ } }
+  await tbSave(st, b);
+  const env = ENV_REF; if (env) for (const a of await adminsOf(env, st)) await say(env, a, `🤖 <b>Bot to'landi</b>: @${esc(b.username)} · ${esc((p.parts || []).join(', '))}${warn ? '\n⚠️ ' + esc(warn) : ''}`, { disable_notification: true });
 }
 async function tbRemove(st, b) { try { await tbTg(b.token, 'deleteWebhook', { drop_pending_updates: true }); } catch { /* ixtiyoriy */ } for (const k of await st.list('tbu:' + b.id + ':')) await st.put(k.name, null, 60); await st.put('tb:' + b.id, null, 60); }
 // Buyurtma (bot ichidan ham, mini ilovadan ham)
@@ -609,7 +622,8 @@ const tbKeyboard = (b, origin) => {
   return { keyboard: rows, resize_keyboard: true, is_persistent: true };
 };
 // Webhook: mijoz botiga kelgan xabar
-async function tbHandle(env, st, b, upd, origin) {
+async function tbHandle(env, st, real, upd, origin) {
+  if (!(real.paidF || []).includes('base')) return; const b = tbEffBot(real);
   const T = (m, p) => tbTg(b.token, m, p).catch(() => null), say = (chat, text, extra) => T('sendMessage', { chat_id: chat, text, parse_mode: 'HTML', ...extra });
   const getU = async (chat, from) => { const o = (await st.get(`tbu:${b.id}:${chat}`)) || { name: '', username: '', joined: new Date().toISOString(), cart: {}, step: '' }; if (from) { o.name = tbCut(from.first_name, 60); o.username = tbCut(from.username, 40); } return o; };
   const putU = (chat, u) => st.put(`tbu:${b.id}:${chat}`, u, 0, { t: Date.parse(u.joined) || Date.now(), n: u.name });
@@ -645,7 +659,7 @@ async function tbHandle(env, st, b, upd, origin) {
   const chat = m.chat.id, from = m.from || {}, u = await getU(chat, from), text = String(m.text || '').trim(), owner = b.ownerChat && chat === b.ownerChat;
   if (/^\/start\b/.test(text)) {
     const payload = text.split(/\s+/)[1] || '';
-    if (payload && payload === b.claim) { b.ownerChat = chat; await tbSave(st, b); await say(chat, "✅ <b>Siz bot egasi sifatida ulandingiz.</b> Yangi buyurtmalar shu yerga keladi.\n\nBuyruqlar:\n/stats — statistika\n/orders — oxirgi buyurtmalar\n/broadcast MATN — barcha obunachilarga xabar", { reply_markup: tbKeyboard(b, origin) }); }
+    if (payload && payload === b.claim) { real.ownerChat = chat; b.ownerChat = chat; await tbSave(st, real); await say(chat, "✅ <b>Siz bot egasi sifatida ulandingiz.</b> Yangi buyurtmalar shu yerga keladi.\n\nBuyruqlar:\n/stats — statistika\n/orders — oxirgi buyurtmalar\n/broadcast MATN — barcha obunachilarga xabar", { reply_markup: tbKeyboard(b, origin) }); }
     await menu(chat, b.config.welcome); await putU(chat, u); return;
   }
   if (owner && /^\/stats\b/.test(text)) { const os = await tbOrdersOf(st, b.id); await say(chat, `📊 Obunachilar: <b>${await tbSubs(st, b.id)}</b>\nBuyurtmalar: <b>${os.length}</b>\nJami summa: <b>${tbMoney(os.reduce((a, o) => a + (o.metadata.tt || 0), 0))} ${tbEsc(b.config.currency)}</b>`); return; }
@@ -688,18 +702,26 @@ async function tbBroadcastTick(env) {
 async function tbMyApi(req, env, ctx, st, J, body, me, pn, origin) {
   const route = `${req.method} ${pn}`;
   const mine = async () => { const out = []; for (const k of await st.list('tb:')) if (k.metadata && k.metadata.u === me.id) { const b = await st.get(k.name); if (b) out.push(b); } return out; };
-  if (route === 'GET /api/my/bots') { const os = (await st.list('o:')).map((k) => k.metadata).filter((m) => m && m.bt); return J(await Promise.all((await mine()).map(async (b) => ({ ...tbPub(b, origin), subscribers: await tbSubs(st, b.id), orders: os.filter((m) => m.bt === b.id).length })))); }
+  if (route === 'GET /api/my/bots') { const os = (await st.list('o:')).map((k) => k.metadata).filter((m) => m && m.bt); const prc = await tbPrices(st); return J(await Promise.all((await mine()).map(async (b) => ({ ...tbPub(b, origin, prc), subscribers: await tbSubs(st, b.id), orders: os.filter((m) => m.bt === b.id).length })))); }
   if (route === 'POST /api/my/bots') {
     if (await limited(st, 'botcreate' + me.id, 10, 3600)) return J({ error: "Juda ko'p urinish. Keyinroq urinib ko'ring." }, 429);
     if ((await mine()).length >= 5) return J({ error: 'Botlar soni chegarasi (5)' }, 400);
     const b = await body(4096); try { return J(await tbCreate(env, st, me.id, b.token, pStr(b.name, 60), origin)); } catch (e) { return J({ error: e.message }, 400); }
   }
-  const bm = /^\/api\/my\/bots\/([a-f0-9]{6,24})(?:\/(connect|broadcast|orders))?$/.exec(pn); if (!bm) return null;
-  const bot = await tbGet(st, bm[1]); if (!bot || bot.userId !== me.id) return J({ error: 'Bot topilmadi' }, 404); const act = bm[2] || '';
-  if (!act && req.method === 'GET') return J({ ...tbPub(bot, origin), subscribers: await tbSubs(st, bot.id) });
-  if (!act && req.method === 'PUT') { const b = await body(1024 * 1024); bot.config = tbClean(b.config, bot.config); let r = { webhook: !!bot.webhookOk }; try { r = await tbConnect(bot, origin); } catch (e) { r = { webhook: false, warn: e.message }; } await tbSave(st, bot); return J({ ...tbPub(bot, origin), ...r }); }
+  const bm = /^\/api\/my\/bots\/([a-f0-9]{6,24})(?:\/(connect|broadcast|orders|checkout))?$/.exec(pn); if (!bm) return null;
+  const bot = await tbGet(st, bm[1]); if (!bot || bot.userId !== me.id) return J({ error: 'Bot topilmadi' }, 404); const act = bm[2] || '', pr = await tbPrices(st);
+  if (!act && req.method === 'GET') return J({ ...tbPub(bot, origin, pr), subscribers: await tbSubs(st, bot.id) });
+  if (!act && req.method === 'PUT') { const b = await body(1024 * 1024); bot.config = tbClean(b.config, bot.config); let r = { webhook: !!bot.webhookOk }; if ((bot.paidF || []).includes('base')) { try { r = await tbConnect(tbEffBot(bot), origin); bot.webhookOk = r.webhook; } catch (e) { r = { webhook: false, warn: e.message }; } } await tbSave(st, bot); return J({ ...tbPub(bot, origin, pr), ...r }); }
   if (!act && req.method === 'DELETE') { await tbRemove(st, bot); return J({ ok: true }); }
-  if (act === 'connect' && req.method === 'POST') { try { const r = await tbConnect(bot, origin); await tbSave(st, bot); return J({ ...r, bot: tbPub(bot, origin) }); } catch (e) { return J({ error: 'Ulanmadi: ' + e.message }, 400); } }
+  if (act === 'connect' && req.method === 'POST') { if (!(bot.paidF || []).includes('base')) return J({ error: "Avval bot to'lovini amalga oshiring" }, 402); try { const r = await tbConnect(tbEffBot(bot), origin); bot.webhookOk = r.webhook; await tbSave(st, bot); return J({ ...r, bot: tbPub(bot, origin, pr) }); } catch (e) { return J({ error: 'Ulanmadi: ' + e.message }, 400); } }
+  if (act === 'checkout' && req.method === 'POST') {
+    const info = tbPriceInfo(bot, pr); if (!info.dueKeys.length) return J({ paid: true });
+    const b = await body(4096), pay = await createPayOrder(env, st, info.uzs, `Bot @${bot.username}: ${info.dueKeys.join('+')} (${me.name} ${me.phone})`); pay.botId = bot.id; pay.ownerId = me.id; pay.parts = info.dueKeys; await payOrderPut(st, pay);
+    const kind = b.method === 'clicktg' ? 'click' : b.method === 'globalpay' ? 'gp' : '';
+    if (kind && GP_ON(env, kind)) { const g = await gpLink(env, pay, 'Impro IT: Telegram bot', kind); if (g.url) return J({ payment: { id: pay.id, usd: info.dueUsd, uzs: info.uzs }, payUrl: g.url }); return J({ error: "Karta orqali to'lov hozir ishlamayapti. Boshqa usulni tanlang." }, 502); }
+    for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Bot sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🤖 @${esc(bot.username)} · ${esc(info.dueKeys.join(', '))}\n💰 $${info.dueUsd} · ${sum(info.uzs)} so'm · #${pay.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pb:' + bot.id + ':' + info.dueKeys.join('.') }]] } });
+    return J({ manual: true, payment: { id: pay.id, usd: info.dueUsd, uzs: info.uzs }, contacts: SITE.contacts || {}, text: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '' });
+  }
   if (act === 'broadcast' && req.method === 'POST') { if (await limited(st, 'broadcast' + me.id, 6, 3600)) return J({ error: 'Soatiga 6 ta xabar yuborish mumkin' }, 429); const b = await body(8192), text = pStr(b.text, 3000); if (text.length < 2) return J({ error: 'Xabar matnini yozing' }, 400); return J({ ok: true, total: await tbBroadcastStart(st, bot, text) }); }
   if (act === 'orders' && req.method === 'GET') { const ks = (await tbOrdersOf(st, bot.id)).sort((a, c) => (a.name < c.name ? 1 : -1)).slice(0, 100), out = []; for (const k of ks) { const o = await st.get(k.name); if (o) out.push(o); } return J(out); }
   return null;
@@ -715,19 +737,20 @@ async function tbPublicApi(req, env, ctx, url, J, body) {
   const ap = /^\/api\/app\/([a-f0-9]{6,24})\/(config|order)$/.exec(pn);
   if (ap) {
     const b = await tbGet(st, ap[1]); if (!b || b.status !== 'faol') return J({ error: "Do'kon topilmadi" }, 404);
-    if (ap[2] === 'config' && req.method === 'GET') return J(tbPublicConfig(b));
+    if (!(b.paidF || []).includes('base')) return J({ error: "Do'kon topilmadi" }, 404);
+    if (ap[2] === 'config' && req.method === 'GET') return J(tbPublicConfig(tbEffBot(b)));
     if (ap[2] === 'order' && req.method === 'POST') {
       if (await limited(st, 'apporder' + b.id + (req.headers.get('CF-Connecting-IP') || ''), 12, 600)) return J({ error: "Juda ko'p so'rov. Birozdan so'ng urinib ko'ring." }, 429);
       const x = await body(64 * 1024), user = await tbVerify(b, x.initData); if (!user) return J({ error: "Buyurtma berish uchun do'konni Telegram ichida oching" }, 401);
       const name = pStr(x.name, 100), phone = pStr(x.phone, 40); if (name.length < 2) return J({ error: 'Ismingizni kiriting' }, 400); if (!pGoodPhone(phone)) return J({ error: "Telefon raqamini to'g'ri kiriting" }, 400);
-      try { const o = await tbPlaceOrder(st, b, { items: x.items, name, phone, note: x.note, tgUser: user }); return J({ ok: true, id: o.id, total: o.total }); } catch (e) { return J({ error: e.message }, 400); }
+      try { const o = await tbPlaceOrder(st, tbEffBot(b), { items: x.items, name, phone, note: x.note, tgUser: user }); return J({ ok: true, id: o.id, total: o.total }); } catch (e) { return J({ error: e.message }, 400); }
     }
   }
   return null;
 }
 async function tbMiniApp(env, url) {
   const m = /^\/app\/([a-f0-9]{6,24})\/?$/.exec(url.pathname); if (!m) return null;
-  const b = await tbGet(store(env), m[1]); if (!b || b.status !== 'faol') return new Response("Do'kon topilmadi", { status: 404 });
+  const b = await tbGet(store(env), m[1]); if (!b || b.status !== 'faol' || !(b.paidF || []).includes('base')) return new Response("Do'kon topilmadi", { status: 404 });
   return new Response(MINIAPP_HTML.replace('/*__BOT__*/', `window.__BOT__=${JSON.stringify(b.id)};`), { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' } });
 }
 
@@ -1210,6 +1233,8 @@ async function handleCallback(env, st, q) {
   if (d === 'm:pay') { await ans(); return startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) }); }
   const ppm = /^pp:([a-f0-9]{6,24}):([a-f0-9]{6,24})$/.exec(d);
   if (ppm) { if (!isAdmin) return ans("Ruxsat yo'q"); const k = 'pr:' + ppm[2] + ':' + ppm[1], m = await st.get(k); if (!m) return ans('Loyiha topilmadi'); m.paid = true; await st.put(k, m, 0, m); await ans('Tasdiqlandi'); return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: "✅ To'lov tasdiqlandi", callback_data: 'noop' }]] } }); }
+  const pbm = /^pb:([a-f0-9]{6,24}):([a-z.]+)$/.exec(d);
+  if (pbm) { if (!isAdmin) return ans("Ruxsat yo'q"); const bb = await tbGet(st, pbm[1]); if (!bb) return ans('Bot topilmadi'); await markBotPaid(st, { botId: bb.id, parts: pbm[2].split('.').filter((x) => ['base', 'catalog', 'mini'].includes(x)) }); await ans('Tasdiqlandi'); return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: "✅ To'lov tasdiqlandi", callback_data: 'noop' }]] } }); }
   const pcm = /^(pc|px):(-?\d+)$/.exec(d);
   if (pcm) {
     if (!isAdmin) return ans("Ruxsat yo'q");
@@ -1764,6 +1789,7 @@ async function gpPaid(env, m) {
   p.state = 'paid'; p.paidAt = Date.now(); p.ref = 'gp:' + (sp.provider_payment_charge_id || sp.telegram_payment_charge_id || ''); await payOrderPut(st, p); await markProjectPaid(st, p);
   const chat = m.chat.id, who2 = [m.from && m.from.first_name, m.from && m.from.username && '@' + m.from.username].filter(Boolean).join(' ');
   if (p.kind === 'order') { const rec = (await st.get('c:' + p.chat)) || {}; addTag(rec, 'tolagan'); await saveRec(st, p.chat, rec); await ev(st, { k: 'pay', c: p.chat, n: p.cname || 'Mijoz', x: sum(p.uzs) + " so'm, buyurtma" }); await say(env, chat, `✅ <b>To'lov qabul qilindi: buyurtmangiz qabul qilindi!</b>\n${esc(p.note || '')}\nMutaxassisimiz tez orada ${esc(p.phone || 'siz')} raqami bo'yicha bog'lanadi.`); for (const a of await adminsOf(env, st)) await say(env, a, `💳✅ <b>Buyurtma TO'LANDI</b> · ${sum(p.uzs)} so'm\n👤 ${esc(p.cname || who2)} <code>${p.chat}</code> · ${esc(p.phone || '')}\n${esc(p.note || '')}`); return; }
+  if (p.botId) { await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Botingiz faollashtirildi. Saytga qaytib sahifani yangilang."); return; }
   if (p.projectId) await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Saytingizni endi joylash yoki yuklab olish mumkin. Saytga qaytib sahifani yangilang.");
   else { const rec = (await st.get('c:' + chat)) || {}; rec.payAmt = p.uzs; await saveRec(st, chat, rec); await confirmPay(env, st, chat, 'GlobalPay'); }
   for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>GlobalPay: to'lov qabul qilindi</b>\n${sum(p.uzs)} so'm · ${esc(who2)}${p.projectId ? '\n🌐 Sayt sotib olindi' : ''}\n${esc(p.note || '')}`);
@@ -1773,7 +1799,7 @@ async function startPay(env, st, chat, rec, hint) {
   rec.flow = { step: 'payamt', d: {} }; await saveRec(st, chat, rec);
   return say(env, chat, "💳 <b>To'lov</b>\nQancha to'laysiz? Summani so'mda yozing (masalan: <code>1500000</code>). Bekor qilish: /cancel" + (hint || ''));
 }
-async function markProjectPaid(st, p) { if (!p.projectId || !p.ownerId) return; const k = 'pr:' + p.ownerId + ':' + p.projectId, m = await st.get(k); if (m) { m.paid = true; m.updatedAt = new Date().toISOString(); await st.put(k, m, 0, m); } }
+async function markProjectPaid(st, p) { if (p.botId) return markBotPaid(st, p); if (!p.projectId || !p.ownerId) return; const k = 'pr:' + p.ownerId + ':' + p.projectId, m = await st.get(k); if (m) { m.paid = true; m.updatedAt = new Date().toISOString(); await st.put(k, m, 0, m); } }
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;

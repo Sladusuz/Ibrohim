@@ -23,8 +23,28 @@
   /* ---------- Ko'rinish (jonli) ---------- */
   function sendPreview() { const f = $('#if'); if (previewReady && f.contentWindow && D) f.contentWindow.postMessage({ type: 'site', data: clean() }, '*'); }
   addEventListener('message', (e) => { if (e.data && e.data.type === 'ready' && e.source === $('#if').contentWindow) { previewReady = true; sendPreview(); } });
+  /* ---------- Saytdagi matnni bosib tahrirlash ---------- */
+  let editOn = true;
+  const sendMode = () => { const f = $('#if'); if (f.contentWindow) f.contentWindow.postMessage({ type: 'editmode', on: editOn }, '*'); };
+  const edt = $('#edt');
+  if (edt) edt.addEventListener('click', () => { editOn = !editOn; edt.classList.toggle('on', editOn); edt.textContent = editOn ? '✏️ Tahrirlash: yoqilgan' : "✏️ Tahrirlash: o'chiq"; sendMode(); toast(editOn ? "Matn ustiga bosing va o'zgartiring" : "Tahrirlash o'chirildi: sayt oddiy ko'rinadi"); });
+  const EDITABLE = new Set(['sections', 'company', 'announce', 'footer', 'nav', 'contacts']);
+  addEventListener('message', (e) => {
+    if (!e.data || e.source !== $('#if').contentWindow) return;
+    if (e.data.type === 'iedready') sendMode();
+    if (e.data.type === 'iedsheet') document.body.classList.toggle('ied-sheet-open', !!e.data.open);
+    if (e.data.type === 'edit' && D && Array.isArray(e.data.path) && EDITABLE.has(e.data.path[0])) {
+      let o = D; const p = e.data.path; for (let i = 0; i < p.length - 1 && o != null; i++) o = o[p[i]]; const k = p[p.length - 1];
+      if (o && typeof o[k] === 'string') { o[k] = String(e.data.value).slice(0, 1500); changed(); if (ed) ed.render(true); toast('Saqlandi'); }
+    }
+    if (e.data.type === 'opensec' && D) {
+      const i = (D.sections || []).findIndex((x) => x.id === e.data.sec), mv = document.querySelector('#mvt [data-v=edit]'); if (mv && document.body.dataset.view === 'view') mv.click();
+      if (ed && i > -1) { ed.setTab('sections'); const bt = document.querySelector(`[data-act="sec-edit"][data-i="${i}"]`); if (bt) bt.click(); }
+      toast(e.data.why === 'image' ? "Rasmni shu bo'limdan almashtiring: «Rasm tanlash»" : "Bu matnni panel orqali o'zgartiring");
+    }
+  });
   // Ishonchlilik uchun: iframe yuklanishi bilan ham ma'lumot yuboriladi (ready xabari erta kelib qolsa)
-  $('#if').addEventListener('load', () => { previewReady = true; sendPreview(); });
+  $('#if').addEventListener('load', () => { previewReady = true; sendPreview(); sendMode(); });
 
   /* ---------- Saqlash ---------- */
   function changed() {

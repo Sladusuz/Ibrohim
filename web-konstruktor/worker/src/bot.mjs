@@ -477,6 +477,8 @@ async function handleCallback(env, st, q) {
   if (d === 'm:pay') { await ans(); return startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) }); }
   const ppm = /^pp:([a-f0-9]{6,24}):([a-f0-9]{6,24})$/.exec(d);
   if (ppm) { if (!isAdmin) return ans("Ruxsat yo'q"); const k = 'pr:' + ppm[2] + ':' + ppm[1], m = await st.get(k); if (!m) return ans('Loyiha topilmadi'); m.paid = true; await st.put(k, m, 0, m); await ans('Tasdiqlandi'); return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: "✅ To'lov tasdiqlandi", callback_data: 'noop' }]] } }); }
+  const pbm = /^pb:([a-f0-9]{6,24}):([a-z.]+)$/.exec(d);
+  if (pbm) { if (!isAdmin) return ans("Ruxsat yo'q"); const bb = await tbGet(st, pbm[1]); if (!bb) return ans('Bot topilmadi'); await markBotPaid(st, { botId: bb.id, parts: pbm[2].split('.').filter((x) => ['base', 'catalog', 'mini'].includes(x)) }); await ans('Tasdiqlandi'); return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: "✅ To'lov tasdiqlandi", callback_data: 'noop' }]] } }); }
   const pcm = /^(pc|px):(-?\d+)$/.exec(d);
   if (pcm) {
     if (!isAdmin) return ans("Ruxsat yo'q");
@@ -1031,6 +1033,7 @@ async function gpPaid(env, m) {
   p.state = 'paid'; p.paidAt = Date.now(); p.ref = 'gp:' + (sp.provider_payment_charge_id || sp.telegram_payment_charge_id || ''); await payOrderPut(st, p); await markProjectPaid(st, p);
   const chat = m.chat.id, who2 = [m.from && m.from.first_name, m.from && m.from.username && '@' + m.from.username].filter(Boolean).join(' ');
   if (p.kind === 'order') { const rec = (await st.get('c:' + p.chat)) || {}; addTag(rec, 'tolagan'); await saveRec(st, p.chat, rec); await ev(st, { k: 'pay', c: p.chat, n: p.cname || 'Mijoz', x: sum(p.uzs) + " so'm, buyurtma" }); await say(env, chat, `✅ <b>To'lov qabul qilindi: buyurtmangiz qabul qilindi!</b>\n${esc(p.note || '')}\nMutaxassisimiz tez orada ${esc(p.phone || 'siz')} raqami bo'yicha bog'lanadi.`); for (const a of await adminsOf(env, st)) await say(env, a, `💳✅ <b>Buyurtma TO'LANDI</b> · ${sum(p.uzs)} so'm\n👤 ${esc(p.cname || who2)} <code>${p.chat}</code> · ${esc(p.phone || '')}\n${esc(p.note || '')}`); return; }
+  if (p.botId) { await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Botingiz faollashtirildi. Saytga qaytib sahifani yangilang."); return; }
   if (p.projectId) await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Saytingizni endi joylash yoki yuklab olish mumkin. Saytga qaytib sahifani yangilang.");
   else { const rec = (await st.get('c:' + chat)) || {}; rec.payAmt = p.uzs; await saveRec(st, chat, rec); await confirmPay(env, st, chat, 'GlobalPay'); }
   for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>GlobalPay: to'lov qabul qilindi</b>\n${sum(p.uzs)} so'm · ${esc(who2)}${p.projectId ? '\n🌐 Sayt sotib olindi' : ''}\n${esc(p.note || '')}`);
@@ -1040,7 +1043,7 @@ async function startPay(env, st, chat, rec, hint) {
   rec.flow = { step: 'payamt', d: {} }; await saveRec(st, chat, rec);
   return say(env, chat, "💳 <b>To'lov</b>\nQancha to'laysiz? Summani so'mda yozing (masalan: <code>1500000</code>). Bekor qilish: /cancel" + (hint || ''));
 }
-async function markProjectPaid(st, p) { if (!p.projectId || !p.ownerId) return; const k = 'pr:' + p.ownerId + ':' + p.projectId, m = await st.get(k); if (m) { m.paid = true; m.updatedAt = new Date().toISOString(); await st.put(k, m, 0, m); } }
+async function markProjectPaid(st, p) { if (p.botId) return markBotPaid(st, p); if (!p.projectId || !p.ownerId) return; const k = 'pr:' + p.ownerId + ':' + p.projectId, m = await st.get(k); if (m) { m.paid = true; m.updatedAt = new Date().toISOString(); await st.put(k, m, 0, m); } }
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;

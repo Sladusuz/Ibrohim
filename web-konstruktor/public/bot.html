@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="/ui.css">
 <style>
-html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden}
+html,body{height:100%}body.ui{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 .page{flex:1;overflow:auto}
 .hero3{position:relative;overflow:hidden;color:#fff;background:#06101f;padding:48px 24px 54px;text-align:center}
 .hero3:before,.hero3:after{content:'';position:absolute;width:55vw;height:55vw;border-radius:50%;filter:blur(90px);opacity:.5;animation:hf 18s ease-in-out infinite}
@@ -38,7 +38,7 @@ html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden
 .pimg{width:64px;height:64px;border-radius:12px;background:#eef0f9 center/cover no-repeat;border:1.5px solid var(--line);flex:none}
 .copy3{display:flex;gap:6px}.copy3 input{flex:1}
 .ord3{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-top:8px;background:#fff;font-size:13px}.ord3 b{font-size:14px}
-@media(max-width:900px){.ed3{flex-direction:column}.ed3 .side{width:100%;height:62%}.prev3{display:none}.row3{grid-template-columns:1fr}}
+@media(max-width:900px){.ed3{flex-direction:column}.ed3 .side{width:100%;height:auto;flex:1;min-height:0;border:0}.prev3{display:none}.row3{grid-template-columns:1fr}.ed3 .tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;flex:none}.ed3 .tabs::-webkit-scrollbar{display:none}.ed3 .tabs button{flex:none;padding:10px 15px;font-size:14px}.ed3 .panel{padding-bottom:60px}}
 </style>
 </head>
 <body class="ui">
@@ -69,7 +69,7 @@ html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden
   async function loadList() { try { bots = await A.request('/api/my/bots'); } catch (e) { toast(e.message); bots = []; } drawList(); }
   function drawList() {
     editor.hidden = true; page.hidden = false;
-    page.innerHTML = `<div class="hero3"><h1>Telegram <em>botingizni</em> o'zingiz yarating</h1><p>Token kiriting, bot darrov ishlaydi: menyu, katalog, buyurtmalar va Telegram ichidagi mini do'kon. Kod yozish shart emas.</p><div style="margin-top:22px"><button class="b" id="newBot" style="padding:14px 26px;font-size:15px">+ Yangi bot ulash</button></div></div>
+    page.innerHTML = `<div class="hero3"><h1>Telegram <em>botingizni</em> o'zingiz yarating</h1><p>Token kiriting va sozlang: menyu, katalog, buyurtmalar va Telegram ichidagi mini do'kon. Kod yozish shart emas. Tahrirlash bepul; to'lovdan keyin bot ishga tushadi. Narx: oddiy bot $15, katalog +$20, mini ilova +$20.</p><div style="margin-top:22px"><button class="b" id="newBot" style="padding:14px 26px;font-size:15px">+ Yangi bot ulash</button></div></div>
       <div class="feat"><div><b>🛍 Katalog va savat</b><span>Mahsulotlar bot ichida, buyurtma sizga keladi</span></div><div><b>📱 Mini ilova (do'kon)</b><span>Telegram ichida chiroyli ilova</span></div><div><b>📣 Xabar yuborish</b><span>Obunachilarga yangiliklar</span></div><div><b>⚡ Avto-javoblar</b><span>Kalit so'z bo'yicha javob</span></div></div>
       <div class="wrap3">${bots.length ? `<div class="bots">${bots.map((b) => `<div class="bc"><div class="av">${esc((b.name || '?')[0].toUpperCase())}</div><b>${esc(b.name)}</b><small>@${esc(b.username)}</small><div><span class="badge3 ${b.webhook ? 'ok3' : 'w3'}">${b.webhook ? 'Ishlayapti' : 'Ulanish kutilmoqda'}</span> <span class="badge3 g3">${b.subscribers} obunachi</span> <span class="badge3 g3">${b.orders} buyurtma</span></div><div class="row"><button class="b s" data-open="${esc(b.id)}">Boshqarish</button><a class="b g s" href="${esc(b.link)}" target="_blank" rel="noopener">Telegramda ochish</a></div></div>`).join('')}</div>` : '<div class="card3" style="text-align:center;padding:40px 20px"><h3>Hali botingiz yo\'q</h3><p class="sub3" style="margin:6px 0 14px">Birinchi botingizni 2 daqiqada ulang.</p><button class="b" id="newBot2">Bot ulash</button></div>'}</div>`;
   }
@@ -97,12 +97,21 @@ html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden
     editor.innerHTML = `<div class="side"><div style="padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px"><button class="b g s" id="back">← Botlar</button><b style="font-size:15px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(B.name)}</b><a class="b g s" href="${esc(B.link)}" target="_blank" rel="noopener">@${esc(B.username)}</a></div><div class="tabs" id="tabs"></div><div class="panel" id="panel"></div></div><div class="prev3" id="prev3"></div>`;
     drawTabs(); drawPanel(); drawPreview();
   }
+  let PM = {}, payInfo = null;
+  A.request('/api/pricing').then((j) => { PM = j.payMethods || {}; }).catch(() => {});
+  function payCard() {
+    const pr = B && B.price; if (!pr) return '';
+    const rows = pr.items.map((i) => `<div class="chk ${i.paid ? 'ok' : 'w'}"><span>${i.paid ? '✓' : '$'}</span><span>${esc(i.label)}: <b>$${i.usd}</b>${i.paid ? " (to'langan)" : ''}</span></div>`).join('');
+    if (!pr.dueUsd) return `<h4>To'lov</h4>${rows}<p class="hint">Hammasi to'langan. Yangi imkoniyat (katalog yoki mini ilova) qo'shsangiz, faqat o'sha qismi to'lanadi.</p>`;
+    if (payInfo) return `<h4>To'lov</h4>${rows}<div class="chk ok" style="display:block;white-space:pre-line"><b>So'rovingiz qabul qilindi (#${esc(payInfo.payment.id)})</b>\nSumma: <b>$${esc(String(payInfo.payment.usd))}</b> (${money(payInfo.payment.uzs)} so'm)\n${esc(payInfo.text || '')}\n\nTo'lov izohiga <b>#${esc(payInfo.payment.id)}</b> yozing. Admin tasdiqlagach bot ishga tushadi.</div><button class="b w" data-a="paycheck">To'lovni tekshirish</button>`;
+    return `<h4>Narx va to'lov</h4>${rows}<div class="chk w" style="display:block;font-size:15px">Jami to'lash: <b>$${pr.dueUsd}</b> (≈ ${money(pr.uzs)} so'm)</div><div id="payarea" style="display:grid;gap:8px;margin-top:8px">${PM.globalpay ? '<button class="b w" data-a="botbuy" data-m="globalpay">Karta orqali to\'lash (GlobalPay, Telegram)</button>' : ''}${PM.clicktg ? '<button class="b w" data-a="botbuy" data-m="clicktg">Click orqali to\'lash (Telegram)</button>' : ''}<button class="b ${PM.globalpay || PM.clicktg ? 'g' : ''} w" data-a="botbuy" data-m="manual">${PM.globalpay || PM.clicktg ? "Boshqa usul (kartaga o'tkazma)" : "Sotib olish"}</button></div><p class="hint">${pr.active ? '' : "To'lovdan keyin bot darrov ishlaydi. "}To'lanmagan imkoniyatlar (katalog, mini ilova) to'lovgacha yopiq turadi. Tahrirlash va tekshirish bepul.</p>`;
+  }
   const drawTabs = () => { $('#tabs').innerHTML = TABS.map(([k, l]) => `<button data-t="${k}" class="${tab === k ? 'on' : ''}">${l}</button>`).join(''); };
   const saveBar = () => `<div class="save3"><button class="b" data-a="save">Saqlash</button><span class="sub3" id="sv">${dirty ? "O'zgarishlar saqlanmagan" : ''}</span></div>`;
   function drawPanel() {
     const c = B.config, p = $('#panel'); let h = '';
     if (tab === 'link') {
-      h = `<h4>Holat</h4><div class="chk ${B.webhook ? 'ok' : 'w'}"><span>${B.webhook ? '✓' : '!'}</span><span>${B.webhook ? 'Bot serverga ulangan va javob beryapti' : "Bot hali serverga ulanmagan. HTTPS domen bo'lgach «Qayta ulash» ni bosing"}</span></div><div class="chk ${B.ownerLinked ? 'ok' : 'w'}"><span>${B.ownerLinked ? '✓' : '!'}</span><span>${B.ownerLinked ? 'Siz bot egasi sifatida ulangansiz: buyurtmalar Telegramingizga keladi' : "Buyurtmalar sizga kelishi uchun egasi sifatida ulaning"}</span></div>
+      h = payCard() + `<h4>Holat</h4><div class="chk ${B.webhook ? 'ok' : 'w'}"><span>${B.webhook ? '✓' : '!'}</span><span>${B.webhook ? 'Bot serverga ulangan va javob beryapti' : "Bot hali serverga ulanmagan. HTTPS domen bo'lgach «Qayta ulash» ni bosing"}</span></div><div class="chk ${B.ownerLinked ? 'ok' : 'w'}"><span>${B.ownerLinked ? '✓' : '!'}</span><span>${B.ownerLinked ? 'Siz bot egasi sifatida ulangansiz: buyurtmalar Telegramingizga keladi' : "Buyurtmalar sizga kelishi uchun egasi sifatida ulaning"}</span></div>
         <h4>1. Egasi sifatida ulanish</h4><p class="hint">Quyidagi tugmani bosing, Telegram ochiladi: <b>Start</b> ni bosing. Shundan keyin yangi buyurtmalar shu chatga keladi va /stats, /orders, /broadcast buyruqlari ishlaydi.</p><a class="b w" style="display:flex" href="${esc(B.claimLink)}" target="_blank" rel="noopener">Telegramda ulanish</a>
         <h4>2. Botingizni tekshiring</h4><a class="b g w" style="display:flex" href="${esc(B.link)}" target="_blank" rel="noopener">@${esc(B.username)} ni ochish</a>
         <h4>3. Qayta ulash</h4><p class="hint">Domen yoki sozlamalar o'zgargan bo'lsa, webhook'ni qayta o'rnating.</p><button class="b g" data-a="connect">Qayta ulash</button>
@@ -153,6 +162,8 @@ html,body{height:100%}body.ui{display:flex;flex-direction:column;overflow:hidden
     if (t.dataset.del) { B.config[t.dataset.del].splice(+t.dataset.i, 1); mark(); drawPanel(); drawPreview(); return; }
     const a = t.dataset.a; if (!a) return;
     if (a === 'save') return saveCfg();
+    if (a === 'botbuy') { t.disabled = true; try { await saveCfg(); const j = await A.request(`/api/my/bots/${B.id}/checkout`, { method: 'POST', body: { method: t.dataset.m } }); if (j.paid) { B = await A.request('/api/my/bots/' + B.id); drawPanel(); return toast("To'langan"); } if (j.manual) { payInfo = j; drawPanel(); return; } if (j.payUrl) { location.href = j.payUrl; return; } } catch (er) { toast(er.message); t.disabled = false; } return; }
+    if (a === 'paycheck') { try { const subs = B.subscribers; B = await A.request('/api/my/bots/' + B.id); B.subscribers = subs; if (!B.price.dueUsd) payInfo = null; drawPanel(); toast(B.price.dueUsd ? "To'lov hali tasdiqlanmadi" : "To'lov tasdiqlandi! Bot ishlayapti"); } catch (er) { toast(er.message); } return; }
     if (a === 'connect') { try { const r = await A.request(`/api/my/bots/${B.id}/connect`, { method: 'POST' }); B = r.bot; drawPanel(); toast(r.webhook ? 'Bot ulandi' : (r.warn || 'Ulanmadi')); } catch (er) { toast(er.message); } return; }
     if (a === 'del') { if (!confirm("Bot platformadan o'chirilsinmi? Katalog va sozlamalar yo'qoladi.")) return; try { await A.request('/api/my/bots/' + B.id, { method: 'DELETE' }); toast("O'chirildi"); await loadList(); } catch (er) { toast(er.message); } return; }
     if (a === 'copy') { try { await navigator.clipboard.writeText(B.appUrl); toast('Nusxa olindi'); } catch (er) { toast(B.appUrl); } return; }
