@@ -33,7 +33,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
 
   console.log('Mijoz va operator');
   await msg(7002, '/start', 1); ok(/yordam botiga/.test(lastTo(7002).body.text), "mijozga salomlashuv");
-  await msg(7002, 'narx qancha?', 2); ok(/operator ulanmagan/.test(lastTo(7002).body.text), 'operator ulanmagan bo\'lsa telefon beriladi');
+  await msg(7002, 'narx qancha?', 2); ok(/Start sayt/.test(lastTo(7002).body.text) && /2 500 000/.test(lastTo(7002).body.text), "operator ulanmagan bo'lsa ham bot narxga o'zi javob beradi");
   await msg(7001, '/login xato', 3); ok(/Parol noto'g'ri/.test(lastTo(7001).body.text) && calls.some((c) => c.method === 'deleteMessage' && c.body.message_id === 3), "noto'g'ri parol rad etildi, xabar o'chirildi");
   await msg(7001, '/login pass-1234', 4); ok(/Admin sifatida kirdingiz/.test(lastTo(7001).body.text), "to'g'ri parol bilan admin bo'ldi");
   await msg(7002, 'Salom, sayt narxi qancha?', 5);

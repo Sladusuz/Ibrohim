@@ -159,7 +159,6 @@ async function supportIn(env, st, m) {
   }
   if (await limited(st, 'c' + chat, 12, 600)) return say(env, chat, "Juda ko'p xabar yuborildi. Birozdan so'ng yozing.");
   const admins = await adminsOf(env, st);
-  if (!admins.length) return say(env, chat, `Hozir operator ulanmagan. Iltimos, ${(SITE.contacts || {}).phone || ''} raqamiga qo'ng'iroq qiling.`);
   const rec = (await st.get('c:' + chat)) || { hist: [] };
   rec.name = who(m);
   const map = {};
@@ -169,7 +168,7 @@ async function supportIn(env, st, m) {
     if (!m.text) { const cp = await tg(env, 'copyMessage', { chat_id: a, from_chat_id: chat, message_id: m.message_id, reply_to_message_id: head && head.message_id }); if (cp) map[a + ':' + cp.message_id] = chat; }
   }
   const saveMap = () => Promise.all(Object.entries(map).map(([k, v]) => st.put('m:' + k, v, 30 * 86400)));
-  if ((await st.get('hu:' + chat)) || (await st.get('auto')) === 'off' || !m.text) { await st.put('c:' + chat, rec, 7 * 86400); await saveMap(); if (!(await st.get('hu:' + chat))) await say(env, chat, '✅ Xabaringiz qabul qilindi. Tez orada javob beramiz.'); return; }
+  if ((await st.get('hu:' + chat)) || (await st.get('auto')) === 'off' || !m.text) { await st.put('c:' + chat, rec, 7 * 86400); await saveMap(); if (!(await st.get('hu:' + chat))) await say(env, chat, '✅ Xabaringiz qabul qilindi. Tez orada javob beramiz.' + (admins.length ? '' : `\nShoshilinch bo'lsa: ${(SITE.contacts || {}).phone || ''}`)); return; }
   let a = null;
   try { a = await assistantOf(env).answer({ text, history: (await limited(st, 'ai', 400, 3600)) ? [] : rec.hist }); } catch { a = null; }
   if (!a || !a.text) { await st.put('c:' + chat, rec, 7 * 86400); await saveMap(); return say(env, chat, '✅ Xabaringiz qabul qilindi. Tez orada javob beramiz.'); }

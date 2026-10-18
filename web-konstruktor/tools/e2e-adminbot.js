@@ -39,7 +39,7 @@ const wait = (ms) => new Promise((r) => setTimeout(r, ms));
     const S = { id: 7002, first_name: 'Begona' }, sc = { id: 7002, type: 'private' };
 
     console.log('Kirish va xavfsizlik');
-    await msg('/stats'); ok(/operator ulanmagan/.test(last().body.text) && !/Statistika/.test(last().body.text) && last().body.chat_id === 7001, 'kirmagan odamga admin buyruq bajarilmaydi (support sifatida qaraladi)');
+    await msg('/stats'); ok(!/Statistika/.test(last().body.text) && last().body.chat_id === 7001, 'kirmagan odamga admin buyruq bajarilmaydi (support sifatida qaraladi)');
     for (let i = 0; i < 14; i++) await msg('/orders'); ok(/Juda ko'p xabar/.test(last().body.text), 'kirmagan odamning spami cheklanadi');
     await msg('/login xato-parol', 11); ok(/Parol noto'g'ri/.test(last().body.text) && sent('deleteMessage', (b) => b.message_id === 11).length === 1, "noto'g'ri parol rad etildi, xabar chatdan o'chirildi");
     await msg('/stats'); ok(!/Statistika/.test(last().body.text), 'noto\'g\'ri parolda ham kirmaydi');

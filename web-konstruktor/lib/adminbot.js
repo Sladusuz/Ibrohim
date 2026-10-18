@@ -23,7 +23,7 @@ module.exports = function makeAdminBot({ db, pay, tg, readJSON, writeJSON, F, ne
       return say(chat, "👋 <b>Impro IT</b> yordam botiga xush kelibsiz!\n\nSavolingizni shu yerga yozing: mutaxassisimiz tez orada javob beradi. Rasm yoki fayl ham yuborishingiz mumkin.", { reply_markup: { inline_keyboard: [[{ text: "🌐 Saytni o'zim yarataman", url: baseUrl() + '/yaratish.html' }], [{ text: '🤖 Telegram bot yaratish', url: baseUrl() + '/bot.html' }]] } });
     }
     if (limited(String(chat), 'sup', 12, 600e3)) return say(chat, "Juda ko'p xabar yuborildi. Birozdan so'ng yozing.");
-    const admins = cfg().chats; if (!admins.length) return say(chat, "Hozir operator ulanmagan. Iltimos, +998 33 623 33 13 raqamiga qo'ng'iroq qiling.");
+    const admins = cfg().chats; // operator ulanmagan bo'lsa ham bot o'zi javob beradi
     const d = SUP(); d.chats[chat] = Object.assign(d.chats[chat] || {}, { name: who(m), at: new Date().toISOString() });
     for (const a of admins) {
       const head = await call('sendMessage', { chat_id: a.id, parse_mode: 'HTML', text: `💬 <b>${esc(who(m))}</b> <code>${chat}</code>\nJavob berish uchun shu xabarga <b>reply</b> qiling.` + (m.text ? `\n\n${esc(text.slice(0, 3500))}` : '') });
