@@ -150,7 +150,18 @@ const KIND = { order: '🛒 Yangi buyurtma', booking: '📅 Yangi ariza', messag
 
 /* ---------- Holat (KV yoki xotira) ---------- */
 const MEM = new Map();
-const store = (env) => env.STATE
+// Saqlash: Cloudflare D1 (kuniga 100 000 yozuv, bepul) -> KV (kuniga 1000 yozuv) -> xotira. Hammasi bir xil interfeys: get/put/list.
+let D1READY = false;
+const d1store = (env) => {
+  const db = env.DB, init = async () => { if (!D1READY) { await db.prepare('CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT, exp INTEGER DEFAULT 0, meta TEXT)').run(); D1READY = true; } };
+  return {
+    get: async (k) => { await init(); const r = await db.prepare('SELECT v, exp FROM kv WHERE k = ?1').bind(k).first(); if (!r || (r.exp && r.exp < Date.now())) return null; try { return JSON.parse(r.v); } catch { return null; } },
+    put: async (k, v, ttl, meta) => { await init(); await db.prepare('INSERT INTO kv (k, v, exp, meta) VALUES (?1, ?2, ?3, ?4) ON CONFLICT(k) DO UPDATE SET v = excluded.v, exp = excluded.exp, meta = excluded.meta').bind(k, JSON.stringify(v), ttl ? Date.now() + Math.floor(ttl * 1000) : 0, meta ? JSON.stringify(meta) : null).run(); },
+    list: async (prefix) => { await init(); const r = await db.prepare('SELECT k, meta FROM kv WHERE k >= ?1 AND k < ?2 AND (exp = 0 OR exp > ?3) ORDER BY k DESC LIMIT 3000').bind(prefix, prefix + '\uffff', Date.now()).all(); return (r.results || []).map((x) => ({ name: x.k, metadata: x.meta ? JSON.parse(x.meta) : undefined })); },
+    gc: async () => { await init(); await db.prepare('DELETE FROM kv WHERE exp > 0 AND exp < ?1').bind(Date.now()).run(); },
+  };
+};
+const store = (env) => env.DB ? d1store(env) : env.STATE
   ? { get: async (k) => { const v = await env.STATE.get(k); if (v == null) return null; try { return JSON.parse(v); } catch { return null; } },
       put: (k, v, ttl, meta) => env.STATE.put(k, JSON.stringify(v), { ...(ttl ? { expirationTtl: Math.max(60, Math.floor(ttl)) } : {}), ...(meta ? { metadata: meta } : {}) }),
       list: async (prefix) => { const out = []; let cursor; do { const r = await env.STATE.list({ prefix, cursor, limit: 1000 }); out.push(...r.keys); cursor = r.list_complete ? undefined : r.cursor; } while (cursor && out.length < 3000); return out; } }
@@ -276,6 +287,7 @@ async function tick(env, now = Date.now()) {
     if (it.k === 'ph') await pushPhone(env, 'Javobsiz mijoz', 'Telefon qoldirgan mijozga 1 soatdan beri javob berilmadi. Telegramni oching.', 4, 'alarm_clock');
   }
   if (left.length !== fl.length) await st.put('fl', left);
+  if (st.gc && !(await st.get('gc:' + dkey(now)))) { await st.put('gc:' + dkey(now), 1, 2 * 86400); await st.gc().catch(() => {}); } // eskirgan yozuvlarni tozalash (kuniga bir marta)
   if (h === 9 && mi < 5 && tz(now).getUTCDay() === 1 && !(await st.get('repw:' + dkey(now)))) { await st.put('repw:' + dkey(now), 1, 2 * 86400); const wt = await weekly(env, st, now); for (const a of admins) await say(env, a, wt); }
   if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await pushPhone(env, 'Kunlik hisobot', `Suhbatlar: ${S.chats}, saytdan so'rovlar: ${S.leads.length}, shoshilinch: ${S.urg.length}, operator kerak: ${S.hand.length}. Batafsil Telegramda.`, 3, 'bar_chart'); await callOwner(env, st, `Дневной отчёт. Диалогов ${S.chats}. Заявок с сайта ${S.leads.length}. Срочных ${S.urg.length}. Нужен оператор ${S.hand.length}. Подробности в Телеграме.`, now); }
 }
@@ -584,7 +596,7 @@ export default {
       const w = await tg(env, 'setWebhook', { url: `${url.origin}/hook/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query'], drop_pending_updates: false });
       await tg(env, 'setMyCommands', { commands: [{ command: 'start', description: 'Boshlash' }] });
       const me = await tg(env, 'getMe', {});
-      return new Response(JSON.stringify({ webhook: !!w, bot: me && me.username, kv: !!env.STATE, ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
+      return new Response(JSON.stringify({ webhook: !!w, bot: me && me.username, store: env.DB ? 'd1' : env.STATE ? 'kv' : 'xotira', ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
     }
     if (url.pathname.startsWith('/hook/')) {
       if (req.method !== 'POST' || !env.WEBHOOK_SECRET || !tEq(url.pathname.slice(6), env.WEBHOOK_SECRET) || !tEq(req.headers.get('X-Telegram-Bot-Api-Secret-Token') || '', env.WEBHOOK_SECRET)) return new Response('no', { status: 403 });
@@ -596,5 +608,5 @@ export default {
     return relay(req, env);
   },
   async scheduled(event, env, ctx) { ctx.waitUntil(tick(env)); },
-  handleUpdate, tick, report,
+  handleUpdate, tick, report, store,
 };

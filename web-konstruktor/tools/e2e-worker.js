@@ -22,6 +22,14 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   };
   const kv = new Map();
   const env = { TG_TOKEN: '123:abc', WEBHOOK_SECRET: 'whsec_abcdefghijklmnop', SETUP_KEY: 'setupkey123', ADMIN_PASSWORD: 'pass-1234', ALLOW_ORIGIN: 'https://improuzbekiston.uz', STATE: { get: async (k) => (kv.has(k) ? kv.get(k).v : null), put: async (k, v, o) => { kv.set(k, { v, meta: o && o.metadata }); }, list: async ({ prefix }) => ({ keys: [...kv.entries()].filter(([k]) => k.startsWith(prefix)).map(([name, e]) => ({ name, metadata: e.meta })), list_complete: true }) } };
+  const MODE = process.env.STORE === 'd1' ? 'd1' : 'kv';
+  if (MODE === 'd1') { // haqiqiy SQLite (node:sqlite) bilan D1 ni taqlid qilamiz
+    const { DatabaseSync } = require('node:sqlite'), sdb = new DatabaseSync(':memory:');
+    env.DB = { prepare(sql) { const stt = sdb.prepare(sql); let args = []; const o = { bind(...a) { args = a; return o; }, async first() { return stt.get(...args) || null; }, async all() { return { results: stt.all(...args) }; }, async run() { return stt.run(...args); } }; return o; } };
+    delete env.STATE;
+  }
+  const S = W.store(env);
+  console.log('Saqlash rejimi:', MODE === 'd1' ? 'D1 (SQLite)' : 'KV');
   const pending = []; const ctx = { waitUntil: (p) => pending.push(p) };
   const hook = async (upd, sec = env.WEBHOOK_SECRET, hdr = env.WEBHOOK_SECRET) => { const r = await hookRaw(upd, sec, hdr); await Promise.all(pending.splice(0)); return r; };
   const hookRaw = (upd, sec, hdr) => W.fetch(new Request(`https://w.example/hook/${sec}`, { method: 'POST', headers: { 'content-type': 'application/json', ...(hdr ? { 'X-Telegram-Bot-Api-Secret-Token': hdr } : {}) }, body: JSON.stringify(upd) }), env, ctx);
@@ -35,7 +43,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok((await W.fetch(new Request('https://w.example/setup?key=x'), env, ctx)).status === 403, "/setup noto'g'ri kalit bilan rad etiladi");
   const su = await (await W.fetch(new Request('https://w.example/setup?key=setupkey123'), env, ctx)).json();
   const sw = calls.find((c) => c.method === 'setWebhook');
-  ok(su.webhook && sw && sw.body.url === 'https://w.example/hook/whsec_abcdefghijklmnop' && sw.body.secret_token === env.WEBHOOK_SECRET && su.kv, '/setup webhookni o\'rnatdi', su);
+  ok(su.webhook && sw && sw.body.url === 'https://w.example/hook/whsec_abcdefghijklmnop' && sw.body.secret_token === env.WEBHOOK_SECRET && su.store === (process.env.STORE === 'd1' ? 'd1' : 'kv'), '/setup webhookni o\'rnatdi', su);
 
   console.log('Mijoz va operator');
   await msg(7002, '/start', 1); ok(/yordam botiga/.test(lastTo(7002).body.text), "mijozga salomlashuv");
@@ -123,14 +131,14 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const callsOf = () => calls.filter((c) => c.method === 'CALL');
   const c0 = callsOf().length; await msg(7060, 'Tezkor sayt kerak, hoziroq qilib bering', 170);
   ok(callsOf().length === c0, "CALL_USER sozlanmagan bo'lsa qo'ng'iroq qilinmaydi");
-  env.CALL_USER = '+998901234567'; env.CALL_ANYTIME = '1'; await env.STATE.put('call:last', 0);
+  env.CALL_USER = '+998901234567'; env.CALL_ANYTIME = '1'; await S.put('call:last', 0);
   await msg(7061, 'Tezkor sayt kerak, hoziroq qilib bering', 171);
   const cu1 = callsOf().slice(-1)[0]; const q = cu1 && new URL(cu1.body.url);
   ok(cu1 && q.hostname === 'api.callmebot.com' && cu1.body.url.includes('user=+998901234567&') && /Срочный клиент/.test(q.searchParams.get('text')) && q.searchParams.get('lang') === 'ru-RU-Standard-A' && q.searchParams.get('text').length <= 256, "shoshilinch mijozda qo'ng'iroq: matn, til va raqam to'g'ri");
   const k1 = callsOf().length; await msg(7062, 'Sayt tezligi qancha?', 172); ok(callsOf().length === k1, "oddiy savolda qo'ng'iroq yo'q");
-  await env.STATE.put('call:last', 0); await msg(7001, '/qongiroq', 173); ok(callsOf().length === k1 + 1 && /Qo'ng'iroq yuborildi/.test(lastTo(7001).body.text), '/qongiroq sinov qo\'ng\'irog\'ini yuboradi');
+  await S.put('call:last', 0); await msg(7001, '/qongiroq', 173); ok(callsOf().length === k1 + 1 && /Qo'ng'iroq yuborildi/.test(lastTo(7001).body.text), '/qongiroq sinov qo\'ng\'irog\'ini yuboradi');
   const td2 = new Date(Date.now() + 5 * 3600e3), at20b = Date.UTC(td2.getUTCFullYear(), td2.getUTCMonth(), td2.getUTCDate() + 1, 15, 1), cB = callsOf().length;
-  await env.STATE.put('ul', []); await env.STATE.put('call:last', 0); await W.tick(env, at20b); const rc = callsOf().slice(-1)[0];
+  await S.put('ul', []); await S.put('call:last', 0); await W.tick(env, at20b); const rc = callsOf().slice(-1)[0];
   ok(callsOf().length > cB && /Дневной отчёт/.test(new URL(rc.body.url).searchParams.get('text')), "kunlik hisobotda qo'ng'iroq ham qilinadi");
   delete env.CALL_ANYTIME; const cN = callsOf().length; await msg(7063, 'Tezkor sayt kerak, hoziroq qilib bering', 174);
   const hNow = new Date(Date.now() + 5 * 3600e3).getUTCHours(); ok((hNow >= 8 && hNow < 22) || callsOf().length === cN, "tunda (22:00-08:00) qo'ng'iroq qilinmaydi");
@@ -154,7 +162,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   env.PUSHBULLET_TOKEN = 'o.test'; const pbN = pushes().length; await msg(7074, 'Tezkor sayt kerak, hoziroq qilib bering', 185); const pb = calls.filter((c) => c.method === 'PB').slice(-1)[0];
   ok(pb && pb.body.h['Access-Token'] === 'o.test' && /Shoshilinch/.test(pb.body.j.title) && !/998/.test(pb.body.j.body) && pushes().length === pbN, 'Pushbullet tokeni bo\'lsa u orqali yuboriladi (ntfy chetlab o\'tiladi)'); delete env.PUSHBULLET_TOKEN;
   Object.assign(env, { TWILIO_SID: 'AC123', TWILIO_TOKEN: 'tok', TWILIO_FROM: '+15005550006', CALL_PHONE: '+998336233313' });
-  await env.STATE.put('ul', []); const cmB = calls.filter((c) => c.method === 'CALL').length; await msg(7076, 'Tezkor sayt kerak, hoziroq qilib bering', 187);
+  await S.put('ul', []); const cmB = calls.filter((c) => c.method === 'CALL').length; await msg(7076, 'Tezkor sayt kerak, hoziroq qilib bering', 187);
   const tw = calls.filter((c) => c.method === 'TWILIO').slice(-1)[0];
   ok(tw && tw.body.url === 'https://api.twilio.com/2010-04-01/Accounts/AC123/Calls.json' && tw.body.h.Authorization === 'Basic ' + Buffer.from('AC123:tok').toString('base64') && tw.body.form.To === '+998336233313' && tw.body.form.From === '+15005550006' && /Срочный клиент/.test(tw.body.form.Twiml) , "Twilio: haqiqiy telefon qo'ng'irog'i (to'g'ri raqam, autentifikatsiya, matn)", tw && tw.body.form);
   ok(calls.filter((c) => c.method === 'CALL').length === cmB, 'Twilio bor bo\'lsa CallMeBot ishlatilmaydi');
@@ -257,13 +265,13 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   await msg(7040, 'Sayt SEO uchun yaxshimi?', 130); ok(/Workers AI: SEO/.test(lastTo(7040).body.text) && aiRuns.length === 1, "kalitsiz ham Workers AI mijoz savoliga javob beradi");
   delete env.AI;
   console.log('KV yozuv xatosi (fail-open)');
-  const putOrig = env.STATE.put; env.STATE.put = async (k, v, o) => { if (k.startsWith('rl:')) throw new Error('KV put() limit exceeded'); return putOrig(k, v, o); };
+  const injectRL = (on) => { if (MODE === 'd1') { if (on) { env.DB._prepare = env.DB.prepare; env.DB.prepare = (sql) => { const o = env.DB._prepare(sql), b = o.bind; o.bind = (...a) => { const r = b(...a); if (/INSERT INTO kv/.test(sql) && String(a[0]).startsWith('rl:')) r.run = async () => { throw new Error('D1 write failed'); }; return r; }; return o; }; } else env.DB.prepare = env.DB._prepare; } else if (on) { env._put = env.STATE.put; env.STATE.put = async (k, v, o) => { if (k.startsWith('rl:')) throw new Error('KV put() limit exceeded'); return env._put(k, v, o); }; } else env.STATE.put = env._put; };
+  injectRL(true);
   await msg(7030, "Qancha vaqtda tayyor bo'ladi?", 80); ok(/5–10/.test(lastTo(7030).body.text), "cheklash KV si ishlamasa ham mijozga javob beriladi");
   ok((await post({ name: 'Test Mijoz', phone: '+998901112233', message: 'x' }, 'https://improuzbekiston.uz', '7.7.7.7')).status === 200, "cheklash KV si ishlamasa ham forma qabul qilinadi (500 emas)");
-  env.STATE.put = async (k, v, o) => { if (k.startsWith('rl:')) throw new Error('KV put() limit exceeded'); return putOrig(k, v, o); };
   await hook({ message: { message_id: 91, chat: { id: 7032, type: 'private' }, from: { id: 7032, first_name: 'M' }, text: '/login pass-1234' } });
-  ok(/Juda ko'p urinish/.test(lastTo(7032).body.text) && !JSON.stringify(await env.STATE.get('admins') || '').includes('7032'), "KV xatosida /login rad etiladi (fail-closed), admin bo'lmaydi");
-  env.STATE.put = putOrig;
+  ok(/Juda ko'p urinish/.test(lastTo(7032).body.text) && !JSON.stringify(await S.get('admins') || '').includes('7032'), "KV xatosida /login rad etiladi (fail-closed), admin bo'lmaydi");
+  injectRL(false);
   await hook({ message: { message_id: 90, chat: { id: 7031, type: 'private' }, from: { id: 7031, first_name: 'L' }, text: '/login pass-1234' } });
   ok(calls.filter((c) => c.method === 'deleteMessage' && c.body.message_id === 90).length === 1, "/login xabari o'chirildi (webhook javobidan oldin)");
   console.log(`\nNatija: ${pass} PASS, ${fail} FAIL`); process.exit(fail ? 1 : 0);

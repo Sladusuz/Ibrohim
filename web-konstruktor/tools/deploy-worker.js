@@ -26,7 +26,10 @@ async function cf(method, p, body, headers) {
   if (!sub) sub = (await cf('PUT', `${acc}/workers/subdomain`, { subdomain: 'impro-' + crypto.randomBytes(3).toString('hex') })).subdomain; // yangi hisobda workers.dev nomi yaratiladi
   const kvs = await cf('GET', `${acc}/storage/kv/namespaces?per_page=100`);
   const kv = kvs.find((x) => x.title === 'impro-state') || (await cf('POST', `${acc}/storage/kv/namespaces`, { title: 'impro-state' }));
-  const bindings = [{ type: 'kv_namespace', name: 'STATE', namespace_id: kv.id }, { type: 'ai', name: 'AI' }, // Workers AI: bepul sun'iy intellekt (kalit shart emas)
+  // D1 baza (kuniga 100 000 yozuv bepul): holat shu yerda saqlanadi, KV zaxira sifatida qoladi
+  let d1 = null; try { d1 = (await cf('GET', `${acc}/d1/database?name=impro-state`)).find((x) => x.name === 'impro-state'); } catch { /* yo'q */ }
+  if (!d1) d1 = await cf('POST', `${acc}/d1/database`, { name: 'impro-state' });
+  const bindings = [{ type: 'd1', name: 'DB', id: d1.uuid }, { type: 'kv_namespace', name: 'STATE', namespace_id: kv.id }, { type: 'ai', name: 'AI' }, // Workers AI: bepul sun'iy intellekt (kalit shart emas)
     ...['TWILIO_SID', 'TWILIO_TOKEN'].filter((k) => E[k]).map((k) => ({ type: 'secret_text', name: k, text: E[k] })),
     ...['TWILIO_FROM', 'CALL_PHONE'].filter((k) => E[k]).map((k) => ({ type: 'plain_text', name: k, text: E[k] })),
     ...(E.BARK_KEY ? [{ type: 'secret_text', name: 'BARK_KEY', text: E.BARK_KEY }] : []),
