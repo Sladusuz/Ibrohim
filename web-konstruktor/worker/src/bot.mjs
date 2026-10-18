@@ -215,9 +215,13 @@ async function scheduleFollow(st, it) { try { const l = ((await st.get('fl')) ||
 const FOLLOW = { ph: { uz: "⏳ Kutganingiz uchun rahmat! Mutaxassisimiz tez orada siz bilan bog'lanadi.", ru: '⏳ Спасибо за ожидание! Специалист скоро свяжется с вами.', en: '⏳ Thank you for waiting! A specialist will contact you shortly.' }, bld: { uz: "👋 Saytingizni tayyorlashda yordam kerakmi? Telefon raqamingizni yozing yoki «📅 Uchrashuv» ni bosing, mutaxassisimiz yordam beradi.", ru: '👋 Нужна помощь с сайтом? Напишите номер телефона, специалист поможет.', en: '👋 Need help with your site? Leave your phone number and a specialist will help.' }, price: { uz: "👋 Sizga yordam kerakmi? Telefon raqamingizni yozib qoldiring, mutaxassisimiz bepul maslahat beradi.", ru: '👋 Нужна помощь? Оставьте номер телефона, специалист бесплатно проконсультирует.', en: '👋 Need help? Leave your phone number and a specialist will give you a free consultation.' } };
 // Anketa (suhbat): xizmat → nom → muddat → byudjet → telefon
 const SERVICES = ['Veb-sayt', "Onlayn do'kon", 'Telegram bot', 'Mobil ilova', 'UI/UX dizayn', 'Boshqa'], DEADLINES = ['Shoshilinch (1 hafta)', '2–3 hafta', '1 oy', 'Shoshilmayman'], BUDGETS = ["1–3 mln so'm", "3–7 mln so'm", "7–15 mln so'm", "15 mln so'mdan ko'p", 'Maslahat kerak'];
+const PAYFLOW = (env) => GP_ON(env) && calcServices().length > 0;
+const svcOpts = () => [...calcServices().map((x) => ({ n: x.name, p: Number(x.price) || 0 })), { n: 'Boshqa', p: 0 }];
+const kbSvcPay = () => ({ inline_keyboard: svcOpts().map((x, i) => [{ text: x.p ? `${x.n} — ${fmtSum(x.p)} so'm` : x.n, callback_data: `o:svc:${i}` }]) });
 const kbOf = (p, arr) => ({ inline_keyboard: arr.map((x, i) => [{ text: x, callback_data: `o:${p}:${i}` }]) });
 async function flowStart(env, st, chat, rec) {
   rec.flow = { step: 'svc', d: {} }; await saveRec(st, chat, rec);
+  if (PAYFLOW(env)) return say(env, chat, "📝 <b>Buyurtma berish</b> (4 ta qisqa savol, bekor qilish: /cancel)\n\n1/4. Qaysi xizmat kerak? Narxi tugmada ko'rsatilgan:", { reply_markup: kbSvcPay() });
   return say(env, chat, '📝 <b>Buyurtma anketasi</b> (5 ta qisqa savol, bekor qilish: /cancel)\n\n1/5. Qanday xizmat kerak?', { reply_markup: kbOf('svc', SERVICES) });
 }
 async function flowFinish(env, st, chat, rec, name) {
@@ -229,6 +233,11 @@ async function flowFinish(env, st, chat, rec, name) {
   for (const a of await adminsOf(env, st)) { const h = await say(env, a, txt + '\n\nJavob berish uchun shu xabarga <b>reply</b> qiling.', { reply_markup: { inline_keyboard: [[{ text: `📞 ${d.ph}`, url: 'https://t.me/' + d.ph }]] } }); if (h) map[a + ':' + h.message_id] = chat; }
   await Promise.all(Object.entries(map).map(([k, v]) => st.put('m:' + k, v, 30 * 86400)));
   if (/^Shoshilinch/.test(d.dl)) await raiseUrgent(env, st, { chat, name, phone: d.ph, text: `Anketa: ${d.svc}, ${d.name}, ${d.dl}` });
+  if (d.pay && d.price && GP_ON(env)) {
+    const pp = await createPayOrder(env, st, d.price, `Buyurtma: ${d.svc}, ${d.name}`); pp.kind = 'order'; pp.chat = chat; pp.phone = d.ph; pp.cname = name; await payOrderPut(st, pp);
+    const inv = await tg(env, 'sendInvoice', { chat_id: chat, ...gpParams(env, pp, String(d.svc).slice(0, 32)) });
+    if (inv) { for (const a of await adminsOf(env, st)) await say(env, a, `⏳ <b>Buyurtma: to'lov kutilmoqda</b>\n👤 ${esc(name)} <code>${chat}</code> · ${esc(d.ph)}\n🔧 ${esc(d.svc)} · ${esc(d.name)} · ${sum(d.price)} so'm`, { disable_notification: true }); return say(env, chat, `✅ <b>Buyurtma yozildi.</b>\n🔧 ${esc(d.svc)}\n💰 Summa: <b>${sum(d.price)} so'm</b>\n\nYuqoridagi «To'lash» tugmasini bosing. To'lovdan keyin buyurtmangiz <b>qabul qilinadi</b>.`); }
+  }
   await scheduleFollow(st, { c: chat, k: 'ph', due: Date.now() + 3600e3, n: name, p: d.ph });
   return say(env, chat, '✅ Anketa qabul qilindi! Mutaxassisimiz tez orada bog\'lanadi.' + (isOffice() ? '' : OFFLINE.uz));
 }
@@ -244,7 +253,7 @@ async function flowText(env, st, m, rec) {
   }
   if (f.step === 'site') return siteProposal(env, st, chat, rec, text);
   if (f.step === 'bkph') { const p = findPhone(text); if (!p) return say(env, chat, "Raqam noto'g'ri. Masalan: <code>90 123 45 67</code>"); rec.phone = p.phone; rec.flow = null; return bookFinish(env, st, chat, rec, who(m), f.ymd, f.hh); }
-  if (f.step === 'name') { f.d.name = text.slice(0, 80); f.step = 'dl'; await saveRec(st, chat, rec); return say(env, chat, '3/5. Qachon tayyor bo\'lishi kerak?', { reply_markup: kbOf('dl', DEADLINES) }); }
+  if (f.step === 'name') { f.d.name = text.slice(0, 80); f.step = 'dl'; await saveRec(st, chat, rec); return say(env, chat, (f.d.pay ? '3/4' : '3/5') + '. Qachon tayyor bo\'lishi kerak?', { reply_markup: kbOf('dl', DEADLINES) }); }
   if (f.step === 'ph') {
     const p = findPhone(text); if (!p) return say(env, chat, "Raqam noto'g'ri. Iltimos, masalan shunday yozing: <code>90 123 45 67</code>");
     f.d.ph = p.phone; return flowFinish(env, st, chat, rec, who(m));
@@ -255,7 +264,9 @@ async function flowCallback(env, st, q, p, i) {
   const chat = q.message.chat.id, rec = (await st.get('c:' + chat)) || { hist: [] }, f = rec.flow;
   if (!f) return say(env, chat, "Anketa yopilgan. Qayta boshlash: /anketa");
   const n = Number(i);
+  if (p === 'svc' && f.step === 'svc' && PAYFLOW(env) && svcOpts()[n]) { const o = svcOpts()[n]; f.d.svc = o.n; f.d.price = o.p; f.d.pay = !!o.p; if (o.p) f.d.bd = fmtSum(o.p) + " so'm"; f.step = 'name'; await saveRec(st, chat, rec); return say(env, chat, (o.p ? '2/4' : '2/5') + '. Biznes yoki kompaniyangiz nomi? (yozib yuboring)'); }
   if (p === 'svc' && f.step === 'svc' && SERVICES[n]) { f.d.svc = SERVICES[n]; f.step = 'name'; await saveRec(st, chat, rec); return say(env, chat, '2/5. Biznes yoki kompaniyangiz nomi? (yozib yuboring)'); }
+  if (p === 'dl' && f.step === 'dl' && DEADLINES[n] && f.d.pay) { f.d.dl = DEADLINES[n]; f.step = 'ph'; await saveRec(st, chat, rec); return say(env, chat, '4/4. Telefon raqamingizni yozing (masalan <code>90 123 45 67</code>):'); }
   if (p === 'dl' && f.step === 'dl' && DEADLINES[n]) { f.d.dl = DEADLINES[n]; f.step = 'bd'; await saveRec(st, chat, rec); return say(env, chat, '4/5. Taxminiy byudjet?', { reply_markup: kbOf('bd', BUDGETS) }); }
   if (p === 'bd' && f.step === 'bd' && BUDGETS[n]) { f.d.bd = BUDGETS[n]; f.step = 'ph'; await saveRec(st, chat, rec); return say(env, chat, '5/5. Telefon raqamingizni yozing (masalan <code>90 123 45 67</code>):'); }
 }
@@ -1045,6 +1056,7 @@ async function gpPaid(env, m) {
   if (p.state === 'paid') return;
   p.state = 'paid'; p.paidAt = Date.now(); p.ref = 'gp:' + (sp.provider_payment_charge_id || sp.telegram_payment_charge_id || ''); await payOrderPut(st, p); await markProjectPaid(st, p);
   const chat = m.chat.id, who2 = [m.from && m.from.first_name, m.from && m.from.username && '@' + m.from.username].filter(Boolean).join(' ');
+  if (p.kind === 'order') { const rec = (await st.get('c:' + p.chat)) || {}; addTag(rec, 'tolagan'); await saveRec(st, p.chat, rec); await ev(st, { k: 'pay', c: p.chat, n: p.cname || 'Mijoz', x: sum(p.uzs) + " so'm, buyurtma" }); await say(env, chat, `✅ <b>To'lov qabul qilindi: buyurtmangiz qabul qilindi!</b>\n${esc(p.note || '')}\nMutaxassisimiz tez orada ${esc(p.phone || 'siz')} raqami bo'yicha bog'lanadi.`); for (const a of await adminsOf(env, st)) await say(env, a, `💳✅ <b>Buyurtma TO'LANDI</b> · ${sum(p.uzs)} so'm\n👤 ${esc(p.cname || who2)} <code>${p.chat}</code> · ${esc(p.phone || '')}\n${esc(p.note || '')}`); return; }
   if (p.projectId) await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Saytingizni endi joylash yoki yuklab olish mumkin. Saytga qaytib sahifani yangilang.");
   else { const rec = (await st.get('c:' + chat)) || {}; rec.payAmt = p.uzs; await saveRec(st, chat, rec); await confirmPay(env, st, chat, 'GlobalPay'); }
   for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>GlobalPay: to'lov qabul qilindi</b>\n${sum(p.uzs)} so'm · ${esc(who2)}${p.projectId ? '\n🌐 Sayt sotib olindi' : ''}\n${esc(p.note || '')}`);

@@ -85,6 +85,16 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
       tgc.length = 0; await msg(1, '/tolov'); ok(tgc.some((c) => c.method === 'sendMessage' && c.body.chat_id === 777 && /Qancha to'laysiz/.test(c.body.text)), 'bot: mijoz /tolov yozsa summa soraydi');
       tgc.length = 0; await msg(2, '250000'); const inv = tgc.find((c) => c.method === 'sendInvoice'); ok(inv && inv.body.chat_id === 777 && inv.body.provider_token === '398062629:TEST:click' && inv.body.prices[0].amount === 25000000, 'bot: summadan keyin Telegram hisob-faktura yuboriladi', inv && inv.body);
       tgc.length = 0; await W.handleUpdate(env, { message: { message_id: 3, chat: { id: 7, type: 'private' }, from: { id: 7 }, text: '/tolov 500000 Vizitka sayt' } }); ok(tgc.some((c) => c.method === 'sendMessage' && /t\.me\/\$inv123/.test(c.body.text)), 'bot: admin /tolov summa -> mijozga havola'); }
+    env.CLICK_TG_TOKEN = '398062629:TEST:click'; { // buyurtma + darrov to'lov
+      const m2 = (id, text) => W.handleUpdate(env, { message: { message_id: id, chat: { id: 888, type: 'private' }, from: { id: 888, first_name: 'Buyurtmachi' }, text } }), cb2 = (data) => W.handleUpdate(env, { callback_query: { id: 'c' + Math.random(), data, from: { id: 888, first_name: 'Buyurtmachi' }, message: { chat: { id: 888 }, message_id: 50 } } });
+      tgc.length = 0; await m2(10, '/anketa'); const kb = JSON.stringify(tgc.find((c) => c.method === 'sendMessage').body.reply_markup); ok(/so'm/.test(kb) && /o:svc:0/.test(kb), 'buyurtma: xizmat narxi tugmada ko\'rinadi');
+      await cb2('o:svc:0'); await m2(11, 'Baraka Market'); await cb2('o:dl:2'); ok(/4\/4/.test(tgc.filter((c) => c.method === 'sendMessage').slice(-1)[0].body.text), 'buyurtma: byudjet soralmaydi, telefon so\'raladi');
+      tgc.length = 0; await m2(12, '90 123 45 67'); const inv2 = tgc.find((c) => c.method === 'sendInvoice'); ok(inv2 && inv2.body.chat_id === 888 && inv2.body.prices[0].amount === 250000000, 'buyurtma: darrov hisob-faktura (summa xizmat narxi)', inv2 && inv2.body.prices);
+      ok(tgc.some((c) => c.method === 'sendMessage' && c.body.chat_id === 7 && /to'lov kutilmoqda/.test(c.body.text)) && tgc.some((c) => c.body.chat_id === 888 && /qabul qilinadi/.test(c.body.text || '')), 'buyurtma: adminga "kutilmoqda", mijozga "to\'lovdan keyin qabul"');
+      const S3 = W.store(env), pay3 = (await Promise.all((await S3.list('po:')).map((k) => S3.get(k.name)))).find((q) => q.kind === 'order');
+      tgc.length = 0; await W.handleUpdate(env, { message: { message_id: 13, chat: { id: 888, type: 'private' }, from: { id: 888, first_name: 'Buyurtmachi' }, successful_payment: { currency: 'UZS', total_amount: pay3.uzs * 100, invoice_payload: 'po:' + pay3.id, telegram_payment_charge_id: 'x1' } } });
+      ok(tgc.some((c) => c.body.chat_id === 888 && /buyurtmangiz qabul qilindi/.test(c.body.text || '')) && tgc.some((c) => c.body.chat_id === 7 && /Buyurtma TO'LANDI/.test(c.body.text || '')), 'buyurtma: tolovdan keyin qabul qilindi va admin xabardor');
+    }
     delete env.GLOBALPAY_TOKEN; delete env.CLICK_TG_TOKEN;
   }
   { // veb admin panel: /api/admin/*
