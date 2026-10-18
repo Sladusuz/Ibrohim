@@ -73,5 +73,12 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok((await post({ name: 'Test', phone: '+998901112233' }, 'https://evil.example')).status === 403, "begona sayt (Origin) rad etiladi");
   ok((await W.fetch(new Request('https://w.example/', { method: 'OPTIONS', headers: { Origin: 'https://improuzbekiston.uz' } }), env, ctx)).status === 204, 'CORS preflight');
   let last = 200; for (let i = 0; i < 9; i++) last = (await post({ name: 'Test', phone: '+998901112233' }, 'https://improuzbekiston.uz', '9.9.9.9')).status; ok(last === 429, 'bir IP dan ko\'p so\'rov cheklanadi');
+  console.log('KV yozuv xatosi (fail-open)');
+  const putOrig = env.STATE.put; env.STATE.put = async (k, v) => { if (k.startsWith('rl:')) throw new Error('KV put() limit exceeded'); return putOrig(k, v); };
+  await msg(7030, "Qancha vaqtda tayyor bo'ladi?", 80); ok(/5–10/.test(lastTo(7030).body.text), "cheklash KV si ishlamasa ham mijozga javob beriladi");
+  ok((await post({ name: 'Test Mijoz', phone: '+998901112233', message: 'x' }, 'https://improuzbekiston.uz', '7.7.7.7')).status === 200, "cheklash KV si ishlamasa ham forma qabul qilinadi (500 emas)");
+  env.STATE.put = putOrig;
+  await hook({ message: { message_id: 90, chat: { id: 7031, type: 'private' }, from: { id: 7031, first_name: 'L' }, text: '/login pass-1234' } });
+  ok(calls.filter((c) => c.method === 'deleteMessage' && c.body.message_id === 90).length === 1, "/login xabari o'chirildi (webhook javobidan oldin)");
   console.log(`\nNatija: ${pass} PASS, ${fail} FAIL`); process.exit(fail ? 1 : 0);
 })().catch((e) => { console.log('XATO', e); process.exit(1); });

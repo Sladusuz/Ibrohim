@@ -39,6 +39,9 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok(/Telegram bot konstruktori/.test((await T('Telegram bot yaratish qancha?')).text), "bot so'rovi bot javobini beradi");
   ok((await T('Menga operator kerak')).handoff === true && (await T('Yordam beradigan odam bormi?')).handoff === true && (await T('Нужен менеджер')).handoff === true, "operator/odam so'rovi uzatiladi (uz/ru)");
   ok((await T('I want to talk to a human agent')).handoff === true, "inglizcha 'human agent' uzatiladi");
+  ok(/5–10/.test((await T("Qancha vaqtda tayyor bo'ladi?")).text) && !/Start sayt: dan/.test((await T("Qancha vaqtda tayyor bo'ladi?")).text.split('\n')[0].replace(/5–10.*/, '')), "'qancha vaqtda' muddatlarni beradi (narxni emas)", await T("Qancha vaqtda tayyor bo'ladi?"));
+  ok(/5–10/.test((await T('Сколько времени займет сайт?')).text), "ruscha 'сколько времени' muddatlar");
+  ok(/2 500 000/.test((await T('Sayt qancha turadi?')).text), "'qancha turadi' narxni beradi");
   mock.close();
   console.log(`\nNatija: ${pass} PASS, ${fail} FAIL`); process.exit(fail ? 1 : 0);
 })();

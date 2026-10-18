@@ -84,8 +84,8 @@ ${kb(F)}`;
     ['thanks', /rahmat|raxmat|спасибо|благодар|thanks|thank you/],
     ['bot', /(?<![\p{L}])(telegram bot|bot yarat\p{L}*|mini ?do'?kon|бот\p{L}*|bots?)(?![\p{L}])/u],
     ['template', /shablon|шаблон|template|konstruktor|конструктор|builder|\$ ?10|10 ?\$|o'?zim yarat|сам создат/],
+    ['time', /muddat|qachon tayyor|necha kun|qancha vaqt|срок|как долго|когда готов|сколько (?:времени|дней|займ\p{L}*)|deadline|how long|timeline/u],
     ['price', /narx|qancha|necha pul|to'?laydi|стоим|цена|сколько|price|cost|how much|tarif|paket|пакет/],
-    ['time', /muddat|qachon tayyor|necha kun|qancha vaqt|срок|как долго|когда готов|deadline|how long|timeline/],
     ['pay', /to'?lov|payme|click|karta|оплат|карт|payment|pay\b/],
     ['domain', /domen|домен|domain|hosting|хостинг/],
     ['contact', /telefon|raqam|manzil|aloqa|email|pochta|ish vaqti|адрес|телефон|контакт|график|address|phone|contact|hours|instagram/],
@@ -135,7 +135,8 @@ const store = (env) => env.STATE
   ? { get: async (k) => { const v = await env.STATE.get(k); if (v == null) return null; try { return JSON.parse(v); } catch { return null; } }, put: (k, v, ttl) => env.STATE.put(k, JSON.stringify(v), ttl ? { expirationTtl: Math.max(60, Math.floor(ttl)) } : undefined) }
   : { get: async (k) => { const e = MEM.get(k); if (!e) return null; if (e.x && e.x < Date.now()) { MEM.delete(k); return null; } return e.v; }, put: async (k, v, ttl) => { MEM.set(k, { v, x: ttl ? Date.now() + ttl * 1000 : 0 }); } };
 // Hisoblagich: oyna ichida max martadan oshsa true
-async function limited(st, key, max, sec) { const now = Date.now(), r = (await st.get('rl:' + key)) || { n: 0, t: now }; if (now - r.t > sec * 1000) { r.n = 0; r.t = now; } r.n++; await st.put('rl:' + key, r, sec); return r.n > max; }
+// KV yozuv chegarasi (bir kalitga ~1/soniya) yoki xato bo'lsa cheklash o'chadi (fail-open): mijozga javob har holda boradi
+async function limited(st, key, max, sec) { try { const now = Date.now(), r = (await st.get('rl:' + key)) || { n: 0, t: now }; if (now - r.t > sec * 1000) { r.n = 0; r.t = now; } r.n++; await st.put('rl:' + key, r, sec); return r.n > max; } catch { return false; } }
 const tEq = (a, b) => { a = String(a); b = String(b); if (a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; };
 
 /* ---------- Telegram ---------- */
@@ -191,7 +192,7 @@ async function handleUpdate(env, upd) {
   const st = store(env), chat = m.chat.id, text = (m.text || '').trim();
   const cmd = (text.split(/\s+/)[0] || '').replace(/@\w+$/, '').toLowerCase(), arg = text.slice((text.split(/\s+/)[0] || '').length).trim();
   if (cmd === '/login') {
-    tg(env, 'deleteMessage', { chat_id: chat, message_id: m.message_id }); // parol chatda qolmasin
+    await tg(env, 'deleteMessage', { chat_id: chat, message_id: m.message_id }); // parol chatda qolmasin (so'rov tugaguncha kutiladi)
     if (!env.ADMIN_PASSWORD) return say(env, chat, "Admin paroli sozlanmagan (ADMIN_PASSWORD).");
     if (await limited(st, 'l' + chat, 5, 900) || await limited(st, 'lall', 30, 3600)) return say(env, chat, "Juda ko'p urinish. 15 daqiqadan so'ng qayta urining.");
     if (!tEq(arg, env.ADMIN_PASSWORD)) return say(env, chat, "❌ Parol noto'g'ri.");
