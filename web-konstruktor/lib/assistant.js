@@ -2,7 +2,7 @@
 // Yordam boti uchun avtomatik javob beruvchi: kompaniya ma'lumotlari (xizmatlar, narxlar, savol-javoblar) asosida
 // mijoz savoliga uz/ru/en tilida javob beradi. Claude API kaliti bo'lsa AI ishlatadi, bo'lmasa qoidalar asosida javob beradi.
 // Javob bera olmasa yoki mijoz operator so'rasa: handoff=true (operatorga uzatiladi).
-module.exports = function makeAssistant({ getSettings, getSite, getPricing, workersAi }) {
+module.exports = function makeAssistant({ getSettings, getSite, getPricing, workersAi, getExtra }) {
   const penv = (typeof process !== 'undefined' && process.env) || {};
   const cfg = () => { const a = getSettings().ai || {}; return { key: penv.ANTHROPIC_API_KEY || a.key || '', model: penv.AI_MODEL || a.model || 'claude-sonnet-5-5', base: (penv.ANTHROPIC_BASE_URL || a.base || 'https://api.anthropic.com').replace(/\/$/, '') }; };
   const enabled = () => !!(cfg().key || workersAi);
@@ -29,6 +29,7 @@ module.exports = function makeAssistant({ getSettings, getSite, getPricing, work
       if (s.type === 'faq') F.faq.push(...(s.items || []).map((p) => ({ q: plain(p.q), a: plain(p.a) })));
       if (s.type === 'process') F.process.push(...(s.items || []).map((p) => `${plain(p.title)}: ${plain(p.text)}`));
     }
+    F.extra = (getExtra ? getExtra() : []).map((x) => plain(x)).filter(Boolean);
     const brief = secs.find((s) => s.type === 'brief');
     if (brief) F.briefServices = (brief.services || []).map((x) => ({ name: plain(x.name), price: Number(x.price) || 0, days: plain(x.days) }));
     return F;
@@ -41,6 +42,7 @@ module.exports = function makeAssistant({ getSettings, getSite, getPricing, work
       "To'lov: Payme, Click yoki karta o'tkazmasi. Katta loyihalarda bosqichma-bosqich, shartnoma asosida."];
     if (F.packs.length) L.push('Tayyor paketlar (boshlang\'ich narx, so\'m): ' + F.packs.map((p) => `${p.name} ${money(p.price)}${p.text ? ' (' + p.text + ')' : ''}`).join('; '));
     if (F.briefServices) L.push('Muddatlar: ' + F.briefServices.map((x) => `${x.name} ${x.days}`).join('; '));
+    if (F.extra && F.extra.length) L.push("Qo'shimcha ma'lumotlar (administrator kiritgan, eng yangi va ishonchli):\n" + F.extra.map((x) => '- ' + x).join('\n'));
     if (F.faq.length) L.push('Ko\'p so\'raladigan savollar:\n' + F.faq.map((f) => `- ${f.q} ${f.a}`).join('\n'));
     return L.join('\n');
   }
@@ -118,7 +120,7 @@ ${kb(F)}`;
       case 'domain': return { text: L.domText };
       case 'contact': return { text: [F.phone && `📞 ${F.phone}`, F.email && `✉️ ${F.email}`, F.telegram && `Telegram: ${F.telegram}`, F.instagram && `Instagram: ${F.instagram}`, F.hours && `🕘 ${F.hours}`, F.address && `📍 ${F.address}`].filter(Boolean).join('\n') };
       case 'app': return { text: `${(F.packs.find((p) => /ilova|app/i.test(p.name)) || {}).name || 'Mobil ilova'}: ${L.from} ${money((F.packs.find((p) => /ilova|app/i.test(p.name)) || {}).price || 0)} so'm. ${L.askphone}`, handoff: true };
-      default: return faq ? { text: faq.a } : { text: L.handoff, handoff: true };
+      default: { const words = t.split(/[^\p{L}\p{N}']+/u).filter((x) => x.length > 3); const ex = (F.extra || []).map((x) => ({ x, n: words.filter((w) => norm(x).includes(w.slice(0, Math.max(4, w.length - 2)))).length })).sort((a, b) => b.n - a.n)[0]; if (ex && ex.n >= 2) return { text: ex.x }; return faq ? { text: faq.a } : { text: L.handoff, handoff: true }; }
     }
   }
 
@@ -128,5 +130,6 @@ ${kb(F)}`;
     if (workersAi) { try { return await viaWorkersAi(F, history, text); } catch { /* AI ishlamasa qoidalarga o'tamiz */ } }
     return { ...rules(F, text, lang), ai: false };
   }
-  return { answer, enabled, facts, kb, detect };
+  const quick = (text) => ({ ...rules(facts(), text, detect(text)) });
+  return { answer, enabled, facts, kb, detect, quick };
 };
