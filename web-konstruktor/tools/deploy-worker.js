@@ -45,7 +45,7 @@ async function cf(method, p, body, headers) {
   fd.append('worker.mjs', new Blob([code], { type: 'application/javascript+module' }), 'worker.mjs');
   await cf('PUT', `${acc}/workers/scripts/${NAME}`, fd);
   await cf('POST', `${acc}/workers/scripts/${NAME}/subdomain`, { enabled: true });
-  await cf('PUT', `${acc}/workers/scripts/${NAME}/schedules`, [{ cron: '*/5 * * * *' }]); // shoshilinch eslatmalar va kunlik hisobot (20:00 Toshkent)
+  await cf('PUT', `${acc}/workers/scripts/${NAME}/schedules`, [{ cron: '* * * * *' }]); // shoshilinch eslatmalar va kunlik hisobot (20:00 Toshkent)
   const url = `https://${NAME}.${sub}.workers.dev`;
   let res = { error: 'javob yo\'q' }; // yangi workers.dev manzili bir necha daqiqada ishga tushadi: qayta urinamiz
   for (let i = 0; i < (E.NO_SETUP ? 0 : 24); i++) { await new Promise((r) => setTimeout(r, 5000)); res = await fetch(`${url}/setup?key=${encodeURIComponent(secrets.SETUP_KEY)}`).then((r) => r.json()).catch((e) => ({ error: e.message })); if (!res.error) break; }
