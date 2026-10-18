@@ -1,16 +1,17 @@
 'use strict';
 // Cloudflare Worker'ni bitta buyruq bilan joylaydi (KV yaratadi, kodni yuklaydi, maxfiy qiymatlarni o'rnatadi, webhookni ulaydi).
-// Kerak: Cloudflare API token (ruxsatlar: Workers Scripts: Edit, Workers KV Storage: Edit, Account Settings: Read) va Account ID.
+// Kerak: Cloudflare API token (ruxsatlar: Workers Scripts: Edit, Workers KV Storage: Edit, Account Settings: Read) va Account ID,
+// yoki Global API Key (CF_EMAIL + CF_API_KEY; Account ID ixtiyoriy: o'zi topiladi).
 // Ishga tushirish (qiymatlar muhit o'zgaruvchisi orqali, repoga yozilmaydi):
 //   CF_API_TOKEN=... CF_ACCOUNT_ID=... TG_TOKEN=... ADMIN_PASSWORD=... [ANTHROPIC_API_KEY=...] node tools/deploy-worker.js
 // Ixtiyoriy: WORKER_NAME (impro-bot), ALLOW_ORIGIN. DRY=1 bo'lsa hech narsa yuborilmaydi.
 const fs = require('fs'), path = require('path'), crypto = require('crypto');
 const E = process.env, NAME = E.WORKER_NAME || 'impro-bot', API = 'https://api.cloudflare.com/client/v4';
-const need = ['CF_API_TOKEN', 'CF_ACCOUNT_ID', 'TG_TOKEN', 'ADMIN_PASSWORD'].filter((k) => !E[k]);
+const GLOBAL = !!(E.CF_EMAIL && E.CF_API_KEY), need = [...(GLOBAL ? [] : ['CF_API_TOKEN', 'CF_ACCOUNT_ID']), 'TG_TOKEN', 'ADMIN_PASSWORD'].filter((k) => !E[k]);
 if (need.length && !E.DRY) { console.error('Yetishmayapti: ' + need.join(', ')); process.exit(1); }
 const rnd = (n) => crypto.randomBytes(n).toString('base64url');
 async function cf(method, p, body, headers) {
-  const r = await fetch(API + p, { method, headers: { Authorization: `Bearer ${E.CF_API_TOKEN}`, ...(body && !(body instanceof FormData) ? { 'content-type': 'application/json' } : {}), ...headers }, body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined });
+  const r = await fetch(API + p, { method, headers: { ...(GLOBAL ? { 'X-Auth-Email': E.CF_EMAIL, 'X-Auth-Key': E.CF_API_KEY } : { Authorization: `Bearer ${E.CF_API_TOKEN}` }), ...(body && !(body instanceof FormData) ? { 'content-type': 'application/json' } : {}), ...headers }, body: body instanceof FormData ? body : body ? JSON.stringify(body) : undefined });
   const j = await r.json().catch(() => ({}));
   if (!j.success) throw new Error(`${method} ${p}: ${(j.errors || []).map((e) => e.message).join('; ') || r.status}`);
   return j.result;
@@ -20,8 +21,9 @@ async function cf(method, p, body, headers) {
   const code = fs.readFileSync(path.join(__dirname, '..', 'worker', 'dist', 'worker.mjs'), 'utf8');
   const secrets = { WEBHOOK_SECRET: rnd(24), SETUP_KEY: rnd(18) };
   if (E.DRY) { console.log('DRY: kod', Math.round(code.length / 1024) + 'KB, maxfiy qiymatlar', Object.keys({ ...secrets, TG_TOKEN: 1, ADMIN_PASSWORD: 1 }).join(', ')); return; }
-  const acc = `/accounts/${E.CF_ACCOUNT_ID}`;
-  const sub = (await cf('GET', `${acc}/workers/subdomain`)).subdomain;
+  const accId = E.CF_ACCOUNT_ID || (await cf('GET', '/accounts'))[0].id, acc = `/accounts/${accId}`;
+  let sub; try { sub = (await cf('GET', `${acc}/workers/subdomain`)).subdomain; } catch { sub = ''; }
+  if (!sub) sub = (await cf('PUT', `${acc}/workers/subdomain`, { subdomain: 'impro-' + crypto.randomBytes(3).toString('hex') })).subdomain; // yangi hisobda workers.dev nomi yaratiladi
   const kvs = await cf('GET', `${acc}/storage/kv/namespaces?per_page=100`);
   const kv = kvs.find((x) => x.title === 'impro-state') || (await cf('POST', `${acc}/storage/kv/namespaces`, { title: 'impro-state' }));
   const bindings = [{ type: 'kv_namespace', name: 'STATE', namespace_id: kv.id },
@@ -35,8 +37,8 @@ async function cf(method, p, body, headers) {
   await cf('PUT', `${acc}/workers/scripts/${NAME}`, fd);
   await cf('POST', `${acc}/workers/scripts/${NAME}/subdomain`, { enabled: true });
   const url = `https://${NAME}.${sub}.workers.dev`;
-  await new Promise((r) => setTimeout(r, 4000));
-  const res = await fetch(`${url}/setup?key=${encodeURIComponent(secrets.SETUP_KEY)}`).then((r) => r.json()).catch((e) => ({ error: e.message }));
+  let res = { error: 'javob yo\'q' }; // yangi workers.dev manzili bir necha daqiqada ishga tushadi: qayta urinamiz
+  for (let i = 0; i < 24; i++) { await new Promise((r) => setTimeout(r, 5000)); res = await fetch(`${url}/setup?key=${encodeURIComponent(secrets.SETUP_KEY)}`).then((r) => r.json()).catch((e) => ({ error: e.message })); if (!res.error) break; }
   console.log('Worker manzili:', url); console.log('Sozlash natijasi:', JSON.stringify(res));
   console.log(`Saytga ulash: RELAY=${url} node tools/build-static.js\nTelegram: botga /login <ADMIN_PASSWORD> yozing.`);
 })().catch((e) => { console.error('XATO:', e.message); process.exit(1); });
