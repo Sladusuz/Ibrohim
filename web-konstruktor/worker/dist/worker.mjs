@@ -153,8 +153,281 @@ ${kb(F)}`;
 
 })(__am);
 const makeAssistant = __am.exports;
+const process = { env: {} };
+const __ai = { exports: {} };
+(function (module) {
+'use strict';
+// AI yordamchi: biznes tavsifidan shablon tanlaydi va matnlarni yozadi (Claude API). Kalit bo'lmasa kalit so'z bo'yicha tanlaydi.
+module.exports = function makeAi({ getSettings }) {
+  const cfg = () => { const a = getSettings().ai || {}; return { key: process.env.ANTHROPIC_API_KEY || a.key || '', model: process.env.AI_MODEL || a.model || 'claude-sonnet-5-5', base: (process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com').replace(/\/$/, '') }; };
+  const enabled = () => !!cfg().key;
+  const cut = (v, n) => String(v == null ? '' : v).replace(/\s+/g, ' ').trim().slice(0, n);
+  const num = (v) => { const n = parseInt(String(v == null ? '' : v).replace(/[^\d]/g, ''), 10); return Number.isFinite(n) && n > 0 ? n : 0; };
+
+  const SYSTEM = `Sen o'zbek tilida (lotin yozuvida) ishlaydigan veb-sayt yaratuvchi yordamchisan. Foydalanuvchi biznesini tasvirlaydi.
+Vazifang: ro'yxatdagi shablonlardan ENG mosini tanlash va sayt matnlarini yozish. Faqat bitta JSON obyekt qaytar, boshqa hech narsa yozma.
+JSON shakli:
+{"template":"<id>","name":"<kompaniya nomi>","tagline":"<qisqa shior, 12 so'zgacha>","heroTitle":"<3-7 so'z, bitta so'zni *yulduzcha* ichiga ol>","heroText":"<1-2 jumla>","about":"<2-3 jumla, bitta-ikki so'zni *yulduzcha* ichiga ol>","services":[{"title":"","text":"","price":"<faqat raqam so'mda yoki bo'sh>"}],"faq":[{"q":"","a":""}],"phone":"","address":""}
+Qoidalar: services 4-6 ta, faq 3-5 ta; narxlar real bo'lsin (so'mda, faqat raqam); foydalanuvchi bermagan telefon yoki manzilni to'qima (bo'sh qoldir); nomni foydalanuvchi bergan bo'lsa shuni ishlat, bermagan bo'lsa chiroyli mos nom o'ylab top; reklama bo'rttirmasi va soxta statistika yozma.`;
+
+  async function viaClaude(description, templates) {
+    const c = cfg();
+    const list = templates.map((t) => `${t.id}: ${t.name} (${t.cat}) [${(t.tags || []).slice(0, 6).join(', ')}]`).join('\n');
+    const r = await fetch(`${c.base}/v1/messages`, {
+      method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': c.key, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: c.model, max_tokens: 2000, system: SYSTEM, messages: [{ role: 'user', content: `Shablonlar:\n${list}\n\nBiznes tavsifi:\n${cut(description, 1500)}` }] }),
+      signal: AbortSignal.timeout(45000),
+    });
+    if (!r.ok) throw new Error('AI xizmati javob bermadi (' + r.status + ')');
+    const j = await r.json();
+    const txt = (j.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');
+    const a = txt.indexOf('{'), b = txt.lastIndexOf('}');
+    if (a < 0 || b < a) throw new Error("AI javobi noto'g'ri");
+    return JSON.parse(txt.slice(a, b + 1));
+  }
+
+  function fallback(description, templates) {
+    const d = ' ' + String(description || '').toLowerCase().replace(/[ʻʼ'’`]/g, '') + ' ';
+    let best = null, bs = 0;
+    for (const t of templates) {
+      let s = 0;
+      for (const w of [t.id, t.name, t.cat, ...(t.tags || [])]) {
+        const x = String(w || '').toLowerCase().replace(/[ʻʼ'’`]/g, '').trim(); if (x.length < 3) continue;
+        if (d.includes(x)) s += x.length > 4 ? 3 : 2; else if (x.length > 5 && d.includes(x.slice(0, x.length - 2))) s += 1;
+      }
+      if (s > bs) { bs = s; best = t; }
+    }
+    const nm = /["«“]([^"»”]{2,40})["»”]/.exec(description || '') || /\b([A-ZА-Я][\w'-]{2,20}(?:\s[A-ZА-Я][\w'-]{2,20})?)\s+(?:nomli|nomi|deb nomlangan)/.exec(description || '');
+    return { template: (best || templates.find((t) => t.id === 'kompaniya') || templates[0] || {}).id, name: nm ? nm[1] : '' };
+  }
+
+  function clean(raw, templates, description) {
+    const ids = new Set(templates.map((t) => t.id));
+    const fb = fallback(description, templates);
+    const r = raw && typeof raw === 'object' ? raw : {};
+    return {
+      template: ids.has(r.template) ? r.template : fb.template,
+      name: cut(r.name, 40) || fb.name, tagline: cut(r.tagline, 140), heroTitle: cut(r.heroTitle, 70), heroText: cut(r.heroText, 260), about: cut(r.about, 360),
+      services: (Array.isArray(r.services) ? r.services : []).slice(0, 6).map((s) => ({ title: cut(s && s.title, 60), text: cut(s && s.text, 200), price: num(s && s.price) })).filter((s) => s.title),
+      faq: (Array.isArray(r.faq) ? r.faq : []).slice(0, 5).map((f) => ({ q: cut(f && f.q, 140), a: cut(f && f.a, 400) })).filter((f) => f.q && f.a),
+      phone: cut(r.phone, 30), address: cut(r.address, 140),
+    };
+  }
+
+  async function generate(description, templates) {
+    const tpl = (Array.isArray(templates) ? templates : []).slice(0, 80).map((t) => ({ id: cut(t.id, 30), name: cut(t.name, 60), cat: cut(t.cat, 40), tags: (Array.isArray(t.tags) ? t.tags : []).slice(0, 10).map((x) => cut(x, 30)) })).filter((t) => t.id);
+    if (!tpl.length) throw new Error("Shablonlar ro'yxati bo'sh");
+    if (enabled()) { try { return { ai: true, result: clean(await viaClaude(description, tpl), tpl, description) }; } catch (e) { return { ai: false, warn: e.message, result: clean(fallback(description, tpl), tpl, description) }; } }
+    return { ai: false, result: clean(fallback(description, tpl), tpl, description) };
+  }
+  return { generate, enabled, cfg };
+};
+
+})(__ai);
+const makeAi = __ai.exports;
 const SITE = {"company":{"name":"Impro IT"},"contacts":{"phone":"+998 33 623 33 13","email":"info@improuzbekiston.uz","address":"Toshkent, Amir Temur ko'chasi 1","hours":"Dush–Shan, 9:00–18:00","telegram":"@improsupport_bot","instagram":"@improuzbekiston_uz","whatsapp":"+998336233313"},"sections":[{"type":"services","enabled":true,"items":[{"title":"Veb-saytlar","text":"Vizitka, korporativ sayt va landing sahifalar: tez, chiroyli va qidiruvga tayyor.","tags":["Dizayn","Kod","SEO"],"link":"#aloqa"},{"title":"Onlayn do'konlar","text":"Katalog, savat, to'lov tizimlari, ombor va qulay admin panel.","tags":["Payme","Click","Admin"],"link":"#aloqa"},{"title":"Telegram botlar","text":"Buyurtma, bron va to'lovlarni avtomatlashtiring. O'zingiz ham bot yaratishingiz mumkin: katalog va mini do'kon bilan.","tags":["Bot","CRM"],"link":"/bot.html"},{"title":"Mobil ilovalar","text":"iOS va Android uchun zamonaviy, tez va qulay ilovalar.","tags":["Flutter","iOS","Android"],"link":"#aloqa"},{"title":"UI/UX dizayn","text":"Foydalanuvchi sevadigan interfeys, prototip va dizayn tizimi.","tags":["Figma","Brend"],"link":"#aloqa"}],"services":[]},{"type":"process","enabled":true,"items":[{"title":"Tahlil va maqsad","text":"Biznesingiz, auditoriya va raqobatchilarni o'rganib, aniq reja tuzamiz."},{"title":"Dizayn va prototip","text":"Kod yozishdan oldin ko'rinish va foydalanuvchi yo'lini tasdiqlaymiz."},{"title":"Ishlab chiqish","text":"Tez, xavfsiz va kengayadigan kod. Har hafta natijani ko'rsatamiz."},{"title":"Ishga tushirish va yordam","text":"Testdan o'tkazib, joylaymiz va keyin ham yonida bo'lamiz."}],"services":[]},{"type":"products","enabled":true,"items":[{"id":"start","name":"Start sayt","price":2500000,"oldPrice":0,"category":"Veb-sayt","badge":"","description":"5 sahifagacha vizitka sayt, mobilga moslashgan, aloqa formasi bilan.","stock":"","active":true},{"id":"dokon","name":"Onlayn do'kon","price":6900000,"oldPrice":0,"category":"Veb-sayt","badge":"ENG KO'P TANLANADI","description":"Katalog, savat, admin panel va Telegram xabarnoma bilan to'liq do'kon.","stock":"","active":true},{"id":"bot","name":"Telegram bot","price":3200000,"oldPrice":0,"category":"Bot","badge":"","description":"Buyurtma va so'rov qabul qiluvchi tayyor bot, admin xabarnomasi bilan.","stock":"","active":true},{"id":"ilova","name":"Mobil ilova","price":15000000,"oldPrice":0,"category":"Ilova","badge":"","description":"iOS va Android uchun ilova: dizayn, ishlab chiqish va e'lon qilish.","stock":"","active":true},{"id":"dizayn","name":"UI/UX dizayn","price":1800000,"oldPrice":0,"category":"Dizayn","badge":"","description":"Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip.","stock":"","active":true},{"id":"yordam","name":"Oylik texnik yordam","price":900000,"oldPrice":0,"category":"Xizmat","badge":"","description":"Yangilash, xavfsizlik, zaxira nusxa va tezkor tuzatishlar.","stock":"","active":true}],"services":[]},{"type":"brief","enabled":true,"items":[],"services":[{"name":"Vizitka / korporativ sayt","price":2500000,"days":"5–10 kun"},{"name":"Onlayn do'kon","price":6900000,"days":"2–3 hafta"},{"name":"Telegram bot","price":3200000,"days":"1–2 hafta"},{"name":"Mobil ilova","price":15000000,"days":"1–2 oy"},{"name":"UI/UX dizayn","price":1800000,"days":"1–2 hafta"},{"name":"Texnik yordam","price":900000,"days":"Oyiga"}]},{"type":"faq","enabled":true,"items":[{"q":"Loyiha qancha vaqtda tayyor bo'ladi?","a":"Vizitka sayt 1–2 hafta, onlayn do'kon 3–5 hafta, mobil ilova 2–3 oy. Aniq muddat suhbatdan keyin shartnomada belgilanadi."},{"q":"Narx qanday hisoblanadi?","a":"Loyiha hajmiga qarab. Anketani to'ldirsangiz, 1 kun ichida aniq narx va muddat bilan taklif yuboramiz."},{"q":"Tayyor sayt shabloni qancha turadi?","a":"Shablonni bepul tanlab, tahrirlab, natijani ko'rasiz. Tayyor saytni yuklab olish yoki o'z subdomeningizda e'lon qilish uchun bir martalik $10 to'lanadi."},{"q":"Qanday to'lov usullari bor?","a":"Payme, Click yoki bank kartasiga o'tkazma. Katta loyihalarda to'lov bosqichma-bosqich, shartnoma asosida amalga oshiriladi."},{"q":"O'z domenimni ulay olamanmi?","a":"Ha. Saytingizni bizning subdomenimizda e'lon qilishingiz yoki o'z domeningizni (masalan, sizningbiznes.uz) ulashingiz mumkin."},{"q":"Telegram bot yaratish qiyinmi?","a":"Yo'q. Bot konstruktorida @BotFather bergan tokenni kiritasiz: katalog, savat va Telegram ichidagi mini do'kon darrov ishlaydi, kod yozish shart emas."},{"q":"Mavjud saytni yangilab bera olasizmi?","a":"Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz."},{"q":"Ishga tushgandan keyin yordam berasizmi?","a":"Ha, texnik yordam va xatolarni tuzatish bo'yicha shartlar shartnomada aniq yoziladi; oylik yordam paketi ham mavjud."}],"services":[]}],"blog":[{"title":"Restoran va kafe uchun sayt: nimalar bo'lishi kerak","slug":"restoran-va-kafe-uchun-sayt","desc":"Restoran va kafe uchun sayt qanday bo'lishi kerak: menyu, stol bronlash, joylashuv xaritasi va Telegram bilan aloqa. Amaliy ro'yxat va maslahatlar."},{"title":"Onlayn do'kon ochish: sayt yoki Telegram bot?","slug":"onlayn-dokon-sayt-yoki-telegram-bot","desc":"Onlayn do'kon ochmoqchimisiz? Sayt va Telegram botning farqi, afzalliklari va qaysi biri qaysi biznes uchun mos kelishini oddiy tilda tushuntiramiz."},{"title":"Telegram bot orqali sotuv: mini do'kon qanday ishlaydi","slug":"telegram-bot-orqali-sotuv","desc":"Telegram bot orqali sotuv qanday ishlaydi: mini-ilovali do'kon, katalog, savat, to'lov va buyurtmalar. Boshlash uchun nimalar kerakligini bilib oling."},{"title":"Sayt narxi qancha turadi? Shablon, konstruktor, individual","slug":"sayt-narxi-qancha-turadi","desc":"Sayt narxi nimaga bog'liq? Tayyor shablon, konstruktor va individual ishlab chiqish farqi, har birining afzalliklari va qaysi biri sizga mosligi haqida."},{"title":"Kichik biznes uchun SEO: 10 ta oddiy qadam","slug":"kichik-biznes-uchun-seo-10-qadam","desc":"Kichik biznes uchun SEO: Google va Yandex'da topilish uchun 10 ta oddiy qadam. Sitemap, Search Console, tezlik, mahalliy qidiruv va sharhlar haqida."},{"title":"Sayt tezligi va mobil moslashuv: PageSpeed bilan tekshirish","slug":"sayt-tezligi-va-mobil-moslashuv","desc":"Sayt tezligi va mobil moslashuv nima uchun muhim? PageSpeed Insights bilan tekshirish, rasmlarni yengillashtirish va telefonda sinash bo'yicha maslahatlar."}],"qa":[{"q":"Siz nima qilasiz? Qanday xizmatlar bor?","a":"Veb-saytlar (vizitka, korporativ, onlayn do'kon), Telegram botlar, mobil ilovalar, UI/UX dizayn va oylik texnik yordam. Shuningdek, saytni o'zingiz yaratadigan konstruktor (32 ta tayyor shablon) va Telegram bot konstruktori ham bor."},{"q":"Eng arzon sayt qancha turadi?","a":"Eng arzon yo'l: tayyor shablonni o'zingiz sozlaysiz, tayyor saytni yuklab olish yoki e'lon qilish uchun bir martalik $10. Biz tayyorlab beradigan eng oddiy paket (Start sayt, 5 sahifagacha) 2 500 000 so'mdan boshlanadi."},{"q":"Onlayn do'kon qancha turadi?","a":"Onlayn do'kon (katalog, savat, buyurtma va admin panel bilan) 6 900 000 so'mdan boshlanadi, odatda 2–3 hafta ichida tayyor bo'ladi. Aniq narx talablarga qarab suhbatdan keyin belgilanadi."},{"q":"Telegram bot qancha turadi va qancha vaqtda tayyor bo'ladi?","a":"Buyurtma va so'rov qabul qiluvchi tayyor Telegram bot 3 200 000 so'mdan boshlanadi, taxminan 1–2 hafta ichida tayyor bo'ladi. O'zingiz yaratmoqchi bo'lsangiz, bot konstruktori ham bor: token kiritasiz, katalog va mini do'kon darrov ishlaydi."},{"q":"Mobil ilova qancha turadi?","a":"iOS va Android uchun mobil ilova 15 000 000 so'mdan boshlanadi va odatda 1–2 oy vaqt oladi. Aniq narx funksiyalarga bog'liq, shuning uchun avval bepul maslahat beramiz."},{"q":"UI/UX dizayn qancha turadi?","a":"Sayt yoki ilova uchun zamonaviy interfeys dizayni va prototip 1 800 000 so'mdan boshlanadi, odatda 1–2 hafta."},{"q":"Texnik yordam bormi, qancha turadi?","a":"Ha. Oylik texnik yordam (yangilash, xavfsizlik, zaxira nusxa, tezkor tuzatishlar) 900 000 so'mdan. Ishga tushgandan keyingi yordam shartlari shartnomada aniq yoziladi."},{"q":"Shablon bilan sayt qanday yaratiladi?","a":"improuzbekiston.uz/yaratish.html sahifasida kasbingizga mos shablonni tanlaysiz (32 ta), matn, rasm va ranglarni o'zgartirasiz. Tahrirlash va ko'rish bepul. Tayyor saytni yuklab olish yoki e'lon qilish uchun bir martalik $10 to'laysiz."},{"q":"Shablon uchun $10 nimani o'z ichiga oladi?","a":"Tayyor saytni yuklab olish (bitta mustaqil fayl), nomingiz.improuzbekiston.uz subdomenida e'lon qilish, o'z domeningizni ulash imkoniyati, telefonga ilova kabi o'rnatilishi va SEO sozlamalari."},{"q":"Saytni o'z domenimga ulay olamanmi?","a":"Ha, tayyor saytni bizning subdomenimizda e'lon qilishingiz yoki o'z domeningizni (masalan, sizningbiznes.uz) ulashingiz mumkin."},{"q":"Domen va hosting kerakmi?","a":"Shablon sayt bizning subdomenimizda bepul turadi, domen shart emas. Individual loyihada domen va hosting 1 yilga 350 000 so'm atrofida qo'shiladi."},{"q":"Qanday to'lov usullari bor?","a":"Payme, Click yoki bank kartasiga o'tkazma. Katta loyihalarda to'lov bosqichma-bosqich, shartnoma asosida amalga oshiriladi."},{"q":"Shartnoma tuzasizlarmi?","a":"Ha, individual loyihalarda narx, muddat va ish hajmi shartnomada aniq yoziladi."},{"q":"Loyiha qancha vaqtda tayyor bo'ladi?","a":"Vizitka sayt 5–10 kun, onlayn do'kon 2–3 hafta, Telegram bot 1–2 hafta, mobil ilova 1–2 oy, dizayn 1–2 hafta. Aniq muddat suhbatdan keyin shartnomada belgilanadi."},{"q":"Ish jarayoni qanday?","a":"To'rt bosqich: 1) tahlil va maqsad, 2) dizayn va prototip, 3) ishlab chiqish, 4) ishga tushirish va yordam. Har bosqichda natijani siz ko'rib tasdiqlaysiz."},{"q":"Admin panel bo'ladimi?","a":"Ha, admin panel qo'shimcha imkoniyat sifatida 800 000 so'mdan. Unda buyurtmalar, mahsulotlar va sayt matnlarini o'zingiz boshqarasiz."},{"q":"Sayt bir nechta tilda bo'la oladimi?","a":"Ha, o'zbek, rus va ingliz tillarida. Ko'p tillilik qo'shimcha imkoniyat sifatida 600 000 so'mdan."},{"q":"Onlayn to'lov ulay olasizlarmi?","a":"Ha, Click va Payme orqali onlayn to'lov qo'shimcha imkoniyat sifatida 900 000 so'mdan."},{"q":"Google va Yandex'da topilish uchun SEO qilasizlarmi?","a":"Ha, SEO sozlash va Google ro'yxatiga qo'shish 500 000 so'mdan. Tayyor shablon saytlarda asosiy SEO sozlamalari allaqachon bor. Blogimizda SEO bo'yicha 10 qadamlik qo'llanma ham bor."},{"q":"Mijozlarim buyurtmasi menga Telegramga kelsinmi?","a":"Ha, Telegram xabarnoma qo'shimcha imkoniyat sifatida 200 000 so'mdan: yangi buyurtma yoki ariza kelganda sizning Telegramingizga xabar keladi."},{"q":"Logotip va brend uslubi ham qilib berasizlarmi?","a":"Ha, logotip va brend uslubi 700 000 so'mdan. Matn va rasmlarni tayyorlash xizmati ham bor (500 000 so'mdan)."},{"q":"Mavjud saytni yangilab berasizlarmi?","a":"Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz. Saytingiz havolasini yuboring, bepul baho beramiz."},{"q":"Telegram botda do'kon (mini ilova) qilsa bo'ladimi?","a":"Ha. Bot konstruktorida token kiritganingizda katalog, savat, buyurtmalar va Telegram ichidagi mini do'kon darrov ishlaydi. Kod yozish shart emas. Boshlash: improuzbekiston.uz/bot.html"},{"q":"Sayt telefonda yaxshi ishlaydimi?","a":"Ha, barcha saytlarimiz telefon, planshet va kompyuterga moslashgan, shablonlar telefonga ilova kabi o'rnatiladi."},{"q":"Bepul maslahat olsam bo'ladimi?","a":"Albatta. Telefon raqamingizni yozib qoldiring yoki anketani to'ldiring, mutaxassisimiz 15 daqiqa ichida (ish vaqtida) bog'lanadi."},{"q":"Ish vaqtingiz qanday?","a":"Dushanbadan shanbagacha 9:00–18:00 (Toshkent vaqti). Bot esa kechayu kunduz javob beradi, murakkab savollar ish vaqtida ko'rib chiqiladi."},{"q":"Aloqa ma'lumotlaringiz?","a":"Telefon: +998 33 623 33 13, email: info@improuzbekiston.uz, Telegram: @improsupport_bot, Instagram: @improuzbekiston_uz. Manzil: Toshkent."},{"q":"Portfolio yoki ishlaringizni ko'rsata olasizmi?","a":"Shablonlarimizning jonli namunalari improuzbekiston.uz saytida ko'rinadi. Hozirgi loyihalar haqida mutaxassisimiz suhbatda batafsil aytadi, telefon raqamingizni qoldiring."},{"q":"Mening ma'lumotlarim xavfsizmi?","a":"Ma'lumotlaringiz uchinchi shaxslarga sotilmaydi, parollar shifrlangan holda saqlanadi. Batafsil: improuzbekiston.uz/maxfiylik.html"},{"q":"Pulni qaytarish mumkinmi?","a":"Tayyor saytni yuklab olishdan yoki e'lon qilishdan oldin to'lovdan keyin 3 kun ichida qaytarish so'rovi qabul qilinadi. Batafsil shartlar: improuzbekiston.uz/qaytarish.html"},{"q":"Blog bormi?","a":"Ha, improuzbekiston.uz/blog/ sahifasida sayt, Telegram bot, SEO va onlayn savdo bo'yicha amaliy maqolalar bor."}],"templates":[{"id":"restoran","name":"Restoran / kafe","cat":"Xizmat","desc":"Restoran va kafe uchun: to'liq ekranli foto, menyu, galereya va stol bron qilish.","tags":["restoran","kafe","taom","oshxona","menyu","bron","stol","ресторан","кафе","restaurant","food"]},{"id":"kompaniya","name":"IT kompaniya / agentlik","cat":"Biznes","desc":"Kompaniya, agentlik va startaplar uchun: nurli animatsion fon, xizmatlar, ishlar va anketa.","tags":["it","kompaniya","agentlik","studiya","startap","dasturlash","veb","company","agency","startup","компания","студия"]},{"id":"market","name":"Onlayn market","cat":"Savdo","desc":"Oziq-ovqat va uy-ro'zg'or do'koni: kategoriyalar, qidiruv, savat va tez yetkazib berish.","tags":["market","do'kon","oziq-ovqat","meva","sabzavot","savat","магазин","продукты","grocery","shop","supermarket"]},{"id":"elektronika","name":"Elektronika do'koni","cat":"Savdo","desc":"Telefon, noutbuk va gadjetlar do'koni: aurora hero, chegirmalar, taymer va savat.","tags":["elektronika","telefon","noutbuk","gadjet","texnika","электроника","смартфон","electronics","gadgets","laptop"]},{"id":"kiyim","name":"Kiyim butigi","cat":"Savdo","desc":"Moda butigi va kiyim brendi uchun: editorial hero, kolleksiyalar vitrinasi va savat.","tags":["kiyim","butik","moda","fashion","одежда","бутик","clothing","style","libos"]},{"id":"gul","name":"Gul do'koni","cat":"Savdo","desc":"Gul do'koni va florist studiyasi uchun: buketlar, savat va tezkor yetkazib berish.","tags":["gul","buket","gullar","sovga","yetkazish","цветы","букет","flowers","florist","bouquet"]},{"id":"mebel","name":"Mebel salon","cat":"Savdo","desc":"Mebel salon va interer studiyasi uchun: kolleksiyalar, katalog, solishtirish va buyurtma anketasi.","tags":["mebel","divan","interer","salon","uy","мебель","диван","интерьер","furniture","interior","sofa"]},{"id":"kafe","name":"Kafe va qandolat","cat":"Xizmat","desc":"Qahvaxona va qandolatxona uchun: katta foto, menyu, galereya va stol bron qilish.","tags":["kafe","qahva","qandolat","nonvoyxona","desert","kofe","кофейня","кафе","пекарня","coffee","bakery","cafe"]},{"id":"fastfood","name":"Fast-food va yetkazib berish","cat":"Xizmat","desc":"Fast-food, pitsa va yetkazib berish xizmati uchun: yorqin dizayn, savat va 30 daqiqalik yetkazish.","tags":["fastfood","burger","pitsa","yetkazib berish","taom","фастфуд","бургер","пицца","доставка","delivery","pizza"]},{"id":"salon","name":"Go'zallik saloni","cat":"Go'zallik va salomatlik","desc":"Go'zallik saloni uchun: nafis foto-hero, xizmatlar narxi, oldin/keyin, ustalar va onlayn yozilish.","tags":["salon","go'zallik","soch","manikyur","makiyaj","салон","красота","beauty","spa","parikmaxer"]},{"id":"barber","name":"Barbershop","cat":"Go'zallik va salomatlik","desc":"Erkaklar soch salonlari uchun: qorong'i kinematik ko'rinish, xizmatlar narxi, barberlar va bron.","tags":["barber","barbershop","soch olish","soqol","erkaklar","парикмахерская","барбершоп","haircut","beard"]},{"id":"klinika","name":"Tibbiyot markazi","cat":"Go'zallik va salomatlik","desc":"Klinika va tibbiyot markazlari uchun: ishonchli, toza ko'rinish, shifokorlar, xizmatlar va qabulga yozilish.","tags":["klinika","tibbiyot","shifokor","doktor","poliklinika","клиника","медицина","clinic","medical","health"]},{"id":"stomatolog","name":"Stomatologiya","cat":"Go'zallik va salomatlik","desc":"Stomatologiya klinikasi uchun: yorqin va do'stona ko'rinish, oldin/keyin, narx paketlari va bron.","tags":["stomatolog","tish","dantist","stomatologiya","стоматология","зубы","dental","dentist","tabassum"]},{"id":"yoga","name":"Yoga va spa","cat":"Go'zallik va salomatlik","desc":"Yoga studiyasi va spa uchun: sokin nafis dizayn, dars jadvali, abonementlar va yozilish.","tags":["yoga","spa","massaj","meditatsiya","pilates","йога","спа","wellness","relax"]},{"id":"fitness","name":"Fitnes klub","cat":"Go'zallik va salomatlik","desc":"Fitnes klub va sport zallar uchun: qorong'i, kuchli ko'rinish, treynerlar, abonementlar va bepul sinov.","tags":["fitnes","fitness","sport zal","trenajor","gym","фитнес","спортзал","trener","bodybuilding"]},{"id":"hayvon","name":"Veterinariya va zoo-servis","cat":"Go'zallik va salomatlik","desc":"Veterinariya klinikasi va zoo-servis uchun: iliq, do'stona dizayn, xizmatlar, shifokorlar va bron.","tags":["veterinar","veterinariya","hayvon","it","mushuk","zoo","ветеринар","зоосервис","vet","pet","grooming"]},{"id":"talim","name":"O'quv markaz","cat":"Ta'lim","desc":"O'quv markaz va kurslar uchun: kurslar katalogi, ustozlar, jarayon va bepul sinov darsi.","tags":["o'quv markaz","kurs","ta'lim","maktab","repetitor","учебный центр","курсы","education","academy","course"]},{"id":"til","name":"Til kurslari","cat":"Ta'lim","desc":"Ingliz, rus va koreys tili maktabi: darajalar, narxlar, o'sish yo'li va yozilish.","tags":["til","ingliz tili","rus tili","koreys tili","language","english","языки","курсы"]},{"id":"avtoservis","name":"Avtoservis","cat":"Xizmat","desc":"Avtoservis va STO uchun: kuchli bosh ekran, xizmat narxlari, jarayon va onlayn yozilish.","tags":["avtoservis","avto","mashina","ta'mir","texnik xizmat","автосервис","car service","garage","sto"]},{"id":"qurilish","name":"Qurilish va ta'mirlash","cat":"Ko'chmas mulk va qurilish","desc":"Qurilish va ta'mirlash kompaniyasi: loyihalar, oldin/keyin, jarayon va smeta so'rovi.","tags":["qurilish","ta'mirlash","remont","uy qurish","pudrat","строительство","ремонт","construction","renovation"]},{"id":"rieltor","name":"Ko'chmas mulk agentligi","cat":"Ko'chmas mulk va qurilish","desc":"Rieltorlik agentligi uchun: obyektlar katalogi, raqamlar, jamoa va ko'rikka yozilish.","tags":["ko'chmas mulk","rieltor","kvartira","uy","sotish","ijara","недвижимость","real estate","agency"]},{"id":"yurist","name":"Yuridik firma","cat":"Biznes","desc":"Yuridik firma va advokatlar uchun: amaliyot yo'nalishlari, jamoa va maslahatga yozilish.","tags":["yurist","advokat","huquq","yuridik","maslahat","юрист","адвокат","law","lawyer","legal"]},{"id":"logistika","name":"Yuk tashish va logistika","cat":"Biznes","desc":"Yuk tashish va logistika kompaniyasi: yo'nalishlar, raqamlar, jarayon va narx so'rovi.","tags":["logistika","yuk tashish","transport","fura","konteyner","логистика","грузоперевозки","logistics","cargo","freight"]},{"id":"dizayner","name":"Portfolio: dizayner","cat":"Portfolio","desc":"Dizayner va kreativ mutaxassis uchun: katta sarlavha, ishlar vitrinasi, xizmatlar va aloqa.","tags":["dizayner","portfolio","ui","ux","grafik","brend","designer","дизайнер","портфолио"]},{"id":"dasturchi","name":"Portfolio: dasturchi","cat":"Portfolio","desc":"Dasturchi uchun qorong'i portfolio: ko'nikmalar, loyihalar, tajriba va aloqa.","tags":["dasturchi","developer","programmer","portfolio","frontend","backend","разработчик","программист"]},{"id":"fotograf","name":"Portfolio: fotograf","cat":"Portfolio","desc":"Fotograf uchun: to'liq ekranli foto, galereya, paketlar va fotosessiyaga yozilish.","tags":["fotograf","foto","photographer","suratga olish","fotosessiya","фотограф"]},{"id":"turizm","name":"Turagentlik","cat":"Tadbir va turizm","desc":"Turagentlik uchun: sarguzashtli bosh ekran, turlar narxlari, yo'nalishlar va so'rov formasi.","tags":["turizm","turagentlik","sayohat","tur","travel","tour","туризм","путешествия","visa"]},{"id":"toy","name":"To'y va tadbirlar","cat":"Tadbir va turizm","desc":"To'y va tadbirlar tashkilotchisi uchun: romantik dizayn, paketlar, galereya va bron.","tags":["toy","to'y","tadbir","bayram","wedding","event","banket","свадьба","мероприятие","nikoh"]},{"id":"musiqa","name":"DJ va musiqachi","cat":"Portfolio","desc":"DJ, qo'shiqchi va guruhlar uchun: qorong'i neon dizayn, videolar, chiqishlar va bron.","tags":["dj","musiqa","musiqachi","qo'shiqchi","konsert","music","band","диджей","музыка"]},{"id":"startap","name":"Startap / SaaS landing","cat":"Biznes","desc":"Startap va SaaS mahsulot uchun: nurli bosh ekran, imkoniyatlar, 3 ta tarif va FAQ.","tags":["startap","saas","landing","mahsulot","startup","product","crm","стартап","сервис"]},{"id":"ilova","name":"Mobil ilova landing","cat":"Biznes","desc":"Mobil ilovani taqdim etish uchun: imkoniyatlar, ekranlar, raqamlar va yuklab olish.","tags":["ilova","mobil","app","android","ios","yuklab olish","приложение","mobile app"]},{"id":"organik","name":"Fermer va organik mahsulotlar","cat":"Savdo","desc":"Fermer xo'jaligi va organik mahsulotlar do'koni: savat, buyurtma va tabiiylik hikoyasi.","tags":["organik","fermer","ferma","tabiiy","mahsulot","meva","sabzavot","organic","farm","фермер","органик"]}]};
-const PRICING = {"templatePrice":{"usd":10,"rate":12800}};
+const PRICING = {"currency":"so'm","plans":[{"id":"self","name":"O'zim joylayman","price":"Bepul","period":"","popular":false,"features":["Tayyor sayt fayli","Istalgan hostingga yuklash mumkin","Cheksiz tahrirlash"]},{"id":"host","name":"Joylab beramiz","price":"250 000","period":"bir martalik","popular":true,"features":["Saytni internetga joylash","Domen ulash","SSL (https) sozlash"]},{"id":"pro","name":"To'liq xizmat","price":"900 000","period":"bir martalik","popular":false,"features":["Dizaynni sizga moslab sozlash","Rasm va matnlarni joylash","Admin panel va buyurtmalar","1 oy qo'llab-quvvatlash"]}],"templatePrice":{"usd":10,"rate":12800},"rootDomain":"improuzbekiston.uz","contacts":{"phone":"+998 33 623 33 13","telegram":""}};
+/* ---------- Platforma API: hisoblar, loyihalar, saytni joylash, buyurtmalar (Cloudflare Worker, VDS shart emas) ---------- */
+const PLAT_RESERVED = new Set(['www', 'api', 'admin', 'app', 'mail', 'ftp', 'blog', 'static', 'cdn', 'test', 'demo', 'login', 'kabinet', 'yaratish', 'bot', 'support', 'pay', 'sms', 'err', 'chat', 'stats', 'uploads', 's']);
+const pHex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
+const pRnd = (n = 6) => pHex(crypto.getRandomValues(new Uint8Array(n)));
+const pSha = async (s) => pHex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
+const pDigits = (s) => String(s || '').replace(/\D/g, '');
+const pPhoneKey = (s) => pDigits(s).slice(-9);
+const pGoodPhone = (s) => /^[+\d][\d\s()\-]{6,}$/.test(String(s || '').trim()) && pDigits(s).length >= 7;
+const pGoodEmail = (s) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(s || ''));
+const pStr = (v, n) => String(v == null ? '' : v).replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, n);
+const pGoodSlug = (v) => /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(v) && !PLAT_RESERVED.has(v) && !/--/.test(v);
+const pubUser = (u) => ({ id: u.id, name: u.name, phone: u.phone, email: u.email || '', createdAt: u.createdAt });
+const pPages = (env) => String(env.SITE_ORIGIN || 'https://improuzbekiston.uz').replace(/\/$/, '');
+async function pwHash(env, pw, salt, it) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(pw + (env.AUTH_PEPPER || env.WEBHOOK_SECRET || '')), 'PBKDF2', false, ['deriveBits']);
+  return pHex(await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: new TextEncoder().encode(salt), iterations: it || 10000 }, key, 256));
+}
+function platCors(req, env) {
+  const o = req.headers.get('Origin') || '', allow = ['https://improuzbekiston.uz', 'https://www.improuzbekiston.uz', ...APP_ORIGINS, new URL(req.url).origin, ...String(env.ALLOW_ORIGIN || '').split(',').map((x) => x.trim()).filter(Boolean)];
+  return { 'Access-Control-Allow-Origin': allow.includes(o) ? o : 'null', 'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, Authorization', 'Access-Control-Max-Age': '86400', Vary: 'Origin' };
+}
+const pJson = (cors, obj, status = 200, extra = {}) => new Response(JSON.stringify(obj), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store', ...cors, ...extra } });
+async function authUser(req, st) {
+  const m = /^Bearer\s+([0-9a-f]{32,64})$/.exec(req.headers.get('Authorization') || ''); if (!m) return null;
+  const uid = await st.get('ss:' + (await pSha(m[1]))); return uid ? await st.get('u:' + uid) : null;
+}
+async function newSession(st, uid) { const tok = pRnd(24); await st.put('ss:' + (await pSha(tok)), uid, 30 * 86400); return tok; }
+const siteOf = (env, req, meta) => (meta.published && meta.slug ? `${new URL(req.url).origin}/s/${meta.slug}` : '');
+const jsonForScript = (o) => JSON.stringify(o).replace(/</g, '\\u003c').replace(new RegExp('[\\u2028\\u2029]', 'g'), (c) => '\\u' + c.charCodeAt(0).toString(16));
+const absImg = (env, data, origin) => { const walk = (v) => (typeof v === 'string' ? (v.startsWith('/img/') ? pPages(env) + v : v.startsWith('/uploads/') ? origin + v : v) : Array.isArray(v) ? v.map(walk) : v && typeof v === 'object' ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, walk(x)])) : v); return walk(data); };
+const pEsc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+async function shellHtml(env) { const r = await fetch(pPages(env) + '/shablon.html', { cf: { cacheTtl: 300, cacheEverything: true } }); if (!r.ok) throw new Error('shablon'); return (await r.text()).replace(/<script src="\/native\.js"[^>]*><\/script>/g, ''); }
+const MARK = '/*__DATA__*/null';
+function renderSite(shell, data, extraHead) {
+  const name = (data.company && data.company.name) || 'Sayt', hero = (data.sections || []).find((s) => s.type === 'hero') || {}, desc = String(hero.text || (data.company && data.company.tagline) || '').replace(/\*/g, '').slice(0, 200);
+  let h = shell.replace(MARK, jsonForScript(data)).replace(/<title>[^<]*<\/title>/, `<title>${pEsc(name)}</title>`).replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${pEsc(desc)}">`);
+  return extraHead ? h.replace('</head>', extraHead + '</head>') : h;
+}
+async function bump(st, id, kind) { try { const k = `sv:${id}:${dkey()}:${kind}`; await st.put(k, ((await st.get(k)) || 0) + 1, 40 * 86400); } catch { /* statistika ixtiyoriy */ } }
+
+async function platformApi(req, env, ctx, url) {
+  const cors = platCors(req, env), pn = url.pathname, st = store(env), origin = url.origin, route = `${req.method} ${pn}`, ip = req.headers.get('CF-Connecting-IP') || 'x';
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
+  const J = (o, s = 200, x = {}) => pJson(cors, o, s, x), body = async (max = 1024 * 1024) => { const t = await req.text(); if (t.length > max) throw Object.assign(new Error('big'), { big: true }); try { return JSON.parse(t || '{}'); } catch { return {}; } };
+  const me = await authUser(req, st), need = () => J({ error: 'Kirish talab qilinadi' }, 401);
+  try {
+    if (route === 'GET /api/pricing') return J({ ...PRICING, payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) }, manualPay: env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: true });
+    if (route === 'GET /api/site') return J(SITE);
+    /* ---- hisob ---- */
+    if (route === 'POST /api/auth/register') {
+      if (await limited(st, 'reg' + ip, 8, 3600)) return J({ error: "Juda ko'p urinish. Keyinroq qayta urinib ko'ring." }, 429);
+      const b = await body(8192), name = pStr(b.name, 80), phone = pStr(b.phone, 30), email = pStr(b.email, 120).toLowerCase(), pw = String(b.password || '');
+      if (name.length < 2) return J({ error: 'Ismingizni kiriting' }, 400);
+      if (!pGoodPhone(phone)) return J({ error: "Telefon raqamini to'g'ri kiriting" }, 400);
+      if (email && !pGoodEmail(email)) return J({ error: "Email noto'g'ri" }, 400);
+      if (pw.length < 6 || pw.length > 100) return J({ error: "Parol kamida 6 belgi bo'lsin" }, 400);
+      if (await st.get('up:' + pPhoneKey(phone))) return J({ error: "Bu telefon raqam bilan hisob mavjud. Iltimos, kiring." }, 409);
+      if (email && (await st.get('ue:' + email))) return J({ error: 'Bu email bilan hisob mavjud. Iltimos, kiring.' }, 409);
+      const salt = pRnd(16), u = { id: pRnd(6), name, phone, email, salt, it: 10000, hash: await pwHash(env, pw, salt, 10000), createdAt: new Date().toISOString() };
+      await st.put('u:' + u.id, u, 0, { n: name.slice(0, 40), p: phone.slice(0, 25), t: Date.now() }); await st.put('up:' + pPhoneKey(phone), u.id, 0); if (email) await st.put('ue:' + email, u.id, 0);
+      ctx && ctx.waitUntil(Promise.all((await adminsOf(env, st)).map((a) => say(env, a, `👤 <b>Yangi mijoz ro'yxatdan o'tdi</b>\n${esc(name)}\n${esc(phone)}${email ? '\n' + esc(email) : ''}`, { disable_notification: true }))).catch(() => {}));
+      return J({ token: await newSession(st, u.id), user: pubUser(u) });
+    }
+    if (route === 'POST /api/auth/login') {
+      const b = await body(4096), id = pStr(b.id, 120).toLowerCase(), pw = String(b.password || '');
+      if ((await limited(st, 'li' + ip, 20, 600)) || (await limited(st, 'lid' + id, 8, 600))) return J({ error: "Juda ko'p urinish. 10 daqiqadan so'ng qayta urining." }, 429);
+      const uid = id.includes('@') ? await st.get('ue:' + id) : pDigits(id).length >= 7 ? await st.get('up:' + pPhoneKey(id)) : null, u = uid ? await st.get('u:' + uid) : null;
+      if (!u || !tEq(await pwHash(env, pw, u.salt, u.it), u.hash)) return J({ error: "Telefon/email yoki parol noto'g'ri" }, 401);
+      return J({ token: await newSession(st, u.id), user: pubUser(u) });
+    }
+    if (route === 'GET /api/me') return me ? J({ user: pubUser(me) }) : J({ error: 'Kirish talab qilinadi' }, 401);
+    if (route === 'PUT /api/me') {
+      if (!me) return need(); const b = await body(4096), name = pStr(b.name, 80), email = pStr(b.email, 120).toLowerCase(), phone = pStr(b.phone, 30);
+      if (name.length < 2) return J({ error: 'Ismingizni kiriting' }, 400); if (email && !pGoodEmail(email)) return J({ error: "Email noto'g'ri" }, 400); if (phone && !pGoodPhone(phone)) return J({ error: "Telefon raqamini to'g'ri kiriting" }, 400);
+      if (email && email !== me.email) { const o = await st.get('ue:' + email); if (o && o !== me.id) return J({ error: 'Bu email band' }, 409); }
+      if (phone && pPhoneKey(phone) !== pPhoneKey(me.phone)) { const o = await st.get('up:' + pPhoneKey(phone)); if (o && o !== me.id) return J({ error: 'Bu telefon raqam band' }, 409); }
+      if (me.email && me.email !== email) await st.put('ue:' + me.email, null, 60); if (email) await st.put('ue:' + email, me.id, 0);
+      if (phone && pPhoneKey(phone) !== pPhoneKey(me.phone)) { await st.put('up:' + pPhoneKey(me.phone), null, 60); await st.put('up:' + pPhoneKey(phone), me.id, 0); }
+      me.name = name; me.email = email; if (phone) me.phone = phone; await st.put('u:' + me.id, me, 0, { n: me.name.slice(0, 40), p: me.phone.slice(0, 25), t: Date.now() }); return J({ user: pubUser(me) });
+    }
+    if (route === 'POST /api/me/password') {
+      if (!me) return need(); const b = await body(4096); if (await limited(st, 'chpw' + ip, 8, 600)) return J({ error: "Juda ko'p urinish" }, 429);
+      if (!tEq(await pwHash(env, String(b.old || ''), me.salt, me.it), me.hash)) return J({ error: "Joriy parol noto'g'ri" }, 400);
+      const np = String(b.password || ''); if (np.length < 6) return J({ error: "Yangi parol kamida 6 belgi bo'lsin" }, 400);
+      me.salt = pRnd(16); me.it = 10000; me.hash = await pwHash(env, np, me.salt, 10000); await st.put('u:' + me.id, me, 0, { n: me.name.slice(0, 40), p: me.phone.slice(0, 25), t: Date.now() }); return J({ ok: true });
+    }
+    /* ---- AI ---- */
+    if (route === 'POST /api/ai/generate') {
+      if (!me) return need(); if (await limited(st, 'ai' + me.id, 8, 3600)) return J({ error: "AI so'rovlari soatiga 8 ta. Keyinroq urinib ko'ring." }, 429);
+      const b = await body(64 * 1024), d = pStr(b.description, 1500); if (d.length < 8) return J({ error: 'Biznesingiz haqida kamida bir jumla yozing' }, 400);
+      try { return J({ ok: true, ...(await makeAiOf(env).generate(d, b.templates)) }); } catch (e) { return J({ error: e.message }, 400); }
+    }
+    /* ---- buyurtma (ochiq saytlardan yoki asosiy saytdan) ---- */
+    if (route === 'POST /api/order') {
+      if (await limited(st, 'ord' + ip, 12, 600)) return J({ error: "Juda ko'p so'rov. Birozdan so'ng urinib ko'ring." }, 429);
+      const b = await body(200 * 1024), ref = /\/s\/([a-z0-9-]{3,30})/.exec(req.headers.get('Referer') || ''), slug = ref ? ref[1] : '', sid = slug ? await st.get('slug:' + slug) : null;
+      const type = ['order', 'booking', 'message', 'brief'].includes(b.type) ? b.type : 'order', name = pStr(b.name, 100) || (me && me.name) || '', phone = pStr(b.phone, 40) || (me && me.phone) || '';
+      const items = (Array.isArray(b.items) ? b.items : []).slice(0, 60).map((i) => ({ id: pStr(i && i.id, 40), name: pStr(i && i.name, 120), price: Math.max(0, Number(i && i.price) || 0), qty: Math.min(999, Math.max(1, parseInt(i && i.qty, 10) || 1)) })).filter((i) => i.name);
+      const extra = {}; if (b.extra && typeof b.extra === 'object') for (const k of Object.keys(b.extra).slice(0, 30)) extra[pStr(k, 40)] = pStr(b.extra[k], 700);
+      if (name.length < 2) return J({ error: 'Ismingizni kiriting' }, 400); if (!pGoodPhone(phone)) return J({ error: "Telefon raqamini to'g'ri kiriting" }, 400);
+      if (type === 'order' && !items.length) return J({ error: "Savat bo'sh" }, 400);
+      const o = { id: pRnd(4), date: new Date().toISOString(), userId: me ? me.id : '', tenant: sid || '', type, name, phone, message: pStr(b.message, type === 'brief' ? 3000 : 1000), items, extra, shipping: Math.max(0, Number(b.shipping) || 0), total: items.reduce((a, i) => a + i.price * i.qty, 0), status: 'yangi' };
+      await st.put('o:' + Date.now().toString(36) + o.id, o, 90 * 86400, { t: Date.now(), n: name.slice(0, 40), p: phone.slice(0, 25), ty: type, tn: sid || '', u: o.userId });
+      if (sid) await bump(st, sid, 'o');
+      const kind = { order: '🛒 Yangi buyurtma', booking: '📅 Yangi ariza', message: '✉️ Yangi xabar', brief: "📝 Yangi loyiha so'rovi" }[type];
+      ctx && ctx.waitUntil(Promise.all((await adminsOf(env, st)).map((a) => say(env, a, `<b>${kind}</b>${sid ? ' · sayt ' + esc(slug) : ''}\n👤 ${esc(name)}\n📞 ${esc(phone)}${items.length ? '\n🧾 ' + items.slice(0, 20).map((i) => `${esc(i.name)} ×${i.qty}`).join(', ') : ''}${o.message ? '\n\n' + esc(o.message.slice(0, 1200)) : ''}`, sid ? { disable_notification: true } : undefined))).catch(() => {}));
+      return J({ ok: true, id: o.id });
+    }
+    /* ---- shaxsiy ---- */
+    if (pn.startsWith('/api/my/')) {
+      if (!me) return need();
+      const myProjects = async () => (await st.list('pr:' + me.id + ':')).map((k) => k.metadata).filter(Boolean).sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+      if (route === 'GET /api/my/projects') return J((await myProjects()).map((p) => ({ ...p, url: siteOf(env, req, p) })));
+      if (route === 'POST /api/my/projects') {
+        if (await limited(st, 'pc' + me.id, 20, 3600)) return J({ error: "Juda ko'p yangi loyiha. Keyinroq urinib ko'ring." }, 429);
+        if ((await myProjects()).length >= 25) return J({ error: "Loyihalar soni chegarasi (25). Keraksizini o'chiring." }, 400);
+        const b = await body(1500 * 1024); if (!b.data || typeof b.data !== 'object' || !Array.isArray(b.data.sections)) return J({ error: "Noto'g'ri loyiha" }, 400);
+        const id = pRnd(6), now = new Date().toISOString(), json = JSON.stringify(b.data), free = !env.PAID_REQUIRED;
+        const meta = { id, userId: me.id, name: pStr(b.name || (b.data.company && b.data.company.name), 80) || 'Yangi sayt', template: pStr(b.template || b.data.template, 30), status: 'qoralama', plan: '', price: '', note: '', adminNote: '', createdAt: now, updatedAt: now, submittedAt: '', size: json.length, paid: free, published: false, slug: '' };
+        await st.put('pd:' + id, json, 0); await st.put('pr:' + me.id + ':' + id, meta, 0, meta); return J({ project: meta });
+      }
+      if (route === 'GET /api/my/orders') { const out = []; for (const k of await st.list('o:')) { const m = k.metadata || {}; if (m.u === me.id && !m.tn) { const o = await st.get(k.name); if (o) out.push(o); } } return J(out.sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 200)); }
+      if (route === 'GET /api/my/leads') { const mine = new Map((await myProjects()).map((p) => [p.id, p.name])), out = []; for (const k of await st.list('o:')) { const m = k.metadata || {}; if (m.tn && mine.has(m.tn)) { const o = await st.get(k.name); if (o) out.push({ ...o, site: mine.get(m.tn) }); } } return J(out.sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 500)); }
+      if (route === 'GET /api/my/referral') return J({ enabled: false, code: '', link: '', discountPct: 0, rewardUsd: 0, invited: 0, rewarded: 0, credit: 0 });
+      if (route === 'GET /api/my/bots') return J([]);
+      if (route === 'POST /api/my/bots') return J({ error: "Telegram bot konstruktori hozircha shu platformada mavjud emas. Bot buyurtma qilish uchun biz bilan bog'laning." }, 501);
+      if (route === 'POST /api/my/upload') {
+        if (await limited(st, 'up' + me.id, 80, 3600)) return J({ error: "Juda ko'p rasm yuklandi. Keyinroq urinib ko'ring." }, 429);
+        const b = await body(2 * 1024 * 1024), m = /^data:(image\/(?:png|jpeg|webp|gif));base64,([A-Za-z0-9+/=]+)$/.exec(String(b.data || ''));
+        if (!m) return J({ error: 'Faqat PNG, JPG, WEBP yoki GIF rasm yuklang' }, 400); if (m[2].length > 1400000) return J({ error: 'Rasm 1 MB dan oshmasin (kichraytirib yuklang)' }, 413);
+        const id = Date.now().toString(36) + pRnd(3), ext = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp', 'image/gif': '.gif' }[m[1]];
+        await st.put('img:' + id, { m: m[1], d: m[2] }, 0); return J({ url: `${origin}/uploads/${id}${ext}` });
+      }
+      const pm = /^\/api\/my\/projects\/([a-f0-9]{6,24})(\/(?:submit|checkout|export|publish|domain|stats))?$/.exec(pn);
+      if (pm) {
+        const meta = await st.get('pr:' + me.id + ':' + pm[1]); if (!meta) return J({ error: 'Loyiha topilmadi' }, 404);
+        const act = (pm[2] || '').slice(1), save = (m2) => st.put('pr:' + me.id + ':' + m2.id, m2, 0, m2);
+        if (req.method === 'GET' && !act) { const d = await st.get('pd:' + meta.id); return J({ project: { ...meta, url: siteOf(env, req, meta) }, data: d ? JSON.parse(d) : null }); }
+        if (act === 'stats' && req.method === 'GET') { const series = []; for (let i = 13; i >= 0; i--) { const d = dkey(Date.now() - i * 864e5); series.push({ d, v: (await st.get(`sv:${meta.id}:${d}:v`)) || 0, o: (await st.get(`sv:${meta.id}:${d}:o`)) || 0 }); } return J({ series, views: series.reduce((a, x) => a + x.v, 0), orders: series.reduce((a, x) => a + x.o, 0) }); }
+        if (act === 'checkout' && req.method === 'POST') {
+          if (meta.paid) return J({ paid: true });
+          const b = await body(4096), tp = PRICING.templatePrice || { usd: 10, rate: 12800 }, uzs = Math.round(tp.usd * tp.rate), p = await createPayOrder(env, st, uzs, `Sayt: ${meta.name} (${me.name} ${me.phone})`); p.projectId = meta.id; p.ownerId = me.id; await payOrderPut(st, p);
+          if (b.method === 'payme' && env.PAYME_MERCHANT_ID && env.PAYME_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: paymeUrl(env, p) });
+          if (b.method === 'click' && env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: clickUrl(env, p) });
+          for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Sayt sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(uzs)} so'm · #${p.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }]] } });
+          return J({ manual: true, payment: { id: p.id, usd: tp.usd, uzs }, contacts: SITE.contacts || {}, text: env.CARD_INFO || '' });
+        }
+        if (act === 'export' && req.method === 'GET') {
+          if (!meta.paid) return J({ error: "Yuklab olish uchun avval saytni sotib oling" }, 402);
+          const d = await st.get('pd:' + meta.id); if (!d) return J({ error: "Ma'lumot topilmadi" }, 404);
+          const fn = (String(meta.name).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'sayt') + '.html';
+          return new Response(renderSite(await shellHtml(env), absImg(env, JSON.parse(d), origin)), { headers: { 'content-type': 'text/html; charset=utf-8', 'content-disposition': `attachment; filename="${fn}"`, ...cors } });
+        }
+        if (act === 'publish') {
+          if (!meta.paid) return J({ error: 'Joylash uchun avval saytni sotib oling' }, 402);
+          if (req.method === 'DELETE') { if (meta.slug) await st.put('slug:' + meta.slug, null, 60); meta.published = false; await save(meta); return J({ project: meta }); }
+          if (req.method === 'POST') {
+            const b = await body(2048), sl = pStr(b.slug, 40).toLowerCase(); if (!pGoodSlug(sl)) return J({ error: "Manzil 3–30 belgi: kichik harf, raqam va chiziqcha bo'lsin" }, 400);
+            const own = await st.get('slug:' + sl); if (own && own !== meta.id) return J({ error: 'Bu manzil band. Boshqasini tanlang.' }, 409);
+            if (meta.slug && meta.slug !== sl) await st.put('slug:' + meta.slug, null, 60);
+            await st.put('slug:' + sl, meta.id, 0); meta.slug = sl; meta.published = true; meta.updatedAt = new Date().toISOString(); meta.status = 'joylandi'; await save(meta);
+            return J({ project: { ...meta, url: siteOf(env, req, meta) } });
+          }
+        }
+        if (act === 'domain' && req.method === 'POST') return J({ error: "O'z domeningizni ulash hozircha mavjud emas. Biz bilan bog'laning." }, 400);
+        if (req.method === 'PUT' && !act) {
+          if (await limited(st, 'ps' + me.id, 200, 600)) return J({ error: 'Juda ko\'p saqlash. Biroz kuting.' }, 429);
+          const b = await body(1500 * 1024);
+          if (b.data) { if (typeof b.data !== 'object' || !Array.isArray(b.data.sections)) return J({ error: "Noto'g'ri loyiha" }, 400); const json = JSON.stringify(b.data); await st.put('pd:' + meta.id, json, 0); meta.size = json.length; }
+          if (b.name) meta.name = pStr(b.name, 80); if (b.template) meta.template = pStr(b.template, 30); meta.updatedAt = new Date().toISOString(); await save(meta); return J({ project: meta });
+        }
+        if (req.method === 'DELETE' && !act) { if (meta.slug) await st.put('slug:' + meta.slug, null, 60); await st.put('pd:' + meta.id, null, 60); await st.put('pr:' + me.id + ':' + meta.id, null, 60); return J({ ok: true }); }
+        if (req.method === 'POST' && act === 'submit') {
+          const b = await body(8192); meta.plan = pStr(b.plan, 60); meta.note = pStr(b.note, 1000); meta.contactPhone = pStr(b.phone, 40) || me.phone; if (!['yuborilgan', 'korilmoqda', 'narx', 'joylandi'].includes(meta.status)) meta.status = 'yuborilgan';
+          meta.submittedAt = new Date().toISOString(); meta.updatedAt = meta.submittedAt; await save(meta);
+          for (const a of await adminsOf(env, st)) await say(env, a, `🌐 <b>Yangi sayt buyurtmasi</b>\n${esc(me.name)} · ${esc(me.phone)}\n${esc(meta.name)} [${esc(meta.template)}]\nTarif: ${esc(meta.plan || '-')}${meta.note ? '\nIzoh: ' + esc(meta.note) : ''}`);
+          return J({ project: meta });
+        }
+        return J({ error: "Ruxsat yo'q" }, 405);
+      }
+      return J({ error: 'Topilmadi' }, 404);
+    }
+    return J({ error: 'Topilmadi' }, 404);
+  } catch (e) { return e && e.big ? J({ error: 'Hajm juda katta' }, 413) : J({ error: 'Server xatosi' }, 500); }
+}
+// Joylangan mijoz saytlari: /s/<manzil>
+async function sitePage(req, env, ctx, url) {
+  const m = /^\/s\/([a-z0-9-]{3,30})\/?$/.exec(url.pathname); if (!m) return new Response('Topilmadi', { status: 404 });
+  const st = store(env), id = await st.get('slug:' + m[1]), nf = () => new Response('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sayt topilmadi</title><body style="font:16px system-ui;background:#0a0a0b;color:#efe9dc;display:grid;place-items:center;min-height:100vh;text-align:center"><div><h1>Sayt topilmadi</h1><p>Bu manzilda sayt joylanmagan.</p></div>', { status: 404, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  if (!id) return nf(); const raw = await st.get('pd:' + id); if (!raw) return nf();
+  const data = absImg(env, JSON.parse(raw), url.origin); ctx && ctx.waitUntil(bump(st, id, 'v'));
+  try { const html = renderSite(await shellHtml(env), data, `<script>window.__API__=location.origin;window.__TENANT__=${jsonForScript(m[1])};</script>`); return new Response(html, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=60' } }); } catch { return new Response('Sayt vaqtincha ochilmayapti', { status: 503 }); }
+}
+async function serveUpload(req, env, url) {
+  const m = /^\/uploads\/([a-z0-9]+)\.(png|jpg|webp|gif)$/.exec(url.pathname); if (!m) return new Response('Topilmadi', { status: 404 });
+  const o = await store(env).get('img:' + m[1]); if (!o) return new Response('Topilmadi', { status: 404 });
+  const bin = atob(o.d), u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return new Response(u8, { headers: { 'content-type': o.m, 'cache-control': 'public, max-age=31536000, immutable', 'access-control-allow-origin': '*' } });
+}
+const makeAiOf = (env) => makeAi({ getSettings: () => ({ ai: { key: env.ANTHROPIC_API_KEY || '', model: env.AI_MODEL || '' } }) });
+
 // Impro IT: Cloudflare Worker. Ikki vazifa:
 //  1) Telegram yordam boti (webhook): mijoz savoliga avtomatik javob (AI yoki qoidalar), murakkab savol adminga uzatiladi.
 //  2) Statik saytdagi forma so'rovlarini Telegram'ga yetkazish (POST /).
@@ -623,6 +896,8 @@ async function handleCallback(env, st, q) {
     rec.flow = { step: 'payamt', d: {} }; await saveRec(st, chat, rec);
     return say(env, chat, "💳 <b>To'lov</b>\nQancha to'laysiz? Summani so'mda yozing (masalan: <code>1500000</code>). Bekor qilish: /cancel");
   }
+  const ppm = /^pp:([a-f0-9]{6,24}):([a-f0-9]{6,24})$/.exec(d);
+  if (ppm) { if (!isAdmin) return ans("Ruxsat yo'q"); const k = 'pr:' + ppm[2] + ':' + ppm[1], m = await st.get(k); if (!m) return ans('Loyiha topilmadi'); m.paid = true; await st.put(k, m, 0, m); await ans('Tasdiqlandi'); return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: "✅ To'lov tasdiqlandi", callback_data: 'noop' }]] } }); }
   const pcm = /^(pc|px):(-?\d+)$/.exec(d);
   if (pcm) {
     if (!isAdmin) return ans("Ruxsat yo'q");
@@ -1060,7 +1335,7 @@ async function paymeRpc(req, env) {
       const p = await byTx(params.id); if (!p) return fail(PE.nf);
       if (p.tx.state === 1) {
         if (Date.now() - p.tx.createTime > PTIMEOUT) { p.tx.state = -1; p.tx.reason = 4; p.tx.cancelTime = Date.now(); await payOrderPut(st, p); return fail(PE.cant); }
-        p.tx.state = 2; p.tx.performTime = Date.now(); p.state = 'paid'; await payOrderPut(st, p);
+        p.tx.state = 2; p.tx.performTime = Date.now(); p.state = 'paid'; await payOrderPut(st, p); await markProjectPaid(st, p);
         await ev(st, { k: 'pay', c: 0, n: 'Payme', x: sum(p.uzs) + " so'm" });
         for (const a of await admins()) await say(env, a, `💳 <b>To'lov qabul qilindi (Payme)</b>\n💰 <b>${sum(p.uzs)} so'm</b>\n🧾 #${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}`);
         await pushPhone(env, "To'lov qabul qilindi", `${sum(p.uzs)} so'm (Payme)`, 4, 'moneybag');
@@ -1167,7 +1442,7 @@ async function clickRpc(req, env) {
     if (!p.click || String(f.merchant_prepare_id) !== String(p.click.prepareId)) return out({ error: -6, error_note: 'Transaction does not exist' });
     if (p.state === 'paid') return out({ merchant_prepare_id: p.id, merchant_confirm_id: p.id, error: -4, error_note: 'Already paid' });
     if (Number(f.error) < 0) { p.click.cancelled = true; await payOrderPut(st, p); return out({ merchant_prepare_id: p.id, merchant_confirm_id: p.id, error: -9, error_note: 'Transaction cancelled' }); }
-    p.state = 'paid'; p.paidAt = Date.now(); p.ref = f.click_paydoc_id; await payOrderPut(st, p);
+    p.state = 'paid'; p.paidAt = Date.now(); p.ref = f.click_paydoc_id; await payOrderPut(st, p); await markProjectPaid(st, p);
     await ev(st, { k: 'pay', c: 0, n: 'Click', x: sum(p.uzs) + " so'm" });
     for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>To'lov qabul qilindi (Click)</b>\n💰 <b>${sum(p.uzs)} so'm</b>\n🧾 #${p.id}${p.note ? '\n📝 ' + esc(p.note) : ''}`);
     await pushPhone(env, "To'lov qabul qilindi", `${sum(p.uzs)} so'm (Click)`, 4, 'moneybag');
@@ -1176,6 +1451,7 @@ async function clickRpc(req, env) {
   return out({ error: -3, error_note: 'Action not found' });
 }
 
+async function markProjectPaid(st, p) { if (!p.projectId || !p.ownerId) return; const k = 'pr:' + p.ownerId + ':' + p.projectId, m = await st.get(k); if (m) { m.paid = true; m.updatedAt = new Date().toISOString(); await st.put(k, m, 0, m); } }
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url); ENV_ORIGIN = url.origin;
@@ -1200,6 +1476,9 @@ export default {
     if (url.pathname === '/api/app' && req.method === 'POST') return appApi(req, env);
     if (url.pathname === '/stats' && req.method === 'GET') return statsApi(req, env);
     if (url.pathname === '/pay/payme' && req.method === 'POST') return new Response(JSON.stringify(await paymeRpc(req, env)), { headers: { 'content-type': 'application/json' } });
+    if (url.pathname.startsWith('/api/')) return platformApi(req, env, ctx, url);
+    if (url.pathname.startsWith('/s/') && req.method === 'GET') return sitePage(req, env, ctx, url);
+    if (url.pathname.startsWith('/uploads/') && req.method === 'GET') return serveUpload(req, env, url);
     if (url.pathname === '/sms') return smsApi(req, env);
     if (url.pathname === '/pay/click' && req.method === 'POST') return new Response(JSON.stringify(await clickRpc(req, env)), { headers: { 'content-type': 'application/json' } });
     if (url.pathname === '/err') return errApi(req, env);
