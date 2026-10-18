@@ -374,7 +374,7 @@ async function platformApi(req, env, ctx, url) {
         const id = Date.now().toString(36) + pRnd(3), ext = { 'image/png': '.png', 'image/jpeg': '.jpg', 'image/webp': '.webp', 'image/gif': '.gif' }[m[1]];
         await st.put('img:' + id, { m: m[1], d: m[2] }, 0); return J({ url: `${origin}/uploads/${id}${ext}` });
       }
-      const pm = /^\/api\/my\/projects\/([a-f0-9]{6,24})(\/(?:submit|checkout|export|publish|domain|stats))?$/.exec(pn);
+      const pm = /^\/api\/my\/projects\/([a-f0-9]{6,24})(\/(?:submit|checkout|export|publish|domain|stats|paid))?$/.exec(pn);
       if (pm) {
         const meta = await st.get('pr:' + me.id + ':' + pm[1]); if (!meta) return J({ error: 'Loyiha topilmadi' }, 404);
         const act = (pm[2] || '').slice(1), save = (m2) => st.put('pr:' + me.id + ':' + m2.id, m2, 0, m2);
@@ -388,6 +388,12 @@ async function platformApi(req, env, ctx, url) {
           if (b.method === 'click' && env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: clickUrl(env, p) });
           for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Sayt sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(uzs)} so'm · #${p.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }]] } });
           return J({ manual: true, payment: { id: p.id, usd: tp.usd, uzs }, contacts: SITE.contacts || {}, text: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '' });
+        }
+        if (act === 'paid' && req.method === 'POST') { // mijoz "to'lov qildim" tugmasi: adminga tasdiqlash tugmali xabar
+          if (meta.paid) return J({ paid: true }); if (await limited(st, 'pn' + me.id, 5, 3600)) return J({ error: "Juda ko'p so'rov. Admin tez orada tekshiradi." }, 429);
+          const tp = PRICING.templatePrice || { usd: 10, rate: 12800 };
+          for (const a of await adminsOf(env, st)) await say(env, a, `🔔 <b>Mijoz to'lov qildim dedi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(Math.round(tp.usd * tp.rate))} so'm\nKartaga tushganini tekshirib, tasdiqlang:`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }]] } });
+          return J({ ok: true });
         }
         if (act === 'export' && req.method === 'GET') {
           if (!meta.paid) return J({ error: "Yuklab olish uchun avval saytni sotib oling" }, 402);

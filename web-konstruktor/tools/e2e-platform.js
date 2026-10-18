@@ -23,7 +23,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     delete env.STATE;
   }
   console.log('Rejim:', MODE);
-  const pend = [], ctx = { waitUntil: (p) => pend.push(p) };
+  const S0 = W.store(env); const pend = [], ctx = { waitUntil: (p) => pend.push(p) };
   const H = 'https://w.example', api = async (method, p, body, tok, hdr) => { const r = await W.fetch(new Request(H + p, { method, headers: { 'content-type': 'application/json', Origin: 'https://improuzbekiston.uz', ...(tok ? { Authorization: 'Bearer ' + tok } : {}), ...(hdr || {}) }, body: body ? JSON.stringify(body) : undefined }), env, ctx); await Promise.all(pend.splice(0)); let j = null, t = ''; try { t = await r.clone().text(); j = JSON.parse(t); } catch { /* */ } return { s: r.status, j, t, h: r.headers }; };
   let r = await api('GET', '/api/pricing'); ok(r.s === 200 && r.j.templatePrice && r.h.get('access-control-allow-origin') === 'https://improuzbekiston.uz', 'pricing + CORS', r.j);
   r = await api('POST', '/api/auth/register', { name: 'A', phone: '1', password: '123' }); ok(r.s === 400, 'noto\'g\'ri royxat rad');
@@ -43,6 +43,8 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   data.sections[0].text = 'Yangi matn'; r = await api('PUT', '/api/my/projects/' + pid, { data, name: 'Gul 2' }, tok); ok(r.s === 200 && r.j.project.name === 'Gul 2', 'saqlash');
   r = await api('POST', '/api/my/projects/' + pid + '/publish', { slug: 'gul-dokon' }, tok); ok(r.s === 402, 'tolovsiz joylash 402');
   r = await api('GET', '/api/my/projects/' + pid + '/export', null, tok); ok(r.s === 402, 'tolovsiz eksport 402');
+  tgc.length = 0; r = await api('POST', '/api/my/projects/' + pid + '/paid', {}, tok); ok(r.s === 200 && tgc.some((c) => c.method === 'sendMessage' && /to'lov qildim/i.test(c.body.text) && JSON.stringify(c.body.reply_markup).includes('pp:')), 'tolov qildim: adminga tasdiqlash tugmasi');
+  { const cb = tgc.filter((c) => c.method === 'sendMessage').map((c) => c.body.reply_markup && c.body.reply_markup.inline_keyboard[0][0].callback_data).find(Boolean); await W.handleUpdate(env, { callback_query: { id: 'cq1', data: cb, from: { id: 7 }, message: { chat: { id: 7 }, message_id: 9 } } }); r = await api('GET', '/api/my/projects/' + pid, null, tok); ok(r.j.project.paid === true, 'admin tugmasi bilan tolov tasdiqlandi (pp:)'); const { sid } = {}; await S0.put('pr:' + me0.id + ':' + pid, { ...r.j.project, paid: false }, 0, { ...r.j.project, paid: false }); }
   r = await api('POST', '/api/my/projects/' + pid + '/checkout', { method: 'card' }, tok); ok(r.s === 200 && r.j.manual && r.j.payment.uzs === 128000, 'tolov sorovi (karta)', r.j);
   ok(tgc.some((c) => c.method === 'sendMessage' && /sotib olish/.test(c.body.text) && JSON.stringify(c.body.reply_markup).includes('pp:')), 'adminga tasdiqlash tugmasi');
   { const S = W.store(env), k = 'pr:' + me0.id + ':' + pid, m = await S.get(k); m.paid = true; await S.put(k, m, 0, m); }

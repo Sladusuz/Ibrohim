@@ -123,7 +123,7 @@
     const pm = pricing.payMethods || {};
     if (payInfo && payInfo.manual) {
       const c = payInfo.contacts || {};
-      return `${price}<div class="guide" style="margin-top:12px"><b>To'lov so'rovingiz qabul qilindi (#${esc(payInfo.payment.id)})</b><br>Summa: <b>$${esc(String(payInfo.payment.usd))}</b> (${money(payInfo.payment.uzs)} so'm).${payInfo.text ? `<br>${esc(payInfo.text)}` : ''}<br>To'lov qilgach, admin tasdiqlaydi va sayt ochiladi. ${c.phone ? `Aloqa: <b>${esc(c.phone)}</b>` : ''}${c.telegram ? `, <b>${esc(c.telegram)}</b>` : ''}</div><button class="b g w" style="margin-top:10px" data-x="recheck">To'lovni tekshirish</button>`;
+      return `${price}<div class="guide" style="margin-top:12px"><b>To'lov so'rovingiz qabul qilindi (#${esc(payInfo.payment.id)})</b><br>Summa: <b>$${esc(String(payInfo.payment.usd))}</b> (${money(payInfo.payment.uzs)} so'm).${payInfo.text ? `<div style="white-space:pre-line;margin:6px 0;font-weight:600">${esc(payInfo.text)}</div>` : ''}<small>To'lov izohiga <b>#${esc(payInfo.payment.id)}</b> yozing.</small><br>To'lov qilgach, «To'lov qildim» tugmasini bosing: admin tasdiqlaydi va sayt ochiladi. ${c.phone ? `Aloqa: <b>${esc(c.phone)}</b>` : ''}${c.telegram ? `, <b>${esc(c.telegram)}</b>` : ''}</div><button class="b w" style="margin-top:10px" data-x="paidnote">To'lov qildim</button><button class="b g w" style="margin-top:8px" data-x="recheck">To'lovni tekshirish</button>`;
     }
     return `${price}<div class="msg" id="buyMsg"></div>${pm.payme ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="payme">Payme orqali to'lash</button>` : ''}${pm.click ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="click">Click orqali to'lash</button>` : ''}${pm.clicktg ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="clicktg">Click orqali to'lash (Telegram)</button>` : ''}${pm.globalpay ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="globalpay">Karta orqali to'lash (GlobalPay, Telegram)</button>` : ''}<button class="b ${pm.payme || pm.click || pm.globalpay || pm.clicktg ? 'g' : ''} w" style="margin-top:8px;padding:14px" data-x="buy" data-m="manual">${pm.payme || pm.click || pm.globalpay || pm.clicktg ? "Boshqa usul (karta, Telegram)" : "Sotib olish"}</button><div class="hint">Oldindan ko'rish va tahrirlash bepul. To'lovdan keyin sayt yuklab olinadi yoki joylanadi.</div>`;
   }
@@ -183,6 +183,7 @@
       const x = e.target.closest('[data-x]'); if (!x) return;
       const a = x.dataset.x;
       if (a === 'dl') downloadPaid();
+      if (a === 'paidnote') { x.disabled = true; Auth.request(`/api/my/projects/${P.id}/paid`, { method: 'POST', body: {} }).then(() => { toast("Adminga xabar yuborildi. Tasdiqlangach sayt ochiladi."); }).catch((er) => { toast(er.message); x.disabled = false; }); }
       if (a === 'buy') buy(x.dataset.m);
       if (a === 'recheck') refreshProject().then(() => { if (paid()) toast("To'lov tasdiqlandi!"); else toast("Hali tasdiqlanmagan. To'lovdan keyin biroz kuting."); ed.render(true); });
       if (a === 'pub') publish();
