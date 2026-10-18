@@ -437,7 +437,7 @@ async function serveUpload(req, env, url) {
 }
 async function platformDump(st) {
   const us = [], prs = [], ors = [];
-  for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u) us.push(u); }
+  for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u && u.hash) us.push(u); }
   for (const k of await st.list('pr:')) { const m = k.metadata; if (m) { const d = await st.get('pd:' + m.id); prs.push({ meta: m, data: d ? JSON.parse(d) : null }); } }
   for (const k of await st.list('o:')) { const o = await st.get(k.name); if (o) ors.push(o); }
   return { users: us, projects: prs, orders: ors };
@@ -449,7 +449,7 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
   const m = /^Bearer\s+([0-9a-f]{32,64})$/.exec(req.headers.get('Authorization') || '');
   if (!m || !(await st.get('as:' + (await pSha(m[1]))))) return J({ error: 'Kirish talab qilinadi' }, 401);
   const pn = url.pathname, origin = url.origin, tpOf = async () => (((await st.get('pricing')) || {}).templatePrice) || PRICING.templatePrice || { usd: 10, rate: 12800 };
-  const users = async () => { const out = []; for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u) out.push(u); } return out; };
+  const users = async () => { const out = []; for (const k of await st.list('u:')) { const u = await st.get(k.name); if (u && u.hash) out.push(u); } return out; };
   const projects = async () => (await st.list('pr:')).map((k) => k.metadata).filter(Boolean);
   const orders = async () => { const out = []; for (const k of await st.list('o:')) { const o = await st.get(k.name); if (o) out.push({ ...o, _k: k.name }); } return out; };
   const strip = (o) => { const { _k, ...r } = o; return r; };
