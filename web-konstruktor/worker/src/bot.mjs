@@ -90,7 +90,8 @@ async function handleUpdate(env, upd) {
 /* ---------- Statik saytdan kelgan so'rov ---------- */
 async function relay(req, env) {
   const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || '').split(',').map((x) => x.trim()).filter(Boolean);
-  const okOrigin = !allow.length || allow.includes(origin);
+  if (!allow.length) allow.push('https://improuzbekiston.uz', 'https://www.improuzbekiston.uz'); // sozlanmagan bo'lsa ham begona saytlarga yopiq
+  const okOrigin = allow.includes(origin);
   const cors = { 'Access-Control-Allow-Origin': okOrigin ? origin || '*' : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   if (req.method !== 'POST' || !okOrigin) return new Response("Ruxsat yo'q", { status: 403, headers: cors });

@@ -12,7 +12,14 @@ module.exports = function makeAssistant({ getSettings, getSite, getPricing }) {
   const money = (n) => Number(n || 0).toLocaleString('ru-RU').replace(/[  ]/g, ' ');
   const plain = (s) => String(s == null ? '' : s).replace(/\*/g, '').replace(/\s+/g, ' ').trim();
   const norm = (s) => String(s || '').toLowerCase().replace(/[ʻʼ’‘`´]/g, "'").replace(/ё/g, 'е');
-  const detect = (t) => (/[а-яА-Я]{2}/.test(t) ? 'ru' : /\b(the|how|much|price|cost|hello|hi|website|bot|order|can|what|do you|need)\b/i.test(t) ? 'en' : 'uz');
+  const EN = new Set('the a an is are was how what when where why which who much many price prices cost costs hello hi hey website websites site bot bots order can could you your do does did need want please help app apps time long take takes pay payment for with my me i we our it this that to of and or in on at from by be have has will would about tell'.split(' '));
+  const UZ = new Set("men biz siz bu u va bilan uchun qancha narx narxi sayt saytlar kerak bormi qanday nima necha qaysi ham yoki emas bor yo'q haqida menga sizga salom rahmat ilova bot bo'ladi bo'lsa mumkin qilib bering aytib".split(' '));
+  const detect = (t) => {
+    if (/[а-яА-ЯёЁ]{2}/.test(t)) return 'ru';
+    const w = String(t).toLowerCase().replace(/[ʻʼ’‘`´]/g, "'").split(/[^a-z']+/).filter(Boolean);
+    const en = w.filter((x) => EN.has(x)).length, uz = w.filter((x) => UZ.has(x)).length;
+    return en > uz && en >= 1 && (en >= 2 || w.length <= 3) ? 'en' : 'uz';
+  };
 
   // Bilimlar bazasi: sayt ma'lumotidan yig'iladi (admin saytni o'zgartirsa, bot ham yangilanadi)
   function facts() {
@@ -72,10 +79,10 @@ ${kb(F)}`;
     en: { hi: (n) => `Hello! I'm the ${n} support bot. Ask me about websites, Telegram bots, apps, prices and timelines.`, thanks: "You're welcome! Write again if you have more questions 🙂", phone: (F) => `Quick contact: ${F.phone}${F.hours ? ' (' + F.hours + ')' : ''}`, askphone: 'For an exact answer please leave your phone number and a specialist will contact you.', handoff: 'I passed your question to a specialist. Send your phone number so we can reach you faster.', from: 'from', day: 'Timeline', tplText: (F) => `Ready-made site template: you can edit and preview 32 templates for free; downloading or publishing is a one-time $${F.tpl.usd}. Start: https://improuzbekiston.uz/yaratish.html`, botText: 'Telegram bot builder: enter your token and the catalog, cart and mini shop work at once. Start: https://improuzbekiston.uz/bot.html', payText: 'Payment by Payme, Click or card transfer. Larger projects are paid in stages under a contract.', domText: 'Yes, you can connect your own domain or publish on our subdomain.' },
   };
   const INTENT = [
-    ['human', /operator|odam|inson|menejer|qo'?ng'?iroq qil|zvon|позвон|оператор|человек|менеджер|manager|human|call me|agent|shikoyat|жалоб|complain/],
-    ['hello', /^(salom|assalom|hi|hello|привет|здравствуй|добрый|start|\/start|hey)\b/],
+    ['human', /(?<![\p{L}])(operator|odam|inson|menejer|qo'?ng'?iroq qil\p{L}*|позвон\p{L}*|оператор\p{L}*|человек\p{L}*|менеджер\p{L}*|manager|human|call me|agent|shikoyat\p{L}*|жалоб\p{L}*|complain\p{L}*)(?![\p{L}])/u],
+    ['hello', /^(salom|assalom|hi|hello|привет|здравствуй|добрый|start|\/start|hey)(?![\p{L}])/u],
     ['thanks', /rahmat|raxmat|спасибо|благодар|thanks|thank you/],
-    ['bot', /telegram bot|bot yarat|mini ?do'?kon|бот|bots?\b/],
+    ['bot', /(?<![\p{L}])(telegram bot|bot yarat\p{L}*|mini ?do'?kon|бот\p{L}*|bots?)(?![\p{L}])/u],
     ['template', /shablon|шаблон|template|konstruktor|конструктор|builder|\$ ?10|10 ?\$|o'?zim yarat|сам создат/],
     ['price', /narx|qancha|necha pul|to'?laydi|стоим|цена|сколько|price|cost|how much|tarif|paket|пакет/],
     ['time', /muddat|qachon tayyor|necha kun|qancha vaqt|срок|как долго|когда готов|deadline|how long|timeline/],
@@ -207,7 +214,8 @@ async function handleUpdate(env, upd) {
 /* ---------- Statik saytdan kelgan so'rov ---------- */
 async function relay(req, env) {
   const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || '').split(',').map((x) => x.trim()).filter(Boolean);
-  const okOrigin = !allow.length || allow.includes(origin);
+  if (!allow.length) allow.push('https://improuzbekiston.uz', 'https://www.improuzbekiston.uz'); // sozlanmagan bo'lsa ham begona saytlarga yopiq
+  const okOrigin = allow.includes(origin);
   const cors = { 'Access-Control-Allow-Origin': okOrigin ? origin || '*' : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   if (req.method !== 'POST' || !okOrigin) return new Response("Ruxsat yo'q", { status: 403, headers: cors });
