@@ -179,7 +179,7 @@ async function callOwner(env, st, text, now = Date.now()) {
   try { const r = await fetch(`http://api.callmebot.com/start.php?user=${to.replace(/[^+@\w]/g, '')}&text=${encodeURIComponent(String(text).replace(/\s+/g, ' ').trim().slice(0, 250))}&lang=${encodeURIComponent(env.CALL_LANG || 'ru-RU-Standard-A')}&rpt=2&cc=no`, { signal: AbortSignal.timeout(20000) }); return r.ok; } catch { return false; }
 }
 const spell = (p) => String(p || '').replace(/\D/g, '').split('').join(' '); // telefon raqamini raqam-raqam o'qitish uchun
-const REMIND = [10, 40, 100, 220, 460]; // daqiqalarda: javob berilmasa takroriy eslatma
+const REMIND = [5, 10, 20, 40, 80, 160]; // daqiqalarda (cron har 5 daqiqada ishlaydi) // daqiqalarda: javob berilmasa takroriy eslatma
 async function raiseUrgent(env, st, { chat, name, phone, text }) {
   const id = Date.now().toString(36), u = { c: chat || 0, n: name || '', p: phone || '', x: String(text || '').slice(0, 300), t: Date.now(), r: 0, done: 0 };
   await st.put('u:' + id, u, 2 * 86400);
