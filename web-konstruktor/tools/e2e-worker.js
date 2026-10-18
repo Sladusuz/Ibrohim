@@ -8,8 +8,9 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const W = (await import(path.join(__dirname, '..', 'worker', 'dist', 'worker.mjs') + '?t=' + Date.now())).default;
   const calls = []; let n = 100, aiMode = false;
   globalThis.fetch = async (url, o) => {
-    const u = String(url), body = o && o.body ? JSON.parse(o.body) : {};
+    const u = String(url); let body = {}; try { body = o && o.body ? JSON.parse(o.body) : {}; } catch { body = {}; }
     if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
+    if (u.includes('ntfy.sh')) { calls.push({ method: 'PUSH', body: { url: u, h: o.headers, text: o.body } }); return new Response('{}', { status: 200 }); }
     if (u.includes('api.callmebot.com')) { calls.push({ method: 'CALL', body: { url: u } }); return new Response('ok', { status: 200 }); }
     const m = /bot([^/]+)\/(\w+)$/.exec(u); if (!m) return new Response('{}', { status: 404 });
     calls.push({ method: m[2], body });
@@ -129,6 +130,19 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   delete env.CALL_ANYTIME; const cN = callsOf().length; await msg(7063, 'Tezkor sayt kerak, hoziroq qilib bering', 174);
   const hNow = new Date(Date.now() + 5 * 3600e3).getUTCHours(); ok((hNow >= 8 && hNow < 22) || callsOf().length === cN, "tunda (22:00-08:00) qo'ng'iroq qilinmaydi");
   delete env.CALL_USER;
+  console.log('Telefon bildirishnomasi (ntfy, bepul)');
+  const pushes = () => calls.filter((c) => c.method === 'PUSH');
+  const p0 = pushes().length; await msg(7070, 'Tezkor sayt kerak, hoziroq qilib bering', 180); ok(pushes().length === p0, 'NTFY_TOPIC sozlanmagan bo\'lsa bildirishnoma yuborilmaydi');
+  env.NTFY_TOPIC = 'impro-secret-topic-123'; env.CALL_ANYTIME = '1';
+  await msg(7071, 'Tezkor sayt kerak, hoziroq qilib bering, mening raqamim +998901112233', 181);
+  const pu = pushes().slice(-1)[0];
+  ok(pu && pu.body.url === 'https://ntfy.sh/impro-secret-topic-123' && pu.body.h.Priority === '5' && /^[\x20-\x7e]+$/.test(pu.body.h.Title) && pu.body.h.Click === 'https://t.me/improsupport_bot', 'shoshilinch mijozda ntfy: eng yuqori daraja, ASCII sarlavha, Telegramga havola', pu);
+  ok(!/998901112233/.test(JSON.stringify(pu.body)), 'bildirishnomada telefon raqami va shaxsiy matn yo\'q');
+  const p1 = pushes().length; await msg(7072, 'Sayt tezligi qancha?', 182); ok(pushes().length === p1, 'oddiy savolda bildirishnoma yo\'q');
+  await msg(7001, '/qongiroq', 183); ok(pushes().length === p1 + 1 && /Sinov/.test(pushes().slice(-1)[0].body.h.Title), '/qongiroq telefon bildirishnomasini ham sinaydi');
+  const td3 = new Date(Date.now() + 5 * 3600e3), at20c = Date.UTC(td3.getUTCFullYear(), td3.getUTCMonth(), td3.getUTCDate() + 2, 15, 1);
+  const p2 = pushes().length; await W.tick(env, at20c); ok(pushes().length > p2 && /Kunlik hisobot/.test(pushes().slice(-1)[0].body.h.Title), 'kunlik hisobot telefonga ham yuboriladi');
+  delete env.NTFY_TOPIC; delete env.CALL_ANYTIME;
   console.log('Workers AI (bepul)');
   const aiRuns = []; env.AI = { run: async (model, input) => { aiRuns.push(model); return { response: "Workers AI: SEO uchun sayt tayyor, qo'shimcha sozlash kerak bo'lishi mumkin." }; } };
   await msg(7040, 'Sayt SEO uchun yaxshimi?', 130); ok(/Workers AI: SEO/.test(lastTo(7040).body.text) && aiRuns.length === 1, "kalitsiz ham Workers AI mijoz savoliga javob beradi");

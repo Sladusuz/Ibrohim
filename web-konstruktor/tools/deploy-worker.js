@@ -27,6 +27,7 @@ async function cf(method, p, body, headers) {
   const kvs = await cf('GET', `${acc}/storage/kv/namespaces?per_page=100`);
   const kv = kvs.find((x) => x.title === 'impro-state') || (await cf('POST', `${acc}/storage/kv/namespaces`, { title: 'impro-state' }));
   const bindings = [{ type: 'kv_namespace', name: 'STATE', namespace_id: kv.id }, { type: 'ai', name: 'AI' }, // Workers AI: bepul sun'iy intellekt (kalit shart emas)
+    ...(E.NTFY_TOPIC ? [{ type: 'plain_text', name: 'NTFY_TOPIC', text: E.NTFY_TOPIC }] : []),
     ...(E.CALL_USER ? [{ type: 'plain_text', name: 'CALL_USER', text: E.CALL_USER }] : []),
     ...(E.CALL_LANG ? [{ type: 'plain_text', name: 'CALL_LANG', text: E.CALL_LANG }] : []),
     ...(E.TG_CHAT ? [{ type: 'plain_text', name: 'TG_CHAT', text: E.TG_CHAT }] : []), // doimiy admin chat ID (/logout qilsa ham xabarlar keladi)

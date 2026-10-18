@@ -178,6 +178,12 @@ async function callOwner(env, st, text, now = Date.now()) {
   try { const last = await st.get('call:last'); if (last && now - last < 70000) return false; await st.put('call:last', now, 600); } catch { /* CallMeBot: bir foydalanuvchiga 65 soniyada ikki qo'ng'iroq mumkin emas */ }
   try { const r = await fetch(`http://api.callmebot.com/start.php?user=${to.replace(/[^+@\w]/g, '')}&text=${encodeURIComponent(String(text).replace(/\s+/g, ' ').trim().slice(0, 250))}&lang=${encodeURIComponent(env.CALL_LANG || 'ru-RU-Standard-A')}&rpt=2&cc=no`, { signal: AbortSignal.timeout(20000) }); return r.ok; } catch { return false; }
 }
+// Telefonga kuchli bildirishnoma (bepul, ntfy.sh): NTFY_TOPIC = maxfiy mavzu nomi. Ilovada shu mavzuga obuna bo'linadi; Priority 5 telefonni ovozli jiringlatadi.
+// Shaxsiy ma'lumot (telefon, matn) yuborilmaydi: faqat ogohlantirish, tafsilot Telegramda.
+async function pushPhone(env, title, text, priority = 5, tags = 'rotating_light') {
+  const t = String(env.NTFY_TOPIC || '').trim(); if (!t) return false;
+  try { const r = await fetch('https://ntfy.sh/' + encodeURIComponent(t), { method: 'POST', headers: { Title: String(title).replace(/[^\x20-\x7e]/g, ''), Priority: String(priority), Tags: tags, Click: 'https://t.me/improsupport_bot' }, body: text, signal: AbortSignal.timeout(15000) }); return r.ok; } catch { return false; }
+}
 const spell = (p) => String(p || '').replace(/\D/g, '').split('').join(' '); // telefon raqamini raqam-raqam o'qitish uchun
 const REMIND = [5, 10, 20, 40, 80, 160]; // daqiqalarda (cron har 5 daqiqada ishlaydi) // daqiqalarda: javob berilmasa takroriy eslatma
 async function raiseUrgent(env, st, { chat, name, phone, text }) {
@@ -186,6 +192,7 @@ async function raiseUrgent(env, st, { chat, name, phone, text }) {
   await st.put('ul', [...((await st.get('ul')) || []), id].slice(-50));
   await ev(st, { k: 'urgent', c: chat, n: name, p: phone, x: text });
   for (const a of await adminsOf(env, st)) await say(env, a, `🔥 <b>SHOSHILINCH mijoz!</b>\n👤 ${esc(name || 'Mijoz')}${phone ? ' · 📞 ' + esc(phone) : ''}${chat ? ` · <code>${chat}</code>` : ''}\n\n${esc(u.x)}\n\n${chat ? 'Javob berish uchun mijoz xabariga <b>reply</b> qiling. ' : ''}Javob berilmasa, eslatib turaman.`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ko'rdim, hal qilaman", callback_data: 'ok:' + id }]] } });
+  await pushPhone(env, 'Shoshilinch mijoz!', `Shoshilinch mijoz keldi${name ? ': ' + name : ''}. Telegramni oching.`, 5);
   await callOwner(env, st, `Внимание! Срочный клиент. ${name || ''}. ${phone ? 'Телефон ' + spell(phone) + '. ' : ''}Откройте Телеграм.`);
   return id;
 }
@@ -219,12 +226,13 @@ async function tick(env, now = Date.now()) {
     if (due === undefined) { u.done = 2; await st.put('u:' + id, u, 2 * 86400); continue; }
     if (age >= due && h >= 7) { // tunda (00:00-07:00) bezovta qilmaymiz
       for (const a of admins) await say(env, a, `⏰ <b>Eslatma:</b> shoshilinch mijozga ${Math.round(age)} daqiqadan beri javob berilmadi\n👤 ${esc(u.n || 'Mijoz')}${u.p ? ' · 📞 ' + esc(u.p) : ''}\n${esc(u.x.slice(0, 200))}`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ko'rdim", callback_data: 'ok:' + id }]] } });
+      await pushPhone(env, 'Eslatma: javobsiz mijoz', `Shoshilinch mijozga ${Math.round(age)} daqiqadan beri javob berilmadi. Telegramni oching.`, u.r >= 2 ? 5 : 4, 'alarm_clock');
       if (u.r === 1) await callOwner(env, st, `Напоминание. Срочному клиенту не ответили ${Math.round(age)} минут. ${u.n || ''}. ${u.p ? 'Телефон ' + spell(u.p) + '.' : ''}`, now);
       u.r++; await st.put('u:' + id, u, 2 * 86400);
     }
   }
   await st.put('ul', keep);
-  if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await callOwner(env, st, `Дневной отчёт. Диалогов ${S.chats}. Заявок с сайта ${S.leads.length}. Срочных ${S.urg.length}. Нужен оператор ${S.hand.length}. Подробности в Телеграме.`, now); }
+  if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await pushPhone(env, 'Kunlik hisobot', `Suhbatlar: ${S.chats}, saytdan so'rovlar: ${S.leads.length}, shoshilinch: ${S.urg.length}, operator kerak: ${S.hand.length}. Batafsil Telegramda.`, 3, 'bar_chart'); await callOwner(env, st, `Дневной отчёт. Диалогов ${S.chats}. Заявок с сайта ${S.leads.length}. Срочных ${S.urg.length}. Нужен оператор ${S.hand.length}. Подробности в Телеграме.`, now); }
 }
 
 /* ---------- Telegram ---------- */
@@ -312,9 +320,11 @@ async function handleUpdate(env, upd) {
   if (m.reply_to_message && !text.startsWith('/') && await supportOut(env, st, m)) return;
   if (m.reply_to_message && !text && await supportOut(env, st, m)) return;
   if (cmd === '/qongiroq') {
-    if (!env.CALL_USER) return say(env, chat, "Qo'ng'iroq sozlanmagan. Telegram raqamingizni (CALL_USER) kiritish va @CallMeBot_txtbot ga /start yozish kerak.");
+    const pushed = await pushPhone(env, 'Sinov', "Bu Impro IT botining sinov bildirishnomasi. Telefon ovozli ogohlantirish ishlayapti.", 5, 'white_check_mark');
+    if (!env.CALL_USER) return say(env, chat, pushed ? '📱 Telefonga sinov bildirishnomasi yuborildi (ntfy ilovasini tekshiring).' : "Telefon bildirishnomasi sozlanmagan (NTFY_TOPIC).");
+    if (false) return say(env, chat, "Qo'ng'iroq sozlanmagan. Telegram raqamingizni (CALL_USER) kiritish va @CallMeBot_txtbot ga /start yozish kerak.");
     const okc = await callOwner(env, st, 'Тестовый звонок. Бот Импро ай ти работает.');
-    return say(env, chat, okc ? "📞 Qo'ng'iroq yuborildi. Telegram qo'ng'irog'i kelishini kuting." : "Qo'ng'iroq yuborilmadi (tun 22:00-08:00, kunlik limit yoki @CallMeBot_txtbot ruxsati yo'q).");
+    return say(env, chat, (pushed ? '📱 Telefonga bildirishnoma yuborildi. ' : '') + (okc ? "📞 Qo'ng'iroq yuborildi. Telegram qo'ng'irog'i kelishini kuting." : "Qo'ng'iroq yuborilmadi (tun 22:00-08:00, kunlik limit yoki @CallMeBot ruxsati yo'q)."));
   }
   if (cmd === '/hisobot') return say(env, chat, await report(env, st, /kecha/i.test(arg) ? dkey(Date.now() - 86400e3) : dkey()));
   if (cmd === '/test') { // admin botni mijoz sifatida sinab ko'radi (hech kimga yuborilmaydi)
