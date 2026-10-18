@@ -182,7 +182,8 @@ async function callOwner(env, st, text, now = Date.now()) {
 // Shaxsiy ma'lumot (telefon, matn) yuborilmaydi: faqat ogohlantirish, tafsilot Telegramda.
 async function pushPhone(env, title, text, priority = 5, tags = 'rotating_light') {
   const t = String(env.NTFY_TOPIC || '').trim(); if (!t) return false;
-  try { const r = await fetch('https://ntfy.sh/' + encodeURIComponent(t), { method: 'POST', headers: { Title: String(title).replace(/[^\x20-\x7e]/g, ''), Priority: String(priority), Tags: tags, Click: 'https://t.me/improsupport_bot' }, body: text, signal: AbortSignal.timeout(15000) }); return r.ok; } catch { return false; }
+  const diag = (v) => store(env).put('diag:push', { ...v, t: Date.now() }, 7 * 86400).catch(() => {});
+  try { const r = await fetch('https://ntfy.sh/' + encodeURIComponent(t), { method: 'POST', headers: { Title: String(title).replace(/[^\x20-\x7e]/g, ''), Priority: String(priority), Tags: tags, Click: 'https://t.me/improsupport_bot', ...(env.NTFY_TOKEN ? { Authorization: 'Bearer ' + env.NTFY_TOKEN } : {}) }, body: text, signal: AbortSignal.timeout(15000) }); if (!r.ok) await diag({ status: r.status, body: (await r.text().catch(() => '')).slice(0, 200) }); return r.ok; } catch (e) { await diag({ err: String(e && e.message).slice(0, 200) }); return false; }
 }
 const spell = (p) => String(p || '').replace(/\D/g, '').split('').join(' '); // telefon raqamini raqam-raqam o'qitish uchun
 const REMIND = [5, 10, 20, 40, 80, 160]; // daqiqalarda (cron har 5 daqiqada ishlaydi) // daqiqalarda: javob berilmasa takroriy eslatma

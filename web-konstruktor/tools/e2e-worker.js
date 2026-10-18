@@ -135,6 +135,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   const p0 = pushes().length; await msg(7070, 'Tezkor sayt kerak, hoziroq qilib bering', 180); ok(pushes().length === p0, 'NTFY_TOPIC sozlanmagan bo\'lsa bildirishnoma yuborilmaydi');
   env.NTFY_TOPIC = 'impro-secret-topic-123'; env.CALL_ANYTIME = '1';
   await msg(7071, 'Tezkor sayt kerak, hoziroq qilib bering, mening raqamim +998901112233', 181);
+  env.NTFY_TOKEN = 'tk_test'; await msg(7073, 'Tezkor sayt kerak, hoziroq qilib bering', 184); ok(pushes().slice(-1)[0].body.h.Authorization === 'Bearer tk_test', 'NTFY_TOKEN bo\'lsa ntfy akkaunti bilan yuboriladi (kvota IP ga bog\'liq emas)'); delete env.NTFY_TOKEN;
   const pu = pushes().slice(-1)[0];
   ok(pu && pu.body.url === 'https://ntfy.sh/impro-secret-topic-123' && pu.body.h.Priority === '5' && /^[\x20-\x7e]+$/.test(pu.body.h.Title) && pu.body.h.Click === 'https://t.me/improsupport_bot', 'shoshilinch mijozda ntfy: eng yuqori daraja, ASCII sarlavha, Telegramga havola', pu);
   ok(!/998901112233/.test(JSON.stringify(pu.body)), 'bildirishnomada telefon raqami va shaxsiy matn yo\'q');
