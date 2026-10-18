@@ -10,6 +10,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = async (url, o) => {
     const u = String(url), body = o && o.body ? JSON.parse(o.body) : {};
     if (u.includes('api.anthropic.com')) { return new Response(JSON.stringify({ content: [{ type: 'text', text: aiMode === 'handoff' ? 'Albatta, telefon raqamingizni yozing. [[HANDOFF]]' : "AI javob: Start sayt 2 500 000 so'mdan." }] }), { status: 200 }); }
+    if (u.includes('api.callmebot.com')) { calls.push({ method: 'CALL', body: { url: u } }); return new Response('ok', { status: 200 }); }
     const m = /bot([^/]+)\/(\w+)$/.exec(u); if (!m) return new Response('{}', { status: 404 });
     calls.push({ method: m[2], body });
     return new Response(JSON.stringify({ ok: true, result: /^(sendMessage|copyMessage)$/.test(m[2]) ? { message_id: ++n } : true }), { status: 200 });
@@ -112,6 +113,22 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok(sent(7001, /Kunlik hisobot/).length === repB + 1 && /Mijoz suhbatlari/.test(rep.body.text) && /Saytdan so'rovlar: <b>\d+/.test(rep.body.text) && /Shoshilinch: <b>\d+/.test(rep.body.text), '20:00 da kunlik hisobot (uzbekcha) yuborildi', rep && rep.body.text);
   await W.tick(env, at20 + 120e3); ok(sent(7001, /Kunlik hisobot/).length === repB + 1, 'hisobot kuniga bir marta');
   await msg(7001, '/hisobot', 160); ok(/Kunlik hisobot/.test(lastTo(7001).body.text) && /Forma Mijoz/.test(lastTo(7001).body.text), '/hisobot buyrug\'i bugungi hisobotni beradi');
+  console.log("Telegram qo'ng'irog'i (bepul)");
+  const callsOf = () => calls.filter((c) => c.method === 'CALL');
+  const c0 = callsOf().length; await msg(7060, 'Tezkor sayt kerak, hoziroq qilib bering', 170);
+  ok(callsOf().length === c0, "CALL_USER sozlanmagan bo'lsa qo'ng'iroq qilinmaydi");
+  env.CALL_USER = '+998901234567'; env.CALL_ANYTIME = '1';
+  await msg(7061, 'Tezkor sayt kerak, hoziroq qilib bering', 171);
+  const cu1 = callsOf().slice(-1)[0]; const q = cu1 && new URL(cu1.body.url);
+  ok(cu1 && q.hostname === 'api.callmebot.com' && q.searchParams.get('user') === '+998901234567' && /Shoshilinch mijoz/.test(q.searchParams.get('text')) && q.searchParams.get('lang') === 'uz-UZ-Standard-A' && q.searchParams.get('text').length <= 256, "shoshilinch mijozda qo'ng'iroq: matn, til va raqam to'g'ri");
+  const k1 = callsOf().length; await msg(7062, 'Sayt tezligi qancha?', 172); ok(callsOf().length === k1, "oddiy savolda qo'ng'iroq yo'q");
+  await msg(7001, '/qongiroq', 173); ok(callsOf().length === k1 + 1 && /Qo'ng'iroq yuborildi/.test(lastTo(7001).body.text), '/qongiroq sinov qo\'ng\'irog\'ini yuboradi');
+  const td2 = new Date(Date.now() + 5 * 3600e3), at20b = Date.UTC(td2.getUTCFullYear(), td2.getUTCMonth(), td2.getUTCDate() + 1, 15, 1), cB = callsOf().length;
+  await W.tick(env, at20b); const rc = callsOf().slice(-1)[0];
+  ok(callsOf().length > cB && /Kunlik hisobot/.test(new URL(rc.body.url).searchParams.get('text')), "kunlik hisobotda qo'ng'iroq ham qilinadi");
+  delete env.CALL_ANYTIME; const cN = callsOf().length; await msg(7063, 'Tezkor sayt kerak, hoziroq qilib bering', 174);
+  const hNow = new Date(Date.now() + 5 * 3600e3).getUTCHours(); ok((hNow >= 8 && hNow < 22) || callsOf().length === cN, "tunda (22:00-08:00) qo'ng'iroq qilinmaydi");
+  delete env.CALL_USER;
   console.log('Workers AI (bepul)');
   const aiRuns = []; env.AI = { run: async (model, input) => { aiRuns.push(model); return { response: "Workers AI: SEO uchun sayt tayyor, qo'shimcha sozlash kerak bo'lishi mumkin." }; } };
   await msg(7040, 'Sayt SEO uchun yaxshimi?', 130); ok(/Workers AI: SEO/.test(lastTo(7040).body.text) && aiRuns.length === 1, "kalitsiz ham Workers AI mijoz savoliga javob beradi");

@@ -27,6 +27,8 @@ async function cf(method, p, body, headers) {
   const kvs = await cf('GET', `${acc}/storage/kv/namespaces?per_page=100`);
   const kv = kvs.find((x) => x.title === 'impro-state') || (await cf('POST', `${acc}/storage/kv/namespaces`, { title: 'impro-state' }));
   const bindings = [{ type: 'kv_namespace', name: 'STATE', namespace_id: kv.id }, { type: 'ai', name: 'AI' }, // Workers AI: bepul sun'iy intellekt (kalit shart emas)
+    ...(E.CALL_USER ? [{ type: 'plain_text', name: 'CALL_USER', text: E.CALL_USER }] : []),
+    ...(E.CALL_LANG ? [{ type: 'plain_text', name: 'CALL_LANG', text: E.CALL_LANG }] : []),
     ...(E.TG_CHAT ? [{ type: 'plain_text', name: 'TG_CHAT', text: E.TG_CHAT }] : []), // doimiy admin chat ID (/logout qilsa ham xabarlar keladi)
     { type: 'plain_text', name: 'ALLOW_ORIGIN', text: E.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz' },
     { type: 'secret_text', name: 'TG_TOKEN', text: E.TG_TOKEN }, { type: 'secret_text', name: 'ADMIN_PASSWORD', text: E.ADMIN_PASSWORD },
