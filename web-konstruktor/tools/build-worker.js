@@ -30,6 +30,7 @@ const APP_HTML = ${JSON.stringify(fs.readFileSync(path.join(R, 'worker', 'src', 
 const PRICING = ${JSON.stringify(PRICING)};
 ${fs.readFileSync(path.join(R, 'worker', 'src', 'platform.mjs'), 'utf8')}
 ${fs.readFileSync(path.join(R, 'worker', 'src', 'tgbots.mjs'), 'utf8')}
+${fs.readFileSync(path.join(R, 'worker', 'src', 'orderbot.mjs'), 'utf8')}
 ${fs.readFileSync(path.join(R, 'worker', 'src', 'bot.mjs'), 'utf8')}`;
 fs.mkdirSync(path.join(R, 'worker', 'dist'), { recursive: true });
 fs.writeFileSync(path.join(R, 'worker', 'dist', 'worker.mjs'), out);

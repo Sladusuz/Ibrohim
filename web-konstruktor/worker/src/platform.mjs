@@ -46,11 +46,11 @@ async function platformApi(req, env, ctx, url) {
   const me = await authUser(req, st), need = () => J({ error: 'Kirish talab qilinadi' }, 401);
   try {
     if (/^\/api\/(tg|app)\//.test(pn)) { const r = await tbPublicApi(req, env, ctx, url, J, body); if (r) return r; }
-    if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), botPrices: (await tbPrices(st)).usd, payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY), globalpay: GP_ON(env, 'gp') && (await st.get('gpok:gp')) !== 0, clicktg: GP_ON(env, 'click') && (await st.get('gpok:click')) !== 0 }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: false });
+    if (route === 'GET /api/pricing') return J({ ...PRICING, ...((await st.get('pricing')) || {}), botPrices: (await tbPrices(st)).usd, orderBot: ORDER_ON(env) ? ORDER_USER(env) : '', payMethods: { payme: !!(env.PAYME_MERCHANT_ID && env.PAYME_KEY), click: !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY), globalpay: GP_ON(env, 'gp') && (await st.get('gpok:gp')) !== 0, clicktg: GP_ON(env, 'click') && (await st.get('gpok:click')) !== 0 }, manualPay: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '', rootDomain: '', contacts: { phone: (SITE.contacts || {}).phone || '', telegram: (SITE.contacts || {}).telegram || '' }, aiEnabled: false });
     if (route === 'GET /api/site') return J(SITE);
     if (route === 'POST /api/adminbot/session') { // Telegram Mini App ichidan admin kirishi (initData imzosi bo'yicha)
       const b = await body(8192), u = await verifyInit(env, String(b.initData || ''));
-      if (!u || !(await adminsOf(env, st)).includes(Number(u.id))) return J({ error: 'Bu panel faqat adminlar uchun' }, 403);
+      if (!u || !(await isOwner(env, st, u.id))) return J({ error: 'Bu panel faqat bot egasi uchun' }, 403);
       const tok = pRnd(24); await st.put('as:' + (await pSha(tok)), 1, 12 * 3600); return J({ ok: true, token: tok });
     }
     if (pn.startsWith('/api/admin/') && pn !== '/api/admin/login') return adminApi(req, env, ctx, url, st, J, body, cors, route);
@@ -155,7 +155,7 @@ async function platformApi(req, env, ctx, url) {
         if (act === 'checkout' && req.method === 'POST') {
           if (meta.paid) return J({ paid: true });
           const b = await body(4096), tp = PRICING.templatePrice || { usd: 10, rate: 12800 }, uzs = Math.round(tp.usd * tp.rate), p = await createPayOrder(env, st, uzs, `Sayt: ${meta.name} (${me.name} ${me.phone})`); p.projectId = meta.id; p.ownerId = me.id; await payOrderPut(st, p);
-          if ((b.method === 'globalpay' || b.method === 'clicktg') && GP_ON(env, b.method === 'clicktg' ? 'click' : 'gp')) { const g = await gpLink(env, p, "Impro IT: sayt", b.method === 'clicktg' ? 'click' : 'gp'); if (g.url) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: g.url }); return J({ error: "Karta orqali to'lov hozir ishlamayapti. Boshqa usulni tanlang." }, 502); }
+          if ((b.method === 'globalpay' || b.method === 'clicktg') && GP_ON(env, b.method === 'clicktg' ? 'click' : 'gp')) { const g = await gpLink(payEnv(env), p, "Impro IT: sayt", b.method === 'clicktg' ? 'click' : 'gp'); if (g.url) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: g.url }); return J({ error: "Karta orqali to'lov hozir ishlamayapti. Boshqa usulni tanlang." }, 502); }
           if (b.method === 'payme' && env.PAYME_MERCHANT_ID && env.PAYME_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: paymeUrl(env, p) });
           if (b.method === 'click' && env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: clickUrl(env, p) });
           for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Sayt sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(uzs)} so'm · #${p.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }]] } });

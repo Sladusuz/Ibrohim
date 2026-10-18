@@ -34,7 +34,7 @@ html.tgapp .lbox{box-shadow:none}
 </head>
 <body class="ui">
 <div class="loginw" id="login" hidden><div class="lbox"><div class="m" style="width:46px;height:46px;font-size:20px">I</div><h2>Admin panel</h2><p>Demo rejimi.</p>
-<form id="lf"><input type="password" id="pw" placeholder="Parol" autocomplete="current-password"><div class="lerr" id="le"></div><button class="b">Kirish</button></form></div></div>
+<form id="lf"><input type="password" id="pw" placeholder="Parol" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"><label style="display:flex;gap:8px;align-items:center;font-size:13px;margin:6px 0"><input type="checkbox" onchange="document.getElementById('pw').type=this.checked?'text':'password'"> Parolni ko'rsatish</label><div class="lerr" id="le"></div><button class="b">Kirish</button></form></div></div>
 <div class="app" id="app" hidden>
   <aside class="sb"><div class="brand"><span class="m">I</span>Impro IT</div><nav id="nav"></nav>
     <div class="foot"><a href="/admin.html">Haqiqiy panel →</a><button id="out">Chiqish</button></div></aside>

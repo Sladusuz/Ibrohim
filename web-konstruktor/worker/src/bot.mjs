@@ -88,14 +88,15 @@ async function pushPhone(env, title, text, priority = 5, tags = 'rotating_light'
 }
 const spell = (p) => String(p || '').replace(/\D/g, '').split('').join(' '); // telefon raqamini raqam-raqam o'qitish uchun
 const REMIND = [1, 3, 6, 10, 15, 25, 40, 60, 90, 120]; // daqiqalarda: javob berilmaguncha tez-tez eslatiladi (cron har daqiqada) // daqiqalarda: javob berilmasa takroriy eslatma
-async function raiseUrgent(env, st, { chat, name, phone, text }) {
-  const id = Date.now().toString(36), u = { c: chat || 0, n: name || '', p: phone || '', x: String(text || '').slice(0, 300), t: Date.now(), r: 0, done: 0 };
+async function raiseUrgent(env, st, { chat, name, phone, text, kind, title }) {
+  const id = Date.now().toString(36), u = { c: chat || 0, n: name || '', p: phone || '', x: String(text || '').slice(0, 300), t: Date.now(), r: 0, done: 0, k: kind || '' };
   await st.put('u:' + id, u, 2 * 86400);
   await st.put('ul', [...((await st.get('ul')) || []), id].slice(-50));
-  await ev(st, { k: 'urgent', c: chat, n: name, p: phone, x: text });
-  for (const a of await adminsOf(env, st)) await say(env, a, `🔥 <b>SHOSHILINCH mijoz!</b>\n👤 ${esc(name || 'Mijoz')}${phone ? ' · 📞 ' + esc(phone) : ''}${chat ? ` · <code>${chat}</code>` : ''}\n\n${esc(u.x)}\n\n${chat ? 'Javob berish uchun mijoz xabariga <b>reply</b> qiling. ' : ''}Javob berilmasa, eslatib turaman.`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ko'rdim, hal qilaman", callback_data: 'ok:' + id }]] } });
-  await pushPhone(env, 'Shoshilinch mijoz!', `Shoshilinch mijoz keldi${name ? ': ' + name : ''}. Telegramni oching.`, 5);
-  await callOwner(env, st, `Внимание! Срочный клиент. ${name || ''}. ${phone ? 'Телефон ' + spell(phone) + '. ' : ''}Откройте Телеграм.`);
+  await ev(st, { k: kind === 'order' ? 'paidorder' : 'urgent', c: chat, n: name, p: phone, x: text });
+  const isO = kind === 'order', ae = AE(env);
+  for (const a of await adminsOf(env, st)) await say(ae, a, `${title || '🔥 <b>SHOSHILINCH mijoz!</b>'}\n👤 ${esc(name || 'Mijoz')}${phone ? ' · 📞 ' + esc(phone) : ''}${chat ? ` · <code>${chat}</code>` : ''}\n\n${esc(u.x)}\n\n${isO ? "Mijoz bilan bog'lanib, ishni boshlang. " : chat ? 'Javob berish uchun mijoz xabariga <b>reply</b> qiling. ' : ''}${isO ? "Qabul qilmaguningizcha eslatib turaman." : 'Javob berilmasa, eslatib turaman.'}`, { reply_markup: { inline_keyboard: [[{ text: isO ? '✅ Qabul qildim' : "✅ Ko'rdim, hal qilaman", callback_data: 'ok:' + id }]] } });
+  await pushPhone(env, isO ? "To'langan buyurtma!" : 'Shoshilinch mijoz!', isO ? `To'lov qilingan yangi buyurtma${name ? ': ' + name : ''}. Telegramni oching.` : `Shoshilinch mijoz keldi${name ? ': ' + name : ''}. Telegramni oching.`, 5);
+  await callOwner(env, st, isO ? `Внимание! Новый оплаченный заказ. ${name || ''}. ${phone ? 'Телефон ' + spell(phone) + '. ' : ''}Откройте Телеграм.` : `Внимание! Срочный клиент. ${name || ''}. ${phone ? 'Телефон ' + spell(phone) + '. ' : ''}Откройте Телеграм.`);
   return id;
 }
 async function closeUrgentOf(st, chat) { for (const id of (await st.get('ul')) || []) { const u = await st.get('u:' + id); if (u && !u.done && u.c === chat) { u.done = 1; await st.put('u:' + id, u, 2 * 86400); } } }
@@ -116,6 +117,7 @@ async function report(env, st, day) {
     ...(n('good') + n('bad') ? [`👍 ${n('good')} · 👎 ${n('bad')} (bot javoblari baholari)`] : []),
     ...(Object.keys(rp).length ? ['👨‍💼 Javoblar: ' + Object.entries(rp).map(([k, v]) => `${esc(k)} ${v}`).join(' · ')] : [])];
   const srcs = Object.entries(keys.filter((e) => e.k === 'start' && e.x).reduce((o, e) => { o[e.x] = (o[e.x] || 0) + 1; return o; }, {}));
+  if (n('ostart') + n('otar') + n('orderpaid') + n('paidorder')) L.push(`🛒 Buyurtma boti: start <b>${n('ostart')}</b> · tariflar <b>${n('otar')}</b> · to'langan buyurtma <b>${n('orderpaid')}</b>${n('ostart') ? ' · konversiya ' + Math.round(n('orderpaid') / n('ostart') * 100) + '%' : ''}`);
   if (srcs.length) L.push('🔗 Manbalar: ' + srcs.map(([k, v]) => `${esc(k)} ${v}`).join(' · '));
   if (leads.length) L.push('', "<b>Saytdan kelgan so'rovlar:</b>", ...leads.slice(-8).map(row));
   if (urg.length) L.push('', '<b>Shoshilinch mijozlar:</b>', ...urg.slice(-5).map(row));
@@ -134,9 +136,9 @@ async function tick(env, now = Date.now()) {
     const age = (now - u.t) / 60000, due = REMIND[u.r];
     if (due === undefined) { u.done = 2; await st.put('u:' + id, u, 2 * 86400); continue; }
     if (age >= due && h >= 7) { // tunda (00:00-07:00) bezovta qilmaymiz
-      for (const a of admins) await say(env, a, `⏰ <b>Eslatma:</b> shoshilinch mijozga ${Math.round(age)} daqiqadan beri javob berilmadi\n👤 ${esc(u.n || 'Mijoz')}${u.p ? ' · 📞 ' + esc(u.p) : ''}\n${esc(u.x.slice(0, 200))}`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ko'rdim", callback_data: 'ok:' + id }]] } });
-      await pushPhone(env, 'Eslatma: javobsiz mijoz', `Shoshilinch mijozga ${Math.round(age)} daqiqadan beri javob berilmadi. Telegramni oching.`, u.r >= 2 ? 5 : 4, 'alarm_clock');
-      if (u.r === 1) await callOwner(env, st, `Напоминание. Срочному клиенту не ответили ${Math.round(age)} минут. ${u.n || ''}. ${u.p ? 'Телефон ' + spell(u.p) + '.' : ''}`, now);
+      for (const a of admins) await say(env, a, `⏰ <b>Eslatma:</b> ${u.k === 'order' ? "to'langan buyurtma" : 'shoshilinch mijozga'} ${Math.round(age)} daqiqadan beri ${u.k === 'order' ? 'qabul qilinmadi' : 'javob berilmadi'}\n👤 ${esc(u.n || 'Mijoz')}${u.p ? ' · 📞 ' + esc(u.p) : ''}\n${esc(u.x.slice(0, 200))}`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ko'rdim", callback_data: 'ok:' + id }]] } });
+      await pushPhone(env, u.k === 'order' ? 'Eslatma: qabul qilinmagan buyurtma' : 'Eslatma: javobsiz mijoz', u.k === 'order' ? `To'langan buyurtma ${Math.round(age)} daqiqadan beri qabul qilinmadi. Telegramni oching.` : `Shoshilinch mijozga ${Math.round(age)} daqiqadan beri javob berilmadi. Telegramni oching.`, u.r >= 2 ? 5 : 4, 'alarm_clock');
+      if (u.r === 1) await callOwner(env, st, u.k === 'order' ? `Напоминание. Оплаченный заказ не принят уже ${Math.round(age)} минут. ${u.n || ''}.` : `Напоминание. Срочному клиенту не ответили ${Math.round(age)} минут. ${u.n || ''}. ${u.p ? 'Телефон ' + spell(u.p) + '.' : ''}`, now);
       u.r++; await st.put('u:' + id, u, 2 * 86400);
     }
   }
@@ -146,6 +148,11 @@ async function tick(env, now = Date.now()) {
     if (it.due > now) { left.push(it); continue; }
     if (it.k === 'bs') { await say(env, it.c, "🙌 Uchrashuv qanday o'tdi? Fikringiz biz uchun muhim:", { reply_markup: { inline_keyboard: [[{ text: '👍 Yaxshi', callback_data: 'bs:g' }, { text: '👎 Yaxshimas', callback_data: 'bs:b' }], [{ text: '📄 Taklif tayyorlang', callback_data: 'bs:o' }]] } }); continue; }
     if (it.k === 'bk') { if (now - it.at < 3600e3) { left.push({ c: it.c, k: 'bs', due: it.at + 2 * 3600e3, n: it.n, p: it.p }); await say(env, it.c, `⏰ <b>Eslatma:</b> bugun ${esc(it.lab)} da uchrashuvimiz bor. Kutib qolamiz!`); for (const a of admins) await say(env, a, `⏰ <b>1 soatdan so'ng uchrashuv</b>: ${esc(it.n || 'Mijoz')} · 📞 ${esc(it.p || '')} · ${esc(it.lab)}`); await pushPhone(env, 'Uchrashuv 1 soatdan so\'ng', `${it.n || 'Mijoz'} ${it.p || ''} ${it.lab}`, 4, 'calendar'); } continue; }
+    if (it.k === 'pay') { // to'lanmagan buyurtmaga eslatma (1 soat va 24 soatdan keyin)
+      const p = await st.get('po:' + it.pid); if (!p || p.state !== 'pending') continue;
+      await say(payEnv(env), it.c, `⏳ <b>Buyurtmangiz to'lovni kutmoqda</b>\n${esc(p.note || '')}\n💰 ${sum(p.uzs)} so'm\n\nTo'lasangiz, buyurtma darrov qabul qilinadi.`, { reply_markup: { inline_keyboard: [[{ text: "💳 To'lash", callback_data: 'ps:' + p.id }]] } });
+      if (!it.again) left.push({ ...it, due: now + 23 * 3600e3, again: 1 }); continue;
+    }
     const rec = (await st.get('c:' + it.c)) || {};
     if ((await st.get('hu:' + it.c)) || (await st.get('ban:' + it.c)) || (it.k === 'price' && rec.phone)) continue; // endi kerak emas
     if (!isOffice(now)) { left.push(it); continue; } // ish vaqtigacha kutamiz
@@ -156,7 +163,7 @@ async function tick(env, now = Date.now()) {
   if (JSON.stringify(left) !== JSON.stringify(fl)) await st.put('fl', left);
   if (st.gc && !(await st.get('gc:' + dkey(now)))) { await st.put('gc:' + dkey(now), 1, 2 * 86400); await st.gc().catch(() => {}); } // eskirgan yozuvlarni tozalash (kuniga bir marta)
   if (h === 9 && mi < 5 && tz(now).getUTCDay() === 1 && !(await st.get('repw:' + dkey(now)))) { await st.put('repw:' + dkey(now), 1, 2 * 86400); const wt = await weekly(env, st, now); for (const a of admins) await say(env, a, wt); }
-  if (mi % 30 === 0 && !(await st.get('hlc:' + Math.floor(now / 1800e3)))) { await st.put('hlc:' + Math.floor(now / 1800e3), 1, 3600); await health(env, st, admins, now); }
+  if (mi % 30 === 0 && !(await st.get('hlc:' + Math.floor(now / 1800e3)))) { await st.put('hlc:' + Math.floor(now / 1800e3), 1, 3600); await health(env, st, admins, now); await healthOrder(env, st, admins, now); }
   if (h === 8 && mi < 5 && !(await st.get('bak:' + dkey(now)))) { await st.put('bak:' + dkey(now), 1, 2 * 86400); await backup(env, st, admins); }
   if (h === 11 && mi < 5 && tz(now).getUTCDay() === 3 && env.CHANNEL_ID && !(await st.get('chw:' + dkey(now)))) { await st.put('chw:' + dkey(now), 1, 2 * 86400); await channelPost(env, st); }
   if (h === 10 && mi < 5 && !(await st.get('dig:' + dkey(now)))) { // ertalabki xulosa: kechagi javobsiz savollar
@@ -225,19 +232,21 @@ async function flowStart(env, st, chat, rec) {
   if (PAYFLOW(env)) return say(env, chat, "📝 <b>Buyurtma berish</b> (4 ta qisqa savol, bekor qilish: /cancel)\n\n1/4. Qaysi xizmat kerak? Narxi tugmada ko'rsatilgan:", { reply_markup: kbSvcPay() });
   return say(env, chat, '📝 <b>Buyurtma anketasi</b> (5 ta qisqa savol, bekor qilish: /cancel)\n\n1/5. Qanday xizmat kerak?', { reply_markup: kbOf('svc', SERVICES) });
 }
+const pr0 = (s) => String(s).replace(/<[^>]+>/g, '').replace(/\n/g, ' ').replace('🎁 ', '').slice(0, 60);
 async function flowFinish(env, st, chat, rec, name) {
   const d = rec.flow.d; rec.flow = null; rec.phone = d.ph; const tmp = leadTemp({ phone: true, anketa: true, urgent: /^Shoshilinch/.test(d.dl), budget: d.bd }); addTag(rec, 'anketa'); addTag(rec, tmp); await saveRec(st, chat, rec);
   await saveLead(st, { c: chat, n: name, p: d.ph, s: 'anketa', x: `${d.svc}; ${d.name}; ${d.dl}; ${d.bd}`, g: tmp, r: rec.src });
   const txt = `📝 <b>Yangi anketa (bot)</b> #${tmp}\n👤 ${esc(name)}${chat ? ` <code>${chat}</code>` : ''}\n🔧 ${esc(d.svc)}\n🏢 ${esc(d.name)}\n⏱ ${esc(d.dl)}\n💰 ${esc(d.bd)}\n📞 <b>${esc(d.ph)}</b>`;
   await ev(st, { k: 'lead', c: chat, n: name, p: d.ph, x: `anketa: ${d.svc}, ${d.dl}` });
   const map = {};
-  for (const a of await adminsOf(env, st)) { const h = await say(env, a, txt + '\n\nJavob berish uchun shu xabarga <b>reply</b> qiling.', { reply_markup: { inline_keyboard: [[{ text: `📞 ${d.ph}`, url: 'https://t.me/' + d.ph }]] } }); if (h) map[a + ':' + h.message_id] = chat; }
+  for (const a of await adminsOf(env, st)) { const h = await say(AE(env), a, txt + '\n\nJavob berish uchun shu xabarga <b>reply</b> qiling.', { reply_markup: { inline_keyboard: [[{ text: `📞 ${d.ph}`, url: 'https://t.me/' + d.ph }]] } }); if (h) map[a + ':' + h.message_id] = chat; }
   await Promise.all(Object.entries(map).map(([k, v]) => st.put('m:' + k, v, 30 * 86400)));
   if (/^Shoshilinch/.test(d.dl)) await raiseUrgent(env, st, { chat, name, phone: d.ph, text: `Anketa: ${d.svc}, ${d.name}, ${d.dl}` });
   if (d.pay && d.price && GP_ON(env)) {
-    const pp = await createPayOrder(env, st, d.price, `Buyurtma: ${d.svc}, ${d.name}`); pp.kind = 'order'; pp.chat = chat; pp.phone = d.ph; pp.cname = name; await payOrderPut(st, pp);
+    let price = d.price, promoLine = ''; if (rec.promo) { const pr = await st.get('promo:' + rec.promo); if (pr && pr.pct > 0) { price = Math.max(1000, Math.round(d.price * (100 - pr.pct) / 100 / 1000) * 1000); promoLine = `\n🎁 Promo-kod ${esc(rec.promo)}: −${pr.pct}% (${sum(d.price)} → ${sum(price)})`; pr.used = (pr.used || 0) + 1; await st.put('promo:' + rec.promo, pr, 0, { pct: pr.pct, used: pr.used }); } delete rec.promo; await saveRec(st, chat, rec); }
+    const pp = await createPayOrder(env, st, price, `Buyurtma: ${d.svc}, ${d.name}${promoLine ? ' [' + (pr0(promoLine)) + ']' : ''}`); pp.kind = 'order'; pp.chat = chat; pp.phone = d.ph; pp.cname = name; await payOrderPut(st, pp);
     const inv = await tg(env, 'sendInvoice', { chat_id: chat, ...gpParams(env, pp, String(d.svc).slice(0, 32)) });
-    if (inv) { for (const a of await adminsOf(env, st)) await say(env, a, `⏳ <b>Buyurtma: to'lov kutilmoqda</b>\n👤 ${esc(name)} <code>${chat}</code> · ${esc(d.ph)}\n🔧 ${esc(d.svc)} · ${esc(d.name)} · ${sum(d.price)} so'm`, { disable_notification: true }); return say(env, chat, `✅ <b>Buyurtma yozildi.</b>\n🔧 ${esc(d.svc)}\n💰 Summa: <b>${sum(d.price)} so'm</b>\n\nYuqoridagi «To'lash» tugmasini bosing. To'lovdan keyin buyurtmangiz <b>qabul qilinadi</b>.`); }
+    if (inv) { await scheduleFollow(st, { c: chat, k: 'pay', pid: pp.id, due: Date.now() + 3600e3, n: name, p: d.ph }); for (const a of await adminsOf(env, st)) await say(AE(env), a, `⏳ <b>Buyurtma: to'lov kutilmoqda</b>\n👤 ${esc(name)} <code>${chat}</code> · ${esc(d.ph)}\n🔧 ${esc(d.svc)} · ${esc(d.name)} · ${sum(price)} so'm${promoLine}`, { disable_notification: true }); return say(env, chat, `✅ <b>Buyurtma yozildi.</b>\n🔧 ${esc(d.svc)}\n💰 Summa: <b>${sum(price)} so'm</b>${promoLine}\n\nYuqoridagi «To'lash» tugmasini bosing. To'lovdan keyin buyurtmangiz <b>qabul qilinadi</b>.`); }
   }
   await scheduleFollow(st, { c: chat, k: 'ph', due: Date.now() + 3600e3, n: name, p: d.ph });
   return say(env, chat, '✅ Anketa qabul qilindi! Mutaxassisimiz tez orada bog\'lanadi.' + (isOffice() ? '' : OFFLINE.uz));
@@ -316,7 +325,8 @@ async function offerDraft(env, st, admins, { to, name, text, hist, extra, label 
 // Mijozga operator nomidan xabar (Telegram yoki sayt chati)
 async function deliver(env, st, to, text, asAdmin) {
   if (String(to).startsWith('web:')) { const sid = String(to).slice(4), box = (await st.get('wo:' + sid)) || []; box.push({ t: Date.now(), text }); await st.put('wo:' + sid, box.slice(-20), 3600); await st.put('hu:' + to, 1, 2 * 3600); return true; }
-  const r = await say(env, to, `💬 <b>Impro IT:</b>\n${esc(text)}`);
+  let r = await say(env, to, `💬 <b>Impro IT:</b>\n${esc(text)}`);
+  if (!r && ORDER_ON(env)) r = await say(orderEnv(env), to, `💬 <b>Impro IT:</b>\n${esc(text)}`);
   if (r) { await st.put('hu:' + to, 1, 2 * 3600); await closeUrgentOf(st, to); }
   if (asAdmin) await ev(st, { k: 'reply', c: 0, n: asAdmin, x: '' });
   return !!r;
@@ -376,6 +386,7 @@ async function supportIn(env, st, m) {
   }
   const admins = await adminsOf(env, st);
   const rec = (await st.get('c:' + chat)) || { hist: [] };
+  if ((text === '/anketa' || text === '/tolov') && ORDER_ON(env) && !env.MAIN) return orderRedirect(env, chat, text === '/tolov' ? 'pay' : 'order');
   if (text === '/anketa') return flowStart(env, st, chat, rec);
   if (text === '/sayt') return siteAsk(env, st, chat, rec);
   if (text === '/uchrashuv') return bookStart(env, st, chat);
@@ -488,6 +499,8 @@ async function handleCallback(env, st, q) {
     await ans(pcm[1] === 'pc' ? 'Tasdiqlandi' : 'Rad etildi');
     return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: { inline_keyboard: [[{ text: pcm[1] === 'pc' ? '✅ Tasdiqlandi' : '❌ Rad etildi', callback_data: 'noop' }]] } });
   }
+  const psm = /^ps:(\w+)$/.exec(d); if (psm) { await ans(); return resendInvoice(env, st, chat, psm[1]); }
+  if ((d === 'm:order' || d === 'm:pay') && ORDER_ON(env) && !env.MAIN) { await ans(); return orderRedirect(env, chat, d === 'm:pay' ? 'pay' : 'order'); }
   if (d === 'm:order') { await ans(); return flowStart(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who({ from: q.from }) }); }
   const oc = /^o:(svc|dl|bd):(\d+)$/.exec(d);
   if (oc) { await ans(); return flowCallback(env, st, q, oc[1], oc[2]); }
@@ -545,7 +558,7 @@ async function handleUpdate(env, upd) {
     return say(env, chat, "✅ <b>Admin sifatida kirdingiz.</b>\nMijoz xabarlari va sayt so'rovlari shu yerga keladi. Mijozga javob berish uchun xabarga <b>reply</b> qiling.\n/auto on|off — avtomatik javob\n/logout — chiqish");
   }
   const admins = await adminsOf(env, st);
-  if (!admins.includes(chat)) { if (cmd === '/tolov') return startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who(m) }); return supportIn(env, st, m); }
+  if (!admins.includes(chat)) { if (cmd === '/tolov') return ORDER_ON(env) ? orderRedirect(env, chat, 'pay') : startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who(m) }); return supportIn(env, st, m); }
   if (cmd === '/logout') { await st.put('admins', ((await st.get('admins')) || []).filter((x) => x !== chat)); return say(env, chat, 'Chiqdingiz. Qayta kirish uchun /login.'); }
   if (cmd === '/auto') {
     if (/^(on|yoq|yoqish|1)$/i.test(arg)) await st.put('auto', 'on'); else if (/^(off|o'?chir|ochir|0)$/i.test(arg)) await st.put('auto', 'off');
@@ -554,6 +567,13 @@ async function handleUpdate(env, upd) {
   }
   if (m.reply_to_message && !text.startsWith('/') && await supportOut(env, st, m)) return;
   if (m.reply_to_message && !text && await supportOut(env, st, m)) return;
+  if (cmd === '/promokod') {
+    const pm2 = /^([A-Za-z0-9_-]{3,20})\s+(\d{1,2}|off)$/.exec(arg); if (!pm2) return say(env, chat, "Format: <code>/promokod YOZ10 10</code> (10% chegirma), o'chirish: <code>/promokod YOZ10 off</code>\nHavola: https://t.me/" + ORDER_USER(env) + "?start=svc0_YOZ10");
+    const code = pm2[1].toUpperCase(); if (pm2[2] === 'off') { await st.put('promo:' + code, null, 60); return say(env, chat, `🗑 ${esc(code)} o'chirildi.`); }
+    const old = (await st.get('promo:' + code)) || {}; await st.put('promo:' + code, { pct: Number(pm2[2]), used: old.used || 0, t: Date.now() }, 0, { pct: Number(pm2[2]), used: old.used || 0 });
+    return say(env, chat, `🎁 Promo-kod <b>${esc(code)}</b>: −${pm2[2]}%\nMijozga havola: https://t.me/${ORDER_USER(env)}?start=svc0_${esc(code)}\nyoki botda: <code>/promo ${esc(code)}</code>`);
+  }
+  if (cmd === '/promokodlar') { const ks = (await st.list('promo:')).filter((k) => k.metadata); return say(env, chat, ks.length ? '🎁 <b>Promo-kodlar</b>\n' + ks.map((k) => `• ${esc(k.name.slice(6))}: −${k.metadata.pct}% · ishlatilgan: ${k.metadata.used || 0}`).join('\n') : "Promo-kod yo'q. Yaratish: /promokod YOZ10 10"); }
   if (cmd === '/mijozlar') {
     const flt = arg.replace(/^#/, '').toLowerCase().trim(), ks = (await st.list('c:')).map((k) => ({ id: k.name.slice(2), ...(k.metadata || {}) })).filter((k) => !flt || String(k.g || '').split(',').includes(flt)).sort((a, b) => (b.t || 0) - (a.t || 0)).slice(0, 12);
     return say(env, chat, ks.length ? `👥 <b>Oxirgi mijozlar</b> (7 kun${flt ? ', #' + esc(flt) : ''})\n` + ks.map((k) => `• <b>${esc(k.n || 'Mijoz')}</b> <code>${k.id}</code>${k.p ? ' · ' + esc(k.p) : ''}${k.g ? ' · ' + String(k.g).split(',').map((x) => '#' + esc(x)).join(' ') : ''} · ${hm(k.t || 0)}`).join('\n') + '\n\nJavob: <code>/javob ID matn</code> · Teg: <code>/teg ID issiq</code>' : "Hozircha mijoz yo'q.");
@@ -607,6 +627,7 @@ async function handleUpdate(env, upd) {
     const cnt = {}; for (let i = 0; i < 7; i++) for (const k of await st.list(`ev:${dkey(Date.now() - i * 864e5)}:`)) { const e = k.metadata; if (e && e.k === 'start' && e.x) cnt[e.x] = (cnt[e.x] || 0) + 1; }
     return say(env, chat, 'Format: <code>/havola instagram</code>\n\n' + (Object.keys(cnt).length ? '📈 7 kun manbalari: ' + Object.entries(cnt).map(([k, v]) => `${esc(k)} ${v}`).join(' · ') : "Hozircha manba bo'yicha mijoz yo'q."));
   }
+  if (cmd === '/panel' && !(await isOwner(env, st, chat))) return say(env, chat, "Bu panel faqat bot egasi uchun.");
   if (cmd === '/panel') { if (!ENV_ORIGIN) return say(env, chat, 'Panel manzili hali aniqlanmadi, /setup ni oching.'); return say(env, chat, '📱 Admin panelini oching:', { reply_markup: { inline_keyboard: [[{ text: '📊 Panel', web_app: { url: PANEL_URL(env) } }]] } }); }
   if (cmd === '/mijozlar') { const us = (await st.list('u:')).map((k) => k.metadata).filter(Boolean).sort((a, b) => b.t - a.t); return say(env, chat, `👥 <b>Ro'yxatdan o'tgan mijozlar: ${us.length}</b>\n` + (us.slice(0, 40).map((u, i) => `${i + 1}. ${esc(u.n)} · ${esc(u.p)} · ${new Date(u.t + TZ).toISOString().slice(0, 10)}`).join('\n') || 'Hali yo\'q') + (us.length > 40 ? '\n… to\'liq ro\'yxat: /zaxira' : '') + '\n\nℹ️ Parollar xeshlangan holda saqlanadi, ularni hech kim (men ham) ko\'ra olmaydi. Mijoz parolni unutsa: /parolber <telefon>'); }
   if (cmd === '/parolber') { const k = pDigits(arg).slice(-9), uid = k ? await st.get('up:' + k) : null, u = uid ? await st.get('u:' + uid) : null; if (!u) return say(env, chat, "Bunday mijoz topilmadi. Format: /parolber 901234567"); const np = pRnd(4); u.salt = pRnd(16); u.it = 10000; u.hash = await pwHash(env, np, u.salt, 10000); await st.put('u:' + u.id, u, 0, uMeta(u)); return say(env, chat, `🔑 ${esc(u.name)} uchun yangi vaqtinchalik parol: <code>${np}</code>\nMijozga yuboring, kirgach almashtirsin.`); }
@@ -626,8 +647,9 @@ async function handleUpdate(env, upd) {
   }
   if (cmd === '/tolov') {
     const mm = /^(\d[\d\s]{2,12})\s*([\s\S]{0,100})$/.exec(arg), uzs = mm ? Number(mm[1].replace(/\s/g, '')) : 0;
+    if ((!uzs || uzs < 1000) && ORDER_ON(env)) return say(env, chat, `Mijozga to'lov havolasi: <code>/tolov 2500000 Vizitka sayt, Aziz</code>\nO'zingiz sinash uchun: @${ORDER_USER(env)}`);
     if (!uzs || uzs < 1000) return startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who(m) }, "\n\n<i>Admin: mijozga to'lov havolasi yuborish uchun</i> <code>/tolov 2500000 Vizitka sayt, Aziz</code>");
-    if (GP_ON(env) && !env.PAYME_MERCHANT_ID) { const pg = await createPayOrder(env, st, uzs, mm[2]), lk = await gpLink(env, pg, "Impro IT: to'lov"); return say(env, chat, lk.url ? `💳 <b>To'lov havolasi</b> · ${sum(pg.uzs)} so'm\n#${pg.id}${pg.note ? '\n📝 ' + esc(pg.note) : ''}\n\n${lk.url}\n\nMijozga yuboring: Telegram ichida to'laydi, to'lov o'zi tasdiqlanadi.` : `Havola yaratilmadi: ${esc(lk.error)}`); }
+    if (GP_ON(env) && !env.PAYME_MERCHANT_ID) { const pg = await createPayOrder(env, st, uzs, mm[2]), lk = await gpLink(payEnv(env), pg, "Impro IT: to'lov"); return say(env, chat, lk.url ? `💳 <b>To'lov havolasi</b> · ${sum(pg.uzs)} so'm\n#${pg.id}${pg.note ? '\n📝 ' + esc(pg.note) : ''}\n\n${lk.url}\n\nMijozga yuboring: Telegram ichida to'laydi, to'lov o'zi tasdiqlanadi.` : `Havola yaratilmadi: ${esc(lk.error)}`); }
     const hasClick = !!(env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY);
     if (!env.PAYME_MERCHANT_ID && hasClick) { const pc = await createPayOrder(env, st, uzs, mm[2]); return say(env, chat, `💳 <b>Click to'lov havolasi</b> · ${sum(pc.uzs)} so'm\n#${pc.id}${pc.note ? '\n📝 ' + esc(pc.note) : ''}\n\n${clickUrl(env, pc)}\n\nShu havolani mijozga yuboring. To'lov tushganda bu yerga xabar keladi.`); }
     if (!env.PAYME_MERCHANT_ID) { if (!env.CARD_INFO) return say(env, chat, "Na Payme, na karta sozlanmagan (PAYME_MERCHANT_ID yoki CARD_INFO)."); return say(env, chat, `💳 <b>Mijozga yuboring</b> (${sum(uzs)} so'm):\n\nTo'lov: <b>${sum(uzs)} so'm</b>${mm[2] ? ' · ' + esc(mm[2]) : ''}\n${esc(env.CARD_INFO)}\n\nO'tkazgach chek rasmini @${(await tg(env, 'getMe', {}) || {}).username || 'improsupport_bot'} ga yuboring.`); }
@@ -743,14 +765,14 @@ async function verifyInit(env, initData) {
     const str = [...p.entries()].sort(([a], [b]) => (a < b ? -1 : 1)).map(([k, v]) => `${k}=${v}`).join('\n'), enc = new TextEncoder();
     const hmac = async (key, data) => new Uint8Array(await crypto.subtle.sign('HMAC', await crypto.subtle.importKey('raw', key, { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']), enc.encode(data)));
     let good = false;
-    for (const tok of [env.TG_TOKEN, env.APP_BOT_TOKEN].filter(Boolean)) { const hex = [...(await hmac(await hmac(enc.encode('WebAppData'), tok), str))].map((b) => b.toString(16).padStart(2, '0')).join(''); if (tEq(hex, hash)) good = true; }
+    for (const tok of [env.TG_TOKEN, env.APP_BOT_TOKEN, env.ORDER_BOT_TOKEN].filter(Boolean)) { const hex = [...(await hmac(await hmac(enc.encode('WebAppData'), tok), str))].map((b) => b.toString(16).padStart(2, '0')).join(''); if (tEq(hex, hash)) good = true; }
     if (!good || Date.now() / 1000 - Number(p.get('auth_date') || 0) > 86400) return null;
     return JSON.parse(p.get('user') || 'null');
   } catch { return null; }
 }
 async function appApi(req, env) {
   const st = store(env), json = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
-  const u = await verifyInit(env, req.headers.get('X-Init-Data') || ''); if (!u || !(await adminsOf(env, st)).includes(Number(u.id))) return json({ error: "Ruxsat yo'q" }, 403);
+  const u = await verifyInit(env, req.headers.get('X-Init-Data') || ''); if (!u || !(await isOwner(env, st, u.id))) return json({ error: "Ruxsat yo'q" }, 403);
   let b = {}; try { b = await req.json(); } catch { /* bo'sh */ }
   const now = Date.now();
   if (b.action === 'summary') {
@@ -817,6 +839,19 @@ async function calcCallback(env, st, q, arg) {
   return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: calcKb(rec.calc) });
 }
 // Sog'liq nazorati: webhook yo'qolsa yoki Telegram xato bersa adminga xabar (6 soatda bir marta), imkon bo'lsa o'zi tuzatadi
+async function healthOrder(env, st, admins, now) { // buyurtma boti webhook'i: yo'qolsa o'zi tiklaydi, bo'lmasa egasiga xabar
+  if (!ORDER_ON(env)) return;
+  try {
+    const e2 = orderEnv(env), wi = await tg(e2, 'getWebhookInfo', {}); let problem = '';
+    if (!wi) problem = "Buyurtma boti bilan aloqa yo'q (token bekor qilingan bo'lishi mumkin)";
+    else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(e2, 'setWebhook', { url: o + '/hook2/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'] }); problem = r ? '' : "Buyurtma boti webhook'ini o'rnatib bo'lmadi"; } else problem = "Buyurtma boti webhook'i o'rnatilmagan"; }
+    else if (wi.last_error_date && now / 1000 - wi.last_error_date < 600) problem = 'Buyurtma botida yetkazish xatosi: ' + String(wi.last_error_message || '').slice(0, 120);
+    if (!problem) { await st.put('hlo:ok', now, 3600); return; }
+    if (await st.get('hlo:alert')) return; await st.put('hlo:alert', 1, 6 * 3600);
+    for (const a of admins) await say(env, a, '🩺 <b>Buyurtma boti: muammo</b>\n' + esc(problem) + "\nMijozlar buyurtma bera olmasligi mumkin!");
+    await pushPhone(env, 'Buyurtma boti muammosi', problem, 5, 'warning');
+  } catch { /* nazorat o'zi ishni to'xtatmasin */ }
+}
 async function health(env, st, admins, now) {
   try {
     const wi = await tg(env, 'getWebhookInfo', {}); let problem = ''; if (wi && typeof wi !== 'object') return;
@@ -1032,12 +1067,13 @@ async function gpPaid(env, m) {
   if (p.state === 'paid') return;
   p.state = 'paid'; p.paidAt = Date.now(); p.ref = 'gp:' + (sp.provider_payment_charge_id || sp.telegram_payment_charge_id || ''); await payOrderPut(st, p); await markProjectPaid(st, p);
   const chat = m.chat.id, who2 = [m.from && m.from.first_name, m.from && m.from.username && '@' + m.from.username].filter(Boolean).join(' ');
-  if (p.kind === 'order') { const rec = (await st.get('c:' + p.chat)) || {}; addTag(rec, 'tolagan'); await saveRec(st, p.chat, rec); await ev(st, { k: 'pay', c: p.chat, n: p.cname || 'Mijoz', x: sum(p.uzs) + " so'm, buyurtma" }); await say(env, chat, `✅ <b>To'lov qabul qilindi: buyurtmangiz qabul qilindi!</b>\n${esc(p.note || '')}\nMutaxassisimiz tez orada ${esc(p.phone || 'siz')} raqami bo'yicha bog'lanadi.`); for (const a of await adminsOf(env, st)) await say(env, a, `💳✅ <b>Buyurtma TO'LANDI</b> · ${sum(p.uzs)} so'm\n👤 ${esc(p.cname || who2)} <code>${p.chat}</code> · ${esc(p.phone || '')}\n${esc(p.note || '')}`); return; }
+  if (p.kind === 'order') { const rec = (await st.get('c:' + p.chat)) || {}; addTag(rec, 'tolagan'); await saveRec(st, p.chat, rec); await ev(st, { k: 'pay', c: p.chat, n: p.cname || 'Mijoz', x: sum(p.uzs) + " so'm, buyurtma" }); await say(env, chat, `🧾 <b>Kvitansiya</b> #${p.id}\n${esc(p.note || '')}\n💰 ${sum(p.uzs)} so'm · ${new Date(Date.now() + TZ).toISOString().slice(0, 16).replace('T', ' ')}\n\n✅ <b>To'lov qabul qilindi: buyurtmangiz qabul qilindi!</b>\nMutaxassisimiz tez orada ${esc(p.phone || 'siz')} raqami bo'yicha bog'lanadi.\n\nSavollar uchun: @improsupport_bot`, { reply_markup: { inline_keyboard: [[{ text: '🌐 Saytni ko\'rish', url: 'https://improuzbekiston.uz' }]] } }); await raiseUrgent(env, st, { chat: p.chat, name: p.cname || who2, phone: p.phone, text: `${p.note || ''} · ${sum(p.uzs)} so'm (to'langan)`, kind: 'order', title: "💳✅ <b>BUYURTMA TO'LANDI!</b>" }); await ev(st, { k: 'orderpaid', c: p.chat, n: p.cname || who2, x: sum(p.uzs) }); return; }
   if (p.botId) { await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Botingiz faollashtirildi. Saytga qaytib sahifani yangilang."); return; }
   if (p.projectId) await say(env, chat, "✅ <b>To'lov qabul qilindi.</b> Saytingizni endi joylash yoki yuklab olish mumkin. Saytga qaytib sahifani yangilang.");
   else { const rec = (await st.get('c:' + chat)) || {}; rec.payAmt = p.uzs; await saveRec(st, chat, rec); await confirmPay(env, st, chat, 'GlobalPay'); }
-  for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>GlobalPay: to'lov qabul qilindi</b>\n${sum(p.uzs)} so'm · ${esc(who2)}${p.projectId ? '\n🌐 Sayt sotib olindi' : ''}\n${esc(p.note || '')}`);
+  for (const a of await adminsOf(env, st)) await say(AE(env), a, `💳 <b>GlobalPay: to'lov qabul qilindi</b>\n${sum(p.uzs)} so'm · ${esc(who2)}${p.projectId ? '\n🌐 Sayt sotib olindi' : ''}\n${esc(p.note || '')}`);
 }
+const orderRedirect = (env, chat, start) => say(env, chat, `📝 <b>Buyurtma va to'lov</b> endi alohida botda: @${ORDER_USER(env)}\nXizmatni tanlang, summani ko'ring va shu yerning o'zida to'lang. To'lovdan keyin buyurtmangiz darrov qabul qilinadi.`, { reply_markup: { inline_keyboard: [[{ text: start === 'pay' ? "💳 To'lov qilish" : '📝 Buyurtma berish', url: ORDER_LINK(env, start === 'pay' ? 'order' : 'order') }]] } });
 async function startPay(env, st, chat, rec, hint) {
   if (!env.CARD_INFO && !GP_ON(env)) return say(env, chat, "To'lov rekvizitlari hozir mavjud emas. Mutaxassisimiz siz bilan bog'lanib, to'lov usulini aytadi.");
   rec.flow = { step: 'payamt', d: {} }; await saveRec(st, chat, rec);
@@ -1052,10 +1088,10 @@ export default {
       if (!env.WEBHOOK_SECRET || !env.TG_TOKEN) return new Response('TG_TOKEN va WEBHOOK_SECRET kerak', { status: 400 });
       try { await store(env).put('origin', url.origin); } catch { /* ixtiyoriy */ }
       const wr = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/setWebhook`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ url: `${url.origin}/hook/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'], drop_pending_updates: false }) }), wj = await wr.json().catch(() => ({})), w = wj.ok ? wj.result : null;
-      await tg(env, 'setChatMenuButton', { chat_id: Number(String(env.TG_CHAT || '').split(',')[0]) || undefined, menu_button: { type: 'web_app', text: 'Panel', web_app: { url: PANEL_URL(env) } } });
+      await tg(env, 'setChatMenuButton', { menu_button: { type: 'commands' } }); for (const o of owners(env)) await tg(env, 'setChatMenuButton', { chat_id: o, menu_button: { type: 'web_app', text: 'Panel', web_app: { url: PANEL_URL(env) } } }); // Panel tugmasi faqat egada
       await tg(env, 'setMyCommands', { commands: [{ command: 'start', description: 'Boshlash' }] });
-      let gp = {}; for (const k of ['gp', 'click']) if (GP_ON(env, k)) { const probe = await gpLink(env, { id: 'probe', uzs: 1000, note: 'sinov' }, 'Sinov', k); gp[k] = probe.url ? 'ok' : probe.error; try { await store(env).put('gpok:' + k, probe.url ? 1 : 0); } catch { /* ixtiyoriy */ } }
-      let app = null; if (env.APP_BOT_TOKEN) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const w2 = await tg(e2, 'setWebhook', { url: `${url.origin}/hook2/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message'] }); await tg(e2, 'setChatMenuButton', { menu_button: { type: 'web_app', text: 'Panel', web_app: { url: PANEL_URL(env) } } }); await tg(e2, 'setMyCommands', { commands: [{ command: 'start', description: 'Admin panelni ochish' }] }); const m2 = await tg(e2, 'getMe', {}); app = { bot: m2 && m2.username, webhook: !!w2 }; }
+      let gp = {}; for (const k of ['gp', 'click']) if (GP_ON(env, k)) { const probe = await gpLink(payEnv(env), { id: 'probe', uzs: 1000, note: 'sinov' }, 'Sinov', k); gp[k] = probe.url ? 'ok' : probe.error; try { await store(env).put('gpok:' + k, probe.url ? 1 : 0); } catch { /* ixtiyoriy */ } }
+      let app = null; if (ORDER_ON(env)) { const e2 = orderEnv(env); const w2 = await tg(e2, 'setWebhook', { url: `${url.origin}/hook2/${env.WEBHOOK_SECRET}`, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'], drop_pending_updates: false }); await tg(e2, 'setChatMenuButton', { menu_button: { type: 'commands' } }); await tg(e2, 'setMyCommands', { commands: [{ command: 'start', description: 'Boshlash' }, { command: 'buyurtma', description: 'Buyurtma berish' }, { command: 'tariflar', description: 'Tariflar' }, { command: 'tolov', description: "To'lov qilish" }, { command: 'menu', description: 'Menyu' }] }); const m2 = await tg(e2, 'getMe', {}); app = { bot: m2 && m2.username, webhook: !!w2 }; }
       const me = await tg(env, 'getMe', {});
       return new Response(JSON.stringify({ webhook: !!w, app, globalpay: gp, ...(w ? {} : { error: wj.description || 'noma\'lum' }), bot: me && me.username, store: env.DB ? 'd1' : env.STATE ? 'kv' : 'xotira', ai: env.ANTHROPIC_API_KEY ? 'claude' : env.AI ? 'workers-ai' : false }), { headers: { 'content-type': 'application/json' } });
     }
@@ -1066,11 +1102,10 @@ export default {
       if (ctx && ctx.waitUntil) ctx.waitUntil(work); else await work;
       return new Response('ok');
     }
-    if (url.pathname.startsWith('/hook2/') && env.APP_BOT_TOKEN) { // ikkinchi bot: faqat Mini App (admin panel) ochadi
+    if (url.pathname.startsWith('/hook2/') && ORDER_ON(env)) { // buyurtma boti (@improuzbekiston_bot): buyurtma va to'lov
       if (req.method !== 'POST' || !env.WEBHOOK_SECRET || !tEq(url.pathname.slice(7), env.WEBHOOK_SECRET) || !tEq(req.headers.get('X-Telegram-Bot-Api-Secret-Token') || '', env.WEBHOOK_SECRET)) return new Response('no', { status: 403 });
       let upd; try { upd = await req.json(); } catch { return new Response('ok'); }
-      const cid = upd && upd.message && upd.message.chat && upd.message.chat.id;
-      if (cid) { const e2 = { ...env, TG_TOKEN: env.APP_BOT_TOKEN }; const ok = (await adminsOf(env, store(env))).includes(Number(upd.message.from && upd.message.from.id)); const w = tg(e2, 'sendMessage', { chat_id: cid, text: ok ? '📱 Admin panelni oching:' : "Bu bot faqat Impro IT adminlari uchun. Savollar: @improsupport_bot", ...(ok ? { reply_markup: { inline_keyboard: [[{ text: '📱 Admin panel', web_app: { url: PANEL_URL(env) } }]] } } : {}) }).catch(() => {}); if (ctx && ctx.waitUntil) ctx.waitUntil(w); else await w; }
+      const work = handleOrderUpdate(env, upd).catch(() => {}); if (ctx && ctx.waitUntil) ctx.waitUntil(work); else await work;
       return new Response('ok');
     }
     if (url.pathname.startsWith('/app/') && req.method === 'GET') { const r = await tbMiniApp(env, url); if (r) return r; }

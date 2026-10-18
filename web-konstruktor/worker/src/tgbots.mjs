@@ -185,7 +185,7 @@ async function tbMyApi(req, env, ctx, st, J, body, me, pn, origin) {
     const info = tbPriceInfo(bot, pr); if (!info.dueKeys.length) return J({ paid: true });
     const b = await body(4096), pay = await createPayOrder(env, st, info.uzs, `Bot @${bot.username}: ${info.dueKeys.join('+')} (${me.name} ${me.phone})`); pay.botId = bot.id; pay.ownerId = me.id; pay.parts = info.dueKeys; await payOrderPut(st, pay);
     const kind = b.method === 'clicktg' ? 'click' : b.method === 'globalpay' ? 'gp' : '';
-    if (kind && GP_ON(env, kind)) { const g = await gpLink(env, pay, 'Impro IT: Telegram bot', kind); if (g.url) return J({ payment: { id: pay.id, usd: info.dueUsd, uzs: info.uzs }, payUrl: g.url }); return J({ error: "Karta orqali to'lov hozir ishlamayapti. Boshqa usulni tanlang." }, 502); }
+    if (kind && GP_ON(env, kind)) { const g = await gpLink(payEnv(env), pay, 'Impro IT: Telegram bot', kind); if (g.url) return J({ payment: { id: pay.id, usd: info.dueUsd, uzs: info.uzs }, payUrl: g.url }); return J({ error: "Karta orqali to'lov hozir ishlamayapti. Boshqa usulni tanlang." }, 502); }
     for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Bot sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🤖 @${esc(bot.username)} · ${esc(info.dueKeys.join(', '))}\n💰 $${info.dueUsd} · ${sum(info.uzs)} so'm · #${pay.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pb:' + bot.id + ':' + info.dueKeys.join('.') }]] } });
     return J({ manual: true, payment: { id: pay.id, usd: info.dueUsd, uzs: info.uzs }, contacts: SITE.contacts || {}, text: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '' });
   }

@@ -93,7 +93,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
       ok(tgc.some((c) => c.method === 'sendMessage' && c.body.chat_id === 7 && /to'lov kutilmoqda/.test(c.body.text)) && tgc.some((c) => c.body.chat_id === 888 && /qabul qilinadi/.test(c.body.text || '')), 'buyurtma: adminga "kutilmoqda", mijozga "to\'lovdan keyin qabul"');
       const S3 = W.store(env), pay3 = (await Promise.all((await S3.list('po:')).map((k) => S3.get(k.name)))).find((q) => q.kind === 'order');
       tgc.length = 0; await W.handleUpdate(env, { message: { message_id: 13, chat: { id: 888, type: 'private' }, from: { id: 888, first_name: 'Buyurtmachi' }, successful_payment: { currency: 'UZS', total_amount: pay3.uzs * 100, invoice_payload: 'po:' + pay3.id, telegram_payment_charge_id: 'x1' } } });
-      ok(tgc.some((c) => c.body.chat_id === 888 && /buyurtmangiz qabul qilindi/.test(c.body.text || '')) && tgc.some((c) => c.body.chat_id === 7 && /Buyurtma TO'LANDI/.test(c.body.text || '')), 'buyurtma: tolovdan keyin qabul qilindi va admin xabardor');
+      ok(tgc.some((c) => c.body.chat_id === 888 && /buyurtmangiz qabul qilindi/.test(c.body.text || '')) && tgc.some((c) => c.body.chat_id === 7 && /BUYURTMA TO'LANDI/.test(c.body.text || '')), 'buyurtma: tolovdan keyin qabul qilindi va admin xabardor');
     }
     delete env.GLOBALPAY_TOKEN; delete env.CLICK_TG_TOKEN;
   }
