@@ -1,0 +1,12 @@
+{
+  "appId": "uz.improuzbekiston.app",
+  "appName": "Impro IT",
+  "webDir": "www",
+  "backgroundColor": "#05070f",
+  "ios": { "contentInset": "never", "backgroundColor": "#05070f", "limitsNavigationsToAppBoundDomains": false },
+  "android": { "backgroundColor": "#05070f" },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#05070f", "showSpinner": false },
+    "StatusBar": { "style": "DARK", "backgroundColor": "#05070f" }
+  }
+}

@@ -32,6 +32,7 @@ async function limited(st, key, max, sec, failClosed) { try { const now = Date.n
 const tEq = (a, b) => { a = String(a); b = String(b); if (a.length !== b.length) return false; let d = 0; for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; };
 
 /* ---------- Kunlik hisobot va shoshilinch eslatmalar ---------- */
+const APP_ORIGINS = ['capacitor://localhost', 'https://localhost', 'http://localhost']; // iOS/Android ilova (Capacitor)
 const TZ = 5 * 3600e3; // Toshkent UTC+5
 const tz = (t = Date.now()) => new Date(t + TZ);
 const dkey = (t = Date.now()) => tz(t).toISOString().slice(0, 10);
@@ -304,7 +305,7 @@ const adminName = (q) => who({ from: q.from || q }) || 'Admin';
 // Sayt chati API (CORS: faqat ruxsat etilgan saytlar)
 async function chatApi(req, env) {
   const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || '').split(',').map((x) => x.trim()).filter(Boolean);
-  if (!allow.length) allow.push('https://improuzbekiston.uz', 'https://www.improuzbekiston.uz');
+  if (!allow.length) allow.push('https://improuzbekiston.uz', 'https://www.improuzbekiston.uz'); allow.push(...APP_ORIGINS);
   const okOrigin = allow.includes(origin), cors = { 'Access-Control-Allow-Origin': okOrigin ? origin : 'null', 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
   const json = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: { ...cors, 'Content-Type': 'application/json' } });
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
@@ -596,7 +597,7 @@ async function handleUpdate(env, upd) {
 /* ---------- Statik saytdan kelgan so'rov ---------- */
 async function relay(req, env) {
   const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || '').split(',').map((x) => x.trim()).filter(Boolean);
-  if (!allow.length) allow.push('https://improuzbekiston.uz', 'https://www.improuzbekiston.uz'); // sozlanmagan bo'lsa ham begona saytlarga yopiq
+  if (!allow.length) allow.push('https://improuzbekiston.uz', 'https://www.improuzbekiston.uz'); allow.push(...APP_ORIGINS); // sozlanmagan bo'lsa ham begona saytlarga yopiq
   const okOrigin = allow.includes(origin);
   const cors = { 'Access-Control-Allow-Origin': okOrigin ? origin || '*' : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
@@ -788,7 +789,7 @@ async function health(env, st, admins, now) {
 // Sayt xatolari: brauzerdan keladi, takrorlari sanaladi, yangisi adminga xabar bo'ladi
 const hash36 = (str) => { let h = 5381; for (let i = 0; i < str.length; i++) h = ((h << 5) + h + str.charCodeAt(i)) | 0; return (h >>> 0).toString(36); };
 async function errApi(req, env) {
-  const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz').split(',').map((x) => x.trim()), okO = allow.includes(origin);
+  const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz').split(',').map((x) => x.trim()).concat(APP_ORIGINS), okO = allow.includes(origin);
   const cors = { 'Access-Control-Allow-Origin': okO ? origin : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', Vary: 'Origin' };
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
   if (req.method !== 'POST' || !okO) return new Response('no', { status: 403, headers: cors });
@@ -816,7 +817,7 @@ async function errApi(req, env) {
 
 // Ommaviy jonli ko'rsatkichlar (faqat yig'ma sonlar, shaxsiy ma'lumotsiz): investor sahifasi uchun
 async function statsApi(req, env) {
-  const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz').split(',').map((x) => x.trim());
+  const origin = req.headers.get('Origin') || '', allow = String(env.ALLOW_ORIGIN || 'https://improuzbekiston.uz,https://www.improuzbekiston.uz').split(',').map((x) => x.trim()).concat(APP_ORIGINS);
   const cors = { 'Access-Control-Allow-Origin': allow.includes(origin) ? origin : 'https://improuzbekiston.uz', Vary: 'Origin', 'Cache-Control': 'public, max-age=300', 'Content-Type': 'application/json' };
   const st = store(env); if (await limited(st, 'sip:' + (req.headers.get('CF-Connecting-IP') || 'x'), 30, 600)) return new Response('{}', { status: 429, headers: cors });
   const days = []; let all = [];

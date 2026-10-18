@@ -1,0 +1,43 @@
+name: iOS → TestFlight
+# Qo'lda ishga tushiriladi: Actions → "iOS → TestFlight" → Run workflow.
+# Kerakli Secrets: APPSTORE_KEY_ID, APPSTORE_ISSUER_ID, APPSTORE_KEY_P8 (.p8 faylning base64 ko'rinishi), APPLE_TEAM_ID
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: macos-14
+    timeout-minutes: 60
+    defaults: { run: { working-directory: web-konstruktor/app } }
+    env:
+      KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: node ../tools/app-web.js && npx cap sync ios
+      - name: API kalitni joylash
+        run: |
+          mkdir -p ~/private_keys
+          echo "${{ secrets.APPSTORE_KEY_P8 }}" | base64 --decode > ~/private_keys/AuthKey_${KEY_ID}.p8
+      - name: Archive
+        working-directory: web-konstruktor/app/ios/App
+        run: |
+          xcodebuild -workspace App.xcworkspace -scheme App -configuration Release -destination 'generic/platform=iOS' \
+            -archivePath $RUNNER_TEMP/App.xcarchive archive \
+            DEVELOPMENT_TEAM=$TEAM_ID CURRENT_PROJECT_VERSION=${{ github.run_number }} MARKETING_VERSION=1.0.0 \
+            -allowProvisioningUpdates -authenticationKeyPath ~/private_keys/AuthKey_${KEY_ID}.p8 \
+            -authenticationKeyID $KEY_ID -authenticationKeyIssuerID $ISSUER_ID
+      - name: IPA eksport
+        working-directory: web-konstruktor/app/ios/App
+        run: |
+          cat > $RUNNER_TEMP/export.plist <<PLIST
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0"><dict><key>method</key><string>app-store-connect</string><key>teamID</key><string>$TEAM_ID</string><key>signingStyle</key><string>automatic</string><key>uploadSymbols</key><true/></dict></plist>
+          PLIST
+          xcodebuild -exportArchive -archivePath $RUNNER_TEMP/App.xcarchive -exportPath $RUNNER_TEMP/out -exportOptionsPlist $RUNNER_TEMP/export.plist \
+            -allowProvisioningUpdates -authenticationKeyPath ~/private_keys/AuthKey_${KEY_ID}.p8 -authenticationKeyID $KEY_ID -authenticationKeyIssuerID $ISSUER_ID
+      - name: TestFlight'ga yuklash
+        run: xcrun altool --upload-app -f $RUNNER_TEMP/out/App.ipa -t ios --apiKey $KEY_ID --apiIssuer $ISSUER_ID
