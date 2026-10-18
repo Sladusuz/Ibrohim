@@ -35,7 +35,8 @@ async function callOwner(env, st, text, now = Date.now()) {
   const to = String(env.CALL_USER || '').trim(); if (!to) return false;
   const h = tz(now).getUTCHours(); if ((h < 8 || h >= 22) && !env.CALL_ANYTIME) return false;
   if (await limited(st, 'call:' + dkey(now), 8, 86400, true)) return false;
-  try { const r = await fetch(`http://api.callmebot.com/start.php?user=${to.replace(/[^+@\w]/g, '')}&text=${encodeURIComponent(String(text).replace(/\s+/g, ' ').trim().slice(0, 250))}&lang=${encodeURIComponent(env.CALL_LANG || 'uz-UZ-Standard-A')}&rpt=2&cc=no`, { signal: AbortSignal.timeout(20000) }); return r.ok; } catch { return false; }
+  try { const last = await st.get('call:last'); if (last && now - last < 70000) return false; await st.put('call:last', now, 600); } catch { /* CallMeBot: bir foydalanuvchiga 65 soniyada ikki qo'ng'iroq mumkin emas */ }
+  try { const r = await fetch(`http://api.callmebot.com/start.php?user=${to.replace(/[^+@\w]/g, '')}&text=${encodeURIComponent(String(text).replace(/\s+/g, ' ').trim().slice(0, 250))}&lang=${encodeURIComponent(env.CALL_LANG || 'ru-RU-Standard-A')}&rpt=2&cc=no`, { signal: AbortSignal.timeout(20000) }); return r.ok; } catch { return false; }
 }
 const spell = (p) => String(p || '').replace(/\D/g, '').split('').join(' '); // telefon raqamini raqam-raqam o'qitish uchun
 const REMIND = [10, 40, 100, 220, 460]; // daqiqalarda: javob berilmasa takroriy eslatma
@@ -45,7 +46,7 @@ async function raiseUrgent(env, st, { chat, name, phone, text }) {
   await st.put('ul', [...((await st.get('ul')) || []), id].slice(-50));
   await ev(st, { k: 'urgent', c: chat, n: name, p: phone, x: text });
   for (const a of await adminsOf(env, st)) await say(env, a, `🔥 <b>SHOSHILINCH mijoz!</b>\n👤 ${esc(name || 'Mijoz')}${phone ? ' · 📞 ' + esc(phone) : ''}${chat ? ` · <code>${chat}</code>` : ''}\n\n${esc(u.x)}\n\n${chat ? 'Javob berish uchun mijoz xabariga <b>reply</b> qiling. ' : ''}Javob berilmasa, eslatib turaman.`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ko'rdim, hal qilaman", callback_data: 'ok:' + id }]] } });
-  await callOwner(env, st, `Diqqat! Shoshilinch mijoz. ${name || 'Mijoz'}. ${phone ? 'Telefon ' + spell(phone) + '. ' : ''}${String(text || '').slice(0, 90)}. Telegramni oching.`);
+  await callOwner(env, st, `Внимание! Срочный клиент. ${name || ''}. ${phone ? 'Телефон ' + spell(phone) + '. ' : ''}Откройте Телеграм.`);
   return id;
 }
 async function closeUrgentOf(st, chat) { for (const id of (await st.get('ul')) || []) { const u = await st.get('u:' + id); if (u && !u.done && u.c === chat) { u.done = 1; await st.put('u:' + id, u, 2 * 86400); } } }
@@ -78,12 +79,12 @@ async function tick(env, now = Date.now()) {
     if (due === undefined) { u.done = 2; await st.put('u:' + id, u, 2 * 86400); continue; }
     if (age >= due && h >= 7) { // tunda (00:00-07:00) bezovta qilmaymiz
       for (const a of admins) await say(env, a, `⏰ <b>Eslatma:</b> shoshilinch mijozga ${Math.round(age)} daqiqadan beri javob berilmadi\n👤 ${esc(u.n || 'Mijoz')}${u.p ? ' · 📞 ' + esc(u.p) : ''}\n${esc(u.x.slice(0, 200))}`, { reply_markup: { inline_keyboard: [[{ text: "✅ Ko'rdim", callback_data: 'ok:' + id }]] } });
-      if (u.r === 1) await callOwner(env, st, `Eslatma. Shoshilinch mijozga ${Math.round(age)} daqiqadan beri javob berilmadi. ${u.n || 'Mijoz'}. ${u.p ? 'Telefon ' + spell(u.p) + '.' : ''}`, now);
+      if (u.r === 1) await callOwner(env, st, `Напоминание. Срочному клиенту не ответили ${Math.round(age)} минут. ${u.n || ''}. ${u.p ? 'Телефон ' + spell(u.p) + '.' : ''}`, now);
       u.r++; await st.put('u:' + id, u, 2 * 86400);
     }
   }
   await st.put('ul', keep);
-  if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await callOwner(env, st, `Kunlik hisobot. Mijoz suhbatlari ${S.chats}. Saytdan so'rovlar ${S.leads.length}. Shoshilinch ${S.urg.length}. Operator kerak bo'lgan ${S.hand.length}. Batafsil Telegramda.`, now); }
+  if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await callOwner(env, st, `Дневной отчёт. Диалогов ${S.chats}. Заявок с сайта ${S.leads.length}. Срочных ${S.urg.length}. Нужен оператор ${S.hand.length}. Подробности в Телеграме.`, now); }
 }
 
 /* ---------- Telegram ---------- */
@@ -172,7 +173,7 @@ async function handleUpdate(env, upd) {
   if (m.reply_to_message && !text && await supportOut(env, st, m)) return;
   if (cmd === '/qongiroq') {
     if (!env.CALL_USER) return say(env, chat, "Qo'ng'iroq sozlanmagan. Telegram raqamingizni (CALL_USER) kiritish va @CallMeBot_txtbot ga /start yozish kerak.");
-    const okc = await callOwner(env, st, "Sinov qo'ng'irog'i. Impro IT yordam boti ishlayapti.");
+    const okc = await callOwner(env, st, 'Тестовый звонок. Бот Импро ай ти работает.');
     return say(env, chat, okc ? "📞 Qo'ng'iroq yuborildi. Telegram qo'ng'irog'i kelishini kuting." : "Qo'ng'iroq yuborilmadi (tun 22:00-08:00, kunlik limit yoki @CallMeBot_txtbot ruxsati yo'q).");
   }
   if (cmd === '/hisobot') return say(env, chat, await report(env, st, /kecha/i.test(arg) ? dkey(Date.now() - 86400e3) : dkey()));
