@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="uz"><head><meta charset="utf-8"><title>Impro IT: klinikalar uchun video</title>
+<link rel="stylesheet" href="lib.css">
+<style>
+.ct{position:absolute;left:0;right:0;text-align:center}
+.sb{position:absolute;left:60px;right:60px;top:150px;height:130px;border-radius:70px;background:#1b1a23;border:3px solid #ffffff22;display:flex;align-items:center;gap:26px;padding:0 44px;font-size:48px;box-shadow:0 30px 90px #000a}
+.sb svg{width:52px;height:52px;stroke:#9a96a8;fill:none;stroke-width:3;stroke-linecap:round;flex:none}
+.rs{position:absolute;left:60px;right:60px;border-radius:40px;background:#17161d;border:2px solid #ffffff1a;padding:30px 40px;opacity:0}
+.rs b{display:block;font-size:44px;color:#8fc3ff}.rs small{display:block;font-size:30px;color:#6fbf8f;margin-top:4px}.rs span{display:block;font-size:34px;color:#b8b3c6;margin-top:8px}
+.rs.me{border:4px dashed #ff4d4d;background:#2a1215}.rs.me b{color:#ff6b6b}.rs.gold{border:4px solid #d8b46a;background:linear-gradient(145deg,#2a2112,#171109);box-shadow:0 0 120px #d8b46a44}.rs.gold b{color:#f1dfae}
+.nb{position:absolute;right:34px;top:26px;font-size:30px;font-weight:800;padding:8px 20px;border-radius:99px}
+#lostp{bottom:150px}#lostp small{display:block;font-size:40px;letter-spacing:4px;color:#9a96a8;text-transform:uppercase;font-weight:600}#lostp b{display:block;font-size:150px;font-weight:900;color:#ff4d4d;text-shadow:0 0 80px #ff4d4d66;font-variant-numeric:tabular-nums}
+.sc{position:absolute;left:0;right:0;top:0}
+.sec2{padding:36px 40px}.sec2 h3{font-size:54px;font-weight:900;color:#15110a;letter-spacing:-1px}
+.dc{display:flex;gap:22px;margin-top:22px;align-items:center;background:#f4f6fa;border-radius:30px;padding:20px}.dc i{width:120px;height:120px;border-radius:50%;background-size:cover;background-position:center;flex:none}.dc b{font-size:38px;color:#15110a;display:block}.dc span{font-size:30px;color:#6b7280}
+.sv2{display:flex;justify-content:space-between;font-size:38px;color:#15110a;padding:22px 0;border-bottom:2px solid #e5e7eb}.sv2 b{color:#0b6bcb}
+.fi2{margin-top:20px;height:104px;border-radius:26px;border:3px solid #cfd6e4;background:#fff;padding:0 30px;display:flex;align-items:center;font-size:40px;color:#15110a}
+.btn3{margin-top:26px;height:120px;border-radius:30px;background:linear-gradient(135deg,#1677ff,#0b4fcf);display:grid;place-items:center;color:#fff;font-size:46px;font-weight:800}
+.okp{position:absolute;left:40px;right:40px;top:560px;border-radius:44px;background:#e8fff1;border:5px solid #2dd36f;padding:50px 36px;text-align:center;box-shadow:0 40px 120px #000a;opacity:0;z-index:7}.okp b{display:block;font-size:56px;color:#0b8a3e}.okp span{display:block;font-size:36px;color:#3b6b50;margin-top:12px}
+.tick{width:150px;height:150px;border-radius:50%;background:#2dd36f;display:grid;place-items:center;font-size:96px;color:#fff;margin:0 auto 24px}
+</style></head>
+<body><div id="st">
+<div class="L" id="bg"></div>
+<div class="L" id="aur"><i id="au0" style="width:900px;height:900px;background:radial-gradient(circle,rgba(216,180,106,.8),rgba(216,180,106,0) 65%)"></i><i id="au1" style="width:900px;height:900px;background:radial-gradient(circle,rgba(40,120,255,.8),rgba(40,120,255,0) 65%)"></i><i id="au2" style="width:900px;height:900px;background:radial-gradient(circle,rgba(255,77,109,.8),rgba(255,77,109,0) 65%)"></i></div>
+
+<div class="L" id="s0">
+  <div class="sb" id="sbar"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span id="q"></span></div>
+  <div class="rs" id="r0" style="top:340px"><b>Salomat Klinika</b><small>★ 4.9 · Shifokorlar, narxlar, onlayn yozilish</small><span>Toshkent · Ochiq: 9:00–21:00</span></div>
+  <div class="rs" id="r1" style="top:640px"><b>Shifo Plus tibbiyot markazi</b><small>★ 4.8 · Xizmatlar va konsultatsiya</small><span>Bepul maslahat · Onlayn qabul</span></div>
+  <div class="rs" id="r2" style="top:940px"><b>Medical Center №1</b><small>★ 4.7 · Shifokorlar jamoasi</small><span>Sayt: tez yozilish tugmasi</span></div>
+  <div class="rs me" id="r3" style="top:1240px"><b>Sizning klinikangiz</b><span style="color:#ff9b9b;font-size:40px">Hech narsa topilmadi. Sayt yo'q.</span></div>
+  <div class="abs ct" id="lostp"><small>Bugun ketgan bemorlar</small><b id="lostpn">0</b></div>
+</div>
+<div class="L" id="s1">
+  <div class="kin" id="k1" style="top:520px;font-size:150px">BEMOR<br>AVVAL<br><span class="gold">QIDIRADI.</span></div>
+  <div class="kin" id="k2" style="top:560px;font-size:132px">SIZNI<br>TOPOLMASA…</div>
+  <div class="kin" id="k3" style="top:560px;font-size:158px">ISHONCH<br>YO'Q.</div>
+  <div class="kin red" id="k4" style="top:520px;font-size:136px">U<br>RAQOBATCHIGA<br>BORADI.</div>
+</div>
+<div class="L" id="s2">
+  <div id="ring"><i></i><i></i><i></i></div>
+  <div class="abs" id="mark">I</div>
+  <div class="abs" id="brand">Impro <span class="gold">IT</span></div>
+  <div class="abs" id="tag" style="font-size:88px">Sayt, klinikangizning<br><span class="gold">yangi qabul bo'limi.</span></div>
+</div>
+<div class="L" id="s3">
+  <div class="phone" id="ph" style="left:150px;top:190px;background:#fff">
+    <div class="abs" id="site" style="left:0;top:0;width:748px;height:1468px;overflow:hidden;background:#fff">
+      <div class="abs" style="left:0;right:0;top:0;height:170px;background:#fff;z-index:4;display:flex;align-items:center;padding:70px 36px 0;gap:18px;border-bottom:2px solid #eef0f5"><i style="width:56px;height:56px;border-radius:16px;background:#1677ff;color:#fff;display:grid;place-items:center;font-weight:900;font-size:34px;font-style:normal">S</i><b style="font-size:38px;color:#15110a">Salomat Klinika</b></div>
+      <div class="sc" id="scr" style="top:0">
+        <div style="height:860px;margin-top:170px;background:linear-gradient(180deg,#00000040,#000000c0),url(../public/img/p/klinika-1.jpg) center/cover;position:relative"><div style="position:absolute;left:44px;right:44px;top:250px;color:#fff"><div style="font-size:80px;font-weight:900;line-height:1;letter-spacing:-3px">Sog'lig'ingiz —<br>eng katta<br>boylik</div><div style="font-size:38px;margin-top:22px;opacity:.9">Tajribali shifokorlar va zamonaviy diagnostika</div><div style="margin-top:34px;display:inline-block;padding:26px 44px;border-radius:99px;background:#1677ff;font-size:40px;font-weight:800">Konsultatsiyaga yozilish</div></div></div>
+        <div class="sec2" style="background:#fff"><h3>Shifokorlarimiz</h3>
+          <div class="dc"><i style="background-image:url(../public/img/p/klinika-2.jpg)"></i><div><b>Dr. Madina Karimova</b><span>Terapevt · 12 yil tajriba</span></div></div>
+          <div class="dc"><i style="background-image:url(../public/img/p/klinika-3.jpg)"></i><div><b>Dr. Jasur Rahimov</b><span>Kardiolog · 15 yil tajriba</span></div></div>
+          <div class="dc"><i style="background-image:url(../public/img/p/klinika-4.jpg)"></i><div><b>Dr. Dilnoza Ergasheva</b><span>Pediatr · 9 yil tajriba</span></div></div></div>
+        <div class="sec2" style="background:#f8faff"><h3>Xizmatlar va narxlar</h3>
+          <div class="sv2"><span>Terapevt konsultatsiyasi</span><b>150 000</b></div><div class="sv2"><span>Kardiolog + EKG</span><b>280 000</b></div><div class="sv2"><span>Umumiy qon tahlili</span><b>90 000</b></div><div class="sv2"><span>Bolalar shifokori</span><b>160 000</b></div></div>
+        <div class="sec2" style="background:#fff"><h3>Konsultatsiyaga yozilish</h3>
+          <div class="fi2" id="f1"></div><div class="fi2" id="f2"></div><div class="btn3" id="bt">Yozilish →</div></div>
+      </div>
+      <div class="okp" id="okp"><div class="tick">✓</div><b>Arizangiz qabul qilindi</b><span>Shifokor siz bilan bog'lanadi</span></div>
+    </div>
+  </div>
+  <div class="chip" id="c1" style="top:92px">👨‍⚕️ Shifokorlar bir joyda</div>
+  <div class="chip" id="c2" style="top:92px">💰 Narxlar ochiq</div>
+  <div class="chip" id="c3" style="top:92px">📅 Onlayn yozilish</div>
+  <div class="chip" id="c4" style="top:1730px">🌙 24/7 ma'lumot beradi</div>
+  <div class="rip" id="rp" style="background:#ffffff88"></div>
+  <!-- natija: endi birinchi -->
+  <div class="rs gold" id="g0" style="top:420px"><b>Sizning klinikangiz</b><small>★ 4.9 · Shifokorlar, narxlar, onlayn yozilish</small><span>1-natija: bemor sizni topdi ✓</span><i class="nb" style="background:#2dd36f;color:#06210f;font-style:normal">1-o'rin</i></div>
+  <div class="ct" id="g1" style="top:200px;font-size:104px;font-weight:900;line-height:1;letter-spacing:-4px">Endi bemor<br><span class="gold">sizni topadi.</span></div>
+  <div class="rs" id="g2" style="top:760px"><b>Shifo Plus tibbiyot markazi</b><small>★ 4.8</small></div>
+  <div class="rs" id="g3" style="top:960px"><b>Medical Center №1</b><small>★ 4.7</small></div>
+</div>
+<div class="L" id="s4">
+  <div class="abs" id="t4" style="left:50px;right:50px;top:180px;text-align:center;font-size:100px;font-weight:900;line-height:1;letter-spacing:-4px">Klinika uchun<br><span class="gold">tayyor shablon.</span></div>
+  <div class="cmp" id="cA" style="top:560px;background:linear-gradient(145deg,#2a2112,#171109);border:4px solid #d8b46a;box-shadow:0 0 160px #d8b46a44"><h4 style="color:#e6d3a3">IMPRO IT · SAYT</h4><div class="pr gold" style="font-size:170px">$10 dan</div><div class="d" style="color:#e6d3a3">Shifokorlar, narxlar, yozilish formasi tayyor</div></div>
+  <div class="cmp" id="cB" style="top:1030px;background:#14131a;border:3px solid #ffffff22;padding:40px 54px"><h4>+ Telegram bot: navbatga yozadi</h4><div class="pr" style="font-size:96px">$15 dan</div></div>
+  <div class="pill" id="p1" style="top:1450px">✏️ Tahrirlash — bepul</div>
+  <div class="pill" id="p2" style="top:1590px">🔒 To'lov faqat chiqarishda</div>
+</div>
+<div class="L" id="s5">
+  <div class="abs" id="cta" style="left:20px;right:20px;top:300px;text-align:center;font-size:150px;font-weight:900;line-height:.94;letter-spacing:-6px">BEMOR<br><span class="gold">SIZNI TOPSIN.</span></div>
+  <div class="abs" id="btn" style="left:90px;right:90px;top:900px;height:200px;border-radius:100px;background:linear-gradient(100deg,#f1dfae,#d8b46a);color:#15110a;display:grid;place-items:center;font-size:72px;font-weight:900;box-shadow:0 30px 140px #d8b46a99">Saytingizni yarating →</div>
+  <div class="ct" id="url" style="top:1190px;font-size:84px;font-weight:800;letter-spacing:-2px">improuzbekiston.uz</div>
+  <div class="ct" id="pr" style="top:1330px;font-size:52px;font-weight:700;color:#e6d3a3">Sayt $10 dan · Bot $15 dan</div>
+  <div class="ct" id="end" style="bottom:90px;font-size:50px;font-weight:700;color:#8d8899">Klinika. Salon. Stomatologiya. <span class="gold">Hammasi uchun.</span></div>
+</div>
+<div class="L" id="scan"></div>
+<canvas class="L" id="grain" width="270" height="480" style="width:1080px;height:1920px"></canvas>
+<div class="L" id="vig" style="opacity:1"></div>
+<div class="L" id="flash"></div>
+</div>
+<script src="lib.js"></script>
+<script>
+'use strict';
+const css2=document.createElement('style');css2.textContent='.cmp{position:absolute;left:60px;right:60px;border-radius:56px;padding:50px 54px}.cmp h4{font-size:44px;font-weight:700;color:#9a96a8}.cmp .pr{font-weight:900;letter-spacing:-4px;line-height:1;margin-top:10px}.cmp .d{font-size:40px;margin-top:10px;color:#9a96a8}.pill{position:absolute;left:50%;padding:24px 44px;border-radius:99px;background:#0e0e12;border:3px solid #e6d3a3;font-size:48px;font-weight:800;white-space:nowrap}';document.head.appendChild(css2);
+function frame(t){
+  const st=L('st');L('bg').style.opacity=1;L('aur').style.opacity=1;aurora(t,t<9);
+  S(L('vig'),{opacity:1});S(L('scan'),{opacity:t<3.6?.3:.12});if(Math.floor(t*24)!==frame.lg){frame.lg=Math.floor(t*24);grain(t)}S(L('grain'),{opacity:.08});
+  // S0 qidiruv
+  vis(L('s0'),t,0,3.7,.01,.15);
+  if(t<3.8){
+    const Q='yaxshi klinika Toshkent';L('q').textContent=typeIn(Q,seg(t,.2,1.1))+(Math.floor(t*3)%2===0&&t<1.4?'|':'');
+    S(L('sbar'),{transform:`translateY(${(1-E.o3(seg(t,0,.4)))*-80}px)`,opacity:seg(t,0,.2)});
+    [['r0',1.2],['r1',1.55],['r2',1.9]].forEach(([id,a])=>{const p=E.sp(seg(t,a,a+.5));S(L(id),{opacity:clamp(seg(t,a,a+.1)),transform:`translateY(${(1-p)*60}px) scale(${.94+.06*p})`})});
+    const p3=E.sp(seg(t,2.5,3.0));S(L('r3'),{opacity:clamp(seg(t,2.5,2.6)),transform:`translateX(${(1-p3)*-120+Math.sin(t*60)*8*seg(t,3.0,3.7)}px) scale(${.9+.1*p3})`});
+    L('lostpn').textContent='−'+Math.floor(E.o3(seg(t,2.6,3.6))*7);S(L('lostp'),{opacity:seg(t,2.6,2.9)});
+  }
+  // S1
+  vis(L('s1'),t,3.6,9.1,.05,.1);
+  if(t>=3.5&&t<9.2){[['k1',3.7,4.7],['k2',4.7,5.7],['k3',5.7,6.7],['k4',6.7,9.0]].forEach(([id,a,b])=>{const e=L(id),pi=E.o5(seg(t,a,a+.28)),po=seg(t,b-.12,b),last=id==='k4';const sh=last?Math.sin(t*70)*10*(1-seg(t,a,a+.8)):0;S(e,{opacity:pi*(last?1:1-po),transform:`translateX(${sh}px) scale(${1.6-.6*pi}) translateY(${-po*60}px)`,filter:`blur(${(1-pi)*26}px)`,display:pi<=0?'none':'block'})})}
+  // S2
+  vis(L('s2'),t,9.0,11.4,.04,.2);
+  if(t>=9&&t<11.6){const p=seg(t,9.05,9.8);S(L('mark'),{transform:`scale(${E.sp(p)}) rotate(${(1-E.o3(p))*-30}deg)`});$$('#ring i').forEach((r,i)=>{const q=seg(t,9.05+i*.18,10.3+i*.18);S(r,{transform:`scale(${.3+q*6})`,opacity:(1-q)*.8*(q>0?1:0)})});S(L('brand'),{opacity:seg(t,9.4,9.8),transform:`translateY(${(1-E.o5(seg(t,9.4,9.9)))*70}px)`});S(L('tag'),{opacity:seg(t,9.9,10.2),transform:`translateY(${(1-E.o5(seg(t,9.9,10.5)))*60}px)`})}
+  S(L('flash'),{opacity:Math.max(0,1-Math.abs(t-9.0)/.22)*.95,display:'block'});
+  // S3
+  vis(L('s3'),t,11.3,23.1,.25,.3);
+  if(t>=11.2&&t<23.2){
+    const pin=E.o5(seg(t,11.4,12.2)),pout=E.io(seg(t,20.1,20.9));S(L('ph'),{opacity:t<21?1:0,transform:`translateY(${(1-pin)*900+pout*1100}px) scale(${1-.1*pout})`});
+    const sc=E.io(seg(t,12.5,14.1))*860+E.io(seg(t,14.3,15.9))*900+E.io(seg(t,16.0,17.2))*820;S(L('scr'),{transform:`translateY(${-sc}px)`});
+    const typed=(el,txt,a,b)=>{L(el).textContent=typeIn(txt,seg(t,a,b))+(Math.floor(t*3)%2===0&&t>a&&t<b+.2?'|':'')};typed('f1','Aziz Karimov',17.2,17.9);typed('f2','+998 90 123 45 67',18.0,18.8);
+    const rp=seg(t,19.0,19.45);S(L('rp'),{left:'420px',top:'1450px',opacity:(1-rp)*(rp>0?1:0)*.9,transform:`scale(${.3+rp*2.4})`});
+    const okp=E.sp(seg(t,19.4,19.95));S(L('okp'),{opacity:clamp(seg(t,19.4,19.55))*(1-seg(t,20.0,20.2)),transform:`scale(${.8+.2*okp})`});
+    const ch=(id,a,b)=>{const q=E.sp(seg(t,a,a+.4)),o=Math.min(clamp(seg(t,a,a+.12)),1-seg(t,b-.15,b));S(L(id),{opacity:o,transform:`translateX(-50%) translateY(${(1-q)*40}px) scale(${.8+.2*q})`})};
+    ch('c1',12.7,14.2);ch('c2',14.5,16.1);ch('c3',16.4,19.2);ch('c4',21.8,23.0);
+    // natija: endi birinchi
+    const g=E.sp(seg(t,20.6,21.2));S(L('g1'),{opacity:seg(t,20.6,20.9),transform:`translateY(${(1-E.o5(seg(t,20.6,21.3)))*50}px)`});S(L('g0'),{opacity:clamp(seg(t,20.9,21.05)),transform:`translateY(${(1-g)*80}px) scale(${.92+.08*g})`,boxShadow:`0 0 ${120+40*Math.sin(t*6)}px #d8b46a55`});[['g2',21.3],['g3',21.5]].forEach(([id,a])=>{const q=E.sp(seg(t,a,a+.5));S(L(id),{opacity:clamp(seg(t,a,a+.12))*.6,transform:`translateY(${(1-q)*60}px)`})});
+  }
+  // S4
+  vis(L('s4'),t,23.0,27.6,.25,.25);
+  if(t>=22.9&&t<27.7){S(L('t4'),{opacity:seg(t,23.2,23.5),transform:`translateY(${(1-E.o5(seg(t,23.2,23.8)))*50}px)`});const q=E.sp(seg(t,23.6,24.2));S(L('cA'),{opacity:clamp(seg(t,23.6,23.75)),transform:`scale(${.85+.15*q}) translateY(${(1-q)*80}px)`});const q2=E.sp(seg(t,24.7,25.3));S(L('cB'),{opacity:clamp(seg(t,24.7,24.85)),transform:`translateY(${(1-q2)*80}px)`});['p1','p2'].forEach((id,i)=>{const a=25.6+i*.5,qq=E.sp(seg(t,a,a+.5));S(L(id),{opacity:clamp(seg(t,a,a+.12)),transform:`translateX(-50%) translateY(${(1-qq)*60}px) scale(${.85+.15*qq})`})})}
+  // S5
+  vis(L('s5'),t,27.4,33,.25,.01);
+  if(t>=27.3){S(L('cta'),{opacity:seg(t,27.7,27.9),transform:`scale(${1.4-.4*E.o5(seg(t,27.7,28.4))})`,filter:`blur(${(1-E.o5(seg(t,27.7,28.3)))*24}px)`});const bp=E.sp(seg(t,28.6,29.2));S(L('btn'),{opacity:clamp(seg(t,28.6,28.75)),transform:`scale(${(.7+.3*bp)*(1+.035*Math.sin(t*7)*seg(t,29.2,33))})`});S(L('url'),{opacity:seg(t,29.4,29.7),transform:`translateY(${(1-E.o5(seg(t,29.4,30.0)))*40}px)`});S(L('pr'),{opacity:seg(t,29.9,30.2)});S(L('end'),{opacity:seg(t,30.4,30.8)})}
+  S(st,{transform:`scale(${1+0.015*Math.sin(t*0.6)}) translate(${Math.sin(t*.5)*6}px,${Math.cos(t*.4)*6}px)`});
+}
+window.__frame=frame;frame(0);
+</script></body></html>
