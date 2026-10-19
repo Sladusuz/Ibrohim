@@ -1,0 +1,165 @@
+{
+ "beat": 0.4838709677419355,
+ "total": 44.032,
+ "scenes": [
+  {
+   "i": 0,
+   "start": 0.0,
+   "dur": 3.3871,
+   "vstart": 0.1,
+   "vdur": 3.01,
+   "text": "Bolangiz bu sovg'ani ko'rsa... nima qiladi?",
+   "wt": [
+    0.1,
+    0.46,
+    0.82,
+    1.18,
+    1.54,
+    1.9
+   ]
+  },
+  {
+   "i": 1,
+   "start": 3.3871,
+   "dur": 3.3871,
+   "vstart": 3.4871,
+   "vdur": 2.72,
+   "text": "Quvonchdan sakrab ketadi!",
+   "wt": [
+    3.547,
+    4.777,
+    5.317
+   ]
+  },
+  {
+   "i": 2,
+   "start": 6.7742,
+   "dur": 6.7742,
+   "vstart": 6.8742,
+   "vdur": 6.47,
+   "text": "Haqiqiy avtomobilday dizayn, yorqin chiroqlar, zo'r harakat. Elektromobillar BabyCheer'da!",
+   "wt": [
+    6.934,
+    7.274,
+    7.669,
+    8.532,
+    9.244,
+    9.907,
+    11.069,
+    12.029,
+    12.484
+   ]
+  },
+  {
+   "i": 3,
+   "start": 13.5484,
+   "dur": 4.8387,
+   "vstart": 13.6484,
+   "vdur": 4.46,
+   "text": "Sayrga chiqasizmi? Velokalyaska bilan bola ham, ota-ona ham xotirjam!",
+   "wt": [
+    13.708,
+    14.036,
+    14.328,
+    14.923,
+    15.358,
+    15.741,
+    16.648,
+    17.043,
+    17.548
+   ]
+  },
+  {
+   "i": 4,
+   "start": 18.3871,
+   "dur": 4.3548,
+   "vstart": 18.4871,
+   "vdur": 3.81,
+   "text": "Chiroqli g'ildirakli samokat. Ko'chaning eng yorqin yulduzi!",
+   "wt": [
+    18.547,
+    19.127,
+    19.587,
+    20.347,
+    20.787,
+    21.147,
+    21.607
+   ]
+  },
+  {
+   "i": 5,
+   "start": 22.7419,
+   "dur": 5.3226,
+   "vstart": 22.8419,
+   "vdur": 4.56,
+   "text": "Yengil, yig'iladigan, yumshoq kalyaska. Eng mayin sayr uchun!",
+   "wt": [
+    22.902,
+    23.772,
+    24.632,
+    25.032,
+    25.872,
+    26.112,
+    26.512,
+    26.892
+   ]
+  },
+  {
+   "i": 6,
+   "start": 28.0645,
+   "dur": 5.3226,
+   "vstart": 28.1645,
+   "vdur": 4.56,
+   "text": "Toshkent bo'ylab yetkazib berish, bepul! O'zbekiston bo'ylab ham yetkazib beramiz!",
+   "wt": [
+    28.225,
+    28.628,
+    29.001,
+    29.568,
+    30.292,
+    30.992,
+    31.428,
+    31.69,
+    32.09,
+    32.555
+   ]
+  },
+  {
+   "i": 7,
+   "start": 33.3871,
+   "dur": 3.3871,
+   "vstart": 33.4871,
+   "vdur": 2.88,
+   "text": "Mashhur modellar tez tugaydi. Kechiktirmang!",
+   "wt": [
+    33.547,
+    34.692,
+    35.237,
+    35.567,
+    36.377
+   ]
+  },
+  {
+   "i": 8,
+   "start": 36.7742,
+   "dur": 6.2903,
+   "vstart": 36.8742,
+   "vdur": 5.74,
+   "text": "Telegramda BabyCheer botini oching, pastdagi Open tugmasini bosing, va bugun buyurtma bering!",
+   "wt": [
+    36.934,
+    37.853,
+    38.281,
+    38.517,
+    38.908,
+    39.19,
+    39.61,
+    40.001,
+    40.591,
+    41.004,
+    41.428,
+    42.024
+   ]
+  }
+ ]
+}
