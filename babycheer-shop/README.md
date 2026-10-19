@@ -6,7 +6,7 @@ ma'lumotlar ombori (Netlify Blobs). Katalog, narxlar, ranglar, yetkazib berish q
 
 ## Imkoniyatlar
 **Do'kon (Mini App, chat yonidagi «Open» tugmasi):** bosh sahifa, kategoriyalar, qidiruv, saralash, filtr, sevimlilar,
-mahsulot sahifasi (rang, soni, xususiyatlar), savat (bepul yetkazishgacha progress), buyurtma (kuryer/olib ketish),
+mahsulot sahifasi (rang, soni, xususiyatlar), savat, buyurtma (Toshkent bo'ylab bepul / O'zbekiston bo'ylab yetkazib berish / olib ketish),
 to'lov usullari, buyurtmalar tarixi va holat chizig'i, raqam bo'yicha kuzatish, FAQ va adminga xabar, tungi rejim.
 
 **To'lov:** naqd, karta (qabul qilganda), onlayn Click/Payme (`PAYMENT_PROVIDER_TOKEN` berilsa, Telegram oynasida),
@@ -16,8 +16,11 @@ karta o'tkazmasi (`CARD_NUMBER` berilsa, chek rasmi botga yuboriladi, admin tasd
 tugmalar bilan (✅ Tasdiqlash, 🚚 Yo'lda, 🎉 Yetkazildi, ❌ Bekor, 💰 To'langan).
 
 **Admin panel (Mini App):** botga `/admin` yozing va «🔧 Admin panelni ochish» tugmasini bosing. Parol kerak emas, Telegram imzosi va
-`ADMIN_IDS` tekshiriladi. Ichida: buyurtmalar (holat, to'lov, mijozga avtomatik xabar), mahsulot qo'shish/tahrirlash/yashirish/o'chirish
-(rasm yuklash, ranglar, xususiyatlar), kategoriyalar, do'kon sozlamalari va statistika.
+`ADMIN_IDS` tekshiriladi. Pastki menyu: **Bosh** (bugungi tushum, 7 kunlik grafik, yangi buyurtmalarni bir bosishda tasdiqlash, kam qolgan
+mahsulotlar), **Buyurtmalar** (qidiruv, filtrlar, bitta tugma bilan keyingi bosqich: Tasdiqlash → Yo'lga chiqarish → Yetkazildi,
+«⋯» menyusida to'lov va bekor qilish; holat o'zgarsa mijozga avtomatik xabar), **Mahsulotlar** (ro'yxatning o'zida ombor +/− va ko'rinish
+tugmasi, qidiruv va kategoriya filtri, jonli ko'rinishli muharrir, nusxa olish, ko'p rasm, ranglar, xususiyatlar), **Sozlamalar**
+(do'kon ma'lumotlari, yetkazish narxi, kategoriyalar, adminlar).
 
 **Mijoz xabarlari:** mijoz botga yozgan hamma narsa (matn, rasm, ovoz, hujjat) hamma adminlarga ism, @username va ID bilan keladi.
 Admin xabarga **reply (javob)** qilsa, javob mijozga yetadi (matn, rasm, ovoz). Mijozga birinchi xabarida «adminga yuborildi» deb tasdiq ketadi,

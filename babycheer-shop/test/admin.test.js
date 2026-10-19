@@ -233,3 +233,16 @@ test('mijoz botga yozsa adminga keladi, admin reply qilsa mijozga boradi', async
   for (let i = 0; i < 20; i++) await hook(888, { text: `spam ${i}` });
   assert.equal(toAdmin().length, 15);
 });
+
+test('tezkor o\'zgartirish (patch): ombor, narx, ko\'rinish', async () => {
+  let r = await J('admin/product/patch', { method: 'POST', body: { id: 9, stock: 12 } });
+  assert.equal(r.product.stock, 12); assert.equal(r.product.title, "Samokat, 3 g'ildirakli"); // boshqa maydonlar o'zgarmaydi
+  r = await J('admin/product/patch', { method: 'POST', body: { id: 9, price: '410 000', active: false } });
+  assert.deepEqual([r.product.price, r.product.active], [410000, false]);
+  assert.equal((await J('catalog')).products.some((p) => p.id === 9), false);
+  await J('admin/product/patch', { method: 'POST', body: { id: 9, active: true } });
+  assert.equal((await call('admin/product/patch', { method: 'POST', body: { id: 9, stock: -1 } })).status, 400);
+  assert.equal((await call('admin/product/patch', { method: 'POST', body: { id: 9, price: 0 } })).status, 400);
+  assert.equal((await call('admin/product/patch', { method: 'POST', body: { id: 999, stock: 1 } })).status, 400);
+  assert.equal((await call('admin/product/patch', { method: 'POST', body: { id: 9, stock: 1 }, id2: 0, id: 111 })).status, 403);
+});

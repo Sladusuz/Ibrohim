@@ -131,7 +131,7 @@ export async function createOrder(user, d) {
   };
   await store.put(`order:${order.id}`, order);
   await store.update(`uorders:${user.id}`, (a) => [order.id, ...a].slice(0, 50), []);
-  await store.update('recent', (a) => [order.id, ...a].slice(0, 50), []);
+  await store.update('recent', (a) => [order.id, ...a].slice(0, 200), []);
   return order;
 }
 

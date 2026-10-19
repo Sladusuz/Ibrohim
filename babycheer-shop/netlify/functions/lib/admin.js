@@ -32,7 +32,7 @@ export async function adminApi(route, req, user) {
       settings: c.settings,
       categories: [...c.categories].sort((a, b) => a.sort - b.sort),
       products: [...c.products].sort((a, b) => a.sort - b.sort),
-      orders: (await shop.recentOrders(50)).map(fullOrder),
+      orders: (await shop.recentOrders(100)).map(fullOrder),
       payments: shop.paymentMethods(),
       owner,
       admins: owner ? [...ownerIds().map((id) => ({ id, owner: true, name: id === user.id ? 'Siz' : '' })), ...(await admins.listAdmins())] : undefined,
@@ -94,6 +94,16 @@ export async function adminApi(route, req, user) {
       return c;
     });
     return err ? bad(err) : json({ product: saved });
+  }
+
+  if (route === 'admin/product/patch') { // ro'yxatdan tezkor o'zgartirish: ombor, narx, ko'rinish
+    const id = Number(body.id), upd = {};
+    if ('stock' in body) { const n = int(body.stock); if (n === null) return bad("Ombor soni noto'g'ri"); upd.stock = n; }
+    if ('price' in body) { const n = int(body.price, 1); if (n === null) return bad("Narx noto'g'ri"); upd.price = n; }
+    if ('active' in body) upd.active = !!body.active;
+    let saved = null;
+    await shop.updateCatalog((c) => { const p = c.products.find((x) => x.id === id); if (p) { Object.assign(p, upd); saved = p; } return c; });
+    return saved ? json({ product: saved }) : bad('Mahsulot topilmadi');
   }
 
   if (route === 'admin/product/delete') {
