@@ -1,10 +1,10 @@
-import { STATUSES, orderNo } from './shop.js';
+import { msg } from './msgs.js';
 
 export const shopUrl = (req) => (process.env.SHOP_URL || new URL(req.url).origin).replace(/\/$/, '');
 
 export const inlineKb = (rows) => ({ inline_keyboard: rows.map((r) => r.map(([text, cb]) => (cb.startsWith('http') ? { text, web_app: { url: cb } } : { text, callback_data: cb }))) });
 
-export const openShopKb = (url) => inlineKb([[["🛍 Do'konni ochish", url]]]);
+export const openShopKb = (url, lang) => inlineKb([[[msg(lang).open, url]]]);
 
 /** Adminga: holat va to'lov tugmalari. */
 export function adminOrderKb(o) {
@@ -19,7 +19,7 @@ export function adminOrderKb(o) {
 /** Mijozga: to'lanmagan o'tkazma buyurtmasi uchun chek tugmasi. */
 export function customerOrderKb(o) {
   if (o.paid || o.status === 'cancelled' || o.payment !== 'transfer') return undefined;
-  return inlineKb([[['🧾 Chek yuborish', `rc:${o.id}`]]]);
+  return inlineKb([[[o.lang === 'ru' ? '🧾 Отправить чек' : '🧾 Chek yuborish', `rc:${o.id}`]]]);
 }
 
-export const statusMessage = (o) => `Buyurtma ${orderNo(o.id)} holati: ${STATUSES[o.status]}`;
+export const statusMessage = (o) => msg(o.lang).status(o);

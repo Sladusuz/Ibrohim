@@ -141,4 +141,8 @@ body.admin #view { padding-top: 6px; }
   .sheet-bar, .chips.sticky { background: var(--bg); }
   .sheet-foot { background: var(--card); }
 }
-body.admin #tabs { grid-template-columns: repeat(4, 1fr); } .quick-a { display: block; }
+body.admin #tabs { grid-template-columns: repeat(5, 1fr); } .quick-a { display: block; }
+
+.catrow input[data-cr] { grid-column: 1 / -1; }
+.meta a { font-weight: 700; }
+#sheet .togs { padding: 0 2px; }

@@ -35,6 +35,17 @@ Yangi admin mahsulot, buyurtma va sozlamalarni boshqaradi, lekin boshqa admin qo
 Mahsulot qo'shish: rasm yuboring va izohga yozing:
 `/add Samokatlar | Nom | 300000 | 0 | 10 | Tavsif | Qizil, Ko'k`
 
+**Sotuvni oshiruvchi imkoniyatlar (v4):**
+- 🌐 **Ikki til:** do'kon va bot o'zbekcha/ruscha (yuqoridagi UZ/RU tugmasi, botda `/ru` `/uz`). Ruscha nomlar admin muharririda («🇷🇺 Русский язык»); boshlang'ich mahsulotlar tayyor tarjima bilan keladi.
+- 🔗 **Mahsulot havolasi va ulashish:** `https://t.me/<bot>?start=p_<id>` (mahsulot sahifasidagi «ulashish» tugmasi shuni yaratadi).
+- 🎂 **Yosh va narx filtri**, «🔥 N ta sotildi», ⭐ baho va fikrlar (faqat yetkazilgan buyurtma egasi, bir marta; admin nomaqbul fikrni o'chiradi).
+- ⚡ **«Hozir olish»** tugmasi, manzilni eslab qolish, «📍 Joylashuvimni qo'shish».
+- 🖼 **Bannerlar** (bosh sahifa, bosilganda kategoriya/mahsulot/havola) va 🎟 **promokodlar** (foiz yoki summa, minimal buyurtma, limit, muddat) admin panel → **Aksiya**.
+- 🧮 **Muddatli to'lov:** admin Sozlamalarda yoqadi (oylar, ustama %); mahsulot sahifasida «oyiga ...» hisoblagichi va to'lov usuli chiqadi. Haqiqiy bo'lib to'lash xizmati (Uzum Nasiya va h.k.) shartnomasi alohida, operator mijoz bilan kelishadi.
+- 🔔 **«Xabar bering»:** tugagan mahsulotga obuna; ombor yana to'lganda bot mijozga o'zi xabar yuboradi.
+- 🎬 **Video:** botda videoni yuboring, izohga `/video id` yozing (olib tashlash `/video id off`); mahsulot galereyasida chiqadi.
+- 📣 **Ommaviy xabar** (Aksiya bo'limi, faqat asosiy admin; tugmasi bilan mahsulotga), 📊 **CSV hisobot** (`/export` yoki Aksiya bo'limi), 🏆 Bosh sahifada eng ko'p sotilganlar.
+
 Xavfsizlik: narx, ombor va yetkazish narxi serverda hisoblanadi; buyurtma Telegram `initData` imzosi bilan tekshiriladi;
 ombor ETag bilan atomik yangilanadi (bir vaqtdagi buyurtmalar ombordan oshib ketmaydi); webhook maxfiy kalit bilan himoyalangan.
 

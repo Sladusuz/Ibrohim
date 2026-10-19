@@ -24,15 +24,16 @@
     reload: '<path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/>',
     sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
     moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>',
+    mega: '<path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/>',
   };
   const svg = (n, cls = '') => `<svg ${cls ? `class="${cls}" ` : ''}viewBox="0 0 24 24">${ICON[n]}</svg>`;
   const STATUS = { new: ['🆕 Yangi', 'brand'], confirmed: ['✅ Tasdiqlandi', 'ok'], shipping: ["🚚 Yo'lda", 'warn'], delivered: ['🎉 Yetkazildi', 'ok'], cancelled: ['❌ Bekor', 'bad'] };
   const NEXT = { new: ['confirmed', '✅ Tasdiqlash'], confirmed: ['shipping', "🚚 Yo'lga chiqarish"], shipping: ['delivered', '🎉 Yetkazildi'] };
   const PALETTE = { "Ko'k": '#2b59ff', Qizil: '#e5262b', Oq: '#eef0f4', Qora: '#1b1d24', Yashil: '#12a66b', Pushti: '#f0589f', Sariq: '#f5b800', "To'q sariq": '#ff7a1a', Zangori: '#10a5b8', Kulrang: '#7d8594' };
   const ICONS = { car: 'Mashina', stroller: 'Kalyaska', trike: 'Velokalyaska', moto: 'Mototsikl', scooter: 'Samokat' };
-  const PAY = { cash: 'Naqd', card: 'Karta (qabul qilganda)', online: 'Onlayn', transfer: "Karta o'tkazmasi" };
+  const PAY = { cash: 'Naqd', card: 'Karta (qabul qilganda)', online: 'Onlayn', transfer: "Karta o'tkazmasi", installment: "Muddatli to'lov" };
   const DELIV = { courier: "🚚 Toshkent bo'ylab", region: "📦 O'zbekiston bo'ylab", pickup: '🏬 Olib ketish' };
-  const TABS = [['home', 'Bosh', 'home'], ['orders', 'Buyurtmalar', 'orders'], ['products', 'Mahsulotlar', 'bag'], ['settings', 'Sozlamalar', 'gear']];
+  const TABS = [['home', 'Bosh', 'home'], ['orders', 'Buyurtmalar', 'orders'], ['products', 'Mahsulotlar', 'bag'], ['promo', 'Aksiya', 'mega'], ['settings', 'Sozlamalar', 'gear']];
 
   const A = { data: null, tab: LS.get('atab', 'home'), ofilter: 'all', oq: '', pcat: 'all', pq: '', open: new Set() };
   const stockTimers = {};
@@ -88,7 +89,7 @@
     drawTop(); drawTabs();
     $('#fab').hidden = A.tab !== 'products';
     $('#view').innerHTML = '<div id="body"></div>';
-    ({ home: drawHome, orders: drawOrders, products: drawProducts, settings: drawSettings })[A.tab]();
+    ({ home: drawHome, orders: drawOrders, products: drawProducts, promo: drawPromo, settings: drawSettings })[A.tab]();
   }
   function go(tab, opts = {}) {
     A.tab = tab; LS.set('atab', tab);
@@ -105,6 +106,7 @@
     const rev = today.reduce((s, o) => s + o.total, 0);
     const fresh = d.orders.filter((o) => o.status === 'new'), shipping = d.orders.filter((o) => o.status === 'shipping').length;
     const low = d.products.filter((p) => p.active && p.stock <= 3).sort((a, b) => a.stock - b.stock);
+    const best = d.products.filter((p) => (p.sold || 0) > 0).sort((x, y) => y.sold - x.sold).slice(0, 5);
     const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || {};
     // oxirgi 7 kun
     const wd = ['Yak', 'Du', 'Se', 'Chor', 'Pay', 'Ju', 'Sha'];
@@ -121,6 +123,7 @@
       </div>
       <section class="a-sec"><h2>Oxirgi 7 kun</h2><div class="acard" style="margin-top:0"><div class="bars">${days.map((x) => `<div class="bc ${x.today ? 'today' : ''}"><em>${x.n || ''}</em><i style="height:${Math.max(4, (x.n / max) * 100)}%"></i><span>${x.label}</span></div>`).join('')}</div>
         <div class="sub" style="margin-top:8px;text-align:center">Haftalik tushum: <b>${money(days.reduce((s, x) => s + x.sum, 0))}</b> · ${days.reduce((s, x) => s + x.n, 0)} ta buyurtma</div></div></section>
+      ${best.length ? `<section class="a-sec"><h2>🏆 Eng ko'p sotilgan</h2><div class="acard" style="margin-top:0">${best.map((p, i) => `<div class="lrow"><div class="tx"><b>${i + 1}. ${esc(p.title)}</b><small>${p.sold} ta sotilgan · omborda ${p.stock}</small></div><b class="num">${money(p.price)}</b></div>`).join('')}</div></section>` : ''}
       <section class="a-sec"><h2>Diqqat talab qiladi</h2><div class="acard" style="margin-top:0">
         ${fresh.slice(0, 3).map((o) => `<div class="lrow"><div class="tx"><b>${esc(o.no)} · ${esc(o.name)}</b><small>${money(o.total)} · ${ago(o.created_at)}</small></div><button class="btn sm ok" data-st="${o.id}:confirmed">✅ Tasdiqlash</button></div>`).join('')}
         ${low.slice(0, 4).map((p) => `<div class="lrow"><div class="tx"><b>${esc(p.title)}</b><small>${p.stock === 0 ? '❌ Tugagan' : '⚠️ Kam qoldi'}</small></div>${stepper(p)}</div>`).join('')}
@@ -145,15 +148,16 @@
       <div id="olist">${list.length ? list.map(orderCard).join('') : `<div class="empty"><div class="em">📦</div><b>Buyurtma topilmadi</b>${A.oq ? "Qidiruvni o'zgartirib ko'ring" : "Bu holatda buyurtma yo'q"}</div>`}</div>`;
     const q = $('#oq'); let t; q.addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { A.oq = e.target.value; const pos = e.target.selectionStart; drawOrders(); const n = $('#oq'); n.focus(); n.setSelectionRange(pos, pos); }, 250); });
   }
+  const linkify = (s) => esc(s).replace(/(https:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">📍 xaritada ochish</a>');
   function orderCard(o) {
     const nx = NEXT[o.status], open = A.open.has(o.id), cnt = o.items.reduce((s, i) => s + i.qty, 0);
     return `<div class="acard st-${o.status}" data-oid="${o.id}"><div class="top"><b>${esc(o.no)}</b><span class="pill ${STATUS[o.status][1]}">${STATUS[o.status][0]}</span></div>
       <div class="sub">${fmtDate(o.created_at)} · ${ago(o.created_at)}</div>
       <div class="who"><div class="av">${esc((o.name || '?').trim().charAt(0).toUpperCase())}</div><div class="tx"><b>${esc(o.name)}</b><span class="sub">${esc(o.phone)}</span></div><a class="call" href="tel:${esc(o.phone)}" aria-label="Qo'ng'iroq">📞</a></div>
-      <div class="meta">${esc(DELIV[o.delivery] || o.delivery)}${o.address ? ': ' + esc(o.address) : ''}${o.comment ? `<br>💬 ${esc(o.comment)}` : ''}<br>To'lov: ${esc(PAY[o.payment] || o.payment)} ${o.paid ? '<span class="pill ok">✅ to\'langan</span>' : '<span class="pill warn">to\'lanmagan</span>'}</div>
+      <div class="meta">${esc(DELIV[o.delivery] || o.delivery)}${o.address ? ': ' + linkify(o.address) : ''}${o.comment ? `<br>💬 ${esc(o.comment)}` : ''}<br>To'lov: ${esc(PAY[o.payment] || o.payment)} ${o.paid ? '<span class="pill ok">✅ to\'langan</span>' : '<span class="pill warn">to\'lanmagan</span>'}</div>
       <button class="items-toggle" data-exp="${o.id}"><span>${cnt} ta mahsulot · ${money(o.total)}</span><span>${open ? '▲' : '▼'}</span></button>
       ${open ? `<div class="items">${o.items.map((i) => `<div class="oline"><span>${esc(i.title)}${i.color ? ` · ${esc(i.color)}` : ''} × ${i.qty}</span><b class="num">${money(i.price * i.qty)}</b></div>`).join('')}
-        <div class="oline"><span>Yetkazish</span><b>${o.delivery_fee ? money(o.delivery_fee) : o.delivery === 'region' ? 'narxi kelishiladi' : 'bepul'}</b></div><div class="oline"><span><b>Jami</b></span><b class="num">${money(o.total)}</b></div></div>` : ''}
+        ${o.discount ? `<div class="oline"><span>Chegirma (${esc(o.promo || '')})</span><b class="num">−${money(o.discount)}</b></div>` : ''}<div class="oline"><span>Yetkazish</span><b>${o.delivery_fee ? money(o.delivery_fee) : o.delivery === 'region' ? 'narxi kelishiladi' : 'bepul'}</b></div><div class="oline"><span><b>Jami</b></span><b class="num">${money(o.total)}</b></div></div>` : ''}
       <div class="acts">${nx ? `<button class="btn grow" data-st="${o.id}:${nx[0]}">${nx[1]}</button>` : o.status === 'cancelled' ? `<button class="btn grow ghost" data-st="${o.id}:new">♻️ Qayta tiklash</button>` : `<button class="btn grow ghost" data-more="${o.id}">Batafsil amallar</button>`}
         ${!o.paid && o.status !== 'cancelled' ? `<button class="btn ok" data-paid="${o.id}:1" aria-label="To'langan">💰</button>` : ''}<button class="btn more" data-more="${o.id}" aria-label="Boshqa amallar">⋯</button></div></div>`;
   }
@@ -207,14 +211,105 @@
     stockTimers[id] = setTimeout(async () => { try { await api('admin/product/patch', { id, stock: p.stock }); } catch (e) { toast(e.message, true); load(true); } }, 500);
   }
 
+  // ================= AKSIYA: bannerlar, promokodlar, fikrlar, ommaviy xabar =================
+  const BCOL = { blue: '🔵 Ko\'k', orange: '🟠 To\'q sariq', green: '🟢 Yashil', pink: '🌸 Pushti', purple: '🟣 Binafsha' };
+  function openForm({ title, rows, values, save, remove, dyn }) {
+    const sheet = $('#sheet'); sheet.hidden = false; document.body.style.overflow = 'hidden'; $('#fab').hidden = true;
+    const close = () => { sheet.hidden = true; sheet.innerHTML = ''; document.body.style.overflow = ''; $('#fab').hidden = A.tab !== 'products'; };
+    const one = (f) => {
+      const v = values[f.k] ?? '';
+      if (f.type === 'check') return `<div class="togs"><label>${f.label}<span class="switch"><input type="checkbox" data-ff="${f.k}" ${v ? 'checked' : ''}></span></label></div>`;
+      if (f.type === 'select') return `<label class="fld"><span>${f.label}</span><select data-ff="${f.k}">${f.options.map(([k, l]) => `<option value="${esc(k)}" ${String(v) === String(k) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>`;
+      if (f.type === 'dyn') return `<div id="dynbox">${dyn.render(values[dyn.on], v)}</div>`;
+      const ex = f.type === 'textarea' ? `rows="2"` : `type="${f.type || 'text'}" ${f.num ? 'inputmode="numeric"' : ''} ${f.ph ? `placeholder="${esc(f.ph)}"` : ''} ${f.ro ? 'readonly' : ''}`;
+      return `<label class="fld"><span>${f.label}</span>${f.type === 'textarea' ? `<textarea data-ff="${f.k}" ${ex}>${esc(v)}</textarea>` : `<input data-ff="${f.k}" ${ex} value="${esc(v)}">`}</label>`;
+    };
+    sheet.innerHTML = `<div class="sheet-bar"><button class="back" data-fclose aria-label="Orqaga">${svg('back')}</button><h2>${esc(title)}</h2><button class="btn" id="fsave">Saqlash</button></div>
+      <section class="ecard" style="margin-top:8px">${rows.map((r) => (Array.isArray(r) ? `<div class="row2c">${r.map(one).join('')}</div>` : one(r))).join('')}<div id="ferr"></div></section>
+      ${remove ? '<div class="sheet-foot"><button class="btn bad grow" id="fdel">🗑 O\'chirish</button></div>' : ''}`;
+    const read = () => { const o = {}; $$('[data-ff]', sheet).forEach((el) => { o[el.dataset.ff] = el.type === 'checkbox' ? el.checked : el.value; }); return o; };
+    sheet.onchange = (e) => { if (dyn && e.target.dataset.ff === dyn.on) $('#dynbox').innerHTML = dyn.render(e.target.value, ''); };
+    sheet.onclick = async (e) => {
+      const t = e.target.closest('button'); if (!t) return;
+      if (t.dataset.fclose !== undefined) return close();
+      try {
+        if (t.id === 'fsave') { t.disabled = true; await save(read()); close(); await load(true); toast('Saqlandi ✅'); haptic('ok'); }
+        if (t.id === 'fdel' && (await confirmBox("O'chirilsinmi?"))) { await remove(); close(); await load(true); toast("O'chirildi 🗑"); }
+      } catch (err) { $('#ferr').innerHTML = `<div class="alert">${esc(err.message)}</div>`; haptic('err'); const b = $('#fsave'); if (b) b.disabled = false; }
+    };
+  }
+  const targetHtml = (type, val) => {
+    const d = A.data;
+    if (type === 'category') return `<label class="fld"><span>Kategoriya</span><select data-ff="target">${d.categories.map((c) => `<option value="${c.id}" ${String(val) === String(c.id) ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>`;
+    if (type === 'product') return `<label class="fld"><span>Mahsulot</span><select data-ff="target">${d.products.map((p) => `<option value="${p.id}" ${String(val) === String(p.id) ? 'selected' : ''}>${esc(p.title)}</option>`).join('')}</select></label>`;
+    if (type === 'url') return `<label class="fld"><span>Havola (https://...)</span><input data-ff="target" value="${esc(val)}" placeholder="https://"></label>`;
+    return '<input data-ff="target" type="hidden" value="">';
+  };
+  function bannerForm(b) {
+    const v = b || { title: '', text: '', title_ru: '', text_ru: '', color: 'blue', target_type: 'none', target: '', active: true };
+    openForm({
+      title: b ? 'Bannerni tahrirlash' : 'Yangi banner', values: v,
+      rows: [{ k: 'title', label: 'Sarlavha' }, { k: 'text', label: 'Qisqa matn' }, [{ k: 'title_ru', label: 'Заголовок (ruscha)' }, { k: 'text_ru', label: 'Текст (ruscha)' }],
+        { k: 'color', type: 'select', label: 'Rang', options: Object.entries(BCOL) },
+        { k: 'target_type', type: 'select', label: 'Bosilganda', options: [['none', 'Hech narsa'], ['category', "Kategoriyaga o'tadi"], ['product', "Mahsulotga o'tadi"], ['url', 'Havolani ochadi']] },
+        { k: 'target', type: 'dyn' }, { k: 'active', type: 'check', label: "Do'konda ko'rinsin" }],
+      dyn: { on: 'target_type', render: (type, val) => targetHtml(type, val) },
+      save: (o) => api('admin/banner', { ...o, id: b && b.id }), remove: b ? () => api('admin/banner/delete', { id: b.id }) : null,
+    });
+  }
+  function promoForm(pr) {
+    const v = pr ? { ...pr, expires: pr.expires ? pr.expires.slice(0, 10) : '' } : { code: '', percent: '', amount: '', min: '', max: '', expires: '', active: true };
+    openForm({
+      title: pr ? 'Promokod' : 'Yangi promokod', values: v,
+      rows: [{ k: 'code', label: 'Kod (lotin harf va raqam)', ph: 'YOZ10', ro: !!pr }, [{ k: 'percent', label: 'Chegirma, %', num: true }, { k: 'amount', label: "yoki summa, so'm", num: true }],
+        [{ k: 'min', label: "Minimal buyurtma, so'm", num: true }, { k: 'max', label: 'Necha marta (0 = cheksiz)', num: true }], { k: 'expires', type: 'date', label: 'Amal qilish muddati (ixtiyoriy)' }, { k: 'active', type: 'check', label: 'Faol' }],
+      save: (o) => api('admin/promo', { ...o, percent: digits(o.percent) || 0, amount: digits(o.amount) || 0, min: digits(o.min) || 0, max: digits(o.max) || 0 }), remove: pr ? () => api('admin/promo/delete', { code: pr.code }) : null,
+    });
+  }
+  const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+  function drawPromo() {
+    const d = A.data, banners = d.banners || [], promos = d.promos || [], reviews = d.reviews || [];
+    const promoDesc = (p) => `${p.percent ? p.percent + '%' : money(p.amount)}${p.min ? ` · min ${money(p.min)}` : ''} · ${p.uses || 0}${p.max ? '/' + p.max : ''} marta${p.expires ? ' · ' + fmtDate(p.expires).slice(0, 5) + 'gacha' : ''}${p.active === false ? ' · o\'chiq' : ''}`;
+    $('#body').innerHTML = `<section class="ecard" style="margin-top:4px"><h3>🖼 Bannerlar <span class="hint" style="font-size:12px">bosh sahifada</span></h3>
+        ${banners.length ? banners.map((b) => `<div class="lrow"><div class="tx"><b>${esc(b.title)}</b><small>${esc(b.text || '')}${b.active === false ? ' · yashirin' : ''}</small></div><button class="btn sm ghost" data-bedit="${b.id}">✏️</button></div>`).join('') : '<p class="sub" style="margin:0 2px 8px">Hozircha banner yo\'q. Aksiya yoki yangilikni shu yerdan e\'lon qiling.</p>'}
+        <button class="btn ghost block" id="addBanner" style="margin:10px 0">➕ Banner qo'shish</button></section>
+      <section class="ecard"><h3>🎟 Promokodlar</h3>
+        ${promos.length ? promos.map((p) => `<div class="lrow"><div class="tx"><b>${esc(p.code)}</b><small>${esc(promoDesc(p))}</small></div><button class="btn sm ghost" data-pedit="${esc(p.code)}">✏️</button></div>`).join('') : '<p class="sub" style="margin:0 2px 8px">Promokod yo\'q. Mijoz buyurtma berishda kodni kiritib chegirma oladi.</p>'}
+        <button class="btn ghost block" id="addPromo" style="margin:10px 0">➕ Promokod qo'shish</button></section>
+      <section class="ecard"><h3>⭐ Mijoz fikrlari</h3>
+        ${reviews.length ? reviews.slice(0, 20).map((r) => `<div class="lrow"><div class="tx"><b><span style="color:#f5a400">${stars(r.rating)}</span> ${esc(r.name)}</b><small>${esc(r.title || '')}${r.text ? ': ' + esc(r.text) : ''}</small></div><button class="btn sm bad" data-rdel="${r.pid}:${esc(r.id)}" aria-label="O'chirish">🗑</button></div>`).join('') : '<p class="sub" style="margin:0 2px 12px">Hali fikrlar yo\'q. Yetkazilgan buyurtma egalari mahsulotni baholay oladi.</p>'}</section>
+      ${d.owner ? `<section class="ecard"><h3>📣 Ommaviy xabar</h3><p class="sub" style="font-size:12px;margin:0 2px 10px">Botga yozgan barcha mijozlarga yuboriladi (aksiya, yangi mahsulot). Faqat asosiy admin.</p>
+        <label class="fld"><span>Xabar (o'zbekcha)</span><textarea id="bcText" rows="3" maxlength="1000"></textarea></label><label class="fld"><span>Сообщение (ruscha, ixtiyoriy)</span><textarea id="bcRu" rows="3" maxlength="1000"></textarea></label>
+        <label class="fld"><span>Mahsulot tugmasi (ixtiyoriy)</span><select id="bcPid"><option value="">Tugmasiz</option>${d.products.filter((p) => p.active).map((p) => `<option value="${p.id}">${esc(p.title)}</option>`).join('')}</select></label>
+        <button class="btn block" id="bcSend" style="margin-bottom:10px">📣 Yuborish</button><div id="bcProg"></div></section>
+        <section class="ecard"><h3>📊 Hisobot</h3><p class="sub" style="font-size:12px;margin:0 2px 10px">Oxirgi 200 ta buyurtma CSV fayl (Excel) bo'lib shu bot chatiga yuboriladi.</p><button class="btn ghost block" id="exportCsv" style="margin-bottom:10px">⬇️ Buyurtmalarni yuklab olish</button></section>` : ''}`;
+  }
+  async function broadcast() {
+    const text = $('#bcText').value.trim(), ru = $('#bcRu').value.trim(), pid = $('#bcPid').value;
+    if (text.length < 3) return toast('Xabar matnini yozing', true);
+    if (!(await confirmBox('Xabar barcha mijozlarga yuborilsinmi?'))) return;
+    const prog = $('#bcProg'), btn = $('#bcSend'); btn.disabled = true;
+    try {
+      const { total } = await api('admin/broadcast/start', { text, text_ru: ru, pid: pid || null });
+      let r;
+      do { r = await api('admin/broadcast/step', {}); prog.innerHTML = `<div class="sub">Yuborilmoqda: ${r.i}/${total} · ✅ ${r.sent}${r.failed ? ` · ⚠️ ${r.failed}` : ''}</div>`; } while (!r.done);
+      toast(`Yuborildi: ${r.sent} ta ✅`); haptic('ok'); $('#bcText').value = ''; $('#bcRu').value = '';
+    } catch (err) { prog.innerHTML = `<div class="alert">${esc(err.message)}</div>`; haptic('err'); }
+    btn.disabled = false;
+  }
+
   // ================= SOZLAMALAR =================
   const admRow = (a) => `<div class="lrow"><div class="tx"><b>${a.owner ? '⭐ Asosiy admin' : esc(a.name || 'Admin')}${a.username ? ` @${esc(a.username)}` : ''}</b><small>ID ${esc(a.id)}</small></div>${a.owner ? '' : `<button class="btn sm bad" data-arm="${esc(a.id)}">Olib tashlash</button>`}</div>`;
-  const catRow = (c) => `<div class="catrow" data-cat="${c.id}"><input value="${esc(c.name)}" data-cn placeholder="Nomi"><select data-ci>${Object.entries(ICONS).map(([k, v]) => `<option value="${k}" ${c.icon === k ? 'selected' : ''}>${v}</option>`).join('')}</select><button class="btn sm" data-csave="${c.id}" aria-label="Saqlash">✓</button><button class="btn sm bad" data-cdel="${c.id}" aria-label="O'chirish">🗑</button></div>`;
+  const catRow = (c) => `<div class="catrow" data-cat="${c.id}"><input value="${esc(c.name)}" data-cn placeholder="Nomi"><select data-ci>${Object.entries(ICONS).map(([k, v]) => `<option value="${k}" ${c.icon === k ? 'selected' : ''}>${v}</option>`).join('')}</select><button class="btn sm" data-csave="${c.id}" aria-label="Saqlash">✓</button><button class="btn sm bad" data-cdel="${c.id}" aria-label="O'chirish">🗑</button><input data-cr value="${esc(c.name_ru || '')}" placeholder="Название по-русски (ixtiyoriy)"></div>`;
   function drawSettings() {
     const s = A.data.settings, fld = (k, l, t = 'text') => `<label class="fld"><span>${l}</span><input data-set="${k}" type="${t}" value="${esc(s[k] ?? '')}"></label>`;
     $('#body').innerHTML = `<section class="ecard"><h3>🏪 Do'kon ma'lumotlari</h3>${fld('name', "Do'kon nomi")}${fld('phone', 'Telefon', 'tel')}${fld('telegram', 'Telegram (@siz)')}${fld('channel', 'Telegram kanal havolasi')}${fld('instagram', 'Instagram havolasi')}
         <label class="fld"><span>O'zbekiston bo'ylab yetkazish narxi (so'm; 0 = operator kelishadi). Toshkent bo'ylab doim bepul</span><input data-set="regionFee" data-num inputmode="numeric" value="${esc(spaced(s.regionFee ?? 0))}"></label>
         <button class="btn block" id="saveSet" style="margin-bottom:10px">Saqlash</button></section>
+      <section class="ecard"><h3>🧮 Muddatli to'lov</h3><div class="togs"><label>Yoqilsin<span class="switch"><input type="checkbox" data-inst="enabled" ${(s.installment || {}).enabled ? 'checked' : ''}></span></label></div>
+        <div class="row2c"><label class="fld"><span>Oylar soni (2–24)</span><input data-inst="months" inputmode="numeric" value="${esc((s.installment || {}).months ?? 6)}"></label><label class="fld"><span>Ustama, % (0–100)</span><input data-inst="markup" inputmode="numeric" value="${esc((s.installment || {}).markup ?? 0)}"></label></div>
+        <p class="sub" style="font-size:12px;margin:0 2px 10px">Mahsulot sahifasida «oyiga ... so'm» hisoblagichi chiqadi va to'lov usullariga «Muddatli to'lov» qo'shiladi. Shartlarni operator mijoz bilan kelishadi (haqiqiy bo'lib to'lash xizmati, masalan Uzum Nasiya, shartnomasi alohida).</p>
+        <button class="btn block" id="saveInst" style="margin-bottom:10px">Saqlash</button></section>
       <section class="ecard"><h3>🗂 Kategoriyalar</h3><div id="cats">${A.data.categories.map(catRow).join('')}</div><button class="btn ghost block" id="addCat" style="margin-bottom:10px">➕ Kategoriya qo'shish</button></section>
       <section class="ecard"><h3>👥 Adminlar</h3>${A.data.owner ? `<div id="adm">${A.data.admins.map(admRow).join('')}</div><div id="invbox"></div><button class="btn block" id="invite" style="margin-bottom:10px">🔗 Yangi admin taklif qilish</button>
         <p class="sub" style="font-size:12px;margin:0 2px 10px">Havolani yangi adminga yuboring: uni bossa, bot ochiladi va u avtomatik admin bo'ladi. Havola 24 soat va bir marta ishlaydi.</p>` : '<p class="sub" style="margin:0 2px 12px">Adminlarni faqat asosiy admin qo\'sha va olib tashlay oladi.</p>'}</section>
@@ -225,7 +320,7 @@
   function openEditor(id, dup) {
     const isNew = id === 'new' || !!dup;
     const src = dup || (isNew ? null : A.data.products.find((x) => x.id === Number(id)));
-    const base = src ? JSON.parse(JSON.stringify(src)) : { category_id: A.data.categories[0] && A.data.categories[0].id, title: '', price: '', old_price: 0, stock: 1, badge: '', short: '', description: '', colors: [], specs: {}, images: [], featured: false, active: true };
+    const base = src ? JSON.parse(JSON.stringify(src)) : { category_id: A.data.categories[0] && A.data.categories[0].id, title: '', price: '', old_price: 0, stock: 1, badge: '', short: '', description: '', colors: [], specs: {}, images: [], featured: false, active: true, age_min: null, age_max: null, title_ru: '', short_ru: '', description_ru: '' };
     if (dup) { base.title = base.title + ' (nusxa)'; base.images = [...imgsOf(src)]; }
     const st = { ...base, specs: Object.entries(base.specs || {}), colors: [...(base.colors || [])], images: imgsOf(base) };
     let dirty = false;
@@ -240,6 +335,9 @@
         <section class="ecard"><h3>📷 Rasmlar <span class="hint" style="font-weight:700;font-size:12px">${st.images.length}/6</span></h3><div class="imgs">${st.images.map((im, i) => `<div class="it"><div class="media ph" data-icon="car" data-hex="#2b59ff">${imgTag(im)}</div><button class="x" data-irm="${i}" aria-label="O'chirish">✕</button>${i === 0 ? '<span class="main">Asosiy</span>' : `<button class="mk" data-imain="${i}">Asosiy qilish</button>`}</div>`).join('')}${st.images.length < 6 ? '<button class="add" id="pick">📷<br>Rasm qo\'shish</button>' : ''}</div><input id="file" type="file" accept="image/*" multiple hidden></section>
         <section class="ecard"><h3>📝 Asosiy</h3>${fld('title', 'Nomi', 'autocomplete="off"')}<label class="fld"><span>Kategoriya</span><select data-f="category_id">${A.data.categories.map((c) => `<option value="${c.id}" ${c.id === Number(st.category_id) ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></label>${fld('short', 'Qisqa tavsif')}${fld('description', "To'liq tavsif", 'rows="4"', 'textarea')}</section>
         <section class="ecard"><h3>💰 Narx va ombor</h3><div class="row2c">${fld('price', "Narxi (so'm)", 'inputmode="numeric" data-num')}${fld('old_price', "Eski narx (0 = yo'q)", 'inputmode="numeric" data-num')}</div><div class="row2c">${fld('stock', 'Omborda (ta)', 'inputmode="numeric" data-num')}${fld('badge', 'Belgi (Yangi, Chegirma...)')}</div></section>
+        <section class="ecard"><h3>🎂 Yosh va video</h3><div class="row2c">${fld('age_min', 'Yoshi: dan (yil)', 'inputmode="decimal" placeholder="masalan 3"')}${fld('age_max', 'Yoshi: gacha (yil)', 'inputmode="decimal" placeholder="masalan 8"')}</div>
+          <p class="sub" style="font-size:12px;margin:0 2px 10px">Yosh bo'yicha filtr uchun. 6 oy = 0.5. ${base.video ? '🎬 Video qo\'shilgan. <button class="btn sm ghost" data-vrm>Videoni olib tashlash</button>' : '🎬 Video qo\'shish: botda videoni yuboring va izohiga <code>/video ' + (isNew ? 'id' : base.id) + '</code> yozing.'}</p></section>
+        <section class="ecard"><h3>🇷🇺 Русский язык</h3>${fld('title_ru', 'Название (ruscha)')}${fld('short_ru', 'Краткое описание')}${fld('description_ru', 'Полное описание', 'rows="3"', 'textarea')}</section>
         <section class="ecard"><h3>🎨 Ranglar</h3><div class="presets">${Object.entries(PALETTE).map(([n, h]) => `<button data-preset="${esc(n)}"><i style="background:${h}"></i>${esc(n)}</button>`).join('')}</div>
           ${st.colors.map((c, i) => `<div class="crow"><input type="color" value="${esc(c.hex)}" data-chex="${i}"><input type="text" value="${esc(c.name)}" data-cname="${i}" placeholder="Rang nomi"><button class="x" data-crm="${i}">✕</button></div>`).join('')}
           <button class="btn ghost sm" data-cadd style="margin-bottom:10px">➕ Rang qo'shish</button></section>
@@ -263,7 +361,7 @@
       const specs = {}; st.specs.forEach(([k, v]) => { if (k.trim() && v.trim()) specs[k.trim()] = v.trim(); });
       $$('#save,#save2').forEach((b) => (b.disabled = true));
       try {
-        const { product } = await api('admin/product', { id: isNew ? undefined : base.id, category_id: st.category_id, title: st.title, price: digits(st.price), old_price: digits(st.old_price) || 0, stock: digits(st.stock) || 0, badge: st.badge, short: st.short, description: st.description, colors: st.colors.filter((c) => c.name.trim()), specs, images: st.images, featured: st.featured, active: st.active });
+        const { product } = await api('admin/product', { id: isNew ? undefined : base.id, category_id: st.category_id, title: st.title, price: digits(st.price), old_price: digits(st.old_price) || 0, stock: digits(st.stock) || 0, badge: st.badge, short: st.short, description: st.description, colors: st.colors.filter((c) => c.name.trim()), specs, images: st.images, featured: st.featured, active: st.active, age_min: String(st.age_min ?? '').trim(), age_max: String(st.age_max ?? '').trim(), title_ru: st.title_ru, short_ru: st.short_ru, description_ru: st.description_ru, video: st.dropVideo ? null : undefined });
         const i = A.data.products.findIndex((x) => x.id === product.id); i >= 0 ? (A.data.products[i] = product) : A.data.products.push(product);
         dirty = false; close(); draw(); toast('Saqlandi ✅'); haptic('ok');
       } catch (err) { $('#serr').innerHTML = `<div class="alert">${esc(err.message)}</div>`; $('#serr').scrollIntoView({ block: 'center', behavior: 'smooth' }); haptic('err'); $$('#save,#save2').forEach((b) => (b.disabled = false)); }
@@ -280,6 +378,7 @@
     sheet.onclick = async (e) => {
       const t = e.target.closest('button'); if (!t) return;
       if (t.dataset.close !== undefined) return tryClose();
+      if (t.dataset.vrm !== undefined) { st.dropVideo = true; dirty = true; t.parentNode.textContent = '🎬 Video saqlashda olib tashlanadi.'; return; }
       if (t.id === 'pick') return $('#file').click();
       if (t.dataset.irm) { collect(); dirty = true; st.images.splice(Number(t.dataset.irm), 1); return draw2(); }
       if (t.dataset.imain) { collect(); dirty = true; const [x] = st.images.splice(Number(t.dataset.imain), 1); st.images.unshift(x); return draw2(); }
@@ -368,10 +467,27 @@
       try { A.data.settings = (await api('admin/settings', body)).settings; toast('Saqlandi ✅'); haptic('ok'); } catch (err) { toast(err.message, true); haptic('err'); }
       return;
     }
+    if (b('#saveInst')) {
+      const g = (k) => $(`[data-inst=${k}]`);
+      try { A.data.settings = (await api('admin/settings', { installment: { enabled: g('enabled').checked, months: digits(g('months').value) || 6, markup: digits(g('markup').value) || 0 } })).settings; toast('Saqlandi ✅'); haptic('ok'); } catch (err) { toast(err.message, true); haptic('err'); }
+      return;
+    }
+    if (b('#addBanner')) return bannerForm();
+    if ((el = b('[data-bedit]'))) return bannerForm(A.data.banners.find((x) => x.id === Number(el.dataset.bedit)));
+    if (b('#addPromo')) return promoForm();
+    if ((el = b('[data-pedit]'))) return promoForm(A.data.promos.find((x) => x.code === el.dataset.pedit));
+    if ((el = b('[data-rdel]'))) {
+      if (!(await confirmBox("Bu fikr o'chirilsinmi? Baho qayta hisoblanadi."))) return;
+      const [pid, ...rest] = el.dataset.rdel.split(':');
+      try { await api('admin/review/delete', { pid: Number(pid), id: rest.join(':') }); await load(true); toast("O'chirildi 🗑"); } catch (err) { toast(err.message, true); }
+      return;
+    }
+    if (b('#bcSend')) return broadcast();
+    if (b('#exportCsv')) { try { await api('admin/export', {}); toast('Fayl bot chatiga yuborildi ✅'); haptic('ok'); } catch (err) { toast(err.message, true); } return; }
     if (b('#addCat')) { $('#cats').insertAdjacentHTML('beforeend', catRow({ id: '', name: '', icon: 'car' })); return; }
     if ((el = b('[data-csave]'))) {
       const row = el.closest('.catrow');
-      try { await api('admin/category', { id: el.dataset.csave || undefined, name: $('[data-cn]', row).value, icon: $('[data-ci]', row).value }); await load(true); toast('Saqlandi ✅'); haptic('ok'); } catch (err) { toast(err.message, true); }
+      try { await api('admin/category', { id: el.dataset.csave || undefined, name: $('[data-cn]', row).value, name_ru: $('[data-cr]', row).value, icon: $('[data-ci]', row).value }); await load(true); toast('Saqlandi ✅'); haptic('ok'); } catch (err) { toast(err.message, true); }
       return;
     }
     if ((el = b('[data-cdel]'))) {

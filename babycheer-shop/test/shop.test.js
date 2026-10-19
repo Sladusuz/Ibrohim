@@ -37,7 +37,7 @@ test("yetkazish: Toshkent va olib ketish bepul, O'zbekiston bo'ylab narx sozlana
   await shop.updateCatalog((c) => { c.settings.regionFee = 30000; return c; });
   const r1 = await shop.createOrder(user, { ...base, delivery: 'region', address: 'Samarqand, Registon 1', items: [cheap] });
   assert.equal(r1.delivery_fee, 30000); assert.equal(r1.total, 420000);
-  assert.deepEqual(shop.invoicePrices(r1).at(-1), { label: 'Yetkazib berish', amount: 3000000 });
+  assert.deepEqual(shop.invoicePrices(r1).at(-1), { label: 'Yetkazib berish / Доставка', amount: 3000000 });
   const b = await shop.createOrder(user, { ...base, delivery: 'pickup', address: '', items: [{ id: 9, qty: 1 }] });
   assert.equal(b.delivery_fee, 0);
   assert.equal(b.items[0].color, "To'q sariq"); // noma'lum rang -> birinchi rang

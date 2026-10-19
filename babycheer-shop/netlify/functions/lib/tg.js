@@ -18,12 +18,28 @@ export async function api(method, params = {}) {
   return j.result;
 }
 
+/** Fayl yuborish (multipart): masalan CSV hisobot. */
+export async function apiForm(method, form) {
+  const res = await fetch(`${BASE()}/bot${TOKEN()}/${method}`, { method: 'POST', body: form, signal: AbortSignal.timeout(15000) });
+  const j = await res.json().catch(() => ({}));
+  if (!j.ok) throw new Error(`Telegram ${method}: ${j.description || res.status}`);
+  return j.result;
+}
+
 /** Xatoni yutadi: xabar yuborilmasa buyurtma jarayoni to'xtamasligi kerak. */
 export const safe = (method, params) => api(method, params).catch((e) => { console.warn(e.message); return null; });
 
 /** Asosiy adminlar (egalar): Netlify'dagi ADMIN_IDS. Ular boshqa adminlarni qo'sha va olib tashlay oladi. */
 export const ownerIds = () => (process.env.ADMIN_IDS || '').split(',').map((x) => Number(x.trim())).filter(Boolean);
 export const adminIds = ownerIds; // eski nom
+
+let cachedBot = null;
+/** Bot @username (ulashish havolalari uchun), bir marta so'raladi. */
+export async function botUsername() {
+  if (cachedBot) return cachedBot;
+  try { cachedBot = (await api('getMe')).username || null; } catch { /* Telegram javob bermadi */ }
+  return cachedBot;
+}
 
 let adminCache = { t: 0, ids: [] };
 export const resetAdminCache = () => { adminCache = { t: 0, ids: adminCache.ids }; };

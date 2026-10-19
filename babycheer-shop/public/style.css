@@ -412,6 +412,58 @@ body.has-cta #app { padding-bottom: calc(var(--tab-h) + var(--tab-gap) + var(--n
   .perk { font-size: 11px; }
 }
 
+/* ---------- v4: bannerlar, yosh filtri, baho, promokod, muddatli to'lov, til tugmasi ---------- */
+.icon-btn.lang { width: auto; min-width: 40px; padding: 0 10px; font-weight: 800; font-size: 13px; letter-spacing: .02em; }
+.bns { display: flex; gap: 12px; overflow-x: auto; margin: 14px -14px 0; padding: 2px 14px 6px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.bns::-webkit-scrollbar { display: none; }
+.bn { flex: 0 0 82%; scroll-snap-align: start; min-height: 96px; border-radius: 22px; padding: 16px 18px; color: #fff; display: flex; flex-direction: column; justify-content: center; gap: 4px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+.bn::after { content: ''; position: absolute; right: -24px; top: -24px; width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 255, 255, .16); }
+.bn b { font-size: 18px; line-height: 1.2; letter-spacing: -.02em; position: relative; z-index: 1; }
+.bn small { font-size: 13px; opacity: .92; position: relative; z-index: 1; max-width: 85%; }
+.bn.blue { background: linear-gradient(135deg, #2b59ff, #5b7bff); }
+.bn.orange { background: linear-gradient(135deg, #ff7a1a, #ffab40); }
+.bn.green { background: linear-gradient(135deg, #0f9a63, #3ccf94); }
+.bn.pink { background: linear-gradient(135deg, #e63c8d, #ff7ab8); }
+.bn.purple { background: linear-gradient(135deg, #6d4aff, #a07bff); }
+.bn:only-child { flex-basis: 100%; }
+.chips.ages { margin-top: 8px; }
+.chip.sm { padding: 6px 12px; font-size: 13px; }
+.toolbar { flex-wrap: wrap; justify-content: flex-start; }
+.toolbar select { max-width: 46%; min-width: 0; }
+.toolbar .switch { margin-left: auto; }
+.rate { color: var(--hint); font-size: 12.5px; font-weight: 700; margin: 2px 0 0; }
+.rate span { color: #f5a400; }
+.rate i { font-style: normal; font-weight: 600; }
+.pill.gold { background: rgba(245, 164, 0, .16); color: #b97800; }
+:root[data-theme="dark"] .pill.gold { color: #ffc54d; }
+.inst { margin-top: 12px; padding: 12px 14px; border-radius: 16px; background: var(--brand-soft); display: grid; gap: 2px; }
+.inst b { font-size: 13px; color: var(--brand); }
+.inst span { font-size: 15px; font-weight: 700; }
+.inst em { font-style: normal; color: var(--brand); }
+.inst small { color: var(--hint); }
+.media.vid { background: #000; }
+.media.vid video { width: 100%; height: 100%; object-fit: contain; display: block; background: #000; }
+.stars { color: #f5a400; letter-spacing: 1px; font-size: 14px; }
+.rv { padding: 12px 14px; border-radius: 16px; background: var(--card); box-shadow: var(--shadow); margin-bottom: 10px; }
+.rvh { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rvh small { margin-left: auto; color: var(--hint); }
+.rv p { margin: 6px 0 0; color: var(--text); overflow-wrap: anywhere; }
+.rform { margin-top: 12px; }
+.rform h3 { font-size: 16px; margin-bottom: 8px; }
+.pick { display: flex; gap: 6px; margin-bottom: 10px; }
+.pick button { font-size: 32px; line-height: 1; color: var(--line); transition: color .15s, transform .15s; }
+.pick button.on { color: #f5a400; transform: scale(1.12); }
+.rlinks { display: grid; gap: 8px; margin-top: 12px; }
+.promo { display: flex; gap: 8px; margin-bottom: 6px; }
+.promo input { flex: 1; min-width: 0; border: 1.5px solid transparent; outline: 0; border-radius: 15px; background: var(--card); padding: 11px 14px; box-shadow: var(--shadow); font-size: 16px; text-transform: uppercase; }
+.promo input:focus { border-color: var(--brand); }
+.pmsg { font-size: 13px; margin: 0 4px 10px; min-height: 0; }
+.pmsg.ok { color: var(--ok); font-weight: 700; }
+.pmsg.bad { color: var(--danger); font-weight: 700; }
+.sum .r.disc, .oline.disc { color: var(--ok); font-weight: 700; }
+#locBtn { margin-top: 2px; }
+.cta-in .btn.ghost { flex: none; }
+
 /* eski Telegram/WebView (color-mix qo'llamaydigan) uchun zaxira ranglar */
 @supports not (background: color-mix(in srgb, red 50%, blue)) {
   #top { background: var(--bg); }

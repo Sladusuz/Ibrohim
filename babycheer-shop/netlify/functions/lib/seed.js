@@ -14,6 +14,7 @@ export const SEED_SETTINGS = {
   channel: 'https://t.me/+9CWZLTOE7KczZjky',
   instagram: 'https://instagram.com/babycheer_shop',
   regionFee: 0, // viloyatlarga yetkazish narxi (0 = operator bilan kelishiladi); Toshkent bo'ylab bepul
+  installment: { enabled: false, months: 6, markup: 0 }, // muddatli to'lov hisoblagichi (admin panelda yoqiladi)
 };
 
 export const SEED_CATEGORIES = [
