@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="uz"><head><meta charset="utf-8"><title>Impro IT: sotuv videosi (9:16)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;background:#050507;overflow:hidden;font-family:Inter,'Helvetica Neue',Arial,sans-serif;color:#f4efe4}
+#st{position:relative;width:1080px;height:1920px;overflow:hidden;background:#07070a;transform-origin:50% 50%}
+.L{position:absolute;inset:0;opacity:0;will-change:transform,opacity}
+.abs{position:absolute}
+.serif{font-family:'Liberation Serif','Times New Roman',serif;font-style:italic;font-weight:400}
+.gold{background:linear-gradient(100deg,#f1dfae,#d8b46a 55%,#a9803a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.red{color:#ff4d4d}
+/* fon */
+#bg{background:radial-gradient(900px 900px at 50% 40%,#17131d 0%,#07070a 70%)}
+#aur{opacity:.55;mix-blend-mode:screen}
+#aur i{position:absolute;border-radius:50%;filter:blur(120px)}
+#grain{opacity:.07;mix-blend-mode:overlay}
+#vig{background:radial-gradient(70% 55% at 50% 50%,transparent 55%,#000 120%);opacity:1}
+#flash{background:#fff;opacity:0}
+#scan{background:repeating-linear-gradient(0deg,#0000 0 3px,#00000022 3px 4px);opacity:.35}
+/* S0 hook */
+#clock{left:0;right:0;top:150px;text-align:center;font-weight:800;font-size:250px;letter-spacing:-8px;font-variant-numeric:tabular-nums}
+#clock small{display:block;font-size:44px;letter-spacing:6px;font-weight:600;color:#9a96a8;margin-top:-6px;text-transform:uppercase}
+.dot{display:inline-block;width:26px;height:26px;border-radius:50%;background:#ff4d4d;margin-right:22px;vertical-align:middle;box-shadow:0 0 40px #ff4d4d}
+.nt{position:absolute;left:70px;right:70px;height:150px;border-radius:38px;background:#1b1a23ee;border:2px solid #ffffff1c;display:flex;align-items:center;gap:30px;padding:0 36px;box-shadow:0 30px 80px #000a}
+.nt .av{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;font-size:44px;font-weight:800;color:#15110a}
+.nt b{display:block;font-size:40px}.nt span{display:block;font-size:42px;color:#cfcbdc;margin-top:4px}
+.nt .bd{margin-left:auto;font-style:normal;font-size:30px;font-weight:800;padding:10px 20px;border-radius:99px;background:#ff4d4d33;color:#ff6b6b;white-space:nowrap}
+#lost{left:0;right:0;bottom:70px;text-align:center}
+#lost small{display:block;font-size:40px;letter-spacing:4px;color:#9a96a8;text-transform:uppercase;font-weight:600}
+#lost b{display:block;white-space:nowrap;font-size:122px;font-weight:900;letter-spacing:-4px;color:#ff4d4d;text-shadow:0 0 80px #ff4d4d66;font-variant-numeric:tabular-nums}
+/* S1 */
+.kin{position:absolute;left:60px;right:60px;text-align:center;font-weight:900;line-height:.95;letter-spacing:-5px;will-change:transform,opacity,filter}
+/* S2 */
+#ring i{position:absolute;left:50%;top:760px;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:50%;border:6px solid #e6d3a3}
+#mark{left:50%;top:760px;width:300px;height:300px;margin:-150px 0 0 -150px;border-radius:84px;background:linear-gradient(135deg,#f1dfae,#a9803a);display:grid;place-items:center;font-size:210px;font-weight:900;color:#15110a;box-shadow:0 40px 160px #d8b46a88}
+#brand{left:0;right:0;top:960px;text-align:center;font-size:170px;font-weight:900;letter-spacing:-6px}
+#tag{left:40px;right:40px;top:1200px;text-align:center;font-size:104px;font-weight:900;line-height:1.02;letter-spacing:-3px}
+/* telefon */
+.phone{position:absolute;width:780px;height:1500px;border-radius:112px;background:#0b0b10;border:16px solid #23232c;box-shadow:0 0 0 3px #3a3a46,0 80px 200px #000,0 0 220px #d8b46a33;overflow:hidden}
+.phone:before{content:"";position:absolute;top:22px;left:50%;width:210px;height:50px;margin-left:-105px;border-radius:30px;background:#000;z-index:5}
+.tgh{position:absolute;top:0;left:0;right:0;height:210px;background:#17212b;display:flex;align-items:flex-end;padding:0 40px 28px;gap:24px;z-index:3}
+.tgh .av{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#f1dfae,#a9803a);display:grid;place-items:center;font-size:44px;font-weight:900;color:#15110a}
+.tgh b{font-size:38px}.tgh span{display:block;font-size:26px;color:#7f93a6;margin-top:2px}
+.chat{position:absolute;top:210px;left:0;right:0;bottom:0;background:linear-gradient(180deg,#0e1621,#0b1119)}
+.bub{position:absolute;max-width:620px;padding:26px 32px;border-radius:38px;font-size:38px;line-height:1.25;opacity:0}
+.bub.me{right:34px;background:#2b5278;border-bottom-right-radius:10px}
+.bub.bot{left:34px;background:#182533;border-bottom-left-radius:10px}
+.bub b{color:#e6d3a3}
+.btn2{position:absolute;left:34px;padding:22px 36px;border-radius:30px;background:#223648;color:#8fc3ff;font-size:36px;font-weight:700;opacity:0;border:2px solid #2f4a63}
+.typing{position:absolute;left:34px;padding:28px 36px;border-radius:38px;background:#182533;opacity:0}
+.typing i{display:inline-block;width:16px;height:16px;border-radius:50%;background:#7f93a6;margin:0 6px}
+.inv{position:absolute;left:34px;width:640px;border-radius:38px;background:#182533;overflow:hidden;opacity:0}
+.inv .h{padding:26px 32px;font-size:34px;color:#cfd9e3;background:#1f3347}
+.inv .a{padding:26px 32px 8px;font-size:64px;white-space:nowrap;font-weight:900;letter-spacing:-2px}
+.inv .s{padding:0 32px 26px;font-size:32px;color:#7f93a6}
+.inv .pay{margin:0 24px 26px;height:104px;border-radius:26px;background:linear-gradient(135deg,#3da0ff,#2a6fe0);display:grid;place-items:center;font-size:42px;font-weight:800}
+.ok{position:absolute;left:34px;width:640px;padding:32px;border-radius:38px;background:#12351f;border:3px solid #2dd36f;opacity:0;font-size:44px;font-weight:800;color:#6df0a1}
+.ok small{display:block;font-size:30px;font-weight:500;color:#9ad8b4;margin-top:6px}
+.rip{position:absolute;width:140px;height:140px;margin:-70px 0 0 -70px;border-radius:50%;background:#ffffff55;opacity:0}
+.chip{position:absolute;left:50%;padding:22px 40px;border-radius:99px;font-size:46px;font-weight:800;white-space:nowrap;background:#0e0e12cc;border:3px solid #e6d3a3;color:#f4efe4;box-shadow:0 20px 60px #000a;opacity:0}
+#call{left:60px;right:60px;top:120px;height:190px;border-radius:50px;background:linear-gradient(135deg,#1db954,#0a8f3c);display:flex;align-items:center;gap:36px;padding:0 44px;box-shadow:0 30px 100px #1db95466;opacity:0;z-index:20}
+#call .ph{width:110px;height:110px;border-radius:50%;background:#ffffff26;display:grid;place-items:center;font-size:62px}
+#call b{font-size:50px;display:block}#call span{font-size:34px;opacity:.9}
+/* S4 */
+#tpls{left:0;right:0;top:580px;height:1080px}
+.tp{position:absolute;top:0;width:520px;height:1080px;border-radius:64px;overflow:hidden;border:10px solid #23232c;background:#111;box-shadow:0 50px 120px #000}
+.tp img{width:100%;height:100%;object-fit:cover;object-position:top}
+#site{width:780px;height:1500px}
+.hero{position:absolute;left:0;right:0;top:0;height:1180px;background-size:cover;background-position:center}
+.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0006,#000d)}
+.hero h2{position:absolute;left:44px;right:44px;top:330px;z-index:2;font-size:92px;line-height:.98;font-weight:900;letter-spacing:-4px}
+.hero p{position:absolute;left:44px;right:60px;top:690px;z-index:2;font-size:38px;color:#e9e4d8}
+.edit{position:absolute;left:0;right:0;bottom:0;height:500px;background:#fffdf9;color:#15110a;border-radius:60px 60px 0 0;padding:36px 40px;z-index:6;box-shadow:0 -30px 120px #000c}
+.edit small{font-size:30px;font-weight:700;color:#6b6355}
+.edit .ta{margin-top:16px;height:190px;border:4px solid #c8a86a;border-radius:30px;padding:26px 30px;font-size:46px;font-weight:700;line-height:1.2;background:#fff}
+.edit .sv{margin-top:26px;height:110px;border-radius:30px;background:linear-gradient(135deg,#e6d3a3,#c8a86a);display:grid;place-items:center;font-size:44px;font-weight:900}
+.caret{display:inline-block;width:4px;height:48px;background:#c8a86a;vertical-align:-8px;margin-left:3px}
+.hl{position:absolute;left:34px;right:34px;top:316px;height:260px;border:5px dashed #e6d3a3;border-radius:26px;z-index:3}
+/* S5 */
+.cmp{position:absolute;left:60px;right:60px;border-radius:56px;padding:50px 54px}
+.cmp h4{font-size:44px;font-weight:700;color:#9a96a8}
+.cmp .pr{font-size:112px;font-weight:900;letter-spacing:-4px;line-height:1;margin-top:10px}
+.cmp .d{font-size:42px;margin-top:10px;color:#9a96a8}
+#cA{top:420px;background:#14131a;border:3px solid #ffffff14}
+#cB{top:880px;background:linear-gradient(145deg,#2a2112,#171109);border:4px solid #d8b46a;box-shadow:0 0 160px #d8b46a44}
+#cB h4{color:#e6d3a3}
+.strike{position:absolute;left:46px;right:46px;top:150px;height:10px;background:#ff4d4d;border-radius:6px;transform-origin:0 50%}
+.pill{position:absolute;left:50%;padding:24px 44px;border-radius:99px;background:#0e0e12;border:3px solid #e6d3a3;font-size:48px;font-weight:800;white-space:nowrap}
+/* S6 */
+#cta{left:20px;right:20px;top:330px;text-align:center;font-size:162px;font-weight:900;line-height:.92;letter-spacing:-8px}
+#btn{left:90px;right:90px;top:880px;height:200px;border-radius:100px;background:linear-gradient(100deg,#f1dfae,#d8b46a);color:#15110a;display:grid;place-items:center;font-size:72px;font-weight:900;box-shadow:0 30px 140px #d8b46a99}
+#url{left:0;right:0;top:1170px;text-align:center;font-size:84px;font-weight:800;letter-spacing:-2px}
+#tgl{left:0;right:0;top:1290px;text-align:center;font-size:56px;font-weight:600;color:#e6d3a3}
+#prices{left:0;right:0;top:1440px;text-align:center;font-size:44px;line-height:1.5;color:#b8b3c6;font-weight:600}
+#end{left:0;right:0;bottom:90px;text-align:center;font-size:52px;font-weight:700;color:#8d8899}
+.cta2{position:absolute;left:44px;top:800px;z-index:2;padding:26px 46px;border-radius:99px;background:linear-gradient(100deg,#f1dfae,#d8b46a);color:#15110a;font-size:40px;font-weight:900}.strip{position:absolute;left:0;right:0;top:1180px;height:320px;display:flex;gap:16px;padding:16px;background:#0b0b0d}.strip i{flex:1;border-radius:30px;background-size:cover;background-position:center}</style></head>
+<body><div id="st">
+<div class="L" id="bg"></div>
+<div class="L" id="aur"></div>
+
+<!-- S0: hook -->
+<div class="L" id="s0">
+  <div class="abs" id="clock"><span id="clk">02:17</span><small><i class="dot"></i>Tun. Siz uxlayapsiz</small></div>
+  <div id="nts"></div>
+  <div class="abs" id="lost"><small>Yo'qotilgan buyurtmalar</small><b id="lostn">0</b></div>
+</div>
+<!-- S1: agitate -->
+<div class="L" id="s1">
+  <div class="kin" id="k1" style="top:520px;font-size:230px">HAR KUNI.</div>
+  <div class="kin" id="k2" style="top:520px;font-size:170px">MIJOZLAR<br><span class="gold">YOZADI.</span></div>
+  <div class="kin red" id="k3" style="top:560px;font-size:250px">JAVOB<br>YO'Q.</div>
+  <div class="kin" id="k4" style="top:520px;font-size:190px">ULAR<br>KETADI</div>
+  <div class="kin" id="k5" style="top:560px;font-size:126px;letter-spacing:-4px;white-space:nowrap;left:20px;right:20px">RAQOBATCHIGA<span class="red">.</span></div>
+  <div class="abs" id="lost2" style="left:0;right:0;top:1140px;text-align:center"><small style="display:block;font-size:44px;letter-spacing:5px;color:#9a96a8;font-weight:600">BU OYDA YO'QOTILGAN</small><b id="lost2n" class="red" style="display:block;white-space:nowrap;font-size:104px;font-weight:900;letter-spacing:-4px;text-shadow:0 0 90px #ff4d4d77">0 so'm</b></div>
+</div>
+<!-- S2: logo -->
+<div class="L" id="s2">
+  <div id="ring"><i></i><i></i><i></i></div>
+  <div class="abs" id="mark">I</div>
+  <div class="abs" id="brand">Impro <span class="gold">IT</span></div>
+  <div class="abs" id="tag">Siz uxlaysiz.<br><span class="gold">Bot sotadi.</span></div>
+</div>
+<!-- S3: bot demo -->
+<div class="L" id="s3">
+  <div class="phone" id="ph1" style="left:150px;top:190px">
+    <div class="tgh"><div class="av">I</div><div><b>Impro IT · buyurtma boti</b><span>bot · onlayn</span></div></div>
+    <div class="chat" id="chat">
+      <div class="bub me" id="m1" style="top:50px">Salom! Vizitka sayt qancha turadi?</div>
+      <div class="typing" id="ty" style="top:230px"><i></i><i></i><i></i></div>
+      <div class="bub bot" id="m2" style="top:230px"><b>Vizitka sayt — 2 500 000 so'm</b><br>5–10 kunda tayyor. Hoziroq buyurtma beramizmi?</div>
+      <div class="btn2" id="b1" style="top:520px">📝 Buyurtma berish</div>
+      <div class="inv" id="iv" style="top:660px"><div class="h">💳 To'lov · Vizitka sayt</div><div class="a">2 500 000 so'm</div><div class="s">Telegram ichida, xavfsiz</div><div class="pay">To'lash</div></div>
+      <div class="ok" id="okc" style="top:660px">✓ To'lov qabul qilindi<small>Buyurtmangiz qabul qilindi. Mutaxassis bog'lanadi.</small></div>
+      <div class="rip" id="rp1"></div><div class="rip" id="rp2"></div>
+    </div>
+  </div>
+  <div class="chip" id="c1" style="top:92px">⚡ Javob — 2 soniyada</div>
+  <div class="chip" id="c2" style="top:1730px">💳 To'lov shu zahoti</div>
+  <div class="chip" id="c3" style="top:1730px">🌙 24/7, dam olmasdan</div>
+  <div class="abs" id="call"><div class="ph">📞</div><div><b>YANGI BUYURTMA!</b><span>Mijoz to'ladi · sizga qo'ng'iroq qilinmoqda</span></div></div>
+  <div class="abs" id="conf"></div>
+</div>
+<!-- S4: builder -->
+<div class="L" id="s4">
+  <div class="abs" id="t4a" style="left:50px;right:50px;top:130px;text-align:center;font-size:112px;font-weight:900;line-height:1;letter-spacing:-4px">O'zingiz yarating.<br><span class="gold">5 daqiqada.</span></div>
+  <div class="abs" id="tpls"></div>
+  <div class="abs" id="t4b" style="left:40px;right:40px;top:1700px;text-align:center;font-size:64px;font-weight:800"><span class="gold">32 ta</span> kasbiy shablon</div>
+  <div class="phone" id="ph2" style="left:150px;top:230px;opacity:0">
+    <div class="abs" id="site" style="left:0;top:0;overflow:hidden;background:#000">
+      <div class="hero" id="hero" style="background-image:url(../public/img/p/restoran-1.jpg)"><h2 id="h2">Mazali lahzalar shu yerda boshlanadi</h2><p>Qo'ng'iroq qiling va stol band qiling</p><div class="cta2">Stol band qilish →</div></div><div class="strip"><i style="background-image:url(../public/img/p/restoran-2.jpg)"></i><i style="background-image:url(../public/img/p/restoran-3.jpg)"></i></div>
+      <div class="hl" id="hl"></div>
+      <div class="edit" id="ed"><small>MATNNI O'ZGARTIRING</small><div class="ta" id="ta"></div><div class="sv">Saqlash</div></div>
+    </div>
+  </div>
+  <div class="chip" id="d1" style="top:1700px">✏️ Matn ustiga bos — o'zgaradi</div>
+  <div class="chip" id="d2" style="top:1700px">🖼 Rasm — menyudan tanlaysiz</div>
+  <div class="chip" id="d3" style="top:1700px">🆓 Tahrirlash bepul</div>
+</div>
+<!-- S5: offer -->
+<div class="L" id="s5">
+  <div class="abs" id="t5" style="left:50px;right:50px;top:170px;text-align:center;font-size:106px;font-weight:900;line-height:1;letter-spacing:-4px">Qaysi biri<br><span class="gold">arzonroq?</span></div>
+  <div class="cmp" id="cA"><h4>Agentlik: vizitka sayt</h4><div class="pr" style="color:#cfcbdc">2 500 000+ so'm</div><div class="d">5–10 kun kutasiz</div><div class="strike" id="stk"></div></div>
+  <div class="cmp" id="cB"><h4>IMPRO IT · O'ZINGIZ YARATING</h4><div class="pr gold">$10 dan</div><div class="d" style="color:#e6d3a3">Bugun. Shu telefondan.</div></div>
+  <div class="pill" id="p1" style="top:1400px">🤖 Telegram bot — $15 dan</div>
+  <div class="pill" id="p2" style="top:1540px">🔒 To'lov faqat chiqarishda</div>
+  <div class="pill" id="p3" style="top:1680px">✏️ Tahrirlash — bepul</div>
+</div>
+<!-- S6: CTA -->
+<div class="L" id="s6">
+  <div class="abs" id="cta">BUGUN<br><span class="gold">BOSHLANG</span></div>
+  <div class="abs" id="btn">Buyurtma berish →</div>
+  <div class="abs" id="url">improuzbekiston.uz</div>
+  <div class="abs" id="tgl">Telegram: @improuzbekiston_bot</div>
+  <div class="abs" id="prices">Sayt $10 · Telegram bot $15<br>Katalog +$20 · Mini ilova +$20</div>
+  <div class="abs" id="end">Siz uxlaysiz. <span class="gold">Bot sotadi.</span></div>
+</div>
+
+<div class="L" id="scan"></div>
+<canvas class="L" id="grain" width="270" height="480" style="width:1080px;height:1920px"></canvas>
+<div class="L" id="vig" style="opacity:1"></div>
+<div class="L" id="flash"></div>
+</div>
+<script>
+'use strict';
+const $=(s)=>document.querySelector(s), $$=(s)=>[...document.querySelectorAll(s)];
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), seg=(t,a,b)=>clamp((t-a)/(b-a));
+const E={o3:(x)=>1-Math.pow(1-x,3),o5:(x)=>1-Math.pow(1-x,5),io:(x)=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2,back:(x)=>{const c=1.9;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)},sp:(x)=>{if(x<=0)return 0;if(x>=1)return 1;return 1-Math.exp(-7*x)*Math.cos(14*x)}};
+const rng=(s)=>()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const fmt=(n)=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+const S=(el,o)=>{if(!el)return;for(const k in o)el.style[k]=o[k]};
+const vis=(el,t,a,b,fi=.12,fo=.12)=>{const o=Math.min(seg(t,a,a+fi),1-seg(t,b-fo,b));el.style.opacity=o;el.style.display=o<=0?'none':'block';return o};
+// --- DOM tayyorlash ---
+const NT=[['A','#f1dfae','Aziz','Narx qancha? 😮'],['M','#9ad8ff','Madina','Bugun yetkazasizmi?'],['J','#ffb3a1','Jasur','Sayt kerak edi, bormisiz?'],['D','#c9f0a8','Dilnoza','Javob bering, iltimos...'],['B','#e6b3ff','Bobur','Boshqasidan olaman.']];
+$('#nts').innerHTML=NT.map((n,i)=>`<div class="nt" id="n${i}" style="top:${520+i*172}px"><div class="av" style="background:${n[1]}">${n[0]}</div><div><b>${n[2]}</b><span>${n[3]}</span></div><i class="bd" id="nb${i}">javob yo'q</i></div>`).join('');
+// shablon karuseli
+const TP=['restoran','barber','klinika','kiyim','fitness','rieltor','kompaniya','stomatolog'];
+$('#tpls').innerHTML=TP.map((n,i)=>`<div class="tp" id="tp${i}"><img src="../public/img/home/${n}-m.webp"></div>`).join('');
+// aurora
+$('#aur').innerHTML=['#d8b46a','#6a4cff','#ff4d6d'].map((c,i)=>`<i id="au${i}" style="width:900px;height:900px;background:${c}"></i>`).join('');
+// konfetti
+const R=rng(7);const CF=Array.from({length:90},(_, i)=>({a:-Math.PI/2+(R()-.5)*2.6,v:900+R()*1400,r:R()*720,c:['#f1dfae','#d8b46a','#fff','#2dd36f','#6aa7ff'][i%5],w:14+R()*22,h:8+R()*12}));
+$('#conf').innerHTML=CF.map((c,i)=>`<i id="cf${i}" style="position:absolute;left:0;top:0;width:${c.w}px;height:${c.h}px;background:${c.c};border-radius:3px;opacity:0"></i>`).join('');
+// donalar (changlar): ixtiyoriy
+const DUST=Array.from({length:46},()=>({x:R()*1080,y:R()*1920,s:20+R()*60,sp:10+R()*40,o:.15+R()*.4}));
+const gc=$('#grain'),gx=gc.getContext('2d');
+function grain(t){const id=gx.createImageData(270,480),d=id.data,r=rng(Math.floor(t*24)+3);for(let i=0;i<d.length;i+=4){const v=r()*255;d[i]=d[i+1]=d[i+2]=v;d[i+3]=255}gx.putImageData(id,0,0)}
+const L=(id)=>document.getElementById(id);
+const typeIn=(s,p)=>s.slice(0,Math.floor(s.length*clamp(p)));
+// --- kadr ---
+function frame(t){
+  const st=L('st');
+  // umumiy kamera: sekin siljish
+  const drift=1+0.015*Math.sin(t*0.6);
+  // fon va aurora
+  S(L('bg'),{opacity:1});S(L('aur'),{opacity:t<8.3?.35:.6});
+  [['au0',200,300,0.37],['au1',700,1100,0.23],['au2',300,1500,0.31]].forEach(([id,x,y,f],i)=>S(L(id),{left:(x+Math.sin(t*f*2+i)*220)+'px',top:(y+Math.cos(t*f*2.3+i)*260)+'px',opacity:(t<8.3?(i==2?.65:.18):.75)}));
+  S(L('vig'),{opacity:1}); S(L('scan'),{opacity:t<3.3?.35:.15});
+  if(Math.floor(t*24)!==frame.lg){frame.lg=Math.floor(t*24);grain(t)} S(L('grain'),{opacity:.08});
+  // === S0 hook 0-3.3
+  const s0=L('s0');vis(s0,t,0,3.4,.01,.15);
+  if(t<3.5){
+    const sec=Math.floor(2*60+17+t); L('clk').textContent='02:'+String(17+Math.floor(t*0.8)).padStart(2,'0');
+    S(L('clock'),{transform:`translateY(${(1-E.o3(seg(t,0,.5)))*-80}px) scale(${1+(t>3?(t-3)*.5:0)})`,opacity:Math.min(seg(t,0,.25),1)});
+    for(let i=0;i<5;i++){const a=.55+i*.38,p=E.sp(seg(t,a,a+.55)),n=L('n'+i);S(n,{transform:`translateY(${(1-p)*-420}px) scale(${.92+.08*p}) rotate(${(1-p)*-4}deg)`,opacity:clamp(seg(t,a,a+.12))});const b=clamp(seg(t,a+.45,a+.7));S(L('nb'+i),{opacity:b,transform:`scale(${.6+.4*E.back(b)})`})}
+    const lost=E.o3(seg(t,.9,3.2))*4120000;L('lostn').textContent='−'+fmt(lost)+" so'm";S(L('lost'),{opacity:seg(t,.8,1.2),transform:`scale(${1+.03*Math.sin(t*20)*seg(t,2.4,3.3)})`});
+    if(t>2.9){S(s0,{transform:`translateX(${Math.sin(t*90)*14*(t-2.9)*3}px)`})}else S(s0,{transform:'none'});
+  }
+  // === S1 agitate 3.3-8.3
+  const s1=L('s1');vis(s1,t,3.2,8.4,.05,.1);
+  if(t>=3.2&&t<8.5){
+    const K=[['k1',3.35,4.0],['k2',4.0,4.8],['k3',4.8,5.6],['k4',5.6,6.35],['k5',6.35,8.2]];
+    K.forEach(([id,a,b],i)=>{const e=L(id),pi=E.o5(seg(t,a,a+.28)),po=seg(t,b-.12,b);const last=id==='k5';const sh=id==='k3'?Math.sin(t*80)*10*(1-seg(t,a,a+.5)):0;
+      S(e,{opacity:(pi*(last?1:1-po)),transform:`translateX(${sh}px) scale(${1.6-.6*pi}) translateY(${-po*60}px)`,filter:`blur(${(1-pi)*26}px)`,display:pi<=0?'none':'block'})});
+    const lost2=E.o3(seg(t,4.4,8.0))*38700000;L('lost2n').textContent='−'+fmt(lost2)+" so'm";S(L('lost2'),{opacity:seg(t,4.3,4.8)*(1-seg(t,8.1,8.35)),transform:`scale(${1+.04*Math.sin(t*14)})`});
+  }
+  // === S2 logo 8.3-10.7
+  const s2=L('s2');vis(s2,t,8.3,10.9,.04,.2);
+  if(t>=8.3&&t<11){
+    const p=seg(t,8.35,9.1);S(L('mark'),{transform:`scale(${E.sp(p)}) rotate(${(1-E.o3(p))*-30}deg)`});
+    $$('#ring i').forEach((r,i)=>{const q=seg(t,8.35+i*.18,9.6+i*.18);S(r,{transform:`scale(${.3+q*6})`,opacity:(1-q)*.8*(q>0?1:0)})});
+    S(L('brand'),{opacity:seg(t,8.7,9.1),transform:`translateY(${(1-E.o5(seg(t,8.7,9.2)))*70}px)`});
+    const tg=L('tag');S(tg,{opacity:seg(t,9.2,9.5),transform:`translateY(${(1-E.o5(seg(t,9.2,9.8)))*60}px) scale(${1+.02*Math.sin(t*3)})`});
+  }
+  // flash 8.2-8.6
+  S(L('flash'),{opacity:Math.max(0,1-Math.abs(t-8.3)/.22)*.95, display:'block'});
+  // === S3 bot demo 10.7-19.9
+  const s3=L('s3');vis(s3,t,10.6,20.0,.25,.3);
+  if(t>=10.5&&t<20.1){
+    const p=E.o5(seg(t,10.6,11.4)),ph=L('ph1');
+    const tilt=Math.sin(t*.8)*2;S(ph,{transform:`translateY(${(1-p)*900}px) rotate(${(1-p)*8}deg) scale(${1+(t-10.6)*.006}) rotateY(${tilt}deg)`,opacity:1});
+    const bub=(id,a,y0)=>{const q=E.sp(seg(t,a,a+.5));S(L(id),{opacity:clamp(seg(t,a,a+.1)),transform:`translateY(${(1-q)*40}px) scale(${.85+.15*q})`})};
+    bub('m1',11.3);
+    const tyIn=seg(t,12.1,12.25)*(1-seg(t,13.0,13.05));S(L('ty'),{opacity:tyIn});$$('#ty i').forEach((d,i)=>S(d,{transform:`translateY(${-Math.abs(Math.sin(t*9+i*.9))*16}px)`}));
+    bub('m2',13.0);
+    S(L('b1'),{opacity:clamp(seg(t,13.8,14.0)),transform:`translateY(${(1-E.sp(seg(t,13.8,14.3)))*30}px) scale(${1-.08*Math.max(0,1-Math.abs(t-14.7)/.15)})`,background:t>14.7?'#3a5f8a':'#223648'});
+    const r1=seg(t,14.55,15.0);S(L('rp1'),{left:'300px',top:'640px',opacity:(1-r1)*(r1>0?1:0)*.9,transform:`scale(${.3+r1*2.4})`});
+    S(L('b1'),{});
+    const ivp=E.sp(seg(t,15.1,15.7));S(L('iv'),{opacity:t<17.0?clamp(seg(t,15.1,15.25)):0,transform:`translateY(${(1-ivp)*50}px) scale(${.9+.1*ivp})`});
+    const r2=seg(t,16.35,16.8);S(L('rp2'),{left:'340px',top:'1060px',opacity:(1-r2)*(r2>0?1:0)*.9,transform:`scale(${.3+r2*2.4})`});
+    const okp=E.sp(seg(t,17.0,17.55));S(L('okc'),{opacity:clamp(seg(t,17.0,17.12)),transform:`scale(${.8+.2*okp})`,boxShadow:`0 0 ${okp*120}px #2dd36f66`});
+    // chiplar
+    const chip=(id,a,b)=>{const q=E.sp(seg(t,a,a+.4)),o=Math.min(clamp(seg(t,a,a+.12)),1-seg(t,b-.15,b));S(L(id),{opacity:o,transform:`translateX(-50%) translateY(${(1-q)*40}px) scale(${.8+.2*q})`})};
+    chip('c1',12.9,15.0);chip('c2',15.2,17.3);chip('c3',17.9,19.9);
+    // qo'ng'iroq
+    const cp=E.sp(seg(t,17.7,18.2));S(L('call'),{opacity:clamp(seg(t,17.7,17.8))*(1-seg(t,19.6,19.9)),transform:`translateY(${(1-cp)*-300}px) scale(${1+.025*Math.sin(t*22)})`});
+    // konfetti
+    CF.forEach((c,i)=>{const tt=t-16.95;const e=L('cf'+i);if(tt<0||tt>2.8){e.style.opacity=0;return}const x=540+Math.cos(c.a)*c.v*tt*.55,y=1000+Math.sin(c.a)*c.v*tt*.55+0.5*2600*tt*tt*.45;S(e,{opacity:1-seg(tt,1.9,2.8),transform:`translate(${x}px,${y}px) rotate(${c.r*tt}deg)`})});
+  }
+  // === S4 builder 19.9-27.6
+  const s4=L('s4');vis(s4,t,19.8,27.7,.25,.3);
+  if(t>=19.7&&t<27.8){
+    S(L('t4a'),{opacity:seg(t,20.1,20.4)*(1-seg(t,22.9,23.2)),transform:`translateY(${(1-E.o5(seg(t,20.1,20.7)))*60}px) scale(${1.05-.05*E.o3(seg(t,20.1,21))})`});
+    // karusel
+    const car=seg(t,20.4,23.3);
+    TP.forEach((n,i)=>{const x0=1180+i*560-E.io(seg(t,20.4,23.1))*(1180+3*560-280);const e=L('tp'+i),cx=x0+260,d=Math.abs(cx-540)/540;const sc=1.02-.2*Math.min(d,1);S(e,{left:x0+'px',transform:`scale(${sc})`,opacity:(1-seg(t,22.9,23.3))*seg(t,20.3,20.6),filter:`brightness(${1-Math.min(d,1)*.5})`})});
+    S(L('t4b'),{opacity:seg(t,20.9,21.2)*(1-seg(t,22.9,23.2))});
+    // telefon + tahrir
+    const p2=E.o5(seg(t,23.0,23.8)),ph2=L('ph2');S(ph2,{opacity:clamp(seg(t,23.0,23.1)),transform:`translateY(${(1-p2)*700}px) scale(${.9+.1*p2})`});
+    const edp=E.sp(seg(t,24.3,24.9));
+    S(L('hl'),{opacity:seg(t,23.9,24.2)*(1-seg(t,26.4,26.6)),transform:`scale(${1+.01*Math.sin(t*10)})`});
+    S(L('ed'),{transform:`translateY(${(1-edp)*520}px)`});
+    const NEW="Oilaviy ta'm, har kuni yangi!";
+    const typed=typeIn(NEW,seg(t,25.0,26.2));L('ta').innerHTML=typed+(Math.floor(t*3)%2===0&&t<26.3?'<span class="caret"></span>':'');
+    // saqlash bosildi
+    const done=t>26.5;L('h2').textContent=done?NEW:"Mazali lahzalar shu yerda boshlanadi";
+    S(L('ed'),{transform:`translateY(${(1-edp)*520+E.o3(seg(t,26.5,26.9))*520}px)`});
+    S(L('h2'),{transform:`scale(${1+(done?.04*Math.max(0,1-(t-26.5)*2):0)})`});
+    const dchip=(id,a,b)=>{const q=E.sp(seg(t,a,a+.4)),o=Math.min(clamp(seg(t,a,a+.12)),1-seg(t,b-.15,b));S(L(id),{opacity:o,transform:`translateX(-50%) translateY(${(1-q)*40}px) scale(${.8+.2*q})`})};
+    dchip('d1',24.0,25.7);dchip('d2',25.8,26.9);dchip('d3',26.9,27.7);
+  }
+  // === S5 offer 27.6-32.2
+  const s5=L('s5');vis(s5,t,27.5,32.4,.2,.25);
+  if(t>=27.4&&t<32.5){
+    const pp=(id,a,dir)=>{const q=E.sp(seg(t,a,a+.55));S(L(id),{opacity:clamp(seg(t,a,a+.15)),transform:`translateX(${(1-q)*dir*900}px)`})};
+    S(L('t5'),{opacity:seg(t,27.6,27.9),transform:`translateY(${(1-E.o5(seg(t,27.6,28.2)))*50}px)`});
+    pp('cA',28.1,-1);pp('cB',29.0,1);
+    S(L('stk'),{transform:`scaleX(${E.o5(seg(t,29.0,29.5))})`});S(L('cA'),{opacity:clamp(seg(t,28.1,28.25))*(1-.45*seg(t,29.0,29.4)),transform:`translateX(${(1-E.sp(seg(t,28.1,28.65)))*-900}px)`});
+    S(L('cB'),{transform:`translateX(${(1-E.sp(seg(t,29.0,29.55)))*900}px) scale(${1+.02*Math.sin(t*5)*seg(t,29.7,32)})`});
+    ['p1','p2','p3'].forEach((id,i)=>{const a=29.9+i*.45,q=E.sp(seg(t,a,a+.45));S(L(id),{opacity:clamp(seg(t,a,a+.1)),transform:`translateX(-50%) translateY(${(1-q)*60}px) scale(${.85+.15*q})`})});
+  }
+  // === S6 CTA 32.2-37
+  const s6=L('s6');vis(s6,t,32.1,38,.25,.01);
+  if(t>=32){
+    S(L('cta'),{opacity:seg(t,32.4,32.6),transform:`scale(${1.4-.4*E.o5(seg(t,32.4,33.1))})`,filter:`blur(${(1-E.o5(seg(t,32.4,33)))*24}px)`});
+    const bp=E.sp(seg(t,33.2,33.8));S(L('btn'),{opacity:clamp(seg(t,33.2,33.35)),transform:`scale(${(.7+.3*bp)*(1+.035*Math.sin(t*7)*seg(t,33.8,38))})`,boxShadow:`0 30px ${140+60*Math.sin(t*7)}px #d8b46a99`});
+    S(L('url'),{opacity:seg(t,34.0,34.3),transform:`translateY(${(1-E.o5(seg(t,34.0,34.6)))*40}px)`});
+    S(L('tgl'),{opacity:seg(t,34.5,34.8),transform:`translateY(${(1-E.o5(seg(t,34.5,35.1)))*40}px)`});
+    S(L('prices'),{opacity:seg(t,35.0,35.3)});
+    S(L('end'),{opacity:seg(t,35.6,36.0)});
+  }
+  // chang zarralari (hamma sahnada)
+  S(st,{transform:`scale(${drift}) translate(${Math.sin(t*.5)*6}px,${Math.cos(t*.4)*6}px)`});
+}
+window.__frame=frame;frame(0);
+</script></body></html>
