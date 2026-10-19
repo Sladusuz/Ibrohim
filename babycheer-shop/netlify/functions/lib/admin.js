@@ -151,7 +151,7 @@ export async function adminApi(route, req, user) {
   }
 
   if (route === 'admin/settings') {
-    const numeric = { freeFrom: [0, 1e9], deliveryFee: [0, 1e8], warrantyMonths: [0, 120] };
+    const numeric = { regionFee: [0, 1e8] };
     const strings = { name: 40, phone: 30, telegram: 60, channel: 200, instagram: 200 };
     const patch = {};
     for (const [k, [min, max]] of Object.entries(numeric)) if (k in body) { const n = int(body[k], min, max); if (n === null) return bad(`${k}: noto'g'ri son`); patch[k] = n; }

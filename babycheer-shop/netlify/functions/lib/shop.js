@@ -9,7 +9,9 @@ export const STATUSES = {
   delivered: '🎉 Yetkazildi',
   cancelled: '❌ Bekor qilindi',
 };
-export const DELIVERY = { courier: '🚚 Kuryer', pickup: '🏬 Olib ketish (bepul)' };
+// courier = Toshkent shahri bo'ylab (bepul), region = butun O'zbekiston bo'ylab, pickup = olib ketish
+export const DELIVERY = { courier: "🚚 Toshkent bo'ylab (bepul)", region: "📦 O'zbekiston bo'ylab", pickup: '🏬 Olib ketish (bepul)' };
+export const needsAddress = (d) => d === 'courier' || d === 'region';
 
 /** Yoqilgan to'lov usullari. Onlayn va o'tkazma faqat sozlangan bo'lsa chiqadi. */
 export function paymentMethods() {
@@ -42,13 +44,25 @@ export async function getCatalog() {
     await store.update('catalog', (cur) => cur ?? c);
     c = await store.get('catalog');
   }
+  if (normalizeCatalog(c)) { // eski qoidalar (kafolat, 1 mln chegarasi) bazadan ham bir marta tozalanadi
+    try { await store.update('catalog', (cur) => { if (cur) normalizeCatalog(cur); return cur; }); } catch (e) { console.warn('katalog moslash yozilmadi:', e.message); }
+  }
   return c;
 }
 
 export const updateCatalog = (fn) => store.update('catalog', async (cur) => fn(cur ?? (await getCatalog())));
 
 export function deliveryFee(settings, subtotal, delivery) {
-  return delivery === 'courier' && subtotal > 0 && subtotal < settings.freeFrom ? settings.deliveryFee : 0;
+  return delivery === 'region' ? Math.max(0, Number(settings.regionFee) || 0) : 0; // Toshkent va olib ketish: bepul
+}
+
+/** Eski ma'lumotni yangi qoidalarga moslaydi: kafolat va "1 mln dan bepul" olib tashlanadi. */
+export function normalizeCatalog(c) {
+  let changed = false;
+  for (const k of ['freeFrom', 'deliveryFee', 'warrantyMonths']) if (k in c.settings) { delete c.settings[k]; changed = true; }
+  if (typeof c.settings.regionFee !== 'number') { c.settings.regionFee = 0; changed = true; }
+  for (const p of c.products) for (const k of Object.keys(p.specs || {})) if (/^kafolat$/i.test(k)) { delete p.specs[k]; changed = true; }
+  return changed;
 }
 
 let lastGood = null; // oxirgi muvaffaqiyatli o'qilgan katalog: ombor vaqtincha ishlamasa, do'kon bo'sh qolmaydi
@@ -60,12 +74,11 @@ export async function publicCatalog() {
     console.warn('katalog: ombor javob bermadi, oxirgi nusxa berildi:', e.message);
     c = lastGood;
   }
-  const faqFmt = { freeFrom: money(c.settings.freeFrom), deliveryFee: money(c.settings.deliveryFee), warrantyMonths: c.settings.warrantyMonths };
   return {
     settings: { ...c.settings, payments: paymentMethods() },
     categories: [...c.categories].sort((a, b) => a.sort - b.sort),
     products: c.products.filter((p) => p.active).sort((a, b) => a.sort - b.sort).map((p) => ({ ...p, images: imagesOf(p) })),
-    faq: FAQ.map(([q, a]) => [q, a.replace(/\{(\w+)\}/g, (_, k) => faqFmt[k])]),
+    faq: FAQ,
   };
 }
 
@@ -79,7 +92,7 @@ export async function createOrder(user, d) {
   if (name.length < 2) throw new ShopError('Ismingizni kiriting');
   if (!phone) throw new ShopError("Telefon raqami noto'g'ri");
   if (!DELIVERY[delivery]) throw new ShopError('Yetkazish usulini tanlang');
-  if (delivery === 'courier' && address.length < 5) throw new ShopError('Manzilni kiriting');
+  if (needsAddress(delivery) && address.length < 5) throw new ShopError('Manzilni kiriting');
   const payment = d.payment;
   if (!paymentMethods().some((m) => m.id === payment)) throw new ShopError("To'lov usulini tanlang");
   const req = Array.isArray(d.items) ? d.items : [];
@@ -183,7 +196,7 @@ export function orderText(o) {
     `${DELIVERY[o.delivery]}${o.address ? `: ${esc(o.address)}` : ''}\n` +
     `To'lov: ${esc(pay)}${o.paid ? ' · ✅ to\'langan' : ''}\n` +
     (o.comment ? `💬 ${esc(o.comment)}\n` : '') +
-    `\n${items}\n\nYetkazish: ${o.delivery_fee ? money(o.delivery_fee) : 'bepul'}\n<b>Jami: ${money(o.total)}</b>`
+    `\n${items}\n\nYetkazish: ${o.delivery_fee ? money(o.delivery_fee) : o.delivery === 'region' ? 'narxi operator bilan kelishiladi' : 'bepul'}\n<b>Jami: ${money(o.total)}</b>`
   );
 }
 

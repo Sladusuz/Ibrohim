@@ -89,11 +89,12 @@
   function lines() {
     return S.cart.map((l, i) => ({ ...l, i, p: prod(l.id) })).filter((l) => l.p && l.p.stock > 0).map((l) => ({ ...l, qty: Math.min(l.qty, l.p.stock) }));
   }
+  const regionFee = () => Math.max(0, Number(S.data.settings.regionFee) || 0);
+  const deliveryText = (d, fee) => (d === 'region' && !fee ? 'narxi kelishiladi' : fee ? money(fee) : 'Bepul');
   function totals(delivery = 'courier') {
     const sub = lines().reduce((s, l) => s + l.p.price * l.qty, 0);
-    const { freeFrom, deliveryFee } = S.data.settings;
-    const fee = delivery === 'courier' && sub > 0 && sub < freeFrom ? deliveryFee : 0;
-    return { sub, fee, total: sub + fee, freeFrom };
+    const fee = delivery === 'region' ? regionFee() : 0; // Toshkent bo'ylab va olib ketish: bepul
+    return { sub, fee, total: sub + fee };
   }
   const cartCount = () => lines().reduce((s, l) => s + l.qty, 0);
   let holdBump = false;
@@ -180,7 +181,7 @@
       home: true, tab: 'home',
       html: `<section class="hero"><span class="hero-chip">${maxOff ? `🔥 Chegirmalar −${maxOff}% gacha` : '✨ Yangi kolleksiya'}</span><h1>Bolalikni harakatga keltiring</h1><p>Elektromobil, kalyaska, velokalyaska va samokatlar.</p>
           <a class="btn" href="#/shop">Katalogni ochish</a><div class="hero-art">${window.BC.art('car', '#ffb800')}</div></section>
-        <div class="perks"><div class="perk"><b>${s.warrantyMonths} oy</b>kafolat</div><div class="perk"><b>🚚</b>butun O'zbekiston</div><div class="perk"><b>${s.freeFrom >= 1e6 ? (s.freeFrom / 1e6).toLocaleString('uz-UZ', { maximumFractionDigits: 1 }) + ' mln' : Math.round(s.freeFrom / 1e3) + ' ming'}+</b>dan yetkazish bepul</div></div>
+        <div class="perks"><div class="perk"><b>🚚</b>Toshkent bo'ylab bepul</div><div class="perk"><b>📦</b>O'zbekiston bo'ylab yetkazamiz</div><div class="perk"><b>💳</b>Qulay to'lov usullari</div></div>
         <section class="sec"><div class="sec-h"><h2>Kategoriyalar</h2></div><div class="cats">${d.categories.map((c, i) => {
           const n = d.products.filter((p) => p.category_id === c.id).length, tint = TINTS[i % TINTS.length];
           return `<button class="cat" style="--c:${tint}" data-go="#/shop?cat=${c.id}"><b>${esc(c.name)}</b><small>${n} ta mahsulot</small>${window.BC.art(c.icon || 'car', tint)}</button>`;
@@ -260,14 +261,14 @@
       html: `<div class="gallery" id="gal">${gallery(p, st.color)}${favBtn(p.id)}${p.stock ? (pct(p) ? `<span class="tag sale">−${pct(p)}%</span>` : p.badge ? `<span class="tag">${esc(p.badge)}</span>` : '') : '<span class="tag out">Tugagan</span>'}</div>
         <div class="pt"><h1>${esc(p.title)}</h1>
           <div class="row"><span class="big num">${money(p.price)}</span>${p.old_price > p.price ? `<s class="num">${money(p.old_price)}</s><span class="pill bad">−${pct(p)}%</span>` : ''}</div>
-          <div class="row">${p.stock ? `<span class="pill ok">✓ Mavjud${p.stock <= 5 ? `: ${p.stock} ta qoldi` : ''}</span>` : '<span class="pill bad">Sotuvda yo\'q</span>'}<span class="pill brand">${s.warrantyMonths} oy kafolat</span></div>
+          <div class="row">${p.stock ? `<span class="pill ok">✓ Mavjud${p.stock <= 5 ? `: ${p.stock} ta qoldi` : ''}</span>` : '<span class="pill bad">Sotuvda yo\'q</span>'}<span class="pill brand">🚚 Toshkentda bepul</span></div>
           ${p.old_price > p.price ? `<div class="save">🎉 Tejaysiz: ${money(p.old_price - p.price)}</div>` : ''}
           <p class="hint" style="margin:12px 0 0">${esc(p.description || p.short)}</p></div>
         ${p.colors.length > 1 ? `<section class="sec"><div class="sec-h"><h2>Rang</h2><span class="hint" id="cname">${esc(st.color)}</span></div><div class="swatches">${p.colors.map((c2) => `<button class="sw ${c2.name === st.color ? 'on' : ''}" data-color="${esc(c2.name)}"><i style="background:${esc(c2.hex)}"></i>${esc(c2.name)}</button>`).join('')}</div></section>` : ''}
         ${p.stock ? `<section class="sec"><div class="sec-h"><h2>Soni</h2><div class="stepper"><button data-q="-1" aria-label="Kamaytirish">−</button><span id="qv" class="num">1</span><button data-q="1" aria-label="Ko'paytirish">+</button></div></div></section>` : ''}
         ${Object.keys(p.specs || {}).length ? `<section class="sec"><div class="sec-h"><h2>Xususiyatlar</h2></div><div class="card specs">${Object.entries(p.specs).map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div></section>` : ''}
-        <div class="trust"><div><b>🛡️</b>${s.warrantyMonths} oy<br>kafolat</div><div><b>🚚</b>Butun O'zbekiston<br>bo'ylab</div><div><b>💳</b>Qulay<br>to'lov</div></div>
-        <div class="note"><span style="font-size:22px">🚚</span><div><b>Yetkazib berish</b>${money(s.freeFrom)} dan yuqori buyurtmalarda bepul, qolganida ${money(s.deliveryFee)}.</div></div>
+        <div class="trust"><div><b>🚚</b>Toshkent<br>bo'ylab bepul</div><div><b>📦</b>O'zbekiston<br>bo'ylab yetkazamiz</div><div><b>💳</b>Qulay<br>to'lov</div></div>
+        <div class="note"><span style="font-size:22px">🚚</span><div><b>Yetkazib berish</b>Toshkent shahri bo'ylab bepul. Butun O'zbekiston bo'ylab ham yetkazib beramiz${regionFee() ? `: ${money(regionFee())}` : ", narxini operator buyurtmani tasdiqlaganda aytadi"}.</div></div>
         ${rel.length ? `<section class="sec"><div class="sec-h"><h2>O'xshash mahsulotlar</h2></div><div class="hscroll">${rel.map(card).join('')}</div></section>` : ''}`,
       mount() {
         drawCta();
@@ -287,7 +288,6 @@
   route(/^\/cart$/, () => {
     const L = lines(), T = totals();
     if (!L.length) return { title: 'Savat', tab: 'cart', html: `<div class="empty"><div class="em">🛒</div><b>Savat bo'sh</b>Mahsulot tanlash uchun katalogni oching<div style="margin-top:18px"><a class="btn" href="#/shop">Katalogga o'tish</a></div></div>` };
-    const left = Math.max(0, T.freeFrom - T.sub);
     return {
       title: 'Savat', tab: 'cart',
       right: `<button class="icon-btn" data-clear aria-label="Tozalash" style="font-size:12px;width:auto;padding:0 12px;font-weight:700">Tozalash</button>`,
@@ -295,9 +295,9 @@
           <div class="meta">${l.color ? `<i style="background:${esc(hexOf(l.p, l.color))}"></i>${esc(l.color)}` : ''}</div>
           <div class="ctl"><div class="stepper"><button data-cq="${l.i}:-1">−</button><span class="num">${l.qty}</span><button data-cq="${l.i}:1">+</button></div><b class="num">${money(l.p.price * l.qty)}</b></div>
           <button class="del" data-cdel="${l.i}">O'chirish</button></div></div>`).join('')}
-        <div class="card free">${left ? `<b>Bepul yetkazishgacha <span class="num">${money(left)}</span> qoldi</b>` : '<b>🎉 Yetkazib berish bepul!</b>'}<div class="bar" style="--p:${Math.min(100, (T.sub / T.freeFrom) * 100)}%"><i style="width:${Math.min(100, (T.sub / T.freeFrom) * 100)}%"></i></div></div>
+        <div class="note" style="margin-top:14px"><span style="font-size:22px">🚚</span><div><b>Toshkent bo'ylab yetkazib berish bepul</b>O'zbekiston bo'ylab ham yetkazib beramiz: buyurtma berishda tanlaysiz.</div></div>
         <div class="card sum"><div class="r"><span class="hint">Mahsulotlar (${cartCount()} ta)</span><span class="num">${money(T.sub)}</span></div>
-          <div class="r"><span class="hint">Kuryer</span><span class="num">${T.fee ? money(T.fee) : 'Bepul'}</span></div><div class="r t"><span>Jami</span><span class="num">${money(T.total)}</span></div></div>`,
+          <div class="r"><span class="hint">Yetkazish (Toshkent)</span><span class="num">Bepul</span></div><div class="r t"><span>Jami</span><span class="num">${money(T.total)}</span></div></div>`,
       mount() { setCta({ info: ['Jami', money(T.total)], text: 'Buyurtma berish', onClick: () => (location.hash = '#/checkout') }); },
     };
   });
@@ -313,9 +313,10 @@
       html: `${inTg ? '' : '<div class="alert">Buyurtma berish uchun do\'konni Telegram ichida, botdagi «Open» tugmasi orqali oching.</div>'}
         <div class="fs"><h3><b>1</b>Aloqa</h3>${fld('name', 'Ismingiz', me.name || [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' '), 'autocomplete="name" enterkeyhint="next"')}${fld('phone', 'Telefon', me.phone || '', 'type="tel" inputmode="tel" placeholder="90 123 45 67" autocomplete="tel"')}</div>
         <div class="fs"><h3><b>2</b>Yetkazib berish</h3><div class="opts">
-          <label class="opt"><input type="radio" name="delivery" value="courier" checked><div><b>🚚 Kuryer</b><small>Manzilingizgacha</small></div></label>
+          <label class="opt"><input type="radio" name="delivery" value="courier" checked><div><b>🚚 Toshkent bo'ylab</b><small>Bepul, manzilingizgacha</small></div></label>
+          <label class="opt"><input type="radio" name="delivery" value="region"><div><b>📦 O'zbekiston bo'ylab</b><small>${regionFee() ? `Yetkazib berish: ${esc(money(regionFee()))}` : 'Narxini operator tasdiqlaganda aytadi'}</small></div></label>
           <label class="opt"><input type="radio" name="delivery" value="pickup"><div><b>🏬 Olib ketish</b><small>Bepul</small></div></label></div>
-          <div id="addrWrap" style="margin-top:10px">${fld('address', "Manzil: shahar, tuman, ko'cha, uy", me.address || '', 'rows="2" autocomplete="street-address"', 'textarea')}</div></div>
+          <div id="addrWrap" style="margin-top:10px">${fld('address', "Manzil: shahar/viloyat, tuman, ko'cha, uy", me.address || '', 'rows="2" autocomplete="street-address"', 'textarea')}</div></div>
         <div class="fs"><h3><b>3</b>To'lov</h3><div class="opts">${pays.map((m, k) => `<label class="opt"><input type="radio" name="payment" value="${esc(m.id)}" ${k === 0 ? 'checked' : ''}><div><b>${esc(m.label)}</b><small>${esc(m.hint || '')}</small></div></label>`).join('')}</div>
           <div style="margin-top:10px">${fld('comment', 'Izoh (ixtiyoriy)', '', 'rows="2"', 'textarea')}</div></div>
         <div class="fs"><h3><b>4</b>Buyurtmangiz</h3><div class="card sum" id="osum"></div></div><div id="cerr"></div>`,
@@ -323,7 +324,7 @@
         const drawSum = () => {
           const T = totals(f.delivery);
           $('#osum').innerHTML = `${lines().map((l) => `<div class="r"><span>${esc(l.p.title)}${l.color ? ` · ${esc(l.color)}` : ''} × ${l.qty}</span><span class="num">${money(l.p.price * l.qty)}</span></div>`).join('')}
-            <div class="r"><span class="hint">Yetkazish</span><span class="num">${T.fee ? money(T.fee) : 'Bepul'}</span></div><div class="r t"><span>Jami</span><span class="num">${money(T.total)}</span></div>`;
+            <div class="r"><span class="hint">Yetkazish</span><span class="num">${deliveryText(f.delivery, T.fee)}</span></div><div class="r t"><span>Jami</span><span class="num">${money(T.total)}</span></div>`;
           return T;
         };
         let T = drawSum();
@@ -338,7 +339,7 @@
           $('#cerr').innerHTML = '';
           const name = $('#name').value.trim(), phone = $('#phone').value.trim(), address = $('#address').value.trim();
           const digits = phone.replace(/\D/g, '');
-          const ok = [setErr('name', name.length < 2 ? 'Ismingizni kiriting' : ''), setErr('phone', digits.length < 9 ? "Telefon raqamini to'liq kiriting" : ''), setErr('address', f.delivery === 'courier' && address.length < 5 ? 'Manzilni kiriting' : '')].every(Boolean);
+          const ok = [setErr('name', name.length < 2 ? 'Ismingizni kiriting' : ''), setErr('phone', digits.length < 9 ? "Telefon raqamini to'liq kiriting" : ''), setErr('address', f.delivery !== 'pickup' && address.length < 5 ? 'Manzilni kiriting' : '')].every(Boolean);
           if (!ok) { haptic('err'); const e = $('.fld.err'); e && e.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
           cta(true);
           try {

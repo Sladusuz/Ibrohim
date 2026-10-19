@@ -24,7 +24,7 @@ const ADMIN_HELP = `🔧 <b>Admin buyruqlari</b>
 /photo <i>id</i>: mahsulot rasmini almashtirish (rasm izohiga yozing)
 /invite: yangi admin taklif havolasi · /admins · /removeadmin <i>ID</i> (faqat asosiy admin)
 /myid: Telegram ID raqamingiz
-/set <i>kalit qiymat</i>: sozlama (phone, telegram, freeFrom, deliveryFee, warrantyMonths, channel, instagram)`;
+/set <i>kalit qiymat</i>: sozlama (phone, telegram, regionFee, channel, instagram)`;
 
 export default async (req) => {
   if (req.method !== 'POST') return new Response('ok');
@@ -113,7 +113,7 @@ async function onMessage(m, ctx) {
     const { settings: s } = await shop.getCatalog();
     return send(chat,
       `Assalomu alaykum, ${esc(m.from.first_name || '')}! 👋\n\n<b>${esc(s.name)}</b>: bolalar elektromobili, kalyaska, velokalyaska, mototsikl va samokatlar.\n` +
-      `✅ ${s.warrantyMonths} oylik kafolat · 🚚 butun O'zbekiston bo'ylab yetkazib berish\n\nDo'konni ochish uchun pastdagi <b>Open</b> tugmasini yoki shu tugmani bosing 👇`,
+      `🚚 Toshkent bo'ylab yetkazib berish bepul · 📦 butun O'zbekiston bo'ylab yetkazib beramiz\n\nDo'konni ochish uchun pastdagi <b>Open</b> tugmasini yoki shu tugmani bosing 👇`,
       { reply_markup: openShopKb(ctx.url) });
   }
   if (cmd === '/orders' && !(await isAdmin(m.from.id))) {
@@ -286,7 +286,7 @@ async function adminCommand(cmd, arg, m, ctx) {
   if (cmd === '/set') {
     const [key, ...v] = arg.split(/\s+/);
     const val = v.join(' ');
-    const numeric = ['freeFrom', 'deliveryFee', 'warrantyMonths'];
+    const numeric = ['regionFee'];
     const allowed = [...numeric, 'phone', 'telegram', 'channel', 'instagram', 'name'];
     if (!allowed.includes(key) || !val || (numeric.includes(key) && num(val) === null)) return reply(`Format: <code>/set kalit qiymat</code>\nKalitlar: ${allowed.join(', ')}`);
     await shop.updateCatalog((c) => { c.settings[key] = numeric.includes(key) ? num(val) : val; return c; });

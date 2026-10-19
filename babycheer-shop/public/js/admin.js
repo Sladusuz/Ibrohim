@@ -67,10 +67,10 @@
   const orderCard = (o) => `<div class="acard"><div class="top"><b>${esc(o.no)}</b><span class="pill ${STATUS[o.status][1]}">${STATUS[o.status][0]}</span></div>
       <div class="sub">${fmtDate(o.created_at)}</div>
       <div class="who">${esc(o.name)} · <a href="tel:${esc(o.phone)}">${esc(o.phone)}</a></div>
-      <div class="sub">${o.delivery === 'courier' ? '🚚 ' + esc(o.address) : '🏬 Olib ketadi'}${o.comment ? `<br>💬 ${esc(o.comment)}` : ''}</div>
+      <div class="sub">${o.delivery === 'courier' ? '🚚 Toshkent: ' + esc(o.address) : o.delivery === 'region' ? '📦 O\'zbekiston bo\'ylab: ' + esc(o.address) : '🏬 Olib ketadi'}${o.comment ? `<br>💬 ${esc(o.comment)}` : ''}</div>
       <div class="sub" style="margin-top:4px">To'lov: ${esc(PAY[o.payment] || o.payment)} ${o.paid ? '<span class="pill ok">✅ to\'langan</span>' : '<span class="pill warn">to\'lanmagan</span>'}</div>
       <div class="items">${o.items.map((i) => `<div class="oline"><span>${esc(i.title)}${i.color ? ` · ${esc(i.color)}` : ''} × ${i.qty}</span><b class="num">${money(i.price * i.qty)}</b></div>`).join('')}
-        <div class="oline"><span>Yetkazish</span><b>${o.delivery_fee ? money(o.delivery_fee) : 'bepul'}</b></div><div class="oline"><span><b>Jami</b></span><b class="num">${money(o.total)}</b></div></div>
+        <div class="oline"><span>Yetkazish</span><b>${o.delivery_fee ? money(o.delivery_fee) : o.delivery === 'region' ? 'narxi kelishiladi' : 'bepul'}</b></div><div class="oline"><span><b>Jami</b></span><b class="num">${money(o.total)}</b></div></div>
       <div class="btns">${[['confirmed', '✅ Tasdiqlash'], ['shipping', "🚚 Yo'lda"], ['delivered', '🎉 Yetkazildi']].map(([k, l]) => `<button class="btn ghost ${o.status === k ? 'cur' : ''}" data-st="${o.id}:${k}">${l}</button>`).join('')}
         <button class="btn bad ${o.status === 'cancelled' ? 'cur' : ''}" data-st="${o.id}:cancelled">❌ Bekor</button>
         <button class="btn ${o.paid ? 'ghost' : 'ok'} full" data-paid="${o.id}:${o.paid ? 0 : 1}">${o.paid ? "↩️ To'lanmagan deb belgilash" : "💰 To'langan deb belgilash"}</button></div></div>`;
@@ -87,8 +87,8 @@
   function drawSettings() {
     const s = A.data.settings, fld = (k, l, t = 'text') => `<label class="fld"><span>${l}</span><input data-set="${k}" type="${t}" value="${esc(s[k])}"></label>`;
     $('#body').innerHTML = `<div class="fs"><h3>Do'kon sozlamalari</h3>${fld('name', "Do'kon nomi")}${fld('phone', 'Telefon', 'tel')}${fld('telegram', 'Telegram (@siz)')}${fld('channel', 'Telegram kanal havolasi')}${fld('instagram', 'Instagram havolasi')}
-        <div class="row2c"><label class="fld"><span>Bepul yetkazish (so'mdan)</span><input data-set="freeFrom" inputmode="numeric" value="${esc(s.freeFrom)}"></label><label class="fld"><span>Yetkazish narxi</span><input data-set="deliveryFee" inputmode="numeric" value="${esc(s.deliveryFee)}"></label></div>
-        ${fld('warrantyMonths', 'Kafolat (oy)')}<button class="btn block" id="saveSet">Saqlash</button></div>
+        <label class="fld"><span>O'zbekiston bo'ylab yetkazish narxi (so'm; 0 = operator kelishadi). Toshkent bo'ylab doim bepul</span><input data-set="regionFee" inputmode="numeric" value="${esc(s.regionFee ?? 0)}"></label>
+        <button class="btn block" id="saveSet">Saqlash</button></div>
       <div class="fs"><h3>Kategoriyalar</h3><div id="cats">${A.data.categories.map(catRow).join('')}</div><button class="btn ghost block" id="addCat">➕ Kategoriya qo'shish</button></div>
       <div class="fs"><h3>Adminlar</h3>${A.data.owner ? `<div id="adm">${A.data.admins.map(admRow).join('')}</div>
         <div id="invbox"></div><button class="btn block" id="invite">🔗 Yangi admin taklif qilish</button>

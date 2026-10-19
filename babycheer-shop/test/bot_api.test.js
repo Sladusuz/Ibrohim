@@ -49,7 +49,7 @@ test('katalog, imzosiz buyurtma rad etiladi', async () => {
   const c = await (await call('catalog')).json();
   assert.equal(c.products.length, 10);
   assert.deepEqual(c.settings.payments.map((p) => p.id), ['cash', 'card', 'online', 'transfer']);
-  assert.equal(c.faq.length, 6);
+  assert.equal(c.faq.length, 5);
   assert.equal((await call('order', { method: 'POST', body: order })).status, 401);
   assert.equal((await call('orders')).status, 401);
 });
@@ -133,8 +133,8 @@ test('admin buyruqlari: narx, ombor, qo\'shish, rasm, sozlama, ro\'yxat', async 
   assert.equal(p.title, 'Yangi samokat'); assert.equal(p.price, 300000); assert.equal(p.photo, 'PHOTOID1234567'); assert.equal(p.colors[0].hex, '#e5262b');
   await say('/photo 11', { photo: [{ file_id: 'NEWPHOTO1234567' }] });
   assert.equal((await shop.getCatalog()).products.find((x) => x.id === 11).photo, 'NEWPHOTO1234567');
-  await say('/set deliveryFee 50000');
-  assert.equal((await shop.getCatalog()).settings.deliveryFee, 50000);
+  await say('/set regionFee 50000');
+  assert.equal((await shop.getCatalog()).settings.regionFee, 50000);
   await say('/add Yo\'q kategoriya | X | 1 | 0 | 1');
   assert.ok(sent('sendMessage').at(-1).text.includes('Kategoriya topilmadi'));
   await say('/del 11');

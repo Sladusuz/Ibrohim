@@ -91,10 +91,10 @@ test('kategoriya va sozlamalar', async () => {
   assert.equal((await J('admin/category', { method: 'POST', body: { id: c.id, name: 'Yangi nom', icon: 'zzz' } })).category.icon, 'car');
   assert.equal((await call('admin/category/delete', { method: 'POST', body: { id: 1 } })).status, 400); // ichida mahsulot bor
   assert.equal((await call('admin/category/delete', { method: 'POST', body: { id: c.id } })).status, 200);
-  const s = (await J('admin/settings', { method: 'POST', body: { deliveryFee: '50 000', freeFrom: 1500000, phone: '+998 90 000 00 00', telegram: '@newadmin' } })).settings;
-  assert.deepEqual([s.deliveryFee, s.freeFrom, s.phone, s.telegram], [50000, 1500000, '+998 90 000 00 00', 'newadmin']);
-  assert.equal((await call('admin/settings', { method: 'POST', body: { deliveryFee: 'abc' } })).status, 400);
-  assert.equal((await J('catalog')).settings.deliveryFee, 50000);
+  const s = (await J('admin/settings', { method: 'POST', body: { regionFee: '50 000', phone: '+998 90 000 00 00', telegram: '@newadmin' } })).settings;
+  assert.deepEqual([s.regionFee, s.phone, s.telegram], [50000, '+998 90 000 00 00', 'newadmin']);
+  assert.equal((await call('admin/settings', { method: 'POST', body: { regionFee: 'abc' } })).status, 400);
+  assert.equal((await J('catalog')).settings.regionFee, 50000);
 });
 
 test('buyurtmani admin panelidan tasdiqlash va to\'langan deb belgilash', async () => {
