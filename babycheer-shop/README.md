@@ -19,6 +19,10 @@ tugmalar bilan (✅ Tasdiqlash, 🚚 Yo'lda, 🎉 Yetkazildi, ❌ Bekor, 💰 To
 `ADMIN_IDS` tekshiriladi. Ichida: buyurtmalar (holat, to'lov, mijozga avtomatik xabar), mahsulot qo'shish/tahrirlash/yashirish/o'chirish
 (rasm yuklash, ranglar, xususiyatlar), kategoriyalar, do'kon sozlamalari va statistika.
 
+**Mijoz xabarlari:** mijoz botga yozgan hamma narsa (matn, rasm, ovoz, hujjat) hamma adminlarga ism, @username va ID bilan keladi.
+Admin xabarga **reply (javob)** qilsa, javob mijozga yetadi (matn, rasm, ovoz). Mijozga birinchi xabarida «adminga yuborildi» deb tasdiq ketadi,
+spamdan himoya: 10 daqiqada 15 tadan ko'p xabar yetkazilmaydi, guruh xabarlari yetkazilmaydi.
+
 **Admin qo'shish:** asosiy admin (Netlify'dagi `ADMIN_IDS`) botda `/invite` yozadi yoki admin panel → Sozlamalar → «🔗 Yangi admin taklif qilish»
 tugmasini bosadi. Chiqqan havolani yangi adminga yuboradi: u havolani bosib botni ochsa, avtomatik admin bo'ladi (havola 24 soat va bir marta ishlaydi).
 Yangi admin mahsulot, buyurtma va sozlamalarni boshqaradi, lekin boshqa admin qo'sha olmaydi. `/admins` ro'yxat, `/removeadmin ID` olib tashlash, `/myid` har kim uchun o'z Telegram ID'si.

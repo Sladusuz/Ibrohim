@@ -4,10 +4,11 @@ import http from 'node:http';
 import { createHmac } from 'node:crypto';
 
 const calls = [];
+let mid = 1000;
 const mock = http.createServer((req, res) => {
   let b = ''; req.on('data', (c) => (b += c)); req.on('end', () => {
     calls.push({ method: req.url.split('/').pop(), ...(b ? JSON.parse(b) : {}) });
-    res.setHeader('content-type', 'application/json'); res.end(JSON.stringify({ ok: true, result: req.url.endsWith('/getMe') ? { username: 'testbot' } : true }));
+    res.setHeader('content-type', 'application/json'); res.end(JSON.stringify({ ok: true, result: req.url.endsWith('/getMe') ? { username: 'testbot' } : /(sendMessage|copyMessage|sendPhoto)$/.test(req.url) ? { message_id: ++mid } : true }));
   });
 });
 await new Promise((r) => mock.listen(0, r));
@@ -118,7 +119,7 @@ test('/admin buyrug\'i admin panel tugmasini yuboradi', async () => {
   const btn = calls.find((c) => c.method === 'sendMessage' && c.reply_markup?.inline_keyboard?.[0]?.[0]?.web_app);
   assert.equal(btn.reply_markup.inline_keyboard[0][0].web_app.url, 'https://shop.test/admin.html');
   calls.length = 0; await hook(111);
-  assert.equal(calls.some((c) => c.reply_markup?.inline_keyboard?.[0]?.[0]?.web_app), false); // oddiy foydalanuvchiga yo'q
+  assert.equal(calls.some((c) => (c.reply_markup?.inline_keyboard || []).flat().some((b) => b.web_app?.url?.endsWith('/admin.html'))), false); // oddiy foydalanuvchiga admin panel havolasi yo'q
 });
 
 async function shopCatalog() { return J('catalog'); }
@@ -192,4 +193,43 @@ test('admin qo\'shish: taklif havolasi, huquqlar, bir martalik, muddat, olib tas
   assert.equal((await call('admin/admin/remove', { method: 'POST', body: { id: 999 } })).status, 400);   // egani olib tashlab bo'lmaydi
   assert.equal((await call('admin/admin/remove', { method: 'POST', body: { id: 555 } })).status, 200);
   assert.equal((await call('admin/state', { id: 555 })).status, 403);              // darhol ruxsat yo'qoladi
+});
+
+test('mijoz botga yozsa adminga keladi, admin reply qilsa mijozga boradi', async () => {
+  const hook = (from, extra, first = 'Ali') => BOT(new Request('https://shop.test/tg', { method: 'POST', body: JSON.stringify({ message: { chat: { id: from, type: 'private' }, from: { id: from, first_name: first, username: 'ali_u' }, message_id: 77, ...extra } }), headers: { 'x-telegram-bot-api-secret-token': 'sec' } }), );
+  const toAdmin = () => calls.filter((c) => c.method === 'sendMessage' && c.chat_id === 999 && c.text.includes('Mijoz xabari'));
+  // oddiy matn
+  calls.length = 0; await hook(321, { text: 'Salom! <b>Elektromobil</b> bormi?' });
+  const m1 = toAdmin()[0];
+  assert.ok(m1, 'adminga keldi'); assert.ok(m1.text.includes('ID <code>321</code>') && m1.text.includes('@ali_u') && m1.text.includes('Salom!') && m1.text.includes('&lt;b&gt;'));
+  assert.ok(calls.some((c) => c.method === 'sendMessage' && c.chat_id === 321 && c.text.includes('adminga yuborildi')), 'mijozga tasdiq');
+  // darhol ikkinchi xabar: tasdiq qayta yuborilmaydi (shovqin yo'q)
+  calls.length = 0; await hook(321, { text: 'Yana bir savol' });
+  assert.equal(toAdmin().length >= 1, true); assert.equal(calls.some((c) => c.chat_id === 321 && c.text?.includes('adminga yuborildi')), false);
+  // rasm: sarlavha + nusxa
+  calls.length = 0; await hook(321, { photo: [{ file_id: 'x' }], caption: 'Mana rasm' });
+  assert.ok(toAdmin().length >= 1); const copy = calls.find((c) => c.method === 'copyMessage' && c.chat_id === 999);
+  assert.ok(copy && copy.from_chat_id === 321 && copy.message_id === 77);
+  // admin sarlavhaga reply qiladi -> mijozga
+  const header = (id) => ({ chat: { id: 999 }, from: { id: 999 }, message_id: 500, text: 'Ha, bor!', reply_to_message: { message_id: id } });
+  const sentHeaderId = mid - 1; // oxirgi yuborilgan (nusxa) xabar identifikatori
+  calls.length = 0;
+  await BOT(new Request('https://shop.test/tg', { method: 'POST', body: JSON.stringify({ message: header(sentHeaderId) }), headers: { 'x-telegram-bot-api-secret-token': 'sec' } }));
+  const back = calls.find((c) => c.method === 'copyMessage' && c.chat_id === 321);
+  assert.ok(back && back.from_chat_id === 999 && back.message_id === 500, 'javob mijozga yetdi (rasm nusxasiga reply ham ishlaydi)');
+  assert.ok(calls.some((c) => c.chat_id === 999 && c.text?.includes('Javob mijozga yuborildi')));
+  // admin oddiy yozsa (reply emas) hech kimga ketmaydi
+  calls.length = 0; await hook(999, { text: 'oddiy gap' }, 'Admin');
+  assert.equal(calls.some((c) => c.method === 'copyMessage' || (c.method === 'sendMessage' && c.chat_id !== 999)), false);
+  // /start va buyruqlar adminga yetkazilmaydi
+  calls.length = 0; await hook(444, { text: '/start' });
+  assert.equal(toAdmin().length, 0);
+  // guruh xabari yetkazilmaydi
+  calls.length = 0;
+  await BOT(new Request('https://shop.test/tg', { method: 'POST', body: JSON.stringify({ message: { chat: { id: -100, type: 'group' }, from: { id: 555000, first_name: 'G' }, text: 'guruhda' } }), headers: { 'x-telegram-bot-api-secret-token': 'sec' } }));
+  assert.equal(toAdmin().length, 0);
+  // spam: 10 daqiqada 15 tadan ko'p yetkazilmaydi
+  calls.length = 0;
+  for (let i = 0; i < 20; i++) await hook(888, { text: `spam ${i}` });
+  assert.equal(toAdmin().length, 15);
 });

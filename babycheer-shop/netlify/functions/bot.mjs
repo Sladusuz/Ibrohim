@@ -1,6 +1,7 @@
 import * as shop from './lib/shop.js';
 import { api, safe, notifyAdmins, allAdminIds, isAdminId, isOwnerId, ownerIds, esc } from './lib/tg.js';
 import * as admins from './lib/admins.js';
+import * as store from './lib/store.js';
 import { adminOrderKb, customerOrderKb, openShopKb, inlineKb, shopUrl, statusMessage } from './lib/botui.js';
 
 export const config = { path: '/tg' };
@@ -45,6 +46,45 @@ export default async (req) => {
   return new Response('ok'); // doim 200: Telegram xabarni qayta-qayta yuborib ketmasin
 };
 
+// ---------- mijoz xabarlari adminlarga ----------
+const recentMsgs = new Map(); // spamdan himoya: 10 daqiqada 15 tadan ko'p xabar yetkazilmaydi
+const lastAck = new Map();
+
+async function relayToAdmins(m, ctx) {
+  const u = m.from, now = Date.now();
+  const arr = (recentMsgs.get(u.id) || []).filter((t) => now - t < 10 * 60 * 1000);
+  if (arr.length >= 15) {
+    if (arr.length === 15) { arr.push(now); recentMsgs.set(u.id, arr); await send(m.chat.id, "⏳ Juda ko'p xabar yubordingiz. Birozdan keyin yozing."); }
+    return;
+  }
+  arr.push(now); recentMsgs.set(u.id, arr);
+  const who = [u.first_name, u.last_name].filter(Boolean).join(' ') || 'Mijoz';
+  const head = `💬 <b>Mijoz xabari</b>\n👤 ${esc(who)}${u.username ? ` @${esc(u.username)}` : ''} · ID <code>${u.id}</code>`;
+  const body = m.text ? `\n\n${esc(m.text)}` : m.caption ? `\n\n${esc(m.caption)}` : '';
+  const hint = '\n\n<i>↩️ Javob berish uchun shu xabarga reply qiling</i>';
+  await Promise.allSettled((await allAdminIds()).map(async (aid) => {
+    const h = await send(aid, head + (m.text ? body : '') + hint);
+    if (h && h.message_id) await store.put(`fwd:${aid}:${h.message_id}`, u.id);
+    if (!m.text) { // rasm, ovoz, hujjat va h.k.: asl xabarning nusxasi
+      const c = await safe('copyMessage', { chat_id: aid, from_chat_id: m.chat.id, message_id: m.message_id });
+      if (c && c.message_id) await store.put(`fwd:${aid}:${c.message_id}`, u.id);
+    }
+  }));
+  if (now - (lastAck.get(u.id) || 0) > 10 * 60 * 1000) {
+    lastAck.set(u.id, now);
+    await send(m.chat.id, "✅ Xabaringiz adminga yuborildi. Tez orada javob beramiz.", { reply_markup: openShopKb(ctx.url) });
+  }
+}
+
+/** Admin mijoz xabariga reply qilsa, javob mijozga yetadi. */
+async function adminReply(m) {
+  const uid = await store.get(`fwd:${m.chat.id}:${m.reply_to_message.message_id}`);
+  if (!uid) return false;
+  const r = await safe('copyMessage', { chat_id: uid, from_chat_id: m.chat.id, message_id: m.message_id });
+  await send(m.chat.id, r ? '✅ Javob mijozga yuborildi' : "⚠️ Yuborib bo'lmadi (mijoz botni to'xtatgan bo'lishi mumkin)");
+  return true;
+}
+
 // ---------- xabarlar ----------
 async function onMessage(m, ctx) {
   const chat = m.chat.id;
@@ -53,6 +93,8 @@ async function onMessage(m, ctx) {
   const [cmdRaw, ...rest] = text.split(/\s+/);
   const cmd = cmdRaw.startsWith('/') ? cmdRaw.split('@')[0].toLowerCase() : '';
   const arg = text.slice(cmdRaw.length).trim();
+
+  if (m.reply_to_message && (await isAdmin(m.from.id)) && (await adminReply(m))) return;
 
   if (m.photo && m.reply_to_message && /BC-\d+/.test(m.reply_to_message.text || '') && !(await isAdmin(m.from.id))) return onReceipt(m);
 
@@ -85,11 +127,17 @@ async function onMessage(m, ctx) {
     return send(chat, `☎️ <b>${esc(s.name)}</b>\nTelefon: ${esc(s.phone)}\nTelegram: @${esc(s.telegram)}\nKanal: ${esc(s.channel)}\nInstagram: ${esc(s.instagram)}`);
   }
 
-  if (cmd && (await isAdmin(m.from.id))) {
+  const admin = await isAdmin(m.from.id);
+  if (cmd && admin) {
     const handled = await adminCommand(cmd, arg, m, ctx);
     if (handled !== false) return;
   }
-  if (!cmd && !m.photo) return send(chat, "Do'konni ochish uchun tugmani bosing 👇", { reply_markup: openShopKb(ctx.url) });
+  if (admin) {
+    if (!cmd && !m.photo) return send(chat, "Do'konni ochish uchun tugmani bosing 👇", { reply_markup: openShopKb(ctx.url) });
+    return;
+  }
+  if (m.chat.type && m.chat.type !== 'private') return; // guruhlardagi xabarlar yetkazilmaydi
+  return relayToAdmins(m, ctx); // oddiy foydalanuvchi: xabar adminlarga boradi
 }
 
 // ---------- mijoz: chek ----------
