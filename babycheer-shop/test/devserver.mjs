@@ -13,7 +13,7 @@ export async function start(port = 8788) {
       const method = req.url.split('/').pop();
       TG_LOG.push({ method, ...(b ? JSON.parse(b) : {}) });
       res.setHeader('content-type', 'application/json');
-      res.end(JSON.stringify({ ok: true, result: method === 'createInvoiceLink' ? 'https://t.me/$invoice' : true }));
+      res.end(JSON.stringify({ ok: true, result: method === 'createInvoiceLink' ? 'https://t.me/$invoice' : method === 'getMe' ? { username: 'testbot' } : true }));
     });
   });
   await new Promise((r) => tgMock.listen(0, r));

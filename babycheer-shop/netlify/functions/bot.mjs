@@ -1,10 +1,11 @@
 import * as shop from './lib/shop.js';
-import { api, safe, notifyAdmins, adminIds, esc } from './lib/tg.js';
+import { api, safe, notifyAdmins, allAdminIds, isAdminId, isOwnerId, ownerIds, esc } from './lib/tg.js';
+import * as admins from './lib/admins.js';
 import { adminOrderKb, customerOrderKb, openShopKb, inlineKb, shopUrl, statusMessage } from './lib/botui.js';
 
 export const config = { path: '/tg' };
 
-const isAdmin = (id) => adminIds().includes(id);
+const isAdmin = (id) => isAdminId(id);
 const send = (chat_id, text, extra = {}) => safe('sendMessage', { chat_id, text, parse_mode: 'HTML', link_preview_options: { is_disabled: true }, ...extra });
 
 const ADMIN_HELP = `🔧 <b>Admin buyruqlari</b>
@@ -20,6 +21,8 @@ const ADMIN_HELP = `🔧 <b>Admin buyruqlari</b>
 /add: yangi mahsulot. Rasm bilan yuboring, izohga:
 <code>/add Kategoriya | Nom | narx | eski narx | ombor | tavsif | rang1, rang2</code>
 /photo <i>id</i>: mahsulot rasmini almashtirish (rasm izohiga yozing)
+/invite: yangi admin taklif havolasi · /admins · /removeadmin <i>ID</i> (faqat asosiy admin)
+/myid: Telegram ID raqamingiz
 /set <i>kalit qiymat</i>: sozlama (phone, telegram, freeFrom, deliveryFee, warrantyMonths, channel, instagram)`;
 
 export default async (req) => {
@@ -51,7 +54,17 @@ async function onMessage(m, ctx) {
   const cmd = cmdRaw.startsWith('/') ? cmdRaw.split('@')[0].toLowerCase() : '';
   const arg = text.slice(cmdRaw.length).trim();
 
-  if (m.photo && m.reply_to_message && /BC-\d+/.test(m.reply_to_message.text || '') && !isAdmin(m.from.id)) return onReceipt(m);
+  if (m.photo && m.reply_to_message && /BC-\d+/.test(m.reply_to_message.text || '') && !(await isAdmin(m.from.id))) return onReceipt(m);
+
+  if (cmd === '/myid') return send(chat, `Sizning Telegram ID raqamingiz: <code>${m.from.id}</code>`);
+
+  if (cmd === '/start' && arg.startsWith('adm_')) { // admin taklif havolasi
+    const r = await admins.acceptInvite(arg.slice(4), m.from);
+    if (!r.ok) return send(chat, `⚠️ ${esc(r.reason)}`);
+    await notifyAdmins(`👤 <b>Yangi admin qo'shildi</b>: ${esc(r.name)} (<code>${m.from.id}</code>)`);
+    return send(chat, "✅ <b>Siz admin bo'ldingiz!</b>\nMahsulot qo'shish, tahrirlash va buyurtmalarni boshqarish uchun pastdagi tugmani bosing 👇\n\nBuyruqlar ro'yxati: /admin",
+      { reply_markup: inlineKb([[['🔧 Admin panelni ochish', `${ctx.url}/admin.html`]]]) });
+  }
 
   if (cmd === '/start' || cmd === '/shop') {
     await safe('setChatMenuButton', { chat_id: chat, menu_button: { type: 'web_app', text: 'Open', web_app: { url: ctx.url } } });
@@ -61,7 +74,7 @@ async function onMessage(m, ctx) {
       `✅ ${s.warrantyMonths} oylik kafolat · 🚚 butun O'zbekiston bo'ylab yetkazib berish\n\nDo'konni ochish uchun pastdagi <b>Open</b> tugmasini yoki shu tugmani bosing 👇`,
       { reply_markup: openShopKb(ctx.url) });
   }
-  if (cmd === '/orders' && !isAdmin(m.from.id)) {
+  if (cmd === '/orders' && !(await isAdmin(m.from.id))) {
     const list = await shop.userOrders(m.from.id);
     if (!list.length) return send(chat, 'Sizda hali buyurtma yo\'q.', { reply_markup: openShopKb(ctx.url) });
     for (const o of list.slice(0, 5)) await send(chat, shop.orderText(o), { reply_markup: customerOrderKb(o) });
@@ -72,7 +85,7 @@ async function onMessage(m, ctx) {
     return send(chat, `☎️ <b>${esc(s.name)}</b>\nTelefon: ${esc(s.phone)}\nTelegram: @${esc(s.telegram)}\nKanal: ${esc(s.channel)}\nInstagram: ${esc(s.instagram)}`);
   }
 
-  if (isAdmin(m.from.id) && cmd) {
+  if (cmd && (await isAdmin(m.from.id))) {
     const handled = await adminCommand(cmd, arg, m, ctx);
     if (handled !== false) return;
   }
@@ -84,7 +97,7 @@ async function onReceipt(m) {
   const no = /BC-(\d+)/.exec(m.reply_to_message.text)[1];
   const o = await shop.getOrder(Number(no) - 1000);
   if (!o || o.user_id !== m.from.id) return send(m.chat.id, 'Buyurtma topilmadi.');
-  await Promise.allSettled(adminIds().map((id) => safe('sendPhoto', {
+  await Promise.allSettled((await allAdminIds()).map((id) => safe('sendPhoto', {
     chat_id: id, photo: m.photo.at(-1).file_id, parse_mode: 'HTML',
     caption: `🧾 <b>To'lov cheki</b>\n\n${shop.orderText(o)}`.slice(0, 1020), reply_markup: adminOrderKb(o),
   })));
@@ -121,7 +134,7 @@ async function onCallback(q, ctx) {
     return answer();
   }
 
-  if (!isAdmin(q.from.id)) return answer('Ruxsat yo\'q', true);
+  if (!(await isAdmin(q.from.id))) return answer('Ruxsat yo\'q', true);
   if (kind !== 'st' && kind !== 'pay') return answer();
   const o = kind === 'st' ? await shop.setStatus(id, extra) : await shop.markPaid(id);
   const edit = q.message.photo
@@ -140,6 +153,19 @@ async function adminCommand(cmd, arg, m, ctx) {
   const chat = m.chat.id;
   const reply = (t, extra) => send(chat, t, extra);
 
+  if (cmd === '/invite' || cmd === '/admins' || cmd === '/removeadmin') {
+    if (!isOwnerId(m.from.id)) return reply("⛔ Adminlarni faqat asosiy admin boshqara oladi.");
+    if (cmd === '/invite') {
+      const link = await admins.createInvite(m.from.id);
+      return reply(`🔗 <b>Admin taklif havolasi</b> (24 soat, bir marta ishlaydi)\n\n${esc(link)}\n\nShuni yangi adminga yuboring: havolani bosib botni ochsa, avtomatik admin bo'ladi.`);
+    }
+    if (cmd === '/admins') {
+      const list = await admins.listAdmins();
+      return reply(`👥 <b>Adminlar</b>\n\n⭐ Asosiy: ${ownerIds().map((i) => `<code>${i}</code>`).join(', ')}\n` + (list.length ? list.map((a) => `• ${esc(a.name)}${a.username ? ` @${esc(a.username)}` : ''} (<code>${a.id}</code>)`).join('\n') : "Qo'shilgan adminlar yo'q.") + "\n\nOlib tashlash: <code>/removeadmin ID</code>\nYangi admin: /invite");
+    }
+    const ok = await admins.removeAdmin(Number(arg));
+    return reply(ok ? `✅ Admin olib tashlandi: <code>${esc(arg)}</code>` : "Admin topilmadi (asosiy adminni olib tashlab bo'lmaydi).");
+  }
   if (cmd === '/admin') {
     await reply("🔧 <b>Admin panel</b>\nMahsulot qo'shish, tahrirlash, rasm yuklash, buyurtmalarni tasdiqlash va sozlamalar bitta joyda 👇",
       { reply_markup: inlineKb([[['🔧 Admin panelni ochish', `${ctx.url}/admin.html`]]]) });

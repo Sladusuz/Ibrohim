@@ -7,7 +7,7 @@ const calls = [];
 const mock = http.createServer((req, res) => {
   let b = ''; req.on('data', (c) => (b += c)); req.on('end', () => {
     calls.push({ method: req.url.split('/').pop(), ...(b ? JSON.parse(b) : {}) });
-    res.setHeader('content-type', 'application/json'); res.end(JSON.stringify({ ok: true, result: true }));
+    res.setHeader('content-type', 'application/json'); res.end(JSON.stringify({ ok: true, result: req.url.endsWith('/getMe') ? { username: 'testbot' } : true }));
   });
 });
 await new Promise((r) => mock.listen(0, r));
@@ -140,4 +140,56 @@ test('ombor uzilsa: katalog eski nusxadan beriladi, health 503, buyurtma xato; t
   assert.equal((await call('health')).status, 200);                 // tiklandi
   const ok = await call('order', { method: 'POST', id: 111, body: { name: 'Ali', phone: '901234567', delivery: 'pickup', payment: 'cash', items: [{ id: 6, qty: 1 }] } });
   assert.equal(ok.status, 200);
+});
+
+test('admin qo\'shish: taklif havolasi, huquqlar, bir martalik, muddat, olib tashlash', async () => {
+  const store = await import('../netlify/functions/lib/store.js');
+  const hook = (from, text) => BOT(new Request('https://shop.test/tg', { method: 'POST', body: JSON.stringify({ message: { chat: { id: from }, from: { id: from, first_name: 'Vali' }, text } }), headers: { 'x-telegram-bot-api-secret-token': 'sec' } }));
+  // faqat egasi taklif yarata oladi
+  assert.equal((await call('admin/invite', { method: 'POST', body: {}, id: 111 })).status, 403);
+  const { link } = await J('admin/invite', { method: 'POST', body: {} });
+  assert.match(link, /^https:\/\/t\.me\/testbot\?start=adm_[\w-]{10,}$/);
+  const token = link.split('adm_')[1];
+
+  assert.equal((await call('admin/state', { id: 555 })).status, 403);            // hali admin emas
+  calls.length = 0;
+  await hook(555, `/start adm_${token}`);
+  const welcome = calls.find((c) => c.method === 'sendMessage' && c.chat_id === 555 && c.reply_markup?.inline_keyboard?.[0]?.[0]?.web_app);
+  assert.ok(welcome, 'yangi adminga panel tugmasi yuboriladi');
+  assert.ok(calls.some((c) => c.method === 'sendMessage' && c.chat_id === 999 && c.text.includes('Yangi admin')), 'egasiga xabar');
+
+  const st = await J('admin/state', { id: 555 });                                 // endi admin
+  assert.equal(st.owner, false); assert.equal(st.admins, undefined);
+  assert.equal((await call('admin/product', { method: 'POST', id: 555, body: { category_id: 5, title: 'Admin qo\'shgan', price: 1000 } })).status, 200);
+  assert.equal((await call('admin/invite', { method: 'POST', body: {}, id: 555 })).status, 403);   // yangi admin boshqa admin qo'sha olmaydi
+  assert.equal((await call('admin/admin/remove', { method: 'POST', body: { id: 999 }, id: 555 })).status, 403);
+
+  calls.length = 0; await hook(666, `/start adm_${token}`);                       // bir martalik
+  assert.ok(calls.some((c) => c.chat_id === 666 && /ishlatilgan|topilmadi/.test(c.text)));
+  assert.equal((await call('admin/state', { id: 666 })).status, 403);
+
+  await store.put('invite:expiredtoken123', { by: 999, exp: Date.now() - 1000 }); // muddati tugagan
+  calls.length = 0; await hook(777, '/start adm_expiredtoken123');
+  assert.ok(calls.some((c) => c.chat_id === 777 && c.text.includes('muddati')));
+  assert.equal((await call('admin/state', { id: 777 })).status, 403);
+
+  // yangi admin ham buyurtma xabarlarini oladi
+  calls.length = 0;
+  await J('order', { method: 'POST', id: 111, body: { name: 'Ali', phone: '901234567', delivery: 'pickup', payment: 'cash', items: [{ id: 6, qty: 1 }] } });
+  assert.ok(calls.some((c) => c.method === 'sendMessage' && c.chat_id === 555 && c.text.includes('Yangi buyurtma')));
+
+  // bot buyruqlari
+  calls.length = 0; await hook(555, '/invite');
+  assert.ok(calls.some((c) => c.chat_id === 555 && c.text.includes('asosiy admin')));
+  calls.length = 0; await hook(999, '/admins');
+  assert.ok(calls.some((c) => c.chat_id === 999 && c.text.includes('555')));
+  calls.length = 0; await hook(777, '/myid');
+  assert.ok(calls.some((c) => c.chat_id === 777 && c.text.includes('777')));
+
+  // egasi admin panelida ro'yxatni ko'radi va olib tashlaydi
+  const own = await J('admin/state');
+  assert.equal(own.owner, true); assert.ok(own.admins.some((a) => a.id === 555 && !a.owner)); assert.ok(own.admins.some((a) => a.id === 999 && a.owner));
+  assert.equal((await call('admin/admin/remove', { method: 'POST', body: { id: 999 } })).status, 400);   // egani olib tashlab bo'lmaydi
+  assert.equal((await call('admin/admin/remove', { method: 'POST', body: { id: 555 } })).status, 200);
+  assert.equal((await call('admin/state', { id: 555 })).status, 403);              // darhol ruxsat yo'qoladi
 });

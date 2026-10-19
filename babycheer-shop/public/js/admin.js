@@ -90,8 +90,13 @@
         <div class="row2c"><label class="fld"><span>Bepul yetkazish (so'mdan)</span><input data-set="freeFrom" inputmode="numeric" value="${esc(s.freeFrom)}"></label><label class="fld"><span>Yetkazish narxi</span><input data-set="deliveryFee" inputmode="numeric" value="${esc(s.deliveryFee)}"></label></div>
         ${fld('warrantyMonths', 'Kafolat (oy)')}<button class="btn block" id="saveSet">Saqlash</button></div>
       <div class="fs"><h3>Kategoriyalar</h3><div id="cats">${A.data.categories.map(catRow).join('')}</div><button class="btn ghost block" id="addCat">➕ Kategoriya qo'shish</button></div>
+      <div class="fs"><h3>Adminlar</h3>${A.data.owner ? `<div id="adm">${A.data.admins.map(admRow).join('')}</div>
+        <div id="invbox"></div><button class="btn block" id="invite">🔗 Yangi admin taklif qilish</button>
+        <p class="hint" style="font-size:12px;margin:8px 2px 0">Havolani yangi adminga yuboring: uni bossa, bot ochiladi va u avtomatik admin bo'ladi. Havola 24 soat va bir marta ishlaydi.</p>`
+        : '<div class="card hint" style="font-size:13px">Adminlarni faqat asosiy admin qo\'sha va olib tashlay oladi.</div>'}</div>
       <div class="fs"><h3>To'lov usullari</h3><div class="card hint" style="font-size:13px">Yoqilgan: ${A.data.payments.map((p) => `<b>${esc(p.label)}</b>`).join(', ')}.<br>Onlayn (Click/Payme) va karta o'tkazmasi Netlify'dagi <code>PAYMENT_PROVIDER_TOKEN</code> va <code>CARD_NUMBER</code> o'zgaruvchilari bilan yoqiladi.</div></div>`;
   }
+  const admRow = (a) => `<div class="acard" style="display:flex;align-items:center;gap:10px;margin-top:8px;padding:10px 12px"><div style="flex:1;min-width:0"><b>${a.owner ? '⭐ Asosiy admin' : esc(a.name || 'Admin')}${a.username ? ` @${esc(a.username)}` : ''}</b><div class="sub">ID <span class="num">${esc(a.id)}</span></div></div>${a.owner ? '' : `<button class="btn sm bad" data-arm="${esc(a.id)}">Olib tashlash</button>`}</div>`;
   const catRow = (c) => `<div class="catrow" data-cat="${c.id}"><input value="${esc(c.name)}" data-cn><select data-ci>${Object.entries(ICONS).map(([k, v]) => `<option value="${k}" ${c.icon === k ? 'selected' : ''}>${v}</option>`).join('')}</select><button class="btn sm" data-csave="${c.id}">✓</button><button class="btn sm bad" data-cdel="${c.id}">🗑</button></div>`;
 
   // ---------- mahsulot muharriri ----------
@@ -201,6 +206,25 @@
       return orderAction({ id: Number(id), status });
     }
     if ((el = b('[data-paid]'))) { const [id, v] = el.dataset.paid.split(':'); return orderAction({ id: Number(id), paid: v === '1' }); }
+    if (b('#invite')) {
+      try {
+        const { link } = await api('admin/invite', {});
+        $('#invbox').innerHTML = `<div class="card" style="margin-bottom:10px"><b>Taklif havolasi</b><div class="copy"><code style="font-size:12px;word-break:break-all">${esc(link)}</code></div><div class="btns"><button class="btn ghost" data-copy="${esc(link)}">📋 Nusxa olish</button><button class="btn" data-share="${esc(link)}">✈️ Telegramda yuborish</button></div></div>`;
+        haptic('ok');
+      } catch (err) { toast(err.message, true); haptic('err'); }
+      return;
+    }
+    if ((el = b('[data-copy]'))) { try { await navigator.clipboard.writeText(el.dataset.copy); toast('Nusxalandi ✅'); } catch { toast(el.dataset.copy); } return; }
+    if ((el = b('[data-share]'))) {
+      const url = 'https://t.me/share/url?url=' + encodeURIComponent(el.dataset.share) + '&text=' + encodeURIComponent("BabyCheer do'koniga admin bo'lish uchun havola:");
+      tg && tg.openTelegramLink ? tg.openTelegramLink(url) : window.open(url, '_blank');
+      return;
+    }
+    if ((el = b('[data-arm]'))) {
+      if (!(await confirmBox('Bu adminni olib tashlaysizmi?'))) return;
+      try { await api('admin/admin/remove', { id: Number(el.dataset.arm) }); await load(true); toast('Admin olib tashlandi'); } catch (err) { toast(err.message, true); }
+      return;
+    }
     if (b('#saveSet')) {
       const body = {}; $$('[data-set]').forEach((i) => { body[i.dataset.set] = i.value; });
       try { A.data.settings = (await api('admin/settings', body)).settings; toast('Saqlandi ✅'); haptic('ok'); } catch (err) { toast(err.message, true); haptic('err'); }

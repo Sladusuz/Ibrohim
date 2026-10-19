@@ -2,7 +2,8 @@
 import { randomBytes } from 'node:crypto';
 import * as shop from './shop.js';
 import * as store from './store.js';
-import { safe, adminIds } from './tg.js';
+import { safe, isAdminId, isOwnerId, ownerIds } from './tg.js';
+import * as admins from './admins.js';
 import { statusMessage } from './botui.js';
 
 const json = (data, status = 200) =>
@@ -16,12 +17,13 @@ const int = (v, min = 0, max = 1e10) => {
 const text = (v, max) => String(v ?? '').trim().slice(0, max);
 const ICONS = ['car', 'stroller', 'trike', 'moto', 'scooter'];
 
-export const isAdmin = (user) => !!user && adminIds().includes(user.id);
+export const isAdmin = (user) => !!user && isAdminId(user.id);
 
 const fullOrder = (o) => ({ ...o, no: shop.orderNo(o.id) });
 
 export async function adminApi(route, req, user) {
-  if (!isAdmin(user)) return bad('Ruxsat yo\'q', 403);
+  if (!(await isAdmin(user))) return bad('Ruxsat yo\'q', 403);
+  const owner = isOwnerId(user.id);
   const body = req.method === 'POST' && route !== 'admin/upload' ? await req.json().catch(() => null) : null;
 
   if (req.method === 'GET' && route === 'admin/state') {
@@ -32,6 +34,8 @@ export async function adminApi(route, req, user) {
       products: [...c.products].sort((a, b) => a.sort - b.sort),
       orders: (await shop.recentOrders(50)).map(fullOrder),
       payments: shop.paymentMethods(),
+      owner,
+      admins: owner ? [...ownerIds().map((id) => ({ id, owner: true, name: id === user.id ? 'Siz' : '' })), ...(await admins.listAdmins())] : undefined,
     });
   }
 
@@ -46,6 +50,15 @@ export async function adminApi(route, req, user) {
   }
 
   if (req.method !== 'POST' || !body) return bad('Topilmadi', 404);
+
+  if (route === 'admin/invite') {
+    if (!owner) return bad("Adminlarni faqat asosiy admin qo'sha oladi", 403);
+    return json({ link: await admins.createInvite(user.id) });
+  }
+  if (route === 'admin/admin/remove') {
+    if (!owner) return bad("Adminlarni faqat asosiy admin olib tashlay oladi", 403);
+    return (await admins.removeAdmin(body.id)) ? json({ ok: true }) : bad('Admin topilmadi (asosiy adminni olib tashlab bo\'lmaydi)');
+  }
 
   if (route === 'admin/product') {
     const title = text(body.title, 120), price = int(body.price, 1), old = int(body.old_price ?? 0), stock = int(body.stock ?? 0);

@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import * as store from './store.js';
 
 export const TOKEN = () => process.env.BOT_TOKEN || '';
 const BASE = () => process.env.TELEGRAM_API_BASE || 'https://api.telegram.org';
@@ -20,10 +21,26 @@ export async function api(method, params = {}) {
 /** Xatoni yutadi: xabar yuborilmasa buyurtma jarayoni to'xtamasligi kerak. */
 export const safe = (method, params) => api(method, params).catch((e) => { console.warn(e.message); return null; });
 
-export const adminIds = () => (process.env.ADMIN_IDS || '').split(',').map((x) => Number(x.trim())).filter(Boolean);
+/** Asosiy adminlar (egalar): Netlify'dagi ADMIN_IDS. Ular boshqa adminlarni qo'sha va olib tashlay oladi. */
+export const ownerIds = () => (process.env.ADMIN_IDS || '').split(',').map((x) => Number(x.trim())).filter(Boolean);
+export const adminIds = ownerIds; // eski nom
 
-export function notifyAdmins(text, extra = {}) {
-  return Promise.allSettled(adminIds().map((id) => safe('sendMessage', { chat_id: id, text, parse_mode: 'HTML', ...extra })));
+let adminCache = { t: 0, ids: [] };
+export const resetAdminCache = () => { adminCache = { t: 0, ids: adminCache.ids }; };
+/** Barcha adminlar: egalar + bot orqali taklif qilinganlar (15 soniya xotirada). Ombor ishlamasa oxirgi ro'yxat. */
+export async function allAdminIds() {
+  if (Date.now() - adminCache.t < 15000) return adminCache.ids;
+  let extra = null;
+  try { extra = ((await store.get('admins')) || []).map((a) => a.id); } catch { /* ombor vaqtincha ishlamadi */ }
+  const ids = [...new Set([...ownerIds(), ...(extra ?? adminCache.ids.filter((i) => !ownerIds().includes(i)))])];
+  adminCache = { t: Date.now(), ids };
+  return ids;
+}
+export const isAdminId = async (id) => !!id && (await allAdminIds()).includes(Number(id));
+export const isOwnerId = (id) => !!id && ownerIds().includes(Number(id));
+
+export async function notifyAdmins(text, extra = {}) {
+  return Promise.allSettled((await allAdminIds()).map((id) => safe('sendMessage', { chat_id: id, text, parse_mode: 'HTML', ...extra })));
 }
 
 /** Telegram WebApp initData imzosini tekshiradi. To'g'ri bo'lsa foydalanuvchi obyekti, aks holda null. */
