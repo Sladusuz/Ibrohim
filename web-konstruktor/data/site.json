@@ -539,7 +539,7 @@
       "services": [
         {
           "id": "start",
-          "name": "Vizitka / korporativ sayt",
+          "name": "Korporativ sayt",
           "desc": "Kompaniyangiz yoki xizmatingizni tanishtiruvchi 5 sahifagacha sayt",
           "icon": "globe",
           "price": 2500000,

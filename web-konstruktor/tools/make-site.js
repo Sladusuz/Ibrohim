@@ -53,7 +53,7 @@ out.splice(bi + 1, 0, {
   buttonText: "Anketani to'ldirish", promise: "15 daqiqada aloqaga chiqamiz", showEstimate: true,
   usp: ["Bepul maslahat va g'oyalar: mutaxassis sizga eng mos yechimni tanlab beradi", "Aniq narx va muddat suhbatdan keyin, shartnoma bilan", "Natijaga kafolat va ishga tushgandan keyin ham yordam"],
   services: [
-    { id: 'start', name: 'Vizitka / korporativ sayt', desc: 'Kompaniyangiz yoki xizmatingizni tanishtiruvchi 5 sahifagacha sayt', icon: 'globe', price: 2500000, days: '5–10 kun' },
+    { id: 'start', name: 'Korporativ sayt', desc: 'Kompaniyangiz yoki xizmatingizni tanishtiruvchi 5 sahifagacha sayt', icon: 'globe', price: 2500000, days: '5–10 kun' },
     { id: 'dokon', name: "Onlayn do'kon", desc: "Katalog, savat, buyurtma va admin panel bilan to'liq do'kon", icon: 'cart', price: 6900000, days: '2–3 hafta' },
     { id: 'bot', name: 'Telegram bot', desc: "Buyurtma, to'lov va mijozlar bilan aloqani avtomatlashtirish", icon: 'send', price: 3200000, days: '1–2 hafta' },
     { id: 'ilova', name: 'Mobil ilova', desc: "iOS va Android uchun ilova: dizayn, ishlab chiqish, e'lon qilish", icon: 'phone', price: 15000000, days: '1–2 oy' },
