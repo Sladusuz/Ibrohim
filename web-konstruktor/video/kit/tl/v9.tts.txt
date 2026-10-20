@@ -1,0 +1,6 @@
+[serious] Instagramda sotasizmi? Mijoz qayerga yozadi? [pause 0.4s]
+[confident] Mana to'g'ri yo'l: post, bioda kontakt sayti, Telegram bot, to'lov, sizga xabar. [pause 0.4s]
+[upbeat] Kontakt sayti tanishtiradi, bot sotadi. [pause 0.4s]
+[firmly] Bot — o'n besh dollardan. Kontakt sayti — o'n dollar. [pause 0.4s]
+[excited] Sayt buyurtma bersangiz — kontakt sayti sovg'a. [pause 0.4s]
+[warm] Bugun boshlang. improuzbekiston nuqta uz [pause 0.4s]

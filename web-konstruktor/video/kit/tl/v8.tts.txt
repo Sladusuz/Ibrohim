@@ -1,0 +1,6 @@
+[serious] Sayt qancha turadi? Uchta yo'l bor. [pause 0.4s]
+[firmly] Birinchi: agentlik. Odatda millionlab so'm. [pause 0.4s]
+[confident] Ikkinchi: Impro IT'ga buyurtma — ikki yarim million so'mdan. [pause 0.4s]
+[excited] Uchinchi: o'zingiz yasang — o'n dollar. [pause 0.4s]
+[firmly] Shablonni tanlaysiz, matnni o'zgartirasiz — tahrirlash bepul. [pause 0.4s]
+[warm] Bugun boshlang. improuzbekiston nuqta uz [pause 0.4s]

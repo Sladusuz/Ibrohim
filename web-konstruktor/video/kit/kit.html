@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uz"><head><meta charset="utf-8"><title>Impro IT video kit</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--lime:#c8ff3a;--red:#ff4d5e;--ink:#05070f;--vio:#7a5cff;--tg:#2aabee}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#05070f;font-family:'Bricolage Grotesque',Inter,sans-serif;color:#fff}
+#st{position:relative;width:1080px;height:1920px;overflow:hidden;background:#05070f}
+.L{position:absolute;inset:0}.abs{position:absolute}
+.sc{position:absolute;inset:0;display:none;overflow:hidden}
+.ph{background-size:cover;background-position:center;background-repeat:no-repeat}
+.lime{color:var(--lime)}.red{color:var(--red)}.vio{color:#a591ff}
+.tx{position:absolute;font-weight:800;letter-spacing:-3px;line-height:.98;white-space:pre-wrap}
+.pill{position:absolute;display:inline-block;white-space:nowrap;border-radius:99px;font-weight:800}
+.fr{position:absolute;border-radius:60px;overflow:hidden;box-shadow:0 50px 120px -30px rgba(0,0,0,.9),0 0 0 3px rgba(255,255,255,.18)}
+.fr>div{position:absolute;inset:0}
+.phn{position:absolute;border-radius:78px;background:#0b0d16;padding:16px;box-shadow:0 60px 140px -20px rgba(0,0,0,.85),0 0 0 3px rgba(255,255,255,.22),0 0 0 11px #11141f}
+.phn .scr{position:relative;width:100%;height:100%;border-radius:62px;overflow:hidden;background-color:#fff;background-repeat:no-repeat}
+.phn .nt{position:absolute;left:50%;top:14px;width:130px;height:34px;margin-left:-65px;border-radius:20px;background:#000;z-index:3}
+.tg{position:absolute;border-radius:48px;overflow:hidden;background:#0e1621;box-shadow:0 50px 120px -30px rgba(0,0,0,.9),0 0 0 3px rgba(255,255,255,.16)}
+.tg .hd{height:128px;background:#17212b;display:flex;align-items:center;gap:22px;padding:0 30px;border-bottom:2px solid #0b1118}
+.tg .hd i{font-style:normal;width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,#ff7aa8,#7a5cff);display:grid;place-items:center;font-size:40px}
+.tg .hd b{display:block;font-size:40px;letter-spacing:-.5px;font-weight:700}.tg .hd span{font-size:27px;color:#6d7f8f;font-weight:500}
+.tg .bd{position:absolute;left:0;right:0;top:128px;bottom:0;padding:26px 24px;overflow:hidden}
+.rw{position:relative;display:flex;margin-bottom:20px}.rw.me{justify-content:flex-end}.mg{max-width:84%;padding:20px 28px;border-radius:30px;font-size:41px;line-height:1.22;font-weight:500;letter-spacing:-.3px}
+.mg.me{background:#2b5278;border-bottom-right-radius:8px}
+.mg.bot{background:#182533;border-bottom-left-radius:8px}
+.mg small{display:block;text-align:right;font-size:23px;color:#8fb4d8;margin-top:6px;opacity:.8}
+.mb{display:flex;gap:14px;margin:-6px 0 22px}.ty{position:absolute;left:0;top:0;background:#182533;border-radius:30px;border-bottom-left-radius:8px;padding:14px 30px;font-size:52px;letter-spacing:6px;color:#8fa6ba;line-height:1.1}.sk{position:relative;display:inline-block}.sk:after{content:'';position:absolute;left:-3%;top:54%;height:.1em;width:calc(var(--s,0)*106%);background:#ff4d5e;border-radius:9px}
+.mb span{flex:1;text-align:center;background:#243447;border-radius:22px;padding:16px 10px;font-size:34px;font-weight:600;color:#7fc4ff;white-space:nowrap}
+.row{position:absolute;display:flex;align-items:center;gap:34px;border-radius:48px;padding:30px 48px;font-weight:800;letter-spacing:-1.5px;background:rgba(255,255,255,.1);border:3px solid rgba(255,255,255,.28);backdrop-filter:none}
+.row i{font-style:normal;flex:none;width:130px;height:130px;border-radius:38px;display:grid;place-items:center;font-size:76px;background:rgba(255,255,255,.12)}
+.card{position:absolute;border-radius:44px;padding:34px;background:rgba(255,255,255,.09);border:3px solid rgba(255,255,255,.22)}
+.card i{font-style:normal;display:block;font-size:76px;margin-bottom:14px}.card b{display:block;font-size:50px;letter-spacing:-1.5px;line-height:1.02}.card span{display:block;font-size:33px;color:#c9cdf5;margin-top:10px;font-weight:600;letter-spacing:-.4px;line-height:1.15}
+.nt2{position:absolute;border-radius:40px;background:rgba(10,14,40,.95);border:3px solid rgba(200,255,58,.7);padding:26px 32px;display:flex;gap:24px;align-items:center;box-shadow:0 20px 60px -10px rgba(0,0,0,.7)}
+.nt2 i{font-style:normal;flex:none;width:90px;height:90px;border-radius:26px;background:var(--lime);display:grid;place-items:center;font-size:52px}
+.nt2 b{display:block;font-size:42px;letter-spacing:-1px}.nt2 span{display:block;font-size:30px;color:#c9cdf5;margin-top:4px;font-weight:600}
+.nd{position:absolute;text-align:center;font-weight:800;letter-spacing:-1px}
+.nd i{font-style:normal;display:grid;place-items:center;margin:0 auto 14px;border-radius:50%;background:rgba(255,255,255,.12);border:4px solid rgba(255,255,255,.4)}
+#cap{position:absolute;left:30px;right:30px;top:1400px;height:300px;text-align:center;display:flex;align-items:center;justify-content:center;z-index:30}
+#cap div{font-size:112px;line-height:1.02;font-weight:800;letter-spacing:-3px;-webkit-text-stroke:14px #05070f;paint-order:stroke fill;text-shadow:0 8px 0 rgba(0,0,0,.35)}
+#cap span{display:inline-block;margin:0 .12em}#cap .k{color:var(--lime)}
+#fadeb{position:absolute;left:0;right:0;top:1000px;height:560px;background:linear-gradient(rgba(5,7,15,0),rgba(5,7,15,.97) 70%);z-index:20;pointer-events:none}
+#brand{position:absolute;left:0;right:0;top:1780px;text-align:center;z-index:30;font-size:40px;font-weight:700;color:rgba(255,255,255,.72);letter-spacing:.5px}
+#pgw{position:absolute;left:0;right:0;top:1742px;height:8px;z-index:30;background:rgba(255,255,255,.12)}#pg{height:100%;width:0;background:linear-gradient(90deg,#7a5cff,var(--lime))}
+</style></head>
+<body><div id="st">
+<div id="scs" style="position:absolute;inset:0"></div>
+<div class="L" id="fadeb"></div>
+<div id="cap"><div id="capt"></div></div>
+<div id="pgw"><div id="pg"></div></div>
+<div id="brand"><img src="../assets/logo-mark.png" style="width:46px;height:46px;border-radius:12px;vertical-align:middle;margin-right:14px;border:2px solid #c8ff3a">improuzbekiston.uz · <span style="color:var(--lime)">@improsupport_bot</span></div>
+<canvas class="L" id="grain" width="270" height="480" style="width:1080px;height:1920px;opacity:.08;mix-blend-mode:overlay;z-index:40"></canvas>
+<div class="L" id="vig" style="background:radial-gradient(80% 62% at 50% 46%,transparent 50%,rgba(0,0,0,.6));z-index:41"></div>
+<div class="L" id="flash" style="background:#fff;opacity:0;display:none;z-index:50"></div>
+</div>
+<script src="../lib.js"></script>
+<script src="specs.js"></script>
+<script>
+const VID=new URLSearchParams(location.search).get('v')||'v1';document.write('<script src="tl/'+VID+'.js"><\/script>');
+</script>
+<script src="kit.js"></script>
+</body></html>

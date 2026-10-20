@@ -1,0 +1,6 @@
+[low] Tun. Soat ikkida mijoz sizga yozdi. [pause 0.4s]
+[firmly] Siz uxlayapsiz. Bot esa — ishlayapti. [pause 0.4s]
+[confident] U savolga javob beradi, buyurtma oladi, to'lovni qabul qiladi. [pause 0.4s]
+[upbeat] Ertalab turasiz — buyurtma tayyor. [pause 0.4s]
+[excited] Telegram sotuv boti: oddiy bot — o'n besh dollardan. [pause 0.4s]
+[warm] Bugun boshlang. improuzbekiston nuqta uz [pause 0.4s]

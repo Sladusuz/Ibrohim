@@ -1,0 +1,6 @@
+[upbeat] Kod bilmasangiz ham, telefondan ham — bo'ladi. [pause 0.4s]
+[firmly] Kod kerakmi? Yo'q. Telefondan yasasa bo'ladimi? Ha. [pause 0.4s]
+[firmly] Tahrirlash pullikmi? Yo'q, bepul. To'lov — faqat chiqarishda. [pause 0.4s]
+[confident] Bot qaysi tillarda gapiradi? Uch tilda: o'zbek, rus, ingliz. [pause 0.4s]
+[warm] Savol bo'lsa, Telegramda yozing — javob beramiz. [pause 0.4s]
+[warm] Bugun boshlang. improuzbekiston nuqta uz [pause 0.4s]

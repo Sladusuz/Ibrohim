@@ -1,0 +1,6 @@
+[confident] Telegram sotuv boti: siz band bo'lsangiz ham ishlaydi. [pause 0.4s]
+[upbeat] U mijozga javob beradi, katalogni ko'rsatadi, to'lovni qabul qiladi, sizga xabar yuboradi. [pause 0.4s]
+[firmly] Oddiy bot — o'n besh dollar. Katalog — yana yigirma dollar. Mini ilova — yana yigirma dollar. [pause 0.4s]
+[confident] Maxsus bot kerakmi? uch yarim million so'mdan, bir-ikki haftada. [pause 0.4s]
+[excited] Sayt buyurtma bersangiz — Instagram kontakt sayti sovg'a. [pause 0.4s]
+[warm] Bugun boshlang. improuzbekiston nuqta uz [pause 0.4s]

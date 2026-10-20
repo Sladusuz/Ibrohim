@@ -1,0 +1,6 @@
+[confident] Biznesingiz uchun uchta narsa kerak. Hammasi bir joyda. [pause 0.4s]
+[upbeat] Birinchi: veb sayt. Google'da topilasiz, mijoz sizga ishonadi. [pause 0.4s]
+[upbeat] Ikkinchi: Instagram uchun kontakt sayti. Bioda bitta havola: narx, manzil, aloqa. [pause 0.4s]
+[upbeat] Uchinchi: Telegram sotuv boti. U kechayu kunduz javob beradi, buyurtma oladi, to'lovni qabul qiladi. [pause 0.4s]
+[warm] Hammasi bir joyda: improuzbekiston.uz. Sayt buyurtma bersangiz, Instagram kontakt saytini sovg'aga olasiz. [pause 0.4s]
+[warm] Bugun boshlang. improuzbekiston nuqta uz [pause 0.4s]

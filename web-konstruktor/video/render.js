@@ -7,7 +7,7 @@ const mode = process.argv[2] || 'preview', FPS = Number(process.argv[3]) || 30, 
 (async () => {
   const b = await chromium.launch({ args: ['--font-render-hinting=none', '--disable-lcd-text'] });
   const p = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 }); const errs = []; p.on('pageerror', (e) => errs.push(e.message)); p.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
-  await p.goto('file://' + path.join(__dirname, process.env.AD || 'ad.html')); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(800);
+  await p.goto('file://' + path.join(__dirname, process.env.AD || 'ad.html') + (process.env.QS ? '?' + process.env.QS : '')); await p.evaluate(() => document.fonts.ready); await p.waitForFunction(() => window.__ready !== false, null, { timeout: 60000 }); await p.waitForTimeout(800);
   if (mode === 'preview') {
     fs.mkdirSync('/tmp/vid-prev', { recursive: true });
     for (const t of String(process.argv[3] || '1,3,5').split(',').map(Number)) { await p.evaluate((t) => window.__frame(t), t); await p.waitForTimeout(60); await p.screenshot({ path: `/tmp/vid-prev/t${String(t).replace('.', '_')}.png` }); }
