@@ -77,7 +77,7 @@
   function setMeta() {
     document.title = S.company.name || 'Sayt';
     const m = $('meta[name=description]');
-    const hero = S.sections.find((s) => s.type === 'hero');
+    const hero = S.sections.find((s) => s.type === 'hero' || s.type === 'vcard');
     if (m) m.content = (hero && hero.text) || S.company.tagline || '';
     const og = (k, v) => { if (!v) return; let t = document.querySelector(`meta[property="${k}"]`); if (!t) { t = document.createElement('meta'); t.setAttribute('property', k); document.head.appendChild(t); } t.content = v; };
     og('og:title', S.company.name || 'Sayt'); og('og:description', (hero && hero.text) || S.company.tagline || ''); og('og:type', 'website');
@@ -227,8 +227,10 @@
     S = E.normalize(JSON.parse(JSON.stringify(data)));
     S.sections.forEach((s, i) => { if (!s.id) s.id = `${s.type}-${i}`; });
     collectItems(); loadCart(); applyTheme(); setMeta();
+    const vcs = S.sections.find((x) => on(x) && x.type === 'vcard'), vroot = document.documentElement;
+    if (vcs) { vroot.classList.add('card-mode', 'vcd-' + (E.vcDesigns && E.vcDesigns[vcs.design] ? vcs.design : 'emerald')); const ua = /^#[0-9a-f]{6}$/i.test(S.theme.accent || '') ? S.theme.accent : ''; if (ua) { vroot.style.setProperty('--vc-ua', ua); vroot.style.setProperty('--vc-ub', /^#[0-9a-f]{6}$/i.test(S.theme.accent2 || '') ? S.theme.accent2 : ua); vroot.style.setProperty('--vc-uon', lum(ua) > 0.58 ? '#0b1220' : '#ffffff'); } else ['--vc-ua', '--vc-ub', '--vc-uon'].forEach((k) => vroot.style.removeProperty(k)); }
     const body = S.sections.filter(on).map((sec) => { const def = E.sections[sec.type]; if (!def) return ''; try { return def.render(sec, S); } catch (e) { console.error('section', sec.type, e); return ''; } }).join('');
-    $('#app').innerHTML = `${announceHtml()}${navHtml()}<main id="top">${body}</main>${footerHtml()}${chromeEnd()}`;
+    $('#app').innerHTML = vcs ? `<main id="top">${body}</main><footer class="vcfoot">© ${new Date().getFullYear()} ${text(S.company.name)}${S.footer.text ? '. ' + text(S.footer.text) : ''}</footer>${chromeEnd()}` : `${announceHtml()}${navHtml()}<main id="top">${body}</main>${footerHtml()}${chromeEnd()}`;
     $('#app').dataset.nav = S.nav.style;
     document.body.classList.toggle('has-announce', !!$('.announce'));
     renderCart(); initEffects(); fillUser(); initAnalytics(); renderFab(); if (E.hooks.afterRender) E.hooks.afterRender();
@@ -380,7 +382,7 @@
     const co = new IntersectionObserver((es) => es.forEach((e) => {
       if (!e.isIntersecting) return; co.unobserve(e.target);
       const t = +e.target.dataset.count || 0, suf = e.target.dataset.suf || '', s = performance.now();
-      (function f(n) { const p = Math.min(1, (n - s) / 1600); e.target.textContent = Math.round(t * (1 - Math.pow(1 - p, 4))).toLocaleString('ru-RU').replace(/ /g, ' ') + suf; if (p < 1) requestAnimationFrame(f); })(s);
+      (function f(n) { const p = Math.min(1, (n - s) / 1600); const v = Math.round(t * (1 - Math.pow(1 - p, 4))); e.target.textContent = (e.target.dataset.plain && t >= 1900 && t <= 2100 ? String(v) : v.toLocaleString('ru-RU').replace(/ /g, ' ') ) + suf; if (p < 1) requestAnimationFrame(f); })(s);
     }), { threshold: 0.6 });
     $$('[data-count]').forEach((e) => co.observe(e)); observers.push(co);
     const tw = $('#tw'); const words = tw ? (tw.dataset.words || '').split('|').filter(Boolean) : [];

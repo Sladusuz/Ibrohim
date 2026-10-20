@@ -8,6 +8,7 @@
   const uid = () => 'i' + Math.random().toString(36).slice(2, 8);
   const iconNames = () => Object.keys(window.ICONS).filter((k) => !['menu', 'x', 'arrow', 'check', 'plus', 'minus', 'trash', 'left', 'right', 'down', 'search', 'external', 'eye', 'edit', 'settings', 'bell', 'inbox', 'download', 'filter', 'grid', 'database', 'quote', 'help', 'home', 'user'].includes(k));
   const ICON_LABEL = { code: 'Kod', phone: 'Telefon', send: 'Yuborish', design: 'Dizayn', shield: 'Himoya', zap: 'Tezlik', chart: 'Grafik', cart: 'Savat', cloud: 'Bulut', support: 'Yordam', globe: 'Dunyo', star: 'Yulduz', users: 'Odamlar', heart: 'Yurak', tool: 'Asbob', truck: 'Yetkazish', mail: 'Pochta', pin: 'Joy', clock: 'Vaqt', tel: 'Qo\'ng\'iroq', insta: 'Instagram', calendar: 'Kalendar', gift: 'Sovg\'a', percent: 'Chegirma', award: 'Mukofot', camera: 'Kamera', image: 'Rasm', scissors: 'Qaychi', coffee: 'Kofe', book: 'Kitob', terminal: 'Terminal', layers: 'Qatlamlar', package: 'Quti', card: 'Karta', refresh: 'Aylanish', github: 'GitHub', briefcase: 'Portfel', utensils: 'Taom', graduation: 'Ta\'lim', leaf: 'Barg', sun: 'Quyosh', dollar: 'Pul' };
+  Object.assign(ICON_LABEL, window.ICON_LABEL_X || {});
 
   window.Editor = {
     create(opts) {

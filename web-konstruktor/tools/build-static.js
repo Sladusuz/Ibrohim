@@ -7,9 +7,9 @@ const ROOT = path.join(__dirname, '..'), P = path.join(ROOT, 'public'), OUT = pa
 const MARK = '/*__DATA__*/null';
 const rd = (f) => fs.readFileSync(path.join(P, f), 'utf8');
 
-const css = (rd('style.css') + '\n' + rd('motion.css')).replace(/\[data-theme=/g, '[data-site=');
-const libs = ['icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'inline-edit.js', 'motion.js', 'brief.js'].map(rd).join('\n');
-const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@500;600&display=swap" rel="stylesheet">';
+const css = (rd('style.css') + '\n' + rd('motion.css') + '\n' + rd('vcard.css')).replace(/\[data-theme=/g, '[data-site=');
+const libs = ['icons.js', 'engine-core.js', 'sections.js', 'sections2.js', 'sections3.js', 'inline-edit.js', 'motion.js', 'brief.js'].map(rd).join('\n');
+const FONTS = '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;700;800&family=Playfair+Display:wght@500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&family=DM+Serif+Display:ital@0;1&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">';
 
 // opts.account: config.js + auth.js ulanadi (asosiy sayt); opts.data: ma'lumot ichiga joylanadi
 let DICT = {}; try { DICT = require('../public/i18n-dict.js'); } catch { /* lug'at hali yo'q */ }
@@ -79,11 +79,12 @@ for (const lang of ['ru', 'en']) {
   const lh = page({ data: JSON.stringify(ls).replace(/</g, '\\u003c'), account: true, seo: seoHead(ls, lang), lang }).replace('<title>Sayt</title>', `<title>${String((ls.company || {}).name || 'Sayt').replace(/</g, '')}: ${TITLES[lang]}</title>`);
   for (const dir of [P, OUT]) { fs.mkdirSync(path.join(dir, lang), { recursive: true }); fs.writeFileSync(path.join(dir, lang, 'index.html'), lh); }
 }
-for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'three.min.js', 'sections.js', 'sections2.js', 'brief.js', 'ui.css', 'topnav.js', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html', 'admin.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
+for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'tpl-6.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'three.min.js', 'sections.js', 'sections2.js', 'sections3.js', 'brief.js', 'ui.css', 'topnav.js', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html', 'admin.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
 if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'config.js'), path.join(OUT, 'config.js'));
 if (process.env.RELAY) fs.writeFileSync(path.join(OUT, 'config.js'), fs.readFileSync(path.join(OUT, 'config.js'), 'utf8').replace(/window\.__RELAY__ = '[^']*';/, `window.__RELAY__ = '${String(process.env.RELAY).replace(/'/g, '')}';`));
 if (!/__RELAY__/.test(fs.readFileSync(path.join(OUT, 'config.js'), 'utf8'))) fs.appendFileSync(path.join(OUT, 'config.js'), "\nwindow.__RELAY__ = '';\n");
 fs.cpSync(path.join(P, 'img'), path.join(OUT, 'img'), { recursive: true });
+if (fs.existsSync(path.join(P, 'smm'))) fs.cpSync(path.join(P, 'smm'), path.join(OUT, 'smm'), { recursive: true });
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 // Shablonlarning jonli namuna sahifalari: /demo/<id>/ (umumiy css va engine fayllari bilan, yengil)
 global.window = {}; require('../public/templates.js');

@@ -14,17 +14,21 @@
   const pg = $('#pg');
   const st = { page: 'dash', stats: null, orders: [], projects: [], users: [], pricing: null, site: null, settings: null, of: { q: '', s: '', t: '' }, pf: { q: '', s: '' }, uq: '', siteDirty: false, ed: null, previewReady: false };
 
+  const API = String(window.__API__ || '').replace(/\/$/, ''), tokGet = () => { try { return localStorage.getItem('impro_adm') || ''; } catch { return ''; } }, tokSet = (v) => { try { v ? localStorage.setItem('impro_adm', v) : localStorage.removeItem('impro_adm'); } catch { /* ignore */ } };
   async function api(method, url, body) {
-    const r = await fetch(url, { method, headers: body !== undefined ? { 'Content-Type': 'application/json' } : {}, body: body !== undefined ? JSON.stringify(body) : undefined });
+    const h = { ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(tokGet() ? { Authorization: 'Bearer ' + tokGet() } : {}) };
+    const r = await fetch(API + url, { method, headers: h, body: body !== undefined ? JSON.stringify(body) : undefined });
     const j = await r.json().catch(() => ({}));
     if (r.status === 401 && url !== '/api/admin/login') { showLogin(); throw new Error('Qayta kiring'); }
     if (!r.ok) throw new Error(j.error || 'Xatolik');
+    if (url === '/api/admin/login' && j.token) tokSet(j.token);
+    if (url === '/api/admin/logout') tokSet('');
     return j;
   }
   function showLogin() { $('#login').hidden = false; $('#app').hidden = true; setTimeout(() => $('#pw').focus(), 50); }
   $('#lf').addEventListener('submit', async (e) => {
     e.preventDefault(); $('#le').textContent = '';
-    try { await api('POST', '/api/admin/login', { password: $('#pw').value }); $('#pw').value = ''; $('#login').hidden = true; await start(); } catch (er) { $('#le').textContent = er.message; }
+    try { await api('POST', '/api/admin/login', { password: $('#pw').value.trim() }); $('#pw').value = ''; $('#login').hidden = true; await start(); } catch (er) { $('#le').textContent = er.message; }
   });
   $('#out').addEventListener('click', async () => { await api('POST', '/api/admin/logout', {}).catch(() => {}); st.siteDirty = false; location.reload(); });
 
@@ -302,7 +306,7 @@
   if (tgApp) { try { tgApp.ready(); tgApp.expand(); document.documentElement.classList.add('tgapp'); } catch (e) { /* ignore */ } }
   api('GET', '/api/admin/stats').then(() => start()).catch(async () => {
     if (!tgApp) return showLogin();
-    try { await fetch('/api/adminbot/session', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ initData: tgApp.initData }) }).then(async (r) => { if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'Kirish rad etildi'); }); $('#login').hidden = true; await start(); }
+    try { await fetch(API + '/api/adminbot/session', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ initData: tgApp.initData }) }).then(async (r) => { const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.error || 'Kirish rad etildi'); if (j.token) tokSet(j.token); }); $('#login').hidden = true; await start(); }
     catch (er) { showLogin(); $('#le').textContent = er.message + '. Yoki parolni kiriting.'; }
   });
 })();

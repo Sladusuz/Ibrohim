@@ -68,8 +68,41 @@ window.ICONS = {
   quote: '<path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>',
   help: '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
   filter: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
+  telegram: '<path d="M21.5 3.5L2.7 10.8l6.3 2.3 2.2 6.8 3.4-4.2 4.9 3.7z"/><path d="M9 13.1l9.5-7"/>',
+  whatsapp: '<path d="M3 21l1.6-4.9A9 9 0 1 1 8 19.5z"/><path d="M9 8.5c-.6 2.3 2.7 6.5 6 6.5.8 0 1.5-.8 1.5-1.4l-2-1-1 .8c-1-.4-2-1.4-2.4-2.4l.8-1-1-2c-.6 0-1.6.6-1.9 1.1z"/>',
+  youtube: '<rect x="2" y="5" width="20" height="14" rx="4.5"/><polygon points="10 9 16 12 10 15 10 9"/>',
+  tiktok: '<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.4 2.6 2.1 4.5 5 4.8"/>',
+  facebook: '<path d="M14.5 21.5v-8.2h2.8l.5-3.4h-3.3V7.7c0-1 .5-1.8 2-1.8h1.4V3.1c-.3 0-1.3-.2-2.4-.2-2.5 0-4.2 1.5-4.2 4.3v2.7H8.5v3.4h2.8v8.2z"/>',
+  linkedin: '<rect x="3" y="3" width="18" height="18" rx="3.5"/><line x1="8" y1="10.5" x2="8" y2="16.5"/><line x1="8" y1="7.6" x2="8.01" y2="7.6"/><path d="M12 16.5v-6m0 3c0-2 1.2-3 2.7-3s2.3 1 2.3 3v3"/>',
+  twitter: '<path d="M4 4l16 16M20 4L4 20"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/>',
+  compass: '<circle cx="12" cy="12" r="10"/><polygon points="16.2 7.8 14.1 14.1 7.8 16.2 9.9 9.9 16.2 7.8"/>',
+  medal: '<circle cx="12" cy="15" r="6"/><path d="M8.2 10.5L5 3h5l2 4.2M15.8 10.5L19 3h-5l-2 4.2"/><path d="M12 12.5v5M10 15h4"/>',
+  building: '<rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M9 22v-4h6v4M8 6h.01M12 6h.01M16 6h.01M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01"/>',
+  tooth: '<path d="M12 5.5C10 3.5 5 3.5 5 8.5c0 3 1.5 4.5 2 7 .5 3 1 6 2.5 6s1.5-4 2.5-4 1 4 2.5 4 2-3 2.5-6c.5-2.5 2-4 2-7 0-5-5-5-7-3z"/>',
+  pulse: '<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>',
+  dumbbell: '<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/>',
+  car: '<path d="M5 17H3v-5l2-5h14l2 5v5h-2"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/><path d="M3 12h18"/>',
+  music: '<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>',
+  crown: '<path d="M3 18h18l1.5-11-5.5 4-4-7-4 7-5.5-4z"/>',
+  flower: '<circle cx="12" cy="12" r="2.5"/><path d="M12 9.5a3.5 3.5 0 1 1 3.5-3.5M14.5 12a3.5 3.5 0 1 1 3.5 3.5M12 14.5a3.5 3.5 0 1 1-3.5 3.5M9.5 12a3.5 3.5 0 1 1-3.5-3.5"/>',
+  sparkle: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.7 1.8 1.8.7-1.8.7L19 22l-.7-1.8-1.8-.7 1.8-.7z"/>',
+  pen: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
+  target: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  smile: '<circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>',
+  translate: '<path d="M5 8l6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14.5 18h6"/>',
+  bag: '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  wallet: '<path d="M20 12V8a2 2 0 0 0-2-2H5a2 2 0 0 1 0-4h13"/><path d="M3 5v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-4"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/>',
+  baby: '<circle cx="12" cy="12" r="9"/><path d="M9 13.5c.8 1 1.8 1.5 3 1.5s2.2-.5 3-1.5M9.5 10h.01M14.5 10h.01M12 3c1 1 1 2 0 3"/>',
+  scale: '<path d="M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0zM19 7l-3 7a3 3 0 0 0 6 0z"/>',
+  palette: '<path d="M12 2a10 10 0 1 0 0 20c1.4 0 2-.9 2-2 0-.6-.3-1.1-.5-1.5-.3-.4-.5-.9-.5-1.5 0-1.1.9-2 2-2h2.4A3.6 3.6 0 0 0 21 11.4C21 6 17 2 12 2z"/><path d="M7.5 11h.01M10 7.5h.01M15 7.5h.01"/>',
+  paw: '<circle cx="6" cy="10" r="2"/><circle cx="10" cy="5.5" r="2"/><circle cx="15" cy="5.5" r="2"/><circle cx="19" cy="10" r="2"/><path d="M12 11c-3 0-5.5 3.5-5.5 6 0 1.8 1.5 2.5 3 2.5 1 0 1.7-.5 2.5-.5s1.5.5 2.5.5c1.5 0 3-.7 3-2.5 0-2.5-2.5-6-5.5-6z"/>',
+  wave: '<path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 18c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/><path d="M2 6c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
 };
 window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${window.ICONS[n] || window.ICONS.star}</svg>`;
+
+window.ICON_LABEL_X = {"telegram": "Telegram", "whatsapp": "WhatsApp", "youtube": "YouTube", "tiktok": "TikTok", "facebook": "Facebook", "linkedin": "LinkedIn", "twitter": "X (Twitter)", "link": "Havola", "compass": "Kompas", "medal": "Medal", "building": "Bino", "tooth": "Tish", "pulse": "Yurak urishi", "dumbbell": "Gantel", "car": "Mashina", "music": "Musiqa", "crown": "Toj", "flower": "Gul", "sparkle": "Yaltirash", "pen": "Qalam", "target": "Nishon", "smile": "Tabassum", "translate": "Til", "bag": "Sumka", "wallet": "Hamyon", "baby": "Bola", "scale": "Tarozi", "palette": "Ranglar", "paw": "Hayvon izi", "wave": "To'lqin", "sun": "Quyosh"};
 
 'use strict';
 // Sayt dvigateli: yadro (mavzular, savat, oynalar, formalar, effektlar).
@@ -150,7 +183,7 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
   function setMeta() {
     document.title = S.company.name || 'Sayt';
     const m = $('meta[name=description]');
-    const hero = S.sections.find((s) => s.type === 'hero');
+    const hero = S.sections.find((s) => s.type === 'hero' || s.type === 'vcard');
     if (m) m.content = (hero && hero.text) || S.company.tagline || '';
     const og = (k, v) => { if (!v) return; let t = document.querySelector(`meta[property="${k}"]`); if (!t) { t = document.createElement('meta'); t.setAttribute('property', k); document.head.appendChild(t); } t.content = v; };
     og('og:title', S.company.name || 'Sayt'); og('og:description', (hero && hero.text) || S.company.tagline || ''); og('og:type', 'website');
@@ -300,8 +333,10 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     S = E.normalize(JSON.parse(JSON.stringify(data)));
     S.sections.forEach((s, i) => { if (!s.id) s.id = `${s.type}-${i}`; });
     collectItems(); loadCart(); applyTheme(); setMeta();
+    const vcs = S.sections.find((x) => on(x) && x.type === 'vcard'), vroot = document.documentElement;
+    if (vcs) { vroot.classList.add('card-mode', 'vcd-' + (E.vcDesigns && E.vcDesigns[vcs.design] ? vcs.design : 'emerald')); const ua = /^#[0-9a-f]{6}$/i.test(S.theme.accent || '') ? S.theme.accent : ''; if (ua) { vroot.style.setProperty('--vc-ua', ua); vroot.style.setProperty('--vc-ub', /^#[0-9a-f]{6}$/i.test(S.theme.accent2 || '') ? S.theme.accent2 : ua); vroot.style.setProperty('--vc-uon', lum(ua) > 0.58 ? '#0b1220' : '#ffffff'); } else ['--vc-ua', '--vc-ub', '--vc-uon'].forEach((k) => vroot.style.removeProperty(k)); }
     const body = S.sections.filter(on).map((sec) => { const def = E.sections[sec.type]; if (!def) return ''; try { return def.render(sec, S); } catch (e) { console.error('section', sec.type, e); return ''; } }).join('');
-    $('#app').innerHTML = `${announceHtml()}${navHtml()}<main id="top">${body}</main>${footerHtml()}${chromeEnd()}`;
+    $('#app').innerHTML = vcs ? `<main id="top">${body}</main><footer class="vcfoot">© ${new Date().getFullYear()} ${text(S.company.name)}${S.footer.text ? '. ' + text(S.footer.text) : ''}</footer>${chromeEnd()}` : `${announceHtml()}${navHtml()}<main id="top">${body}</main>${footerHtml()}${chromeEnd()}`;
     $('#app').dataset.nav = S.nav.style;
     document.body.classList.toggle('has-announce', !!$('.announce'));
     renderCart(); initEffects(); fillUser(); initAnalytics(); renderFab(); if (E.hooks.afterRender) E.hooks.afterRender();
@@ -453,7 +488,7 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     const co = new IntersectionObserver((es) => es.forEach((e) => {
       if (!e.isIntersecting) return; co.unobserve(e.target);
       const t = +e.target.dataset.count || 0, suf = e.target.dataset.suf || '', s = performance.now();
-      (function f(n) { const p = Math.min(1, (n - s) / 1600); e.target.textContent = Math.round(t * (1 - Math.pow(1 - p, 4))).toLocaleString('ru-RU').replace(/ /g, ' ') + suf; if (p < 1) requestAnimationFrame(f); })(s);
+      (function f(n) { const p = Math.min(1, (n - s) / 1600); const v = Math.round(t * (1 - Math.pow(1 - p, 4))); e.target.textContent = (e.target.dataset.plain && t >= 1900 && t <= 2100 ? String(v) : v.toLocaleString('ru-RU').replace(/ /g, ' ') ) + suf; if (p < 1) requestAnimationFrame(f); })(s);
     }), { threshold: 0.6 });
     $$('[data-count]').forEach((e) => co.observe(e)); observers.push(co);
     const tw = $('#tw'); const words = tw ? (tw.dataset.words || '').split('|').filter(Boolean) : [];
@@ -1223,6 +1258,158 @@ window.svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentCol
     render(sec) {
       if (!imgUrl(sec.before) || !imgUrl(sec.after)) return '';
       return E.wrap(sec, `${E.head(sec)}<div class="cmp rv" tabindex="0" role="slider" aria-label="Oldin va keyin" aria-valuemin="0" aria-valuemax="100" data-cursor="Suring">${E.img(sec.before, sec.labelBefore)}${E.img(sec.after, sec.labelAfter, 'af')}<span class="lb1">${text(sec.labelBefore)}</span><span class="lb2">${text(sec.labelAfter)}</span><i class="hd"></i></div>`);
+    },
+  });
+})();
+
+'use strict';
+// Vizitka (link-in-bio) bo'limlari: profil kartasi, yo'nalishlar, narx ro'yxati, galereya, sharhlar, manzil.
+// "vcard" bo'limi bor sayt vizitka rejimida chiqadi (menyu va katta footer yo'q), dizayn vcard.design orqali tanlanadi.
+(function () {
+  const E = window.E;
+  const { esc, text, imgUrl, linkUrl, icon } = E;
+  const F = E.F;
+  const arr = (a) => (Array.isArray(a) ? a : []);
+  const define = (type, def) => { E.sections[type] = def; E.order.push(type); };
+  const rich = (v) => E.rich(v);
+
+  E.vcDesigns = {
+    emerald: "Zumrad: qorong'i yashil + oltin",
+    midnight: "Yarim tun: ko'k neon",
+    rose: 'Atirgul: nafis och pushti',
+    gold: 'Oltin: qora + premium',
+    clinic: 'Klinika: toza oq-feruza',
+    sunset: 'Quyosh botishi: iliq gradient',
+    mono: 'Minimal: oq-qora muharrir',
+    ocean: "Dengiz: och ko'k",
+    neon: 'Neon: binafsha-pushti',
+    sand: 'Qum: iliq bej + terakota',
+  };
+
+  /* ---- Ijtimoiy tarmoqlar: tur -> ikonka, nom, havola ---- */
+  const strip = (v) => String(v || '').trim().replace(/^@/, '').replace(/^https?:\/\/(www\.)?[^/]+\//i, '').replace(/\/+$/, '');
+  const digits = (v) => String(v || '').replace(/\D/g, '');
+  const SOC = {
+    instagram: ['insta', 'Instagram', (v) => 'https://instagram.com/' + strip(v)],
+    telegram: ['telegram', 'Telegram', (v) => 'https://t.me/' + strip(v)],
+    whatsapp: ['whatsapp', 'WhatsApp', (v) => 'https://wa.me/' + digits(v)],
+    youtube: ['youtube', 'YouTube', (v) => (/^@/.test(String(v).trim()) ? 'https://youtube.com/' + String(v).trim() : 'https://youtube.com/' + strip(v))],
+    tiktok: ['tiktok', 'TikTok', (v) => 'https://tiktok.com/@' + strip(v)],
+    facebook: ['facebook', 'Facebook', (v) => 'https://facebook.com/' + strip(v)],
+    linkedin: ['linkedin', 'LinkedIn', (v) => 'https://linkedin.com/in/' + strip(v)],
+    twitter: ['twitter', 'X (Twitter)', (v) => 'https://x.com/' + strip(v)],
+    link: ['globe', 'Sayt', (v) => (/^https?:\/\//i.test(String(v).trim()) ? String(v).trim() : 'https://' + String(v).trim())],
+    tel: ['tel', 'Telefon', (v) => 'tel:' + String(v).replace(/[^\d+]/g, '')],
+    mail: ['mail', 'Email', (v) => 'mailto:' + String(v).trim()],
+    pin: ['pin', 'Xarita', (v) => (/^https?:\/\//i.test(String(v).trim()) ? String(v).trim() : 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(String(v).trim()))],
+  };
+  const socOpts = Object.keys(SOC).map((k) => [k, SOC[k][1]]);
+  const socHref = (kind, v) => { const d = SOC[kind] || SOC.link; const x = String(v || '').trim(); if (!x) return ''; try { return linkUrl(d[2](x)); } catch { return ''; } };
+  const ext = (h) => (/^https?:/i.test(h) ? ' target="_blank" rel="noopener"' : '');
+  // Havola kartasi/tugma uchun: to'liq havola, @nom, telefon raqam yoki sayt manzili
+  const smart = (u) => { const x = String(u || '').trim(); if (!x) return ''; const l = linkUrl(x); if (l) return l; if (/^(t\.me|wa\.me|instagram\.com|youtube\.com|youtu\.be|facebook\.com|tiktok\.com|linkedin\.com|maps\.google|goo\.gl)\//i.test(x) || /^[\w-]+(\.[\w-]+)+(\/|$)/.test(x)) return 'https://' + x; if (/^\+?[\d\s()-]{7,}$/.test(x)) return 'tel:' + x.replace(/[^\d+]/g, ''); return ''; };
+
+  const HEAD = [F.text('eyebrow', 'Kichik yozuv', { max: 30 }), F.text('title', 'Sarlavha', { max: 80, hint: "So'zni *yulduzcha* ichiga olsangiz, nafis kursiv bo'ladi." })];
+  const head = (sec) => (sec.title || sec.eyebrow ? `<div class="vch">${sec.eyebrow ? `<span class="vce">${text(sec.eyebrow)}</span>` : ''}${sec.title ? `<h2>${rich(sec.title)}</h2>` : ''}</div>` : '');
+  const sect = (sec, cls, inner) => `<section class="vcs ${cls}" id="${esc(sec.id)}" data-sec="${esc(sec.id)}">${inner}</section>`;
+  const stars = (n) => '★★★★★'.slice(0, Math.max(1, Math.min(5, Number(n) || 5)));
+
+  /* =============== PROFIL KARTASI =============== */
+  define('vcard', {
+    label: 'Vizitka: profil kartasi', icon: 'user', desc: "Logotip, nom, tavsif, ko'rsatkichlar, havola kartalari va tarmoq ikonkalari",
+    fields: [
+      F.sel('design', 'Dizayn', Object.keys(E.vcDesigns).map((k) => [k, E.vcDesigns[k]]), { hint: "Rangni o'zgartirish: Sozlamalar → mavzu rangi." }),
+      F.text('badge', 'Yuqoridagi yozuv', { max: 60 }), F.img('logoImage', 'Logotip yoki rasm'), F.text('logoText', 'Logotip harfi (rasm bo\'lmasa)', { max: 2 }), F.tog('verified', 'Tasdiqlangan belgisi'),
+      F.text('name', 'Nomi', { max: 40 }), F.text('sub', 'Qo\'shimcha nom (qiya yozuv)', { max: 40 }), F.text('role', 'Qisqa yo\'nalish', { max: 60 }), F.area('text', 'Tavsif', { max: 320, rows: 3 }),
+      F.list('stats', "Ko'rsatkichlar", { title: 'label', fields: [F.icon('icon', 'Ikonka'), F.num('value', 'Son'), F.text('suffix', 'Qo\'shimcha (+, %)', { max: 10 }), F.text('label', 'Yozuv', { max: 24 })], add: () => ({ icon: 'star', value: 10, suffix: '+', label: 'Yangi' }), max: 3 }),
+      F.list('pills', 'Kichik yozuvlar (ish vaqti, shahar...)', { title: 'label', fields: [F.icon('icon', 'Ikonka'), F.text('label', 'Yozuv', { max: 30 })], add: () => ({ icon: 'clock', label: '9:00 – 20:00' }), max: 4 }),
+      F.list('links', 'Havola kartalari', { title: 'title', fields: [F.icon('icon', 'Ikonka'), F.text('title', 'Nomi', { max: 40 }), F.text('sub', 'Pastki yozuv', { max: 60 }), F.text('url', 'Havola, @nom yoki telefon', { max: 200 })], add: () => ({ icon: 'link', title: 'Yangi havola', sub: '', url: '' }), max: 10 }),
+      F.list('socials', 'Ijtimoiy tarmoq ikonkalari', { title: 'kind', fields: [F.sel('kind', 'Tarmoq', socOpts), F.text('url', '@nom, raqam yoki havola', { max: 200 })], add: () => ({ kind: 'instagram', url: '' }), max: 8 }),
+      F.text('ctaText', 'Asosiy tugma matni', { max: 40 }), F.text('ctaLink', 'Asosiy tugma havolasi (@nom, telefon, havola)', { max: 200 }),
+    ],
+    defaults: () => ({
+      design: 'emerald', badge: 'Toshkent · 2020 yildan buyon', logoImage: '', logoText: 'N', verified: true, name: 'Nomingiz', sub: 'Yo\'nalishingiz', role: 'Asosiy xizmat', text: 'Kompaniyangiz yoki o\'zingiz haqingizda qisqa va aniq tavsif yozing.',
+      stats: [{ icon: 'medal', value: 2020, suffix: '', label: 'Yildan buyon' }, { icon: 'users', value: 500, suffix: '+', label: 'Mijoz' }, { icon: 'compass', value: 5, suffix: '', label: 'Yo\'nalish' }],
+      pills: [{ icon: 'clock', label: '9:00 – 20:00' }, { icon: 'calendar', label: 'Har kuni' }, { icon: 'pin', label: 'Toshkent' }],
+      links: [{ icon: 'tel', title: 'Qo\'ng\'iroq qilish', sub: '+998 90 123 45 67', url: '+998901234567' }, { icon: 'telegram', title: 'Telegram', sub: '@nomingiz', url: 't.me/nomingiz' }, { icon: 'insta', title: 'Instagram', sub: '@nomingiz', url: 'instagram.com/nomingiz' }],
+      socials: [{ kind: 'instagram', url: '@nomingiz' }, { kind: 'telegram', url: '@nomingiz' }, { kind: 'whatsapp', url: '+998901234567' }],
+      ctaText: 'Bog\'lanish', ctaLink: '+998901234567',
+    }),
+    render(sec) {
+      let n = 0; const st = () => `style="--i:${n++}"`;
+      const av = imgUrl(sec.logoImage) ? `<img src="${esc(imgUrl(sec.logoImage))}" alt="${esc(sec.name || '')}">` : `<span>${text(String(sec.logoText || (sec.name || 'S')[0]).slice(0, 2))}</span>`;
+      const stats = arr(sec.stats).filter((x) => x && x.label).slice(0, 3);
+      const pills = arr(sec.pills).filter((x) => x && x.label);
+      const links = arr(sec.links).filter((x) => x && x.title);
+      const socs = arr(sec.socials).filter((x) => x && socHref(x.kind, x.url));
+      const cta = sec.ctaText ? smart(sec.ctaLink) : '';
+      return `<section class="vcs vcard" id="${esc(sec.id)}" data-sec="${esc(sec.id)}"><div class="vcbg" aria-hidden="true"><i></i><i></i><i></i></div>
+        ${sec.badge ? `<div class="vcbadge" ${st()}><b></b>${text(sec.badge)}</div>` : ''}
+        <div class="vcav" ${st()}><div class="vcring"><div class="vcin">${av}</div></div>${sec.verified ? `<em class="vcver" aria-label="Tasdiqlangan">${icon('check')}</em>` : ''}</div>
+        <div class="vcid" ${st()}>${sec.name ? `<h1>${text(sec.name)}</h1>` : ''}${sec.sub ? `<p class="vcsub">${text(sec.sub)}</p>` : ''}${sec.role ? `<p class="vcrole">${text(sec.role)}</p>` : ''}</div>
+        ${sec.text ? `<p class="vcbio" ${st()}>${text(sec.text)}</p>` : ''}
+        ${stats.length ? `<div class="vcstats c${stats.length}" ${st()}>${stats.map((x) => `<div class="vcst"><span class="vci">${icon(x.icon)}</span><b data-count="${Number(x.value) || 0}" data-suf="${esc(x.suffix || '')}" data-plain="1">${Number(x.value) || 0}${text(x.suffix)}</b><small>${text(x.label)}</small></div>`).join('')}</div>` : ''}
+        ${pills.length ? `<div class="vcpills" ${st()}>${pills.map((x) => `<span>${icon(x.icon)}${text(x.label)}</span>`).join('')}</div>` : ''}
+        ${cta ? `<a class="vccta" ${st()} href="${esc(cta)}"${ext(cta)}>${text(sec.ctaText)}<span>${icon('arrow')}</span></a>` : ''}
+        ${links.length ? `<div class="vcdiv" ${st()}><i></i>${icon('leaf')}<i></i></div><div class="vclinks">${links.map((x) => { const h = smart(x.url); const tag = h ? 'a' : 'div'; return `<${tag} class="vcl" ${st()}${h ? ` href="${esc(h)}"${ext(h)}` : ''}><span class="vci">${icon(x.icon)}</span><span class="vct"><b>${text(x.title)}</b>${x.sub ? `<small>${text(x.sub)}</small>` : ''}</span><span class="vca">${icon('arrow')}</span></${tag}>`; }).join('')}</div>` : ''}
+        ${socs.length ? `<div class="vcsoc" ${st()}>${socs.map((x) => { const h = socHref(x.kind, x.url); return `<a href="${esc(h)}"${ext(h)} aria-label="${esc(SOC[x.kind] ? SOC[x.kind][1] : '')}">${icon((SOC[x.kind] || SOC.link)[0])}</a>`; }).join('')}</div>` : ''}
+      </section>`;
+    },
+  });
+
+  /* =============== YO'NALISHLAR (ikonkali kartalar) =============== */
+  define('vcsvc', {
+    label: "Vizitka: yo'nalishlar", icon: 'grid', desc: "Ikonkali kartochkalar: yo'nalish, xizmat yoki afzallik",
+    fields: [...HEAD, F.list('items', 'Kartochkalar', { title: 'title', fields: [F.icon('icon', 'Ikonka'), F.text('title', 'Nomi', { max: 40 }), F.text('text', 'Qisqa tavsif', { max: 80 })], add: () => ({ icon: 'star', title: 'Yangi xizmat', text: '' }), max: 12 })],
+    defaults: () => ({ eyebrow: '', title: "Yo'nalishlarimiz", items: [{ icon: 'book', title: 'Birinchi yo\'nalish', text: 'Qisqa tavsif' }, { icon: 'users', title: 'Ikkinchi yo\'nalish', text: 'Qisqa tavsif' }, { icon: 'star', title: 'Uchinchi yo\'nalish', text: 'Qisqa tavsif' }, { icon: 'zap', title: 'To\'rtinchi yo\'nalish', text: 'Qisqa tavsif' }] }),
+    render(sec) {
+      const it = arr(sec.items).filter((x) => x && x.title); if (!it.length) return '';
+      return sect(sec, 'vsvc', `${head(sec)}<div class="vcgrid n${it.length}">${it.map((x, i) => `<div class="vcc" style="--i:${i}"><span class="vci">${icon(x.icon)}</span><b>${text(x.title)}</b>${x.text ? `<small>${text(x.text)}</small>` : ''}</div>`).join('')}</div>`);
+    },
+  });
+
+  /* =============== NARXLAR RO'YXATI =============== */
+  define('vclist', {
+    label: "Vizitka: narxlar ro'yxati", icon: 'percent', desc: "Xizmat nomi, qisqa izoh va narx (menyu, prays-list)",
+    fields: [...HEAD, F.list('items', 'Qatorlar', { title: 'name', fields: [F.text('name', 'Nomi', { max: 50 }), F.text('desc', 'Izoh', { max: 80 }), F.text('price', 'Narx', { max: 30 })], add: () => ({ name: 'Yangi xizmat', desc: '', price: '100 000' }), max: 20 })],
+    defaults: () => ({ eyebrow: 'Narxlar', title: 'Xizmatlar *narxi*', items: [{ name: 'Birinchi xizmat', desc: 'Qisqa izoh', price: '100 000' }, { name: 'Ikkinchi xizmat', desc: 'Qisqa izoh', price: '150 000' }, { name: 'Uchinchi xizmat', desc: 'Qisqa izoh', price: '250 000' }] }),
+    render(sec) {
+      const it = arr(sec.items).filter((x) => x && x.name); if (!it.length) return '';
+      return sect(sec, 'vlist', `${head(sec)}<div class="vcrows">${it.map((x, i) => `<div class="vcrow" style="--i:${i}"><span class="vcn"><b>${text(x.name)}</b>${x.desc ? `<small>${text(x.desc)}</small>` : ''}</span>${x.price ? `<span class="vcp">${text(x.price)}</span>` : ''}</div>`).join('')}</div>`);
+    },
+  });
+
+  /* =============== GALEREYA =============== */
+  define('vcgal', {
+    label: 'Vizitka: galereya', icon: 'image', desc: "Yonga suriladigan rasmlar",
+    fields: [...HEAD, F.list('items', 'Rasmlar', { title: 'caption', fields: [F.img('image', 'Rasm'), F.text('caption', 'Yozuv', { max: 50 })], add: () => ({ image: '', caption: '' }), max: 12 })],
+    defaults: () => ({ eyebrow: 'Galereya', title: 'Ishlarimizdan *lavhalar*', items: [{ image: '', caption: 'Birinchi' }, { image: '', caption: 'Ikkinchi' }, { image: '', caption: 'Uchinchi' }] }),
+    render(sec) {
+      const it = arr(sec.items).filter((x) => x && imgUrl(x.image)); if (!it.length) return '';
+      return sect(sec, 'vgal', `${head(sec)}<div class="vcscroll">${it.map((x, i) => `<figure style="--i:${i}"><img src="${esc(imgUrl(x.image))}" alt="${esc(x.caption || '')}" loading="lazy">${x.caption ? `<figcaption>${text(x.caption)}</figcaption>` : ''}</figure>`).join('')}</div>`);
+    },
+  });
+
+  /* =============== SHARHLAR =============== */
+  define('vcrev', {
+    label: 'Vizitka: sharhlar', icon: 'quote', desc: 'Mijozlar fikri',
+    fields: [...HEAD, F.list('items', 'Sharhlar', { title: 'name', fields: [F.area('text', 'Sharh', { max: 220, rows: 3 }), F.text('name', 'Ism', { max: 40 }), F.text('role', 'Kimligi', { max: 50 }), F.num('stars', 'Yulduz (1–5)')], add: () => ({ text: 'Juda yoqdi!', name: 'Mijoz', role: '', stars: 5 }), max: 8 })],
+    defaults: () => ({ eyebrow: 'Sharhlar', title: 'Mijozlar *fikri*', items: [{ text: 'Juda yoqdi! Hammasi tez va sifatli bajarildi.', name: 'Mijoz ismi', role: 'Mijoz', stars: 5 }, { text: 'Tavsiya qilaman, ishonchli jamoa.', name: 'Mijoz ismi', role: 'Mijoz', stars: 5 }] }),
+    render(sec) {
+      const it = arr(sec.items).filter((x) => x && x.text); if (!it.length) return '';
+      return sect(sec, 'vrev', `${head(sec)}<div class="vcrevs">${it.map((x, i) => `<blockquote style="--i:${i}"><div class="vcs5" aria-label="${esc(String(x.stars || 5))} yulduz">${stars(x.stars)}</div><p>${text(x.text)}</p><footer><b>${text(x.name)}</b>${x.role ? `<small>${text(x.role)}</small>` : ''}</footer></blockquote>`).join('')}</div>`);
+    },
+  });
+
+  /* =============== MANZIL =============== */
+  define('vcmap', {
+    label: 'Vizitka: manzil', icon: 'pin', desc: "Manzil, mo'ljal va xaritada ochish tugmasi",
+    fields: [...HEAD, F.text('address', 'Manzil', { max: 140 }), F.text('hint', "Mo'ljal", { max: 100 }), F.text('hours', 'Ish vaqti', { max: 60 }), F.text('buttonText', 'Tugma matni', { max: 30 }), F.text('buttonLink', "Xarita havolasi (bo'sh qolsa, manzildan yasaladi)", { max: 300 })],
+    defaults: () => ({ eyebrow: '', title: 'Bizning *manzil*', address: "Toshkent shahri, Chilonzor tumani, Bunyodkor ko'chasi 10", hint: "Mo'ljal: metro bekati yonida", hours: 'Har kuni 9:00 – 20:00', buttonText: "Yo'nalish olish", buttonLink: '' }),
+    render(sec) {
+      if (!sec.address) return '';
+      const h = smart(sec.buttonLink) || ('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(sec.address));
+      return sect(sec, 'vmap', `${head(sec)}<div class="vcmapc"><span class="vci">${icon('pin')}</span><div class="vct"><b>${text(sec.address)}</b>${sec.hint ? `<small>${text(sec.hint)}</small>` : ''}${sec.hours ? `<small class="vch2">${icon('clock')}${text(sec.hours)}</small>` : ''}</div></div>${sec.buttonText ? `<a class="vccta ghost" href="${esc(h)}" target="_blank" rel="noopener">${text(sec.buttonText)}<span>${icon('arrow')}</span></a>` : ''}`);
     },
   });
 })();

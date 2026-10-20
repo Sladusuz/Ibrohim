@@ -23,8 +23,28 @@
   /* ---------- Ko'rinish (jonli) ---------- */
   function sendPreview() { const f = $('#if'); if (previewReady && f.contentWindow && D) f.contentWindow.postMessage({ type: 'site', data: clean() }, '*'); }
   addEventListener('message', (e) => { if (e.data && e.data.type === 'ready' && e.source === $('#if').contentWindow) { previewReady = true; sendPreview(); } });
+  /* ---------- Saytdagi matnni bosib tahrirlash ---------- */
+  let editOn = true;
+  const sendMode = () => { const f = $('#if'); if (f.contentWindow) f.contentWindow.postMessage({ type: 'editmode', on: editOn }, '*'); };
+  const edt = $('#edt');
+  if (edt) edt.addEventListener('click', () => { editOn = !editOn; edt.classList.toggle('on', editOn); edt.textContent = editOn ? '✏️ Tahrirlash: yoqilgan' : "✏️ Tahrirlash: o'chiq"; sendMode(); toast(editOn ? "Matn ustiga bosing va o'zgartiring" : "Tahrirlash o'chirildi: sayt oddiy ko'rinadi"); });
+  const EDITABLE = new Set(['sections', 'company', 'announce', 'footer', 'nav', 'contacts']);
+  addEventListener('message', (e) => {
+    if (!e.data || e.source !== $('#if').contentWindow) return;
+    if (e.data.type === 'iedready') sendMode();
+    if (e.data.type === 'iedsheet') document.body.classList.toggle('ied-sheet-open', !!e.data.open);
+    if (e.data.type === 'edit' && D && Array.isArray(e.data.path) && EDITABLE.has(e.data.path[0])) {
+      let o = D; const p = e.data.path; for (let i = 0; i < p.length - 1 && o != null; i++) o = o[p[i]]; const k = p[p.length - 1];
+      if (o && typeof o[k] === 'string') { o[k] = String(e.data.value).slice(0, 1500); changed(); if (ed) ed.render(true); toast('Saqlandi'); }
+    }
+    if (e.data.type === 'opensec' && D) {
+      const i = (D.sections || []).findIndex((x) => x.id === e.data.sec), mv = document.querySelector('#mvt [data-v=edit]'); if (mv && document.body.dataset.view === 'view') mv.click();
+      if (ed && i > -1) { ed.setTab('sections'); const bt = document.querySelector(`[data-act="sec-edit"][data-i="${i}"]`); if (bt) bt.click(); }
+      toast(e.data.why === 'image' ? "Rasmni shu bo'limdan almashtiring: «Rasm tanlash»" : "Bu matnni panel orqali o'zgartiring");
+    }
+  });
   // Ishonchlilik uchun: iframe yuklanishi bilan ham ma'lumot yuboriladi (ready xabari erta kelib qolsa)
-  $('#if').addEventListener('load', () => { previewReady = true; sendPreview(); });
+  $('#if').addEventListener('load', () => { previewReady = true; sendPreview(); sendMode(); });
 
   /* ---------- Saqlash ---------- */
   function changed() {
@@ -123,9 +143,9 @@
     const pm = pricing.payMethods || {};
     if (payInfo && payInfo.manual) {
       const c = payInfo.contacts || {};
-      return `${price}<div class="guide" style="margin-top:12px"><b>To'lov so'rovingiz qabul qilindi (#${esc(payInfo.payment.id)})</b><br>Summa: <b>$${esc(String(payInfo.payment.usd))}</b> (${money(payInfo.payment.uzs)} so'm).${payInfo.text ? `<br>${esc(payInfo.text)}` : ''}<br>To'lov qilgach, admin tasdiqlaydi va sayt ochiladi. ${c.phone ? `Aloqa: <b>${esc(c.phone)}</b>` : ''}${c.telegram ? `, <b>${esc(c.telegram)}</b>` : ''}</div><button class="b g w" style="margin-top:10px" data-x="recheck">To'lovni tekshirish</button>`;
+      return `${price}<div class="guide" style="margin-top:12px"><b>To'lov so'rovingiz qabul qilindi (#${esc(payInfo.payment.id)})</b><br>Summa: <b>$${esc(String(payInfo.payment.usd))}</b> (${money(payInfo.payment.uzs)} so'm).${payInfo.text ? `<div style="white-space:pre-line;margin:6px 0;font-weight:600">${esc(payInfo.text)}</div>` : ''}<small>To'lov izohiga <b>#${esc(payInfo.payment.id)}</b> yozing.</small><br>To'lov qilgach, «To'lov qildim» tugmasini bosing: admin tasdiqlaydi va sayt ochiladi. ${c.phone ? `Aloqa: <b>${esc(c.phone)}</b>` : ''}${c.telegram ? `, <b>${esc(c.telegram)}</b>` : ''}</div><button class="b w" style="margin-top:10px" data-x="paidnote">To'lov qildim</button><button class="b g w" style="margin-top:8px" data-x="recheck">To'lovni tekshirish</button>`;
     }
-    return `${price}<div class="msg" id="buyMsg"></div>${pm.payme ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="payme">Payme orqali to'lash</button>` : ''}${pm.click ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="click">Click orqali to'lash</button>` : ''}<button class="b ${pm.payme || pm.click ? 'g' : ''} w" style="margin-top:8px;padding:14px" data-x="buy" data-m="manual">${pm.payme || pm.click ? "Boshqa usul (karta, Telegram)" : "Sotib olish"}</button><div class="hint">Oldindan ko'rish va tahrirlash bepul. To'lovdan keyin sayt yuklab olinadi yoki joylanadi.</div>`;
+    return `${price}<div class="msg" id="buyMsg"></div>${pm.payme ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="payme">Payme orqali to'lash</button>` : ''}${pm.click ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="click">Click orqali to'lash</button>` : ''}${pm.clicktg ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="clicktg">Click orqali to'lash (Telegram)</button>` : ''}${pm.globalpay ? `<button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="globalpay">Karta orqali to'lash (GlobalPay, Telegram)</button>` : ''}<button class="b ${pm.payme || pm.click || pm.globalpay || pm.clicktg ? 'g' : ''} w" style="margin-top:8px;padding:14px" data-x="buy" data-m="manual">${pm.payme || pm.click || pm.globalpay || pm.clicktg ? "Boshqa usul (karta, Telegram)" : "Sotib olish"}</button><div class="hint">Oldindan ko'rish va tahrirlash bepul. To'lovdan keyin sayt yuklab olinadi yoki joylanadi.</div>`;
   }
   function ownBox() {
     const url = P.published ? (P.url || '') : '';
@@ -183,6 +203,7 @@
       const x = e.target.closest('[data-x]'); if (!x) return;
       const a = x.dataset.x;
       if (a === 'dl') downloadPaid();
+      if (a === 'paidnote') { x.disabled = true; Auth.request(`/api/my/projects/${P.id}/paid`, { method: 'POST', body: {} }).then(() => { toast("Adminga xabar yuborildi. Tasdiqlangach sayt ochiladi."); }).catch((er) => { toast(er.message); x.disabled = false; }); }
       if (a === 'buy') buy(x.dataset.m);
       if (a === 'recheck') refreshProject().then(() => { if (paid()) toast("To'lov tasdiqlandi!"); else toast("Hali tasdiqlanmagan. To'lovdan keyin biroz kuting."); ed.render(true); });
       if (a === 'pub') publish();
