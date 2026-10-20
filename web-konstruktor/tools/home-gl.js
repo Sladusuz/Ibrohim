@@ -58,6 +58,7 @@
     ring.rotation.y = cur.ry + drift + mx * .35; ring.position.set(narrow ? 0 : cur.x, cur.y + (narrow ? (sp.hero >= 1 || sp.q > 0 ? 1.3 : 0.1) : 0), cur.z); ring.scale.setScalar(sc); ring.rotation.x = -my * .08;
     phones.forEach(function (p, i) { p.position.y = Math.sin(now * .8 + i * 1.3) * .09; p.material.uniforms.alpha.value = cur.ra; });
     ring.visible = cur.ra > .02;
+    if (narrow && sp.q <= 0) ring.visible = false;
     cam.position.set(mx * .5, cur.cy - my * .35, cur.z * 0 + cur.cz + (narrow ? 2.2 : 0)); cam.lookAt(0, 0, 0);
     lap.visible = cur.la > .02; lap.material.uniforms.alpha.value = Math.min(1, cur.la); lap.position.set(narrow ? 0 : cur.lx, cur.ly + (narrow ? 1.2 : 0), 0.2); lap.rotation.set(-my * .1, cur.lr + mx * .25, 0); lap.scale.setScalar(cur.ls * (narrow ? .5 : 1));
     if (lap.visible) { var li = Math.floor(now / 2.2) % lapTex.length; if (li !== lapIdx && lapTex[li]) { lapIdx = li; lap.material.uniforms.map.value = lapTex[li]; } }
