@@ -95,3 +95,5 @@ input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0
 .prev{position:relative}.edtog{position:absolute;top:22px;right:26px;z-index:5;padding:9px 14px;border-radius:99px;border:1px solid var(--line);background:#fffdf9ee;color:var(--muted);font-weight:700;font-size:13px;box-shadow:0 6px 18px #15110a22;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}.edtog.on{background:linear-gradient(135deg,#e6d3a3,#c8a86a);color:#15110a;border-color:transparent}
 @media(max-width:900px){.edtog{top:10px;right:10px;padding:10px 14px;font-size:13px}}
 body.ied-sheet-open .mvt{display:none!important}
+
+.lg .m,.sb .brand .m{background:#0e0c09 url(/img/logo-mark-96.png) center/cover no-repeat;font-size:0;color:transparent;box-shadow:0 0 0 1px #d8b46a55}
