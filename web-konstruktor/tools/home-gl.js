@@ -4,7 +4,7 @@
   if (typeof THREE === 'undefined' || reduce) { root.classList.add('nogl'); return; }
   var cv = $('#gl'), ren;
   try { ren = new THREE.WebGLRenderer({ canvas: cv, antialias: !narrow, alpha: false, powerPreference: 'high-performance' }); } catch (e) { root.classList.add('nogl'); return; }
-  ren.setPixelRatio(Math.min(devicePixelRatio || 1, narrow ? 1.5 : 1.8)); ren.setClearColor(0x0a0a0b, 1);
+  var dprMax = Math.min(devicePixelRatio || 1, narrow ? 1.25 : 1.4), qual = 1; ren.setPixelRatio(dprMax); ren.setClearColor(0x0a0a0b, 1);
   var scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(38, 1, 0.1, 100), mx = 0, my = 0, tmx = 0, tmy = 0;
   var aniso = Math.min(4, ren.capabilities.getMaxAnisotropy());
   function resize() { var w = innerWidth, h = innerHeight; ren.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix(); bg.uniforms.res.value.set(w, h); }
@@ -43,14 +43,22 @@
   function ease(x) { return x * x * (3 - 2 * x); }
   function target(s) { var a = KF[0], b = KF[KF.length - 1], j; for (j = 0; j < KF.length - 1; j++) { if (s >= KF[j].s && s <= KF[j + 1].s) { a = KF[j]; b = KF[j + 1]; break; } } var f = a === b ? 0 : ease(Math.max(0, Math.min(1, (s - a.s) / (b.s - a.s)))); keys.forEach(function (k) { tgt[k] = a[k] + (b[k] - a[k]) * f; }); }
   addEventListener('pointermove', function (e) { tmx = e.clientX / innerWidth - .5; tmy = e.clientY / innerHeight - .5; }, { passive: true });
-  addEventListener('resize', resize); resize();
+  var rw = innerWidth, rh = innerHeight, rt = 0;
+  addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (innerWidth === rw && Math.abs(innerHeight - rh) < 170) return; rw = innerWidth; rh = innerHeight; resize(); }, 140); }); resize();
   var t0 = performance.now(), lapIdx = -1, hidden = false;
   document.addEventListener('visibilitychange', function () { hidden = document.hidden; });
-  var lt = performance.now(), acc = 0, cnt = 0, slow = 0, dead = false;
+  var lt = performance.now(), acc = 0, cnt = 0, slow = 0, dead = false, fr = 0;
   function frame() {
     if (dead) return; requestAnimationFrame(frame); if (hidden) return;
     var tn = performance.now(), dt = tn - lt; lt = tn;
-    if (dt < 300 && ++cnt) { acc += dt; if (cnt >= 70) { slow = acc / cnt > 62 ? slow + 1 : 0; acc = 0; cnt = 0; if (slow >= 3) { dead = true; root.classList.add('nogl'); try { ren.dispose(); } catch (e) { /* ignore */ } return; } } }
+    if (dt < 300 && ++cnt >= 45) {
+      var avg = acc / cnt; acc = 0; cnt = 0;
+      if (avg > 27 && qual > .55) { qual *= .8; ren.setPixelRatio(Math.max(.55, dprMax * qual)); resize(); slow = 0; }
+      else if (avg > 55) { if (++slow >= 3) { dead = true; root.classList.add('nogl'); try { ren.dispose(); } catch (e) { /* ignore */ } return; } }
+      else slow = 0;
+    } else if (dt < 300) acc += dt;
+    var spp = window.__SP || { hero: 0, q: 0, after: false };
+    if (spp.after && (fr++ & 1)) return;
     var now = (performance.now() - t0) / 1000, sp = window.__SP || { hero: 0, q: 0, after: false }, s = sp.hero * .18 + sp.q * .82;
     target(s); keys.forEach(function (k) { cur[k] += (tgt[k] - cur[k]) * .075; });
     mx += (tmx - mx) * .05; my += (tmy - my) * .05;
