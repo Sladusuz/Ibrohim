@@ -21,9 +21,12 @@
       const h = { ...(o.headers || {}) };
       if (o.body !== undefined) h['Content-Type'] = 'application/json';
       const t = ls.get(KEY); if (t) h.Authorization = 'Bearer ' + t;
-      let r;
-      try { r = await fetch(API + path, { method: o.method || 'GET', headers: h, body: o.body !== undefined ? JSON.stringify(o.body) : undefined }); }
-      catch { const e = new Error("Serverga ulanib bo'lmadi. Internetni tekshiring."); e.network = true; throw e; }
+      let r; const safe = (o.method || 'GET') === 'GET' || path === '/api/auth/login';
+      for (let k = 0; k < (safe ? 2 : 1); k++) {
+        const ac = typeof AbortController === 'function' ? new AbortController() : null, tm = ac ? setTimeout(() => ac.abort(), k ? 25000 : 15000) : 0;
+        try { r = await fetch(API + path, { method: o.method || 'GET', headers: h, body: o.body !== undefined ? JSON.stringify(o.body) : undefined, signal: ac ? ac.signal : undefined }); clearTimeout(tm); break; }
+        catch (er) { clearTimeout(tm); if (k + 1 < (safe ? 2 : 1)) continue; const e = new Error(er && er.name === 'AbortError' ? "Server uzoq javob bermadi. Internet yoki VPN ni tekshirib, qayta urining." : "Serverga ulanib bo'lmadi. Internetni tekshiring (yoki VPN ni o'chirib ko'ring)."); e.network = true; throw e; }
+      }
       const j = await r.json().catch(() => ({}));
       if (r.status === 401 && t && !path.startsWith('/api/auth/')) Auth._set(null);
       if (!r.ok) { const e = new Error(j.error || 'Xatolik yuz berdi'); e.status = r.status; throw e; }

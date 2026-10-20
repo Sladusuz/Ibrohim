@@ -79,7 +79,7 @@ for (const lang of ['ru', 'en']) {
   const lh = page({ data: JSON.stringify(ls).replace(/</g, '\\u003c'), account: true, seo: seoHead(ls, lang), lang }).replace('<title>Sayt</title>', `<title>${String((ls.company || {}).name || 'Sayt').replace(/</g, '')}: ${TITLES[lang]}</title>`);
   for (const dir of [P, OUT]) { fs.mkdirSync(path.join(dir, lang), { recursive: true }); fs.writeFileSync(path.join(dir, lang, 'index.html'), lh); }
 }
-for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'tpl-6.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'three.min.js', 'sections.js', 'sections2.js', 'sections3.js', 'brief.js', 'ui.css', 'topnav.js', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html', 'admin.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
+for (const f of ['yaratish.html', 'kabinet.html', 'bot.html', 'builder.js', 'editor.js', 'auth.js', 'templates.js', 'tpl-1.js', 'tpl-2.js', 'tpl-3.js', 'tpl-4.js', 'tpl-5.js', 'tpl-6.js', 'motion.js', 'i18n.js', 'i18n-dict.js', 'motion.css', 'icons.js', 'engine-core.js', 'three.min.js', 'sections.js', 'sections2.js', 'sections3.js', 'brief.js', 'ui.css', 'topnav.js', 'pricing.json', 'shablon.html', 'admin.js', 'admin-demo.js', 'admin-demo.html', 'admin.html', 'tekshir.html']) fs.copyFileSync(path.join(P, f), path.join(OUT, f));
 if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'config.js'), path.join(OUT, 'config.js'));
 if (process.env.RELAY) fs.writeFileSync(path.join(OUT, 'config.js'), fs.readFileSync(path.join(OUT, 'config.js'), 'utf8').replace(/window\.__RELAY__ = '[^']*';/, `window.__RELAY__ = '${String(process.env.RELAY).replace(/'/g, '')}';`));
 if (!/__RELAY__/.test(fs.readFileSync(path.join(OUT, 'config.js'), 'utf8'))) fs.appendFileSync(path.join(OUT, 'config.js'), "\nwindow.__RELAY__ = '';\n");
@@ -146,4 +146,16 @@ if (fs.existsSync(path.join(__dirname, '..', 'download', 'Impro-IT.apk'))) fs.co
 fs.copyFileSync(path.join(__dirname, 'app-native.js'), path.join(OUT, 'native.js')); fs.copyFileSync(path.join(__dirname, 'app-native.js'), path.join(P, 'native.js'));
 (function walk(d) { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, e.name); if (e.isDirectory()) walk(p); else if (e.name.endsWith('.html') && e.name !== 'offline.html') { const h = fs.readFileSync(p, 'utf8'); if (!h.includes('/native.js') && h.includes('</body>')) fs.writeFileSync(p, h.replace('</body>', '<script src="/native.js" defer></script></body>')); } } })(OUT);
 if (process.env.CNAME) fs.writeFileSync(path.join(OUT, 'CNAME'), process.env.CNAME + '\n');
+
+// Tezlik: Google Fonts sahifani bloklamasin (swap), server manziliga oldindan ulanish.
+{
+  const cfg = fs.existsSync(path.join(P, 'config.js')) ? fs.readFileSync(path.join(P, 'config.js'), 'utf8') : '', api = (/__API__\s*=\s*'(https?:\/\/[^']+)'/.exec(cfg) || [])[1] || '';
+  const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : /\.html$/.test(e.name) ? [path.join(d, e.name)] : []));
+  for (const f of walk(OUT)) {
+    let h = fs.readFileSync(f, 'utf8'), o = h;
+    h = h.replace(/<link href="(https:\/\/fonts\.googleapis\.com\/css2[^"]+)" rel="stylesheet">/g, (m, u) => `<link href="${u}" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="${u}" rel="stylesheet"></noscript>`);
+    if (api && /\/config\.js/.test(h) && !h.includes('rel="preconnect" href="' + api)) h = h.replace('<meta charset="utf-8">', `<meta charset="utf-8"><link rel="preconnect" href="${api}" crossorigin>`);
+    if (h !== o) fs.writeFileSync(f, h);
+  }
+}
 console.log('public/shablon.html, public/index.html va docs/ tayyor');
