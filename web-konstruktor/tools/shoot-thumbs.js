@@ -20,9 +20,9 @@ srv.listen(0, async () => {
   const port = srv.address().port; const b = await chromium.launch();
   const probe = await b.newPage(); await probe.goto(`http://localhost:${port}/_t.html?t=x`); const ids = process.argv[2] ? process.argv.slice(2) : await probe.evaluate(() => window.TEMPLATES.map((t) => t.id)); await probe.close();
   for (const id of ids) {
-    const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
+    const vz = /^vz-/.test(id), p = await b.newPage(vz ? { viewport: { width: 390, height: 760 }, deviceScaleFactor: 1.5 } : { viewport: { width: 1280, height: 800 } });
     await p.goto(`http://localhost:${port}/_t.html?t=${id}`); await p.waitForSelector('.hero,.vcard'); await p.waitForTimeout(4200);
-    await p.screenshot({ path: path.join(OUT, id + '.jpg'), type: 'jpeg', quality: 78, clip: { x: 0, y: 0, width: 1280, height: 800 } });
+    await p.screenshot({ path: path.join(OUT, id + '.jpg'), type: 'jpeg', quality: 80, clip: vz ? { x: 0, y: 0, width: 390, height: 760 } : { x: 0, y: 0, width: 1280, height: 800 } });
     await p.close(); console.log('rasm:', id);
   }
   await b.close(); srv.close();

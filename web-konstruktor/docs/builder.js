@@ -245,15 +245,25 @@
   /* ---------- Galereya ---------- */
   let catFilter = '', query = '';
   const norm = (v) => String(v || '').toLowerCase().replace(/[ʻʼ'’`]/g, '');
+  let grp = 'sites';
+  const isVz = (t) => t.look === 'vcard';
   function drawGallery() {
     const all = window.TEMPLATES, q = norm(query).trim();
     const hit = (t) => !q || norm([t.name, t.cat, t.desc, (t.tags || []).join(' ')].join(' ')).includes(q);
-    const cats = ['', ...new Set(all.map((t) => t.cat))];
-    $('#cats').innerHTML = cats.map((c) => `<button data-cat="${esc(c)}" class="${c === catFilter ? 'on' : ''}">${esc(c || 'Hammasi')}<small>${all.filter((t) => (!c || t.cat === c) && hit(t)).length}</small></button>`).join('');
-    const list = all.filter((t) => (!catFilter || t.cat === catFilter) && hit(t));
+    const sites = all.filter((t) => !isVz(t)), vcs = all.filter(isVz), g = q ? 'all' : grp;
+    const pool = g === 'vizitka' ? vcs : g === 'sites' ? sites : all;
+    $('#grp').innerHTML = `<button data-grp="sites" class="${grp === 'sites' && !q ? 'on' : ''}"><i>🌐</i><span><b>Veb-saytlar</b><small>${sites.length} ta shablon · to'liq sayt</small></span></button><button data-grp="vizitka" class="vz ${grp === 'vizitka' && !q ? 'on' : ''}"><i>📇</i><span><b>Vizitkalar</b><small>${vcs.length} ta shablon · bitta havola</small></span><em>Yangi</em></button>`;
+    const showCats = g !== 'vizitka';
+    const cats = ['', ...new Set(pool.map((t) => t.cat))];
+    $('#cats').hidden = !showCats; $('#cats').innerHTML = showCats ? cats.map((c) => `<button data-cat="${esc(c)}" class="${c === catFilter ? 'on' : ''}">${esc(c || 'Hammasi')}<small>${pool.filter((t) => (!c || t.cat === c) && hit(t)).length}</small></button>`).join('') : '';
+    const list = pool.filter((t) => (!catFilter || !showCats || t.cat === catFilter) && hit(t));
     if ($('#nT')) $('#nT').textContent = all.length + '';
     $('#cnt').textContent = list.length ? `${list.length} ta shablon` : '';
-    $('#tgrid').innerHTML = list.length ? list.map((t) => `<article class="tc" data-id="${t.id}"><div class="tci" style="cursor:pointer"><img src="${esc(t.thumb)}" alt="${esc(t.name)}" loading="lazy" onerror="this.remove()">${t.badge ? `<span class="bd">${esc(t.badge)}</span>` : ''}</div><div class="tcb"><small>${esc(t.cat)}</small><h3>${esc(t.name)}</h3><p>${esc(t.desc)}</p><div class="row"><button class="b w" data-pick="${t.id}">Tanlash</button></div></div></article>`).join('') : `<div class="noRes" style="grid-column:1/-1"><b>Hech narsa topilmadi</b><p style="margin-top:6px">Boshqa so'z bilan qidirib ko'ring yoki <a href="#" data-cat="" style="color:var(--acc);font-weight:600">hammasini ko'rsating</a>.</p></div>`;
+    const vb = $('#vzb'); if (vb) vb.hidden = g !== 'vizitka';
+    const gridEl = $('#tgrid'); gridEl.classList.toggle('vzg', g === 'vizitka');
+    gridEl.innerHTML = list.length ? list.map((t) => isVz(t)
+      ? `<article class="tc vz" data-id="${t.id}"><div class="tci" style="cursor:pointer"><div class="ph"><img src="${esc(t.thumb)}" alt="${esc(t.name)}" loading="lazy" onerror="this.remove()"></div></div><div class="tcb"><h3>${esc(t.name.replace(/^Vizitka:\s*/, '').replace(/^./, (c) => c.toUpperCase()))}</h3><p>${esc(t.desc)}</p><div class="row"><button class="b w" data-pick="${t.id}">Tanlash</button></div></div></article>`
+      : `<article class="tc" data-id="${t.id}"><div class="tci" style="cursor:pointer"><img src="${esc(t.thumb)}" alt="${esc(t.name)}" loading="lazy" onerror="this.remove()">${t.badge ? `<span class="bd">${esc(t.badge)}</span>` : ''}</div><div class="tcb"><small>${esc(t.cat)}</small><h3>${esc(t.name)}</h3><p>${esc(t.desc)}</p><div class="row"><button class="b w" data-pick="${t.id}">Tanlash</button></div></div></article>`).join('') : `<div class="noRes" style="grid-column:1/-1"><b>Hech narsa topilmadi</b><p style="margin-top:6px">Boshqa so'z bilan qidirib ko'ring yoki <a href="#" data-cat="" style="color:var(--acc);font-weight:600">hammasini ko'rsating</a>.</p></div>`;
     // davom ettirish / mening saytlarim
     const r = $('#resume'); r.hidden = true; r.innerHTML = '';
     if (useAcc && myProjects.length) {
@@ -363,6 +373,7 @@
   document.addEventListener('click', async (e) => {
     const ci = e.target.closest('.tci'); if (ci && ci.closest('.tc')) { pick(ci.closest('.tc').dataset.id); return; }
     const t = e.target.closest('button,a'); if (!t) return;
+    if (t.dataset.grp) { e.preventDefault(); grp = t.dataset.grp; catFilter = ''; query = ''; const q = $('#tq'); if (q) q.value = ''; drawGallery(); const gr = $('#grp'); if (gr && gr.getBoundingClientRect().top < 0) gr.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
     if (t.dataset.cat !== undefined) { e.preventDefault(); catFilter = t.dataset.cat; if (!t.closest('#cats')) { query = ''; const q = $('#tq'); if (q) q.value = ''; } drawGallery(); }
     if (t.dataset.pick && !t.closest('.modalx')) pick(t.dataset.pick);
     if (t.dataset.open) openProject(t.dataset.open);

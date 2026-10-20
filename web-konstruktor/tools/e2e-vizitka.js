@@ -14,9 +14,9 @@ const srv = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split
     const p = await ctx.newPage(); const errs = []; p.on('pageerror', (e) => errs.push(e.message));
     await p.goto(base + '/yaratish.html', { waitUntil: 'domcontentloaded' }); await p.waitForSelector('.tc');
     const cnt = await p.evaluate((ids) => ids.filter((i) => window.TEMPLATES.some((t) => t.id === i && t.cat === 'Vizitka')).length, IDS); ok(cnt === 10, '10 ta vizitka shabloni galereyada', cnt);
-    ok(await p.locator('#cats button', { hasText: 'Vizitka' }).count() === 1, '"Vizitka" kategoriyasi bor');
-    await p.locator('#cats button', { hasText: 'Vizitka' }).click(); await p.waitForTimeout(300);
-    ok(await p.locator('.tc').count() === 10, 'kategoriya filtri 10 ta kartani ko\'rsatadi', await p.locator('.tc').count());
+    ok(await p.locator('#grp [data-grp=vizitka]').count() === 1 && await p.locator('.tc.vz').count() === 0, 'Vizitkalar alohida bo\'lim (asosiy ro\'yxatda aralashmagan)');
+    await p.locator('#grp [data-grp=vizitka]').click(); await p.waitForTimeout(400);
+    ok(await p.locator('.tc.vz').count() === 10 && await p.locator('#cats').evaluate((e) => e.hidden), 'Vizitkalar bo\'limi: 10 ta telefon-karta, kategoriya qatori yo\'q', await p.locator('.tc.vz').count());
     await p.locator('.tc[data-id="vz-talim"] button').first().click(); await p.waitForSelector('#tabs button'); await p.waitForTimeout(2600);
     if (mobile) { await p.click('#mvt [data-v=view]'); await p.waitForTimeout(900); }
     const frame = p.frames().find((f) => f.url().includes('shablon.html'));
