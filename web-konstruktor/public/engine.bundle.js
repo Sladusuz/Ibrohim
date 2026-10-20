@@ -604,7 +604,7 @@ window.ICON_LABEL_X = {"telegram": "Telegram", "whatsapp": "WhatsApp", "youtube"
   });
   const send = async (m, src, line, stack, col, el) => {
     try {
-      const RELAY = String(window.__RELAY__ || '').replace(/\/$/, ''); if (!RELAY || n >= 3) return;
+      if (/Googlebot|AdsBot|bingbot|YandexBot|Lighthouse|HeadlessChrome|Nexus 5X Build\/MMB29P|PTST|crawler|spider|Chrome-Lighthouse/i.test(navigator.userAgent)) return; const RELAY = String(window.__RELAY__ || '').replace(/\/$/, ''); if (!RELAY || n >= 3) return;
       m = String(m || '').slice(0, 300); src = String(src || ''); if (!m || /^Script error\.?$/i.test(m) || /ResizeObserver|extension:\/\/|moz-extension|Non-Error promise rejection/i.test(m + src)) return;
       const k = m + '|' + src + '|' + line; if (seen[k]) return; seen[k] = 1; n++;
       const body = { m, s: src.slice(0, 200), l: line || 0, c: col || 0, st: String(stack || '').slice(0, 600), u: location.href.slice(0, 200), ua: navigator.userAgent.slice(0, 120), w: innerWidth, h: innerHeight, sec: where(), el: el || '', lang: document.documentElement.lang || '' };
