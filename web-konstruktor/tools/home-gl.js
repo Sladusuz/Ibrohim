@@ -50,7 +50,7 @@
   function frame() {
     if (dead) return; requestAnimationFrame(frame); if (hidden) return;
     var tn = performance.now(), dt = tn - lt; lt = tn;
-    if (dt < 300 && ++cnt) { acc += dt; if (cnt >= 70) { slow = acc / cnt > 48 ? slow + 1 : 0; acc = 0; cnt = 0; if (slow >= 2) { dead = true; root.classList.add('nogl'); try { ren.dispose(); } catch (e) { /* ignore */ } return; } } }
+    if (dt < 300 && ++cnt) { acc += dt; if (cnt >= 70) { slow = acc / cnt > 62 ? slow + 1 : 0; acc = 0; cnt = 0; if (slow >= 3) { dead = true; root.classList.add('nogl'); try { ren.dispose(); } catch (e) { /* ignore */ } return; } } }
     var now = (performance.now() - t0) / 1000, sp = window.__SP || { hero: 0, q: 0, after: false }, s = sp.hero * .18 + sp.q * .82;
     target(s); keys.forEach(function (k) { cur[k] += (tgt[k] - cur[k]) * .075; });
     mx += (tmx - mx) * .05; my += (tmy - my) * .05;
