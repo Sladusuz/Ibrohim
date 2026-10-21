@@ -5,5 +5,5 @@ window.__API__ = 'https://impro-bot.impro-6c9a2d.workers.dev';
 // Statik saytdan Telegram'ga so'rov yuboruvchi Cloudflare Worker manzili (worker/README.md). Bo'sh bo'lsa pochta ishlatiladi.
 window.__RELAY__ = 'https://impro-bot.impro-6c9a2d.workers.dev';
 
-// Kartaga o'tkazma rekvizitlari: to'lov oynasida shu ko'rsatiladi (serverdagi qiymatdan ustun).
-window.__CARD__ = { number: '5614 6822 1689 8066', holder: 'MUSTAFO ALI MAHSUDOV' };
+// Kartaga o'tkazma rekvizitlari serverdan olinadi (admin panel → Sozlamalar → qo'lda to'lov).
+// Saytning o'zida belgilash kerak bo'lsa: window.__CARD__ = { number: '0000 0000 0000 0000', holder: 'ISM FAMILIYA' };
