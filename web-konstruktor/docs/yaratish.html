@@ -39,16 +39,85 @@ html,body{height:100%}body.ui{height:100vh;height:100dvh;display:flex;flex-direc
 .tgrid.vzg{grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:24px}.tc.vz{background:linear-gradient(180deg,#fff 0%,#fbf6ea 100%)}.tc.vz .tci{aspect-ratio:auto;background:radial-gradient(260px 200px at 50% 20%,#efe0bd,transparent 70%);padding:26px 24px 10px;display:grid;place-items:center;overflow:visible}.tc.vz .ph{width:100%;max-width:196px;aspect-ratio:390/760;border-radius:30px;border:6px solid #15110a;background:#15110a;overflow:hidden;position:relative;box-shadow:0 26px 44px -20px #1e293b88,0 0 0 1px #ffffff22 inset;transition:transform .4s cubic-bezier(.2,.8,.2,1)}.tc.vz .ph:before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);width:56px;height:15px;border-radius:99px;background:#15110a;z-index:2}.tc.vz:hover .ph{transform:translateY(-8px) rotate(-1.5deg)}.tc.vz .tci img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}.tc.vz .tci .bd{top:14px;left:14px}.tc.vz .tcb{padding:10px 18px 18px;text-align:center}.tc.vz .tcb h3{font-size:18px}.tc.vz .tcb p{font-size:13px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;flex:none}
 @media(max-width:560px){.grp{grid-template-columns:1fr 1fr;gap:10px;padding:0 16px}.grp button{padding:12px;flex-direction:column;align-items:flex-start;gap:8px}.grp button i{width:40px;height:40px;font-size:20px;border-radius:12px}.grp button b{font-size:15px}.grp button small{font-size:12px;line-height:1.3}.grp button em{right:10px}.vzb{margin:14px 16px 0;padding:18px}.tgrid.vzg{grid-template-columns:1fr 1fr;gap:14px;padding:0 14px}.tc.vz .tci{padding:18px 10px 6px}.tc.vz .ph{border-width:5px;border-radius:24px}.tc.vz .tcb{padding:8px 12px 14px}.tc.vz .tcb h3{font-size:15px}.tc.vz .tcb p{display:none}.cats{padding-left:16px!important;padding-right:16px!important}}
 
+
+/* ===== Galereya: premium qora-oltin uslub (faqat galereya rejimida) ===== */
+body[data-mode=gallery]{background:#09080a;color:#f6f1e8;--line:rgba(255,255,255,.1);--muted:#a09a8d;--card:#14120f;--soft:rgba(255,255,255,.07);--ink:#f6f1e8;--acc:#d9b46a;-webkit-tap-highlight-color:transparent}
+body[data-mode=gallery] button,body[data-mode=gallery] a{touch-action:manipulation}
+body[data-mode=gallery] .gal-wrap{background:radial-gradient(800px 500px at 90% -5%,rgba(217,180,106,.1),transparent 60%),radial-gradient(700px 500px at -10% 30%,rgba(122,92,255,.07),transparent 60%),#09080a;padding-bottom:90px}
+body[data-mode=gallery] .top{background:rgba(9,8,10,.84);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line);color:#f6f1e8}
+body[data-mode=gallery] .lg{color:#f6f1e8}
+body[data-mode=gallery] .b.g{background:rgba(255,255,255,.07);color:#f6f1e8;border:1px solid var(--line)}
+body[data-mode=gallery] .b.g:hover{background:rgba(255,255,255,.12)}
+body[data-mode=gallery] .b{box-shadow:0 10px 26px -12px rgba(217,180,106,.7)}
+body[data-mode=gallery] .b.g,body[data-mode=gallery] .b.s.g{box-shadow:none}
+body[data-mode=gallery] .burger{background:rgba(255,255,255,.07);border-color:var(--line)}
+body[data-mode=gallery] .top.open .tb.nv:not([hidden]){background:#100e0c;border-bottom:1px solid var(--line);box-shadow:0 30px 50px rgba(0,0,0,.6)}
+/* hero */
+body[data-mode=gallery] .hero2{background:transparent;padding:64px 24px 40px}
+body[data-mode=gallery] .hero2:before,body[data-mode=gallery] .hero2:after{filter:none;opacity:1;width:110vw;height:110vw;max-width:900px;max-height:900px;will-change:transform}
+body[data-mode=gallery] .hero2:before{background:radial-gradient(circle,rgba(217,180,106,.3),transparent 65%);left:-30vw;top:-55vw}
+body[data-mode=gallery] .hero2:after{background:radial-gradient(circle,rgba(122,92,255,.22),transparent 65%);right:-40vw;top:-50vw;opacity:1}
+body[data-mode=gallery] .hero2 h1{font-size:clamp(46px,8vw,96px)}
+body[data-mode=gallery] .hero2 h1 em{background:linear-gradient(135deg,#f6dea0,#d9b46a 50%,#b8893a);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.06em}
+body[data-mode=gallery] .hero2 p{color:#b3ab9b}
+body[data-mode=gallery] .srch{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);transition:.25s;max-width:560px}
+body[data-mode=gallery] .srch:focus-within{border-color:#d9b46a;background:rgba(217,180,106,.07);box-shadow:0 0 0 5px rgba(217,180,106,.12)}
+body[data-mode=gallery] .srch input::placeholder{color:#8f897c}
+body[data-mode=gallery] .srch svg{color:#d9b46a;opacity:1}
+body[data-mode=gallery] .hstats{gap:12px;margin-top:30px}
+body[data-mode=gallery] .hstats>div{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:20px;padding:14px 24px;min-width:118px;color:#a09a8d}
+body[data-mode=gallery] .hstats b{font-size:26px;background:linear-gradient(135deg,#f6dea0,#d9b46a);-webkit-background-clip:text;background-clip:text;color:transparent}
+body[data-mode=gallery] .aibox{background:rgba(255,255,255,.04);border:1px solid rgba(217,180,106,.3);border-radius:22px}
+body[data-mode=gallery] .ait{color:#e8d9b6}
+/* Mening saytlarim */
+body[data-mode=gallery] .resume{margin-top:8px}
+body[data-mode=gallery] .rbox{background:linear-gradient(135deg,#1d1810,#14110c);border:1px solid rgba(217,180,106,.28);border-radius:26px;padding:22px 22px 20px;box-shadow:0 30px 60px -40px rgba(217,180,106,.5)}
+body[data-mode=gallery] .rbox h4{margin:0 0 14px;font-size:12px;letter-spacing:.16em;color:#d9b46a;display:flex;align-items:center;justify-content:space-between;gap:10px}
+body[data-mode=gallery] .rbox h4 a{font-size:13px;letter-spacing:0;text-transform:none;color:#f6f1e8;text-decoration:none;font-weight:600;background:rgba(255,255,255,.07);padding:6px 12px;border-radius:99px}
+body[data-mode=gallery] .rbox span{color:#a09a8d}
+body[data-mode=gallery] .pcard2{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:18px;padding:12px;gap:12px;transition:.2s}
+body[data-mode=gallery] .pcard2:hover{border-color:rgba(217,180,106,.4);background:rgba(217,180,106,.06)}
+.pth{width:56px;height:56px;border-radius:14px;background:#241d10 center top/cover no-repeat;flex:none;border:1px solid rgba(255,255,255,.1)}
+.pcard2>div:first-child{display:flex;gap:12px;align-items:center;min-width:0}.pcard2>div:first-child>div{min-width:0}.pcard2 b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}.pcard2 span{font-size:12.5px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* guruhlar */
+body[data-mode=gallery] .grp button{background:rgba(255,255,255,.04);border:1px solid var(--line);box-shadow:none;border-radius:22px}
+body[data-mode=gallery] .grp button b{color:#f6f1e8}
+body[data-mode=gallery] .grp button small{color:#a09a8d}
+body[data-mode=gallery] .grp button i{background:rgba(217,180,106,.12)}
+body[data-mode=gallery] .grp button:hover{border-color:rgba(217,180,106,.45);transform:translateY(-2px)}
+body[data-mode=gallery] .grp button.on{background:linear-gradient(135deg,rgba(217,180,106,.22),rgba(217,180,106,.07));border-color:rgba(217,180,106,.6);box-shadow:0 18px 40px -22px rgba(217,180,106,.8)}
+body[data-mode=gallery] .grp button.on b{color:#f1dfae}
+body[data-mode=gallery] .grp button.on small{color:#cdbf9f}
+body[data-mode=gallery] .vzb{border:1px solid rgba(217,180,106,.3)}
+/* filtrlar */
+body[data-mode=gallery] .cats button{background:rgba(255,255,255,.04);border:1px solid var(--line);color:#a09a8d;transition:.2s}
+body[data-mode=gallery] .cats button:hover{color:#f6f1e8}
+body[data-mode=gallery] .cats button.on{background:linear-gradient(135deg,#f0cf8e,#d9b46a 50%,#a8802f);border-color:transparent;color:#1a1204}
+body[data-mode=gallery] .cnt{color:#8f897c}
+/* shablon kartochkalari */
+body[data-mode=gallery] .tc{background:#14120f;border:1px solid var(--line);box-shadow:none;border-radius:24px}
+body[data-mode=gallery] .tc:hover{border-color:rgba(217,180,106,.5);box-shadow:0 30px 60px -28px rgba(0,0,0,.9),0 0 0 1px rgba(217,180,106,.15)}
+body[data-mode=gallery] .tci{background:linear-gradient(135deg,#241d10,#15120d)}
+body[data-mode=gallery] .tci .bd{background:rgba(9,8,10,.82);border:1px solid rgba(217,180,106,.45);color:#e8c77f;backdrop-filter:blur(8px)}
+body[data-mode=gallery] .tcb small{color:#d9b46a}
+body[data-mode=gallery] .tcb h3{color:#f6f1e8;letter-spacing:-.01em}
+body[data-mode=gallery] .tcb p{color:#a09a8d}
+body[data-mode=gallery] .tc.vz{background:linear-gradient(180deg,#171410,#100e0b)}
+body[data-mode=gallery] .tc.vz .tci{background:radial-gradient(260px 200px at 50% 20%,rgba(217,180,106,.22),transparent 70%)}
+body[data-mode=gallery] .tc.vz .ph{border-color:#0b0a09;box-shadow:0 26px 44px -20px #000,0 0 0 1px rgba(255,255,255,.14)}
+body[data-mode=gallery] .noRes{background:#14120f;border:1px dashed rgba(255,255,255,.16);color:#a09a8d}
+body[data-mode=gallery] .rbox,body[data-mode=gallery] .mine,body[data-mode=gallery] .pcard2{min-width:0}body[data-mode=gallery] .pcard2{flex-wrap:wrap}.pcard2>div:first-child{flex:1 1 190px}
+@media(max-width:560px){.pcard2 .row{width:100%}.pcard2 .row .b:first-child{flex:1}body[data-mode=gallery] .hero2{padding:44px 18px 28px}body[data-mode=gallery] .hstats>div{min-width:0;flex:1;padding:12px 8px}body[data-mode=gallery] .hstats{gap:8px;flex-wrap:nowrap}body[data-mode=gallery] .hstats b{font-size:22px}body[data-mode=gallery] .resume{padding:0 16px}body[data-mode=gallery] .rbox{padding:18px 16px}.mine{grid-template-columns:1fr!important}.cnt,.cats{padding-left:16px!important;padding-right:16px!important}.tgrid{padding:0 16px}}
 </style>
 </head>
-<body class="ui">
+<body class="ui" data-mode="gallery">
 <header class="top"><a class="lg" href="/"><span class="m" aria-hidden="true"></span><span class="t" id="brand">Impro IT</span></a>
 <div class="tb" id="tbar" hidden><span id="ttl" style="font-weight:700;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span><div class="dev"><button class="on" data-d="d">Kompyuter</button><button data-d="m">Telefon</button></div><button class="b g s" id="btnTpl">Shablonlar</button><span class="st" id="st">● Saqlandi</span><button class="b" id="btnDone">Tayyor ✓</button></div>
 <div class="tb" id="gbar"><a class="b g s" href="/bot.html">Telegram bot</a><a class="b g s" href="/">← Bosh sahifa</a></div></header>
 
 <div class="gal-wrap" id="gallery">
   <div class="hero2"><h1>Saytingizni <em>o'zingiz</em> yarating</h1><p>Kasbingizga mos shablonni tanlang. Matn, rasm, narx va ranglarni o'zgartiring, natijani darrov ko'ring va tayyor saytni yuklab oling.</p>
-    <label class="srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="tq" type="search" placeholder="Kasbingizni yozing: restoran, salon, portfolio, do'kon…" autocomplete="off"></label>
+    <label class="srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="tq" type="search" placeholder="Kasbingiz: restoran, salon, do'kon…" autocomplete="off"></label>
     <div class="hstats"><div><b id="nT">30+</b>shablon</div><div><b>100%</b>tahrirlanadi</div><div><b>0 so'm</b>boshlash uchun</div></div></div>
   <div class="resume" id="resume" hidden></div>
   <div class="grp" id="grp"></div><div class="vzb" id="vzb" hidden><div><h2>Instagramingiz uchun <em>vizitka sayt</em></h2><span>Bitta havola, butun biznesingiz: logotip, aloqa tugmalari, narxlar va manzil bitta chiroyli sahifada. Instagram bio, QR-kod va Telegram uchun. 5 daqiqada tayyor.</span></div><ul><li>📱 Telefonga mos</li><li>🎨 10 ta dizayn</li><li>✏️ Matn ustiga bosib tahrir</li></ul></div><div class="cats" id="cats"></div><div class="cnt" id="cnt"></div>

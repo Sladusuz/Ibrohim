@@ -267,7 +267,7 @@
     // davom ettirish / mening saytlarim
     const r = $('#resume'); r.hidden = true; r.innerHTML = '';
     if (useAcc && myProjects.length) {
-      r.hidden = false; r.innerHTML = `<div class="rbox"><h4 style="margin:0 0 10px">Mening saytlarim</h4><div class="mine">${myProjects.map((p) => `<div class="pcard2"><div><b>${esc(p.name)}</b><span>${esc(tplName(p.template))} · ${esc(STATUS[p.status] || p.status)}</span></div><div class="row"><button class="b s" data-open="${p.id}">Tahrirlash</button><button class="b g s" data-del="${p.id}" title="O'chirish">✕</button></div></div>`).join('')}</div></div>`;
+      r.hidden = false; r.innerHTML = `<div class="rbox"><h4>Mening saytlarim${myProjects.length > 3 ? `<a href="/kabinet.html">Hammasi (${myProjects.length}) →</a>` : ''}</h4><div class="mine">${myProjects.slice(0, 3).map((p) => `<div class="pcard2"><div><i class="pth" style="background-image:url('/img/tpl/${esc(p.template)}.jpg')"></i><div><b>${esc(p.name)}</b><span>${esc(tplName(p.template))} · ${esc(STATUS[p.status] || p.status)}</span></div></div><div class="row"><button class="b s" data-open="${p.id}">Tahrirlash</button><button class="b g s" data-del="${p.id}" title="O'chirish">✕</button></div></div>`).join('')}</div></div>`;
     } else if (!useAcc) {
       let saved = null; try { saved = JSON.parse(ls.get() || 'null'); } catch { saved = null; }
       if (saved && saved.D) { r.hidden = false; r.innerHTML = `<div class="rbox flex"><div><b>Saqlangan loyiha: ${esc((saved.D.company || {}).name || 'Nomsiz')}</b><span>${esc(tplName(saved.tplId))}. Davom ettirishingiz mumkin.</span></div><button class="b" data-resume="1">Davom ettirish</button></div>`; }
