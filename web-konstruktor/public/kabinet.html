@@ -13,10 +13,10 @@
 <style>
 :root{--bg:#09080a;--s1:#121014;--s2:#1a171c;--line:rgba(255,255,255,.08);--line2:rgba(217,180,106,.3);--tx:#f6f1e8;--mut:#a09a8d;--gold:#d9b46a;--gold2:#a8802f;--ok:#5fd394;--bad:#ff7a7a;--blue:#7fb2ff;--vio:#b39bff;--r:22px}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body.kb{margin:0;min-height:100vh;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body.kb{margin:0;min-height:100vh;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
 body.kb:before{content:'';position:fixed;inset:0;pointer-events:none;background:radial-gradient(800px 520px at 88% -8%,rgba(217,180,106,.14),transparent 60%),radial-gradient(700px 520px at -8% 38%,rgba(122,92,255,.1),transparent 60%),radial-gradient(600px 500px at 60% 110%,rgba(255,77,150,.06),transparent 60%);z-index:0}
-a{color:inherit}button{font-family:inherit;cursor:pointer}
+a{color:inherit}button,a,input,.kb-btn{touch-action:manipulation}button{font-family:inherit;cursor:pointer}
 .app{position:relative;z-index:1;display:grid;grid-template-columns:272px 1fr;min-height:100vh;max-width:1360px;margin:0 auto}
 /* chap panel */
 .sbar{position:sticky;top:0;height:100vh;padding:26px 18px 22px;display:flex;flex-direction:column;gap:6px;border-right:1px solid var(--line)}
@@ -32,13 +32,13 @@ a{color:inherit}button{font-family:inherit;cursor:pointer}
 .usr b{display:block;font-size:14px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.usr span{display:block;font-size:12px;color:var(--mut);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kout{margin-left:auto;border:0;background:rgba(255,255,255,.07);color:var(--mut);width:34px;height:34px;border-radius:11px;display:grid;place-items:center;transition:.2s;flex:none}.kout:hover{background:rgba(255,122,122,.18);color:var(--bad)}.kout svg{width:17px;height:17px}
 /* asosiy */
-.mainc{padding:34px 40px 100px;min-width:0}
+.mainc{padding:34px 40px 100px;min-width:0;min-height:100vh;min-height:100svh;overflow-x:clip}
 .mtop,.bnav{display:none}
 .rise{animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*70ms)}@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 .spot{position:relative;overflow:hidden}.spot:before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(217,180,106,.14),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:0}.spot:hover:before{opacity:1}.spot>*{position:relative;z-index:1}
 /* hero */
 .hero{position:relative;overflow:hidden;border-radius:30px;padding:38px 40px;background:linear-gradient(135deg,#1e1810 0%,#130f0b 55%,#1a1431 135%);border:1px solid var(--line2);box-shadow:0 40px 80px -50px rgba(217,180,106,.5)}
-.hero .bl{position:absolute;border-radius:50%;filter:blur(50px);pointer-events:none;animation:fl 14s ease-in-out infinite alternate}.hero .b1{width:360px;height:360px;right:-90px;top:-130px;background:rgba(217,180,106,.34)}.hero .b2{width:300px;height:300px;right:240px;bottom:-190px;background:rgba(122,92,255,.28);animation-delay:-5s}@keyframes fl{to{transform:translate(-50px,34px) scale(1.15)}}
+.hero .bl{position:absolute;border-radius:50%;pointer-events:none;will-change:transform;animation:fl 14s ease-in-out infinite alternate}.hero .b1{width:480px;height:480px;right:-140px;top:-190px;background:radial-gradient(circle,rgba(217,180,106,.4),transparent 68%)}.hero .b2{width:420px;height:420px;right:200px;bottom:-250px;background:radial-gradient(circle,rgba(122,92,255,.34),transparent 68%);animation-delay:-5s}@keyframes fl{to{transform:translate(-50px,34px) scale(1.15)}}
 .hero>*{position:relative}
 .eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}.eyebrow:before{content:'';width:26px;height:1px;background:var(--gold)}
 .hero h1{margin:14px 0 8px;font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(42px,6vw,68px);line-height:1;letter-spacing:-.025em}.hero h1 em{background:linear-gradient(135deg,#f3d99b,var(--gold) 50%,#b8893a);-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic;padding-right:.05em}
@@ -94,6 +94,7 @@ a{color:inherit}button{font-family:inherit;cursor:pointer}
 .sk{border-radius:22px;background:linear-gradient(90deg,var(--s1) 25%,var(--s2) 50%,var(--s1) 75%);background-size:200% 100%;animation:skl 1.4s infinite}@keyframes skl{to{background-position:-200% 0}}
 /* mobil */
 @media(max-width:920px){
+ .fd input,.srch input{font-size:16px}.hero .bl{animation:none}.bnav{transform:translateZ(0);will-change:transform}
  .app{display:block}.sbar{display:none}
  .mtop{display:flex;position:sticky;top:0;z-index:30;align-items:center;gap:12px;padding:12px 16px;background:rgba(9,8,10,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
  .mtop .klg{padding:0;font-size:17px}.mtop .klg img{width:34px;height:34px}.mtop .kout{margin-left:auto}.mtop .kav{width:34px;height:34px;font-size:14px;margin-left:auto}.mtop .kav+.kout{margin-left:0}
@@ -161,15 +162,22 @@ a{color:inherit}button{font-family:inherit;cursor:pointer}
   async function load() { try { [projects, orders, leads] = await Promise.all([A.request('/api/my/projects'), A.request('/api/my/orders'), A.request('/api/my/leads')]); } catch (e) { toast(e.message); } try { ref = await A.request('/api/my/referral'); } catch { ref = null; } draw(); }
   const STEPS = [['qoralama', 'Qoralama'], ['yuborilgan', 'Yuborilgan'], ['narx', 'Narx'], ['joylandi', 'Joylandi']];
   const stepIdx = (s) => s === 'korilmoqda' ? 1 : Math.max(0, STEPS.findIndex((x) => x[0] === s));
+  let shellDone = false;
   function shell(u) {
     const first = String(u.name || '').split(' ')[0] || 'do\'st', ini = (String(u.name || '?').trim()[0] || '?').toUpperCase();
-    const N = (k, ic, l, n) => `<button class="nvl ${tab === k ? 'on' : ''}" data-t="${k}">${ic}<span>${l}</span>${n == null ? '' : `<i>${n}</i>`}</button>`;
-    $('#side').innerHTML = `<a class="klg" href="/"><img src="/img/logo-mark-96.png" alt="" width="40" height="40"><span>Impro IT<small>Kabinet</small></span></a>${N('sites', IC.site, 'Saytlarim', projects.length)}${N('orders', IC.bag, 'Buyurtmalarim', orders.length)}${N('leads', IC.inbox, 'Mijoz so\'rovlari', leads.length)}${N('prof', IC.user, 'Profil')}<div class="sep"></div><div class="cap">Tezkor</div><a class="nvl" href="/yaratish.html">${IC.plus}<span>Sayt yaratish</span></a><a class="nvl" href="/bot.html">${IC.bot}<span>Telegram bot</span></a><a class="nvl" href="/">${IC.home}<span>Bosh sahifa</span></a><div class="usr"><div class="kav">${esc(ini)}</div><div><b>${esc(u.name)}</b><span>${esc(u.email || u.phone || '')}</span></div><button class="kout" data-out title="Chiqish" aria-label="Chiqish">${IC.out}</button></div>`;
-    $('#mtop').innerHTML = `<a class="klg" href="/"><img src="/img/logo-mark-96.png" alt="" width="34" height="34"><span>Impro IT</span></a><div class="kav" data-t="prof" style="cursor:pointer">${esc(ini)}</div><button class="kout" data-out aria-label="Chiqish">${IC.out}</button>`;
-    const B = (k, ic, l, n) => `<button data-t="${k}" class="${tab === k ? 'on' : ''}">${ic}<span>${l}</span>${n ? `<i>${n}</i>` : ''}</button>`;
-    $('#bnav').innerHTML = `${B('sites', IC.site, 'Saytlar', projects.length)}${B('orders', IC.bag, 'Buyurtma', orders.length)}<a class="fab" href="/yaratish.html" aria-label="Yangi sayt">${IC.plus}</a>${B('leads', IC.inbox, 'So\'rovlar', leads.length)}${B('prof', IC.user, 'Profil')}`;
+    const cnt = { sites: projects.length, orders: orders.length, leads: leads.length };
+    if (shellDone) {
+      document.querySelectorAll('[data-t]').forEach((b) => { if (b.closest('#main')) return; b.classList.toggle('on', b.dataset.t === tab); });
+      document.querySelectorAll('[data-n]').forEach((i) => { const n = cnt[i.dataset.n]; i.textContent = n; i.hidden = !n && i.closest('#bnav') != null; });
+      return first;
+    }
+    const N = (k, ic, l, n) => `<button class="nvl ${tab === k ? 'on' : ''}" data-t="${k}">${ic}<span>${l}</span>${n == null ? '' : `<i data-n="${k}">${n}</i>`}</button>`;
+    $('#side').innerHTML = `<a class="klg" href="/"><img src="/img/logo-mark-96.png" alt="" width="40" height="40"><span>Impro IT<small>Kabinet</small></span></a>${N('sites', IC.site, 'Saytlarim', cnt.sites)}${N('orders', IC.bag, 'Buyurtmalarim', cnt.orders)}${N('leads', IC.inbox, 'Mijoz so\'rovlari', cnt.leads)}${N('prof', IC.user, 'Profil')}<div class="sep"></div><div class="cap">Tezkor</div><a class="nvl" href="/yaratish.html">${IC.plus}<span>Sayt yaratish</span></a><a class="nvl" href="/bot.html">${IC.bot}<span>Telegram bot</span></a><a class="nvl" href="/">${IC.home}<span>Bosh sahifa</span></a><div class="usr"><div class="kav">${esc(ini)}</div><div><b>${esc(u.name)}</b><span>${esc(u.email || u.phone || '')}</span></div><button class="kout" data-out title="Chiqish" aria-label="Chiqish">${IC.out}</button></div>`;
+    $('#mtop').innerHTML = `<a class="klg" href="/"><img src="/img/logo-mark-96.png" alt="" width="34" height="34"><span>Impro IT</span></a><button class="kav" data-t="prof" aria-label="Profil" style="border:0;cursor:pointer">${esc(ini)}</button><button class="kout" data-out aria-label="Chiqish">${IC.out}</button>`;
+    const B = (k, ic, l, n) => `<button data-t="${k}" class="${tab === k ? 'on' : ''}">${ic}<span>${l}</span>${n == null ? '' : `<i data-n="${k}"${n ? '' : ' hidden'}>${n}</i>`}</button>`;
+    $('#bnav').innerHTML = `${B('sites', IC.site, 'Saytlar', cnt.sites)}${B('orders', IC.bag, 'Buyurtma', cnt.orders)}<a class="fab" href="/yaratish.html" aria-label="Yangi sayt">${IC.plus}</a>${B('leads', IC.inbox, 'So\'rovlar', cnt.leads)}${B('prof', IC.user, 'Profil')}`;
     document.querySelectorAll('[data-out]').forEach((b) => { b.onclick = () => { A.logout(); location.href = '/'; }; });
-    return first;
+    shellDone = true; return first;
   }
   function draw() {
     const u = A.user(), first = shell(u), ini = (String(u.name || '?').trim()[0] || '?').toUpperCase();
@@ -211,10 +219,10 @@ a{color:inherit}button{font-family:inherit;cursor:pointer}
   }
   main.addEventListener('mousemove', (e) => { const s = e.target.closest('.spot'); if (!s) return; const r = s.getBoundingClientRect(); s.style.setProperty('--mx', (e.clientX - r.left) + 'px'); s.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
   main.addEventListener('input', (e) => { if (e.target.id !== 'q') return; const v = e.target.value.trim().toLowerCase(); document.querySelectorAll('#sg .site').forEach((c) => { c.style.display = !v || c.dataset.name.includes(v) ? '' : 'none'; }); });
-  document.addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b && !main.contains(b) && b.dataset.t) { tab = b.dataset.t; draw(); scrollTo({ top: 0, behavior: 'smooth' }); } });
+  document.addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b && !main.contains(b) && b.dataset.t && b.dataset.t !== tab) { tab = b.dataset.t; window.scrollTo(0, 0); draw(); } });
   main.addEventListener('click', async (e) => {
     const t = e.target.closest('button'); if (!t) return;
-    if (t.dataset.t) { tab = t.dataset.t; draw(); }
+    if (t.dataset.t) { if (t.dataset.t !== tab) { tab = t.dataset.t; window.scrollTo(0, 0); draw(); } }
     if (t.dataset.del && confirm("Bu sayt o'chirilsinmi? Qaytarib bo'lmaydi.")) { try { await A.request(`/api/my/projects/${t.dataset.del}`, { method: 'DELETE' }); projects = projects.filter((p) => p.id !== t.dataset.del); draw(); toast("O'chirildi"); } catch (er) { toast(er.message); } }
     if (t.id === 'refcopy') { const i = $('#refl'); try { await navigator.clipboard.writeText(i.value); } catch { i.select(); document.execCommand('copy'); } toast('Nusxalandi'); }
     if (t.id === 'psave') { const m = $('#pm'); m.className = 'mk'; try { const j = await A.request('/api/me', { method: 'PUT', body: { name: $('#pn').value, phone: $('#pp').value, email: $('#pe').value } }); A._set(j.user, null); m.className = 'mk okk'; m.textContent = 'Saqlandi'; } catch (er) { m.className = 'mk bad'; m.textContent = er.message; } }
