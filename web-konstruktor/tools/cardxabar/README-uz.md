@@ -27,12 +27,23 @@ Mijoz kartaga pul o'tkazadi, @CardXabarBot sizga xabar yuboradi, bu skript xabar
    ```
 4. Birinchi ishga tushirish: `python listener.py` → Telegram telefon raqamingiz va kelgan kodni **o'zingiz** kiritasiz. Keyingi safar so'ramaydi.
 
+## Qo'llab-quvvatlanadigan xabar formati
+Sizning namunangiz bo'yicha moslangan:
+```
+🟢 Perevod na kartu
+➕ 1 000.00 UZS      ← kirim summasi (➖ bo'lsa chiqim, e'tiborsiz)
+💳 ***8066           ← karta oxirgi 4 raqami (boshqa karta bo'lsa e'tiborsiz)
+🕓 21.10.26 23:19    ← vaqt (Toshkent), to'lov so'rovidan oldingi xabarlar e'tiborga olinmaydi
+💵 15 132.41 UZS     ← qoldiq (o'qilmaydi)
+```
+Karta tekshiruvi: `CARD_LAST4` (standart `8066`).
+
 ## Xabar formatini sinash (Telegramsiz)
 Kelgan xabaringizni qavs ichiga qo'yib tekshiring (karta raqamini o'chirib):
 ```
-python listener.py --test "➕ Пополнение 150 037.00 UZS ..."
+python listener.py --test "➕ 150 037.00 UZS\n💳 ***8066"
 ```
-Natija `(True, 150037)` bo'lsa, o'qiy oladi (True = kirim). Boshqacha chiqsa, xabar namunasini yuboring, formatni moslab beraman.
+Natija `{'kind': 'in', 'amount': 150037, 'last4': '8066', ...}` bo'lsa, o'qiy oladi (`in` = kirim). Boshqacha chiqsa, xabar namunasini yuboring, formatni moslab beraman.
 Xom xabarlarni ko'rish uchun: `DEBUG=1 python listener.py`.
 
 ## Doimiy ishlatish
@@ -44,7 +55,8 @@ Skript ishlab turishi kerak (kompyuter yoqiq bo'lsin yoki arzon VPS'da):
 | O'zgaruvchi | Ma'nosi | Standart |
 |---|---|---|
 | `AUTO_CONFIRM=0` | Avtomatik tasdiqlamaydi, faqat xabar beradi | 1 |
-| `MATCH_WINDOW_HOURS` | (zaxira) mos kelish muddati | 72 |
+| `MATCH_WINDOW_HOURS` | to'lov so'rovi yaratilgandan keyin necha soat ichida tushgan pul hisoblanadi | 72 |
+| `CARD_LAST4` | Qaysi karta (oxirgi 4 raqam) kirimlari hisobga olinadi | 8066 |
 | `CARD_BOT` | Bot nomi | CardXabarBot |
 | `IMPRO_API` | Server manzili | impro-bot workers.dev |
 

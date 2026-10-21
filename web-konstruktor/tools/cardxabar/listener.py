@@ -4,7 +4,7 @@
 Bu skript SIZNING kompyuteringizda/serveringizda ishlaydi. Telegram hisobingizga kirish ma'lumotlari faqat sizda qoladi.
 Ishga tushirish va sozlash: README-uz.md.   Sinash:  python listener.py --test "matn"
 """
-import os, re, sys, json, time, asyncio, argparse
+import os, re, sys, json, time, calendar, asyncio, argparse
 try:
     import requests
 except ImportError:
@@ -16,27 +16,48 @@ AUTO = os.environ.get('AUTO_CONFIRM', '1') != '0'
 WINDOW_H = int(os.environ.get('MATCH_WINDOW_HOURS', '72'))
 STATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'state.json')
 
-IN_WORDS = re.compile(r'пополнени|поступлени|зачислени|перевод\s+на\s+карт|kirim|to.?ldirish|o.?tkazma\s+qabul|tushum|qabul\s+qilindi|credit|deposit|income|➕|\+\s*\d', re.I)
+IN_WORDS = re.compile(r'perevod\s+na\s+kartu|popolnen|пополнени|поступлени|зачислени|перевод\s+на\s+карт|kirim|to.?ldirish|o.?tkazma\s+qabul|tushum|qabul\s+qilindi|credit|deposit|income|➕|\+\s*\d', re.I)
 OUT_WORDS = re.compile(r'оплат|списани|покупк|снятие|chiqim|to.?lov\s+qilindi|xarid|yechib|debit|purchase|withdraw|➖', re.I)
 AMOUNT = re.compile(r'(?<![\d.,])(\d{1,3}(?:[   ,]\d{3})+(?:[.,]\d{1,2})?|\d+(?:[.,]\d{1,2})?)\s*(?:UZS|uzs|so.?m|сум|sum)', re.I)
 
-def parse(text):
-    """Xabardan (kirim_mi, summa_so'm) ni ajratadi. Aniqlab bo'lmasa (None, None)."""
-    t = str(text or '')
-    m = AMOUNT.search(t)
-    if not m:
-        return None, None
-    raw = re.sub(r'[   ]', '', m.group(1))
+LINE_IN = re.compile(r'^\s*(?:➕|\+)\s*([\d \u00a0\u202f.,]+?)\s*(?:UZS|so.?m|сум)?\s*$', re.I | re.M)
+LINE_OUT = re.compile(r'^\s*(?:➖|-)\s*([\d \u00a0\u202f.,]+?)\s*(?:UZS|so.?m|сум)?\s*$', re.I | re.M)
+CARD = re.compile(r'💳\s*\**\s*(\d{4})')
+STAMP = re.compile(r'🕓\s*(\d{2})\.(\d{2})\.(\d{2,4})\s+(\d{2}):(\d{2})')
+
+def _num(raw):
+    raw = re.sub(r'[ \u00a0\u202f]', '', raw)
     if re.search(r',\d{3}(?:\.|$)', raw): raw = raw.replace(',', '')          # 150,000.00
     else: raw = raw.replace(',', '.')                                           # 150000,00
-    try: amount = int(round(float(raw)))
-    except ValueError: return None, None
-    inc, out = bool(IN_WORDS.search(t)), bool(OUT_WORDS.search(t))
-    if inc and not out: return True, amount
-    if out and not inc: return False, amount
-    if inc and out:  # ikkalasi ham bor: birinchi uchragan so'z hal qiladi
-        return (IN_WORDS.search(t).start() < OUT_WORDS.search(t).start()), amount
-    return None, amount
+    try: return int(round(float(raw)))
+    except ValueError: return None
+
+def parse_msg(text):
+    """CardXabar xabarini ajratadi: {'kind': 'in'|'out'|None, 'amount', 'last4', 'ts'} (ts = UTC epoch)."""
+    t = str(text or '')
+    kind, amount = None, None
+    m = LINE_IN.search(t)
+    if m: kind, amount = 'in', _num(m.group(1))
+    else:
+        m = LINE_OUT.search(t)
+        if m: kind, amount = 'out', _num(m.group(1))
+    if kind is None:  # zaxira: so'zlar bo'yicha (boshqa formatdagi xabarlar uchun)
+        am = AMOUNT.search(t)
+        if am:
+            amount = _num(am.group(1))
+            inc, out = bool(IN_WORDS.search(t)), bool(OUT_WORDS.search(t))
+            kind = 'in' if inc and not out else 'out' if out and not inc else None
+    c = CARD.search(t); st = STAMP.search(t); ts = None
+    if st:
+        d, mo, y, hh, mi = (int(x) for x in st.groups()); y += 2000 if y < 100 else 0
+        try: ts = calendar.timegm(time.strptime(f'{y:04d}-{mo:02d}-{d:02d} {hh:02d}:{mi:02d}', '%Y-%m-%d %H:%M')) - 5 * 3600  # Toshkent = UTC+5
+        except Exception: ts = None
+    return {'kind': kind, 'amount': amount, 'last4': c.group(1) if c else None, 'ts': ts}
+
+def parse(text):
+    """Eski interfeys: (kirim_mi, summa)."""
+    r = parse_msg(text)
+    return (True if r['kind'] == 'in' else False if r['kind'] == 'out' else None), r['amount']
 
 def log(*a): print(time.strftime('%H:%M:%S'), *a, flush=True)
 
@@ -64,13 +85,18 @@ def notify(text):
     try: requests.post(f'https://api.telegram.org/bot{tok}/sendMessage', json={'chat_id': chat, 'text': text}, timeout=15)
     except Exception as e: log('xabar yuborilmadi:', e)
 
-def handle(amount, text):
+def handle(amount, text, ts=None):
     """Kirimga mos kutilayotgan to'lovni topadi; bitta bo'lsa tasdiqlaydi, bo'lmasa egasiga aytadi."""
     try:
         pays = admin('GET', '/api/admin/payments')
     except Exception as e:
         log('API xatosi:', e); notify(f"⚠️ {amount:,} so'm tushdi, lekin serverga ulanib bo'lmadi: {e}".replace(',', ' ')); return
-    cand = [p for p in pays if p.get('state') == 'pending' and int(p.get('uzs') or 0) == amount]
+    def in_window(p):
+        if not ts: return True
+        try: cts = calendar.timegm(time.strptime(str(p['createdAt'])[:19], '%Y-%m-%dT%H:%M:%S'))
+        except Exception: return True
+        return cts - 300 <= ts <= cts + WINDOW_H * 3600
+    cand = [p for p in pays if p.get('state') == 'pending' and int(p.get('uzs') or 0) == amount and in_window(p)]
     pretty = f"{amount:,}".replace(',', ' ')
     if len(cand) == 1 and cand[0].get('projectId') and AUTO:
         p = cand[0]
@@ -86,10 +112,13 @@ def handle(amount, text):
         log('bir nechta mos', ids); notify(f"💳 {pretty} so'm tushdi. Bir xil summali {len(cand)} ta to'lov bor ({ids}). Qaysi biri ekanini o'zingiz tasdiqlang.")
 
 def process(text):
-    inc, amount = parse(text)
-    if inc is True and amount:
-        log('KIRIM', amount); handle(amount, text)
-    elif inc is False: log('chiqim (e\'tiborsiz):', amount)
+    r = parse_msg(text)
+    want = os.environ.get('CARD_LAST4', '8066')
+    if r['last4'] and want and r['last4'] != want:
+        log('boshqa karta, e\'tiborsiz:', r['last4']); return
+    if r['kind'] == 'in' and r['amount']:
+        log('KIRIM', r['amount'], '| karta', r['last4']); handle(r['amount'], text, r['ts'])
+    elif r['kind'] == 'out': log("chiqim (e'tiborsiz):", r['amount'])
     else: log("xabar tushunilmadi (kirim/chiqim aniqlanmadi):", repr(str(text)[:80]))
 
 async def main():
@@ -121,5 +150,5 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(); ap.add_argument('--test', help='xabar matnini sinash (Telegramsiz)')
     a = ap.parse_args()
     if a.test is not None:
-        print(parse(a.test)); sys.exit(0)
+        print(parse_msg(a.test)); sys.exit(0)
     asyncio.run(main())
