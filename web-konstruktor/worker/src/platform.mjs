@@ -154,17 +154,18 @@ async function platformApi(req, env, ctx, url) {
         if (act === 'stats' && req.method === 'GET') { const series = []; for (let i = 13; i >= 0; i--) { const d = dkey(Date.now() - i * 864e5); series.push({ d, v: (await st.get(`sv:${meta.id}:${d}:v`)) || 0, o: (await st.get(`sv:${meta.id}:${d}:o`)) || 0 }); } return J({ series, views: series.reduce((a, x) => a + x.v, 0), orders: series.reduce((a, x) => a + x.o, 0) }); }
         if (act === 'checkout' && req.method === 'POST') {
           if (meta.paid) return J({ paid: true });
+          if (meta.payRejected) { delete meta.payRejected; await save(meta); }
           const b = await body(4096), tp = PRICING.templatePrice || { usd: 10, rate: 12800 }, uzs = Math.round(tp.usd * tp.rate), p = await createPayOrder(env, st, uzs, `Sayt: ${meta.name} (${me.name} ${me.phone})`); p.projectId = meta.id; p.ownerId = me.id; await payOrderPut(st, p);
           if ((b.method === 'globalpay' || b.method === 'clicktg') && GP_ON(env, b.method === 'clicktg' ? 'click' : 'gp')) { const g = await gpLink(payEnv(env), p, "Impro IT: sayt", b.method === 'clicktg' ? 'click' : 'gp'); if (g.url) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: g.url }); return J({ error: "Karta orqali to'lov hozir ishlamayapti. Boshqa usulni tanlang." }, 502); }
           if (b.method === 'payme' && env.PAYME_MERCHANT_ID && env.PAYME_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: paymeUrl(env, p) });
           if (b.method === 'click' && env.CLICK_SERVICE_ID && env.CLICK_MERCHANT_ID && env.CLICK_SECRET_KEY) return J({ payment: { id: p.id, usd: tp.usd, uzs }, payUrl: clickUrl(env, p) });
-          for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Sayt sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(uzs)} so'm · #${p.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }]] } });
+          for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Sayt sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(uzs)} so'm · #${p.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }], [{ text: "❌ Qabul qilinmadi", callback_data: 'pn:' + meta.id + ':' + me.id }]] } });
           return J({ manual: true, payment: { id: p.id, usd: tp.usd, uzs }, contacts: SITE.contacts || {}, text: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '' });
         }
         if (act === 'paid' && req.method === 'POST') { // mijoz "to'lov qildim" tugmasi: adminga tasdiqlash tugmali xabar
-          if (meta.paid) return J({ paid: true }); if (await limited(st, 'pn' + me.id, 5, 3600)) return J({ error: "Juda ko'p so'rov. Admin tez orada tekshiradi." }, 429);
+          if (meta.paid) return J({ paid: true }); if (meta.payRejected) { delete meta.payRejected; await save(meta); } if (await limited(st, 'pn' + me.id, 5, 3600)) return J({ error: "Juda ko'p so'rov. Admin tez orada tekshiradi." }, 429);
           const tp = PRICING.templatePrice || { usd: 10, rate: 12800 };
-          for (const a of await adminsOf(env, st)) await say(env, a, `🔔 <b>Mijoz to'lov qildim dedi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(Math.round(tp.usd * tp.rate))} so'm\nKartaga tushganini tekshirib, tasdiqlang:`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }]] } });
+          for (const a of await adminsOf(env, st)) await say(env, a, `🔔 <b>Mijoz to'lov qildim dedi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🌐 ${esc(meta.name)}\n💰 ${sum(Math.round(tp.usd * tp.rate))} so'm\nKartaga tushganini tekshirib, tasdiqlang:`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pp:' + meta.id + ':' + me.id }], [{ text: "❌ Qabul qilinmadi", callback_data: 'pn:' + meta.id + ':' + me.id }]] } });
           return J({ ok: true });
         }
         if (act === 'export' && req.method === 'GET') {
@@ -265,7 +266,7 @@ async function adminApi(req, env, ctx, url, st, J, body, cors, route) {
   if (ap) {
     const meta = (await projects()).find((p) => p.id === ap[1]); if (!meta) return J({ error: 'Topilmadi' }, 404); const key = 'pr:' + meta.userId + ':' + meta.id;
     if (req.method === 'GET') { const d = await st.get('pd:' + meta.id); return J({ project: await withPaid(meta), data: d ? JSON.parse(d) : null }); }
-    if (req.method === 'PUT') { const b = await body(8192); if (PSTAT.includes(b.status)) meta.status = b.status; if (typeof b.price === 'string') meta.price = pStr(b.price, 60); if (typeof b.adminNote === 'string') meta.adminNote = pStr(b.adminNote, 1000); if (typeof b.paid === 'boolean') { meta.paid = b.paid; if (!b.paid && meta.published) { meta.published = false; if (meta.slug) await st.put('slug:' + meta.slug, null, 60); } } meta.updatedAt = new Date().toISOString(); await st.put(key, meta, 0, meta); return J({ project: await withPaid(meta) }); }
+    if (req.method === 'PUT') { const b = await body(8192); if (PSTAT.includes(b.status)) meta.status = b.status; if (typeof b.price === 'string') meta.price = pStr(b.price, 60); if (typeof b.adminNote === 'string') meta.adminNote = pStr(b.adminNote, 1000); if (typeof b.paid === 'boolean') { delete meta.payRejected; meta.paid = b.paid; if (!b.paid && meta.published) { meta.published = false; if (meta.slug) await st.put('slug:' + meta.slug, null, 60); } } meta.updatedAt = new Date().toISOString(); await st.put(key, meta, 0, meta); return J({ project: await withPaid(meta) }); }
     if (req.method === 'DELETE') { if (meta.slug) await st.put('slug:' + meta.slug, null, 60); await st.put('pd:' + meta.id, null, 60); await st.put(key, null, 60); return J({ ok: true }); }
   }
   if (route === 'GET /api/admin/bots') {

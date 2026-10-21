@@ -97,6 +97,23 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     }
     delete env.GLOBALPAY_TOKEN; delete env.CLICK_TG_TOKEN;
   }
+  { // To'lov "qabul qilinmadi" (admin rad etadi, mijoz xabar oladi)
+    r = await api('POST', '/api/auth/register', { name: 'Rad Mijoz', phone: '+998905556677', password: 'secret12' }); const rt = r.j.token, ruid = r.j.user.id;
+    r = await api('POST', '/api/my/projects', { name: 'Rad sinov', data }, rt); const rpid = r.j.project.id;
+    tgc.length = 0; r = await api('POST', '/api/my/projects/' + rpid + '/checkout', { method: 'manual' }, rt); ok(r.j.manual === true, 'rad: qo\'lda to\'lov so\'rovi');
+    const kb = tgc.find((c) => c.method === 'sendMessage' && c.body.reply_markup); const btns = kb ? kb.body.reply_markup.inline_keyboard.flat().map((b) => b.callback_data) : [];
+    ok(btns.some((d) => d === 'pp:' + rpid + ':' + ruid) && btns.some((d) => d === 'pn:' + rpid + ':' + ruid), "adminga 'tasdiqlash' va 'qabul qilinmadi' tugmalari keladi", btns);
+    tgc.length = 0; await W.handleUpdate(env, { callback_query: { id: 'x1', data: 'pn:' + rpid + ':' + ruid, from: { id: 99 }, message: { chat: { id: 99 }, message_id: 5 } } });
+    r = await api('GET', '/api/my/projects/' + rpid, null, rt); ok(!r.j.project.payRejected, 'rad: begona odam rad eta olmaydi');
+    tgc.length = 0; await W.handleUpdate(env, { callback_query: { id: 'x2', data: 'pn:' + rpid + ':' + ruid, from: { id: 7 }, message: { chat: { id: 7 }, message_id: 6 } } });
+    r = await api('GET', '/api/my/projects/' + rpid, null, rt); ok(!!r.j.project.payRejected && !r.j.project.paid, "rad: mijoz loyihasida 'payRejected' belgilandi, to'langan emas", r.j.project);
+    ok(tgc.some((c) => c.method === 'editMessageReplyMarkup' && /qabul qilinmadi/.test(JSON.stringify(c.body.reply_markup))), "rad: admin xabari 'qabul qilinmadi' ga o'zgardi");
+    r = await api('POST', '/api/my/projects/' + rpid + '/publish', { slug: 'rad-sinov' }, rt); ok(r.s === 402, "rad: to'lanmagan sayt joylanmaydi");
+    r = await api('POST', '/api/my/projects/' + rpid + '/paid', {}, rt); r = await api('GET', '/api/my/projects/' + rpid, null, rt); ok(!r.j.project.payRejected, "rad: mijoz qayta 'to'lov qildim' bossa belgi tozalanadi");
+    await W.handleUpdate(env, { callback_query: { id: 'x3', data: 'pn:' + rpid + ':' + ruid, from: { id: 7 }, message: { chat: { id: 7 }, message_id: 7 } } });
+    await W.handleUpdate(env, { callback_query: { id: 'x4', data: 'pp:' + rpid + ':' + ruid, from: { id: 7 }, message: { chat: { id: 7 }, message_id: 8 } } });
+    r = await api('GET', '/api/my/projects/' + rpid, null, rt); ok(!!r.j.project.paid && !r.j.project.payRejected, "rad: keyin tasdiqlansa 'to'langan' bo'ladi va rad belgisi o'chadi", r.j.project);
+  }
   { // veb admin panel: /api/admin/*
     r = await api('GET', '/api/admin/stats'); ok(r.s === 401, 'admin: tokensiz 401');
     r = await api('POST', '/api/admin/login', { password: 'wrong' }); ok(r.s === 401, 'admin: noto\'g\'ri parol');

@@ -23,7 +23,7 @@ function tbClean(c, prev) {
   const seen = new Set(); out.products.forEach((p) => { while (seen.has(p.id)) p.id = pRnd(3); seen.add(p.id); });
   return out;
 }
-const tbPub = (b, origin, pr) => ({ price: pr ? tbPriceInfo(b, pr) : undefined, id: b.id, name: b.name, username: b.username, status: b.status, tokenHint: b.token ? '••••' + b.token.slice(-4) : '', config: b.config, claim: b.claim, ownerLinked: !!b.ownerChat, webhook: !!b.webhookOk, createdAt: b.createdAt, appUrl: `${origin}/app/${b.id}`, link: `https://t.me/${b.username}`, claimLink: `https://t.me/${b.username}?start=${b.claim}` });
+const tbPub = (b, origin, pr) => ({ price: pr ? tbPriceInfo(b, pr) : undefined, id: b.id, name: b.name, username: b.username, status: b.status, tokenHint: b.token ? '••••' + b.token.slice(-4) : '', config: b.config, claim: b.claim, payRejected: b.payRejected || '', ownerLinked: !!b.ownerChat, webhook: !!b.webhookOk, createdAt: b.createdAt, appUrl: `${origin}/app/${b.id}`, link: `https://t.me/${b.username}`, claimLink: `https://t.me/${b.username}?start=${b.claim}` });
 const tbPublicConfig = (b) => ({ title: b.config.miniApp.title || b.config.title, shop: b.config.title, currency: b.config.currency, accent: b.config.miniApp.accent, about: b.config.about, contact: b.config.contact, enabled: b.config.miniApp.enabled, products: b.config.products.filter((p) => p.active).map((p) => ({ id: p.id, name: p.name, price: p.price, description: p.description, image: p.image, category: p.category })) });
 const TB_LABEL = { base: 'Asosiy bot (menyu, avto-javob, aloqa)', catalog: 'Katalog va savat', mini: 'Mini ilova (Telegram ichidagi do\'kon)' };
 const tbParts = (c) => ['base', ...(c.products.length ? ['catalog'] : []), ...(c.miniApp.enabled ? ['mini'] : [])];
@@ -53,7 +53,7 @@ async function tbCreate(env, st, userId, token, name, origin) {
 }
 async function markBotPaid(st, p) {
   const b = await tbGet(st, p.botId); if (!b) return; const had = (b.paidF || []).includes('base');
-  b.paidF = [...new Set([...(b.paidF || []), ...(p.parts || [])])]; if (b.paidF.includes('base')) b.status = 'faol';
+  b.paidF = [...new Set([...(b.paidF || []), ...(p.parts || [])])]; delete b.payRejected; if (b.paidF.includes('base')) b.status = 'faol';
   let warn = ''; if (!had && b.paidF.includes('base')) { try { await tbConnect(b, ENV_ORIGIN || 'https://impro-bot.impro-6c9a2d.workers.dev'); } catch (e) { warn = e.message; } } else if (b.paidF.includes('base')) { try { await tbConnect(b, ENV_ORIGIN || 'https://impro-bot.impro-6c9a2d.workers.dev'); } catch { /* ixtiyoriy */ } }
   await tbSave(st, b);
   const env = ENV_REF; if (env) for (const a of await adminsOf(env, st)) await say(env, a, `🤖 <b>Bot to'landi</b>: @${esc(b.username)} · ${esc((p.parts || []).join(', '))}${warn ? '\n⚠️ ' + esc(warn) : ''}`, { disable_notification: true });
@@ -182,11 +182,11 @@ async function tbMyApi(req, env, ctx, st, J, body, me, pn, origin) {
   if (!act && req.method === 'DELETE') { await tbRemove(st, bot); return J({ ok: true }); }
   if (act === 'connect' && req.method === 'POST') { if (!(bot.paidF || []).includes('base')) return J({ error: "Avval bot to'lovini amalga oshiring" }, 402); try { const r = await tbConnect(tbEffBot(bot), origin); bot.webhookOk = r.webhook; await tbSave(st, bot); return J({ ...r, bot: tbPub(bot, origin, pr) }); } catch (e) { return J({ error: 'Ulanmadi: ' + e.message }, 400); } }
   if (act === 'checkout' && req.method === 'POST') {
-    const info = tbPriceInfo(bot, pr); if (!info.dueKeys.length) return J({ paid: true });
+    const info = tbPriceInfo(bot, pr); if (!info.dueKeys.length) return J({ paid: true }); if (bot.payRejected) { delete bot.payRejected; await tbSave(st, bot); }
     const b = await body(4096), pay = await createPayOrder(env, st, info.uzs, `Bot @${bot.username}: ${info.dueKeys.join('+')} (${me.name} ${me.phone})`); pay.botId = bot.id; pay.ownerId = me.id; pay.parts = info.dueKeys; await payOrderPut(st, pay);
     const kind = b.method === 'clicktg' ? 'click' : b.method === 'globalpay' ? 'gp' : '';
     if (kind && GP_ON(env, kind)) { const g = await gpLink(payEnv(env), pay, 'Impro IT: Telegram bot', kind); if (g.url) return J({ payment: { id: pay.id, usd: info.dueUsd, uzs: info.uzs }, payUrl: g.url }); return J({ error: "Karta orqali to'lov hozir ishlamayapti. Boshqa usulni tanlang." }, 502); }
-    for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Bot sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🤖 @${esc(bot.username)} · ${esc(info.dueKeys.join(', '))}\n💰 $${info.dueUsd} · ${sum(info.uzs)} so'm · #${pay.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pb:' + bot.id + ':' + info.dueKeys.join('.') }]] } });
+    for (const a of await adminsOf(env, st)) await say(env, a, `💳 <b>Bot sotib olish so'rovi</b>\n👤 ${esc(me.name)} ${esc(me.phone)}\n🤖 @${esc(bot.username)} · ${esc(info.dueKeys.join(', '))}\n💰 $${info.dueUsd} · ${sum(info.uzs)} so'm · #${pay.id}`, { reply_markup: { inline_keyboard: [[{ text: "✅ To'lovni tasdiqlash", callback_data: 'pb:' + bot.id + ':' + info.dueKeys.join('.') }], [{ text: "❌ Qabul qilinmadi", callback_data: 'pq:' + bot.id }]] } });
     return J({ manual: true, payment: { id: pay.id, usd: info.dueUsd, uzs: info.uzs }, contacts: SITE.contacts || {}, text: ((await st.get('settings')) || {}).manualPay || env.CARD_INFO || '' });
   }
   if (act === 'broadcast' && req.method === 'POST') { if (await limited(st, 'broadcast' + me.id, 6, 3600)) return J({ error: 'Soatiga 6 ta xabar yuborish mumkin' }, 429); const b = await body(8192), text = pStr(b.text, 3000); if (text.length < 2) return J({ error: 'Xabar matnini yozing' }, 400); return J({ ok: true, total: await tbBroadcastStart(st, bot, text) }); }

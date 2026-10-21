@@ -140,11 +140,12 @@
     const price = `<div class="pricebox"><div><b>$${esc(String(eff))}</b>${nx ? ` <s style="opacity:.55;font-size:.6em">$${esc(String(tp().usd))}</s>` : ''}<span>bir martalik to'lov</span></div><small>≈ ${money(Math.round(eff * tp().rate))} so'm</small></div>${nx ? `<div class="guide" style="margin:8px 0">${nx.pct ? `🎁 Do'st taklifi: birinchi xaridga <b>−${nx.pct}%</b>. ` : ''}${nx.credit ? `Bonus balansdan <b>$${esc(String(nx.credit))}</b> hisobga olindi.` : ''}</div>` : ''}
       <ul class="incl"><li>Tayyor saytni yuklab olish (bitta mustaqil fayl)</li><li>Subdomenda joylash: <b>nomingiz.${esc(pricing.rootDomain || 'improuzbekiston.uz')}</b></li><li>O'z domeningizni ulash</li><li>Telefonga ilova kabi o'rnatiladi, Google uchun SEO sozlangan</li><li>Statistika va kelgan buyurtmalar kabinetda</li></ul>`;
     if (!useAcc) return `${price}<p class="hint">Sotib olish uchun biz bilan bog'laning, saytingizni darrov tayyorlab beramiz.</p>${contactBtns()}<button class="b g w" style="margin-top:8px" data-x="mail">Pochta orqali so'rov yuborish</button><div class="hint">Tayyor sayt faqat to'lovdan keyin beriladi. Oldindan ko'rish va tahrirlash bepul.</div>`;
-    if (payInfo && payInfo.manual) {
+    const rej = P && P.payRejected ? `<div class="chk w" style="display:block;margin:10px 0;border-color:#ff7a7a;color:#c62828"><b>❌ To'lovingiz tasdiqlanmadi</b><br>Pul kartaga tushmagan. To'lovni tekshirib, qayta urinib ko'ring yoki biz bilan bog'laning.</div>` : '';
+    if (payInfo && payInfo.manual && !(P && P.payRejected)) {
       const c = payInfo.contacts || {};
       return `${price}<div class="guide" style="margin-top:12px"><b>To'lov so'rovingiz qabul qilindi (#${esc(payInfo.payment.id)})</b><br>Summa: <b>$${esc(String(payInfo.payment.usd))}</b> (${money(payInfo.payment.uzs)} so'm).${window.__CARD__ ? `<div style="white-space:pre-line;margin:6px 0;font-weight:700;font-size:16px">Karta: ${esc(window.__CARD__.number)}\n${esc(window.__CARD__.holder)}</div>` : (payInfo.text ? `<div style="white-space:pre-line;margin:6px 0;font-weight:600">${esc(payInfo.text)}</div>` : '')}<small>To'lov izohiga <b>#${esc(payInfo.payment.id)}</b> yozing.</small><br>To'lov qilgach, «To'lov qildim» tugmasini bosing: admin tasdiqlaydi va sayt ochiladi. ${c.phone ? `Aloqa: <b>${esc(c.phone)}</b>` : ''}${c.telegram ? `, <b>${esc(c.telegram)}</b>` : ''}</div><button class="b w" style="margin-top:10px" data-x="paidnote">To'lov qildim</button><button class="b g w" style="margin-top:8px" data-x="recheck">To'lovni tekshirish</button>`;
     }
-    return `${price}<div class="msg" id="buyMsg"></div><button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="manual">Kartaga o'tkazma bilan to'lash</button><div class="hint">Oldindan ko'rish va tahrirlash bepul. To'lovdan keyin sayt yuklab olinadi yoki joylanadi.</div></div>`;
+    return `${price}${rej}<div class="msg" id="buyMsg"></div><button class="b w" style="margin-top:8px;padding:14px" data-x="buy" data-m="manual">${P && P.payRejected ? "Qayta to'lash" : "Kartaga o'tkazma bilan to'lash"}</button><div class="hint">Oldindan ko'rish va tahrirlash bepul. To'lovdan keyin sayt yuklab olinadi yoki joylanadi.</div></div>`;
   }
   function ownBox() {
     const url = P.published ? (P.url || '') : '';
@@ -165,8 +166,9 @@
   async function refreshProject() { try { const j = await Auth.request(`/api/my/projects/${P.id}`); P = j.project; } catch { /* ignore */ } }
   async function loadStats() { if (!useAcc || !paid() || !P.published) return; try { stats = await Auth.request(`/api/my/projects/${P.id}/stats`); ed.render(true); } catch { /* ignore */ } }
   async function waitPaid() {
-    for (let i = 0; i < 25 && P && !paid(); i++) { await new Promise((r) => setTimeout(r, 3000)); await refreshProject(); }
+    for (let i = 0; i < 25 && P && !paid() && !P.payRejected; i++) { await new Promise((r) => setTimeout(r, 3000)); await refreshProject(); }
     if (paid()) { toast("To'lov qabul qilindi! Rahmat."); if (ed) ed.render(true); }
+    else if (P && P.payRejected) { toast("To'lov tasdiqlanmadi: pul kartaga tushmagan."); if (ed) ed.render(true); }
   }
   async function buy(method) {
     const m = $('#buyMsg'); if (m) { m.className = 'msg'; m.textContent = ''; }
@@ -202,9 +204,9 @@
       const x = e.target.closest('[data-x]'); if (!x) return;
       const a = x.dataset.x;
       if (a === 'dl') downloadPaid();
-      if (a === 'paidnote') { x.disabled = true; Auth.request(`/api/my/projects/${P.id}/paid`, { method: 'POST', body: {} }).then(() => { toast("Adminga xabar yuborildi. Tasdiqlangach sayt ochiladi."); }).catch((er) => { toast(er.message); x.disabled = false; }); }
+      if (a === 'paidnote') { x.disabled = true; Auth.request(`/api/my/projects/${P.id}/paid`, { method: 'POST', body: {} }).then(() => { toast("Adminga xabar yuborildi. Tasdiqlangach sayt ochiladi."); waitPaid(); }).catch((er) => { toast(er.message); x.disabled = false; }); }
       if (a === 'buy') buy(x.dataset.m);
-      if (a === 'recheck') refreshProject().then(() => { if (paid()) toast("To'lov tasdiqlandi!"); else toast("Hali tasdiqlanmagan. To'lovdan keyin biroz kuting."); ed.render(true); });
+      if (a === 'recheck') refreshProject().then(() => { if (paid()) toast("To'lov tasdiqlandi!"); else if (P && P.payRejected) toast("To'lov tasdiqlanmadi: pul kartaga tushmagan."); else toast("Hali tasdiqlanmagan. To'lovdan keyin biroz kuting."); ed.render(true); });
       if (a === 'pub') publish();
       if (a === 'unpub') Auth.request(`/api/my/projects/${P.id}/publish`, { method: 'DELETE' }).then((j) => { P = j.project; stats = null; ed.render(true); }).catch((er) => toast(er.message));
       if (a === 'dom') setDomain();
