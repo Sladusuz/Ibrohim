@@ -12,7 +12,7 @@
   const useAcc = !!(Auth && Auth.enabled);
   const STATUS = { qoralama: 'Qoralama', yuborilgan: 'Yuborilgan', korilmoqda: "Ko'rib chiqilmoqda", narx: 'Narx belgilandi', joylandi: 'Joylandi', bekor: 'Bekor qilindi' };
 
-  let D = null, P = null, tplId = '', ed = null, previewReady = false, pt = null, st = null, pricing = { plans: [] }, myProjects = [], dirty = false, saving = false;
+  let D = null, P = null, tplId = '', ed = null, previewReady = false, pt = null, st = null, pricing = { plans: [] }, myProjects = [], dirty = false, saving = false, picking = false;
   const ls = { get() { try { return localStorage.getItem(LOCAL_KEY); } catch { return null; } }, set(v) { try { localStorage.setItem(LOCAL_KEY, v); return true; } catch { return false; } }, del() { try { localStorage.removeItem(LOCAL_KEY); } catch { /* ignore */ } } };
   const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2800); };
   const status = (txt, cls) => { const s = $('#st'); s.textContent = '● ' + txt; s.className = 'st ' + (cls || ''); };
@@ -355,7 +355,14 @@
       d.orders.currency = (o.orders && o.orders.currency) || d.orders.currency;
       tplId = id; D = d; dirty = true; showEditor(); changed(); toast("Shablon almashtirildi. Ma'lumotlaringiz saqlandi."); return;
     }
-    try { await openData(d, id, null); } catch (e) { toast(e.message); }
+    if (picking) return; picking = true;
+    try {
+      // tasodifiy ikki marta bosish / sahifani qayta ochish: yaqinda yaratilgan shu shablon qoralamasi bo'lsa, yangisini ochmaymiz
+      const rec = useAcc && !ai && myProjects.find((p) => p.template === id && p.status === 'qoralama' && Date.now() - new Date(p.updatedAt || p.createdAt || 0).getTime() < 180000);
+      if (rec) { toast('Yaqinda yaratilgan qoralamangiz ochildi'); await openProject(rec.id); return; }
+      toast('Sayt tayyorlanmoqda…');
+      await openData(d, id, null);
+    } catch (e) { toast(e.message); } finally { picking = false; }
   }
   async function openProject(id) {
     try {
