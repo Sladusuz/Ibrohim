@@ -6,4 +6,4 @@ window.__API__ = 'https://impro-bot.impro-6c9a2d.workers.dev';
 window.__RELAY__ = 'https://impro-bot.impro-6c9a2d.workers.dev';
 
 // Kartaga o'tkazma rekvizitlari: to'lov oynasida shu ko'rsatiladi (serverdagi qiymatdan ustun).
-window.__CARD__ = { number: '5616 6822 1689 8066', holder: 'MUSTAFO ALI MAHSUDOV' };
+window.__CARD__ = { number: '5614 6822 1689 8066', holder: 'MUSTAFO ALI MAHSUDOV' };
