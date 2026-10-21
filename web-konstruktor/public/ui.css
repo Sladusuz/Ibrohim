@@ -62,9 +62,19 @@ input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0
   .top .lg .t{display:inline;font-size:16px}
   .burger{display:flex}body[data-mode=editor] .burger{display:none}
   .tb.nv{display:none!important}
-  .top.open .tb.nv:not([hidden]){display:flex!important;position:absolute;top:100%;left:0;right:0;flex-direction:column;align-items:stretch;gap:8px;padding:12px 14px 16px;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 24px 40px #15110a22;animation:tnv .18s ease-out}
-  .top.open .tb.nv .b{width:100%;justify-content:flex-start;text-align:left;padding:15px 16px;font-size:16px;border-radius:14px;min-height:50px}
-  @keyframes tnv{from{opacity:0;transform:translateY(-8px)}}
+  .top.open .tb.nv:not([hidden]){display:flex!important;position:fixed;top:var(--thh,58px);left:0;right:0;bottom:0;z-index:60;flex-direction:column;align-items:stretch;gap:10px;padding:18px 16px calc(28px + env(safe-area-inset-bottom));overflow-y:auto;-webkit-overflow-scrolling:touch;background:radial-gradient(520px 320px at 90% -4%,rgba(217,180,106,.2),transparent 70%),radial-gradient(420px 320px at -10% 40%,rgba(122,92,255,.12),transparent 70%),rgba(9,8,10,.97);-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);color:#f6f1e8;animation:tnv .28s cubic-bezier(.2,.8,.2,1)}
+  .top.open .tb.nv .b{position:relative;width:100%;justify-content:flex-start;text-align:left;gap:14px;padding:14px 16px;font-size:17px;font-weight:650;border-radius:20px;min-height:68px;background:rgba(255,255,255,.05);color:#f6f1e8;border:1px solid rgba(255,255,255,.09);box-shadow:none;letter-spacing:-.01em;animation:mi .55s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--k,0)*60ms + 80ms);transition:background .2s,border-color .2s,transform .15s}
+  .top.open .tb.nv .b:active{transform:scale(.98);background:rgba(217,180,106,.12)}
+  .top.open .tb.nv .b .mi{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:rgba(217,180,106,.13);color:#d9b46a;flex:none}.top.open .tb.nv .b .mi svg{width:22px;height:22px;margin:0;vertical-align:0}
+  .top.open .tb.nv .b .ml{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}.top.open .tb.nv .b .ml b{font-weight:700;font-size:17px;line-height:1.2}.top.open .tb.nv .b .ml small{display:block;font-size:12.5px;font-weight:500;color:#a09a8d;letter-spacing:0}
+  .top.open .tb.nv .b .mch{display:block;width:18px;height:18px;color:#6f695f;flex:none;margin:0}
+  .top.open .tb.nv .b.mprof{min-height:92px;background:linear-gradient(135deg,rgba(217,180,106,.24),rgba(217,180,106,.07));border-color:rgba(217,180,106,.5);box-shadow:0 20px 44px -26px rgba(217,180,106,.9)}
+  .top.open .tb.nv .b.mprof .mi{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f0cf8e,#d9b46a 50%,#a8802f);color:#1a1204;font-weight:800;font-size:22px}
+  .top.open .tb.nv .b.mprof .ml b{font-size:20px}.top.open .tb.nv .b.mprof .ml small{color:#d9c79b}
+  .top.open .tb.nv .b.mout{background:rgba(255,122,122,.07);border-color:rgba(255,122,122,.22)}.top.open .tb.nv .b.mout .mi{background:rgba(255,122,122,.14);color:#ff8a8a}.top.open .tb.nv .b.mout .ml b{color:#ffb0b0}
+  .top.open .tb.nv .mfoot{display:block;margin-top:auto;padding:22px 6px 4px;text-align:center;color:#6f695f;font-size:12.5px;animation:mi .6s both;animation-delay:.45s}.top.open .tb.nv .mfoot a{color:#d9b46a;text-decoration:none;font-weight:600}
+  @keyframes tnv{from{opacity:0;transform:translateY(-10px)}}@keyframes mi{from{opacity:0;transform:translateY(16px)}}
+  .tb .mfoot{display:none}
   /* muharrir paneli: ixcham */
   #tbar #ttl{display:none}#tbar{gap:8px;margin-left:auto}#tbar .b{padding:10px 14px}
   .gal-wrap,.wrap{padding-left:14px;padding-right:14px}
@@ -97,3 +107,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0
 body.ied-sheet-open .mvt{display:none!important}
 
 .lg .m,.sb .brand .m{background:#0e0c09 url(/img/logo-mark-96.png) center/cover no-repeat;font-size:0;color:transparent;box-shadow:0 0 0 1px #d8b46a55}
+
+/* menyu bezaklari faqat telefonda */
+.tb .mi,.tb .mch,.tb .ml small{display:none}.tb .ml,.tb .ml b{display:inline;font:inherit}
+body.menu-open{overflow:hidden}
+
+/* ochiq menyu: backdrop-filter fixed-ichki elementni qamrab olmasin */
+header.top.open{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(9,8,10,.98)!important;border-bottom-color:rgba(255,255,255,.08)!important}header.top.open .lg,header.top.open .lg .t{color:#f6f1e8}header.top.open .burger{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}header.top.open .burger i{background:#f6f1e8}
+
+.top.open .tb.nv .b.mprof{order:-1}.top.open .tb.nv .b.mout{order:5}.top.open .tb.nv .mfoot{order:9}
