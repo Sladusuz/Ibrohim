@@ -10,6 +10,6 @@ srv.listen(0,async()=>{const port=srv.address().port;const b=await chromium.laun
 for(const [name,vp] of [['m',{width:390,height:844}],['d',{width:1280,height:900}]]){
  const c=await b.newContext({viewport:vp,deviceScaleFactor:2});const p=await c.newPage();await p.route('**/auth.js',r=>r.fulfill({contentType:'application/javascript',body:STUB}));
  await p.goto(`http://localhost:${port}/kabinet.html`);await p.waitForSelector('.hero');await p.waitForTimeout(900);
- for(const t of ['sites','orders','leads','prof']){await p.click(`[data-t="${t}"]`);await p.waitForTimeout(300);await p.screenshot({path:`/tmp/kab-${name}-${t}.png`,fullPage:true})}
+ for(const t of ['sites','orders','leads','prof']){await p.evaluate((t)=>{const b=[...document.querySelectorAll('[data-t="'+t+'"]')].find(x=>x.offsetParent);b.click()},t);await p.waitForTimeout(300);await p.screenshot({path:`/tmp/kab-${name}-${t}.png`,fullPage:true})}
  await c.close()}
 await b.close();srv.close();console.log('ok')});
