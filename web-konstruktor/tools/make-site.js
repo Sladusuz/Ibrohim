@@ -87,7 +87,7 @@ if (faq) faq.items = [
   { q: "Loyiha qancha vaqtda tayyor bo'ladi?", a: "Vizitka sayt 1–2 hafta, onlayn do'kon 3–5 hafta, mobil ilova 2–3 oy. Aniq muddat suhbatdan keyin shartnomada belgilanadi." },
   { q: 'Narx qanday hisoblanadi?', a: "Loyiha hajmiga qarab. Anketani to'ldirsangiz, 1 kun ichida aniq narx va muddat bilan taklif yuboramiz." },
   { q: 'Tayyor sayt shabloni qancha turadi?', a: "Shablonni bepul tanlab, tahrirlab, natijani ko'rasiz. Tayyor saytni yuklab olish yoki o'z subdomeningizda e'lon qilish uchun bir martalik $10 to'lanadi." },
-  { q: "Qanday to'lov usullari bor?", a: "Payme, Click yoki bank kartasiga o'tkazma. Katta loyihalarda to'lov bosqichma-bosqich, shartnoma asosida amalga oshiriladi." },
+  { q: "Qanday to'lov usullari bor?", a: "Bank kartasiga o'tkazma orqali: karta raqamini buyurtma tasdiqlangach yuboramiz. Katta loyihalarda to'lov bosqichma-bosqich, shartnoma asosida amalga oshiriladi." },
   { q: "O'z domenimni ulay olamanmi?", a: "Ha. Saytingizni bizning subdomenimizda e'lon qilishingiz yoki o'z domeningizni (masalan, sizningbiznes.uz) ulashingiz mumkin." },
   { q: "Telegram bot yaratish qiyinmi?", a: "Yo'q. Bot konstruktorida @BotFather bergan tokenni kiritasiz: katalog, savat va Telegram ichidagi mini do'kon darrov ishlaydi, kod yozish shart emas." },
   { q: 'Mavjud saytni yangilab bera olasizmi?', a: "Albatta: dizaynni yangilash, tezlashtirish va yangi funksiyalar qo'shish ham qilamiz." },

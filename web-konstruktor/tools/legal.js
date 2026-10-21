@@ -1,5 +1,5 @@
 'use strict';
-// Huquqiy sahifalar (oferta, maxfiylik, qaytarish): to'lov tizimlari (Payme, Click) shularni talab qiladi.
+// Huquqiy sahifalar (oferta, maxfiylik, qaytarish): bank (kartaga o'tkazma tasdig'i uchun) shularni talab qiladi.
 // DIQQAT: bu umumiy namuna matn. Yuridik shaxs rekvizitlarini to'ldiring va yurist bilan tekshiring.
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -14,7 +14,7 @@ module.exports = function legalPages({ site, domain }) {
     offerta: { title: 'Ommaviy oferta', h: [
       ['1. Umumiy qoidalar', `Ushbu hujjat ${esc(name)} (keyingi o'rinlarda «Ijrochi») tomonidan ${url} saytida ko'rsatiladigan xizmatlar va raqamli mahsulotlarga nisbatan ommaviy oferta hisoblanadi. Saytda buyurtma berish, ro'yxatdan o'tish yoki to'lov qilish ushbu shartlarni to'liq qabul qilishni (aksept) bildiradi.`],
       ['2. Xizmat va mahsulotlar', `Ijrochi quyidagilarni taqdim etadi: veb-sayt, onlayn do'kon, mobil ilova va Telegram bot ishlab chiqish; tayyor sayt shablonlarini sozlash va sotish (raqamli mahsulot); sayt joylash (hosting), domen ulash va texnik yordam; Telegram bot konstruktori. Xizmatlarning tarkibi, narxi va muddati saytda yoki buyurtma anketasida alohida ko'rsatiladi.`],
-      ['3. Narx va to\'lov', `Narxlar saytda so'mda yoki AQSH dollarida ko'rsatiladi. Dollardagi narx to'lov kuni ${esc(name)} belgilagan kurs bo'yicha so'mga o'giriladi. To'lov Payme, Click yoki bank kartasiga o'tkazma orqali amalga oshiriladi. To'lov qabul qilingandan keyin buyurtma bajarilishi boshlanadi (raqamli mahsulot uchun: darhol).`],
+      ['3. Narx va to\'lov', `Narxlar saytda so'mda yoki AQSH dollarida ko'rsatiladi. Dollardagi narx to'lov kuni ${esc(name)} belgilagan kurs bo'yicha so'mga o'giriladi. To'lov bank kartasiga o'tkazma orqali amalga oshiriladi. To'lov qabul qilingandan keyin buyurtma bajarilishi boshlanadi (raqamli mahsulot uchun: darhol).`],
       ['4. Tayyor sayt shabloni (raqamli mahsulot)', `Mijoz shablonni bepul sozlaydi va oldindan ko'radi. To'lovdan keyin tayyor saytni fayl sifatida yuklab olish, ${esc(domain)} subdomenida joylash va o'z domenini ulash imkoniyati ochiladi. Shablon dizayni va kodi mualliflik huquqi bilan himoyalangan; mijozga o'z biznesi uchun foydalanish huquqi beriladi, qayta sotish yoki shablon sifatida tarqatish taqiqlanadi. Shablondagi fotosuratlar erkin litsenziyali (CC0) manbalardan olingan.`],
       ['5. Individual loyihalar', `Murakkab loyihalar (sayt, ilova, bot) bo'yicha aniq narx, muddat va ish hajmi anketa va suhbat natijasida kelishiladi hamda yozma yoki elektron tarzda tasdiqlanadi.`],
       ['6. Tomonlarning majburiyatlari', `Ijrochi xizmatni kelishilgan hajm va muddatda bajaradi, mijoz ma'lumotlarini uchinchi shaxslarga bermaydi. Mijoz to'g'ri ma'lumot taqdim etadi, saytga joylangan matn, rasm va logotiplar uchun huquqlarga ega ekanini kafolatlaydi, qonunga zid kontent joylamaydi.`],
@@ -25,14 +25,14 @@ module.exports = function legalPages({ site, domain }) {
     maxfiylik: { title: 'Maxfiylik siyosati', h: [
       ['1. Qanday ma\'lumotlar yig\'iladi', `Ro'yxatdan o'tishda: ism, telefon raqami, email (ixtiyoriy). Buyurtma va arizalarda: ism, telefon, manzil, izoh. Sayt yaratishda: siz kiritgan matn va rasmlar. Telegram bot konstruktorida: bot tokeni (faqat serverda, shifrlanmagan holda ko'rsatilmaydi). Texnik ma'lumotlar: sahifa ko'rishlar soni.`],
       ['2. Nima uchun ishlatiladi', `Buyurtmani bajarish, siz bilan bog'lanish, to'lovni tasdiqlash, hisobingizni yuritish va xizmat sifatini oshirish uchun. Ma'lumotlaringiz reklama maqsadida uchinchi shaxslarga sotilmaydi.`],
-      ['3. Uchinchi tomonlar', `Faqat zarur hollarda: to'lov tizimlari (Payme, Click), Telegram (xabarnomalar va bot), hosting provayderi, AI yordamchi ishlatilsa — biznes tavsifi matni sun'iy intellekt xizmatiga yuboriladi.`],
+      ['3. Uchinchi tomonlar', `Faqat zarur hollarda: bank (kartaga o'tkazma tasdig'i uchun), Telegram (xabarnomalar va bot), hosting provayderi, AI yordamchi ishlatilsa — biznes tavsifi matni sun'iy intellekt xizmatiga yuboriladi.`],
       ['4. Saqlash va xavfsizlik', `Parollar qaytarib bo'lmaydigan shifrlangan (hash) holda saqlanadi. Ma'lumotlar serverda saqlanadi, muntazam zaxira nusxa olinadi. Ma'lumotlarni ishlatish O'zbekiston Respublikasining shaxsga doir ma'lumotlar to'g'risidagi qonunchiligiga muvofiq amalga oshiriladi.`],
       ['5. Cookie va brauzer xotirasi', `Sayt hisobga kirishni, savatni va tanlangan mavzuni eslab qolish uchun brauzer xotirasidan (localStorage) foydalanadi. Ba'zi saytlarda mijoz o'z xohishiga ko'ra statistika vositalarini (Google Analytics, Yandex Metrika, Meta Pixel) yoqishi mumkin.`],
       ['6. Sizning huquqlaringiz', `Ma'lumotlaringizni ko'rish, tuzatish yoki o'chirishni so'rash huquqiga egasiz: ${esc(c.email || '')} ${esc(c.phone || '')} orqali murojaat qiling. Hisobingizni kabinetdan o'zingiz ham o'chira olasiz.`],
       ['7. Aloqa', reqHtml],
     ] },
     qaytarish: { title: "To'lov va qaytarish shartlari", h: [
-      ['1. To\'lov usullari', `Payme, Click yoki bank kartasiga o'tkazma. To'lov qabul qilinganda mijozga tasdiq ko'rsatiladi (qo'lda o'tkazmada administrator tasdiqlaydi, odatda ish vaqtida bir necha soat ichida).`],
+      ['1. To\'lov usullari', `Bank kartasiga o'tkazma. To'lov qabul qilinganda mijozga tasdiq ko'rsatiladi (qo'lda o'tkazmada administrator tasdiqlaydi, odatda ish vaqtida bir necha soat ichida).`],
       ['2. Tayyor sayt shabloni', `Tayyor saytni yuklab olishdan yoki joylashdan **oldin** pul qaytarish so'rovi qabul qilinadi (to'lovdan keyin 3 kun ichida). Sayt yuklab olingan yoki joylangan bo'lsa, raqamli mahsulot topshirilgan hisoblanadi va to'lov qaytarilmaydi, texnik nosozlik bundan mustasno: nosozlikni bepul tuzatamiz yoki pulni qaytaramiz.`],
       ['3. Individual loyihalar', `Ish boshlanmagan bo'lsa, to'lov to'liq qaytariladi. Ish boshlangan bo'lsa, bajarilgan qismga mutanosib summa ushlab qolinadi. Aniq shartlar shartnomada belgilanadi.`],
       ['4. Qanday qaytariladi', `${esc(c.email || '')} manziliga yoki ${esc(c.phone || '')} raqamiga murojaat qiling: ism, telefon va buyurtma raqamini yozing. Qaytarish to'lov qilingan usul orqali, odatda 3–10 ish kuni ichida amalga oshiriladi.`],
