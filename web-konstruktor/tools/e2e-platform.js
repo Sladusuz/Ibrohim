@@ -114,6 +114,16 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
     await W.handleUpdate(env, { callback_query: { id: 'x4', data: 'pp:' + rpid + ':' + ruid, from: { id: 7 }, message: { chat: { id: 7 }, message_id: 8 } } });
     r = await api('GET', '/api/my/projects/' + rpid, null, rt); ok(!!r.j.project.paid && !r.j.project.payRejected, "rad: keyin tasdiqlansa 'to'langan' bo'ladi va rad belgisi o'chadi", r.j.project);
   }
+  { // admin: qabul qilinmadi belgisi va o'chirish (Telegram admin ilovasi API'si)
+    const adm = await api('POST', '/api/admin/login', { password: 'x' }); const atk = adm.j.token;
+    r = await api('POST', '/api/auth/register', { name: 'Ochirish Mijoz', phone: '+998907778899', password: 'secret12' }); const dtk = r.j.token, duid = r.j.user.id;
+    r = await api('POST', '/api/my/projects', { name: 'Ochiriladigan', data }, dtk); const dpid = r.j.project.id;
+    r = await api('PUT', '/api/admin/projects/' + dpid, { payRejected: true }, atk); r = await api('GET', '/api/my/projects/' + dpid, null, dtk); ok(!!r.j.project.payRejected, "admin API: payRejected belgilandi");
+    r = await api('PUT', '/api/admin/projects/' + dpid, { payRejected: false }, atk); r = await api('GET', '/api/my/projects/' + dpid, null, dtk); ok(!r.j.project.payRejected, "admin API: payRejected olib tashlandi");
+    r = await api('DELETE', '/api/admin/projects/' + dpid, null, atk); r = await api('GET', '/api/my/projects', null, dtk); ok(r.j.length === 0, "admin API: sayt o'chirildi");
+    r = await api('POST', '/api/my/projects', { name: 'Mijoz bilan', data }, dtk);
+    r = await api('DELETE', '/api/admin/users/' + duid, null, atk); r = await api('POST', '/api/auth/login', { phone: '+998907778899', password: 'secret12' }); ok(r.s !== 200, "admin API: mijoz o'chirildi (kira olmaydi)");
+  }
   { // veb admin panel: /api/admin/*
     r = await api('GET', '/api/admin/stats'); ok(r.s === 401, 'admin: tokensiz 401');
     r = await api('POST', '/api/admin/login', { password: 'wrong' }); ok(r.s === 401, 'admin: noto\'g\'ri parol');
