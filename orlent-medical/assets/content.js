@@ -21,8 +21,8 @@ window.I18N={
   "s2t": "tekshiruvi",
   "s3": "Oila",
   "s3t": "uchun davolash",
-  "f1": "✔ Tezkor qabul",
-  "f2": "✔ Zamonaviy uskuna",
+  "f1": "Tezkor qabul",
+  "f2": "Zamonaviy uskuna",
   "sv_e": "Xizmatlar",
   "sv_h": "Nimalarda yordam beramiz",
   "sv_p": "LOR kasalliklarining diagnostikasi va davolash hamda ultratovush tekshiruvi.",
@@ -222,7 +222,22 @@ window.I18N={
    "Bolalar LOR"
   ],
   "title": "Orlent Medical — LOR markazi va UTT diagnostikasi",
-  "desc": "Orlent Medical: quloq, burun, tomoq kasalliklari diagnostikasi va davolash, UTT tekshiruvi. Onlayn qabulga yoziling."
+  "desc": "Orlent Medical: quloq, burun, tomoq kasalliklari diagnostikasi va davolash, UTT tekshiruvi. Onlayn qabulga yoziling.",
+  "tr": [
+   "Zamonaviy uskunalar",
+   "Tajribali shifokorlar",
+   "Sterillik va xavfsizlik",
+   "LOR + UTT bir joyda"
+  ],
+  "cta_h": "Salomatligingiz uchun bugunoq qadam tashlang",
+  "cta_p": "Qabulga yoziling — biz qulay vaqtni tanlab beramiz.",
+  "more": "Yozilish",
+  "rights": "Barcha huquqlar himoyalangan",
+  "mb_call": "Qo'ng'iroq",
+  "mb_book": "Yozilish",
+  "hv_t": "LOR markazi",
+  "menu": "Menyu",
+  "dr_ph": "Rasm qo'shiladi"
  },
  "ru": {
   "nav": [
@@ -245,8 +260,8 @@ window.I18N={
   "s2t": "обследование",
   "s3": "Лечение",
   "s3t": "для всей семьи",
-  "f1": "✔ Быстрый приём",
-  "f2": "✔ Современная техника",
+  "f1": "Быстрый приём",
+  "f2": "Современная техника",
   "sv_e": "Услуги",
   "sv_h": "С чем мы помогаем",
   "sv_p": "Диагностика и лечение ЛОР-заболеваний, а также ультразвуковые исследования.",
@@ -446,7 +461,22 @@ window.I18N={
    "Детский ЛОР"
   ],
   "title": "Orlent Medical — ЛОР-центр и УЗИ-диагностика",
-  "desc": "Orlent Medical: диагностика и лечение заболеваний уха, горла, носа, УЗИ-обследование. Запишитесь онлайн."
+  "desc": "Orlent Medical: диагностика и лечение заболеваний уха, горла, носа, УЗИ-обследование. Запишитесь онлайн.",
+  "tr": [
+   "Современное оборудование",
+   "Опытные врачи",
+   "Стерильность и безопасность",
+   "ЛОР + УЗИ в одном месте"
+  ],
+  "cta_h": "Сделайте шаг к здоровью уже сегодня",
+  "cta_p": "Запишитесь на приём — мы подберём удобное время.",
+  "more": "Записаться",
+  "rights": "Все права защищены",
+  "mb_call": "Позвонить",
+  "mb_book": "Записаться",
+  "hv_t": "ЛОР-центр",
+  "menu": "Меню",
+  "dr_ph": "Фото будет добавлено"
  },
  "en": {
   "nav": [
@@ -469,8 +499,8 @@ window.I18N={
   "s2t": "examination",
   "s3": "Family",
   "s3t": "care",
-  "f1": "✔ Fast appointments",
-  "f2": "✔ Modern equipment",
+  "f1": "Fast appointments",
+  "f2": "Modern equipment",
   "sv_e": "Services",
   "sv_h": "How we can help",
   "sv_p": "Diagnosis and treatment of ENT conditions, plus ultrasound examinations.",
@@ -670,6 +700,21 @@ window.I18N={
    "Pediatric ENT"
   ],
   "title": "Orlent Medical — ENT center & ultrasound diagnostics",
-  "desc": "Orlent Medical: diagnosis and treatment of ear, nose and throat conditions, ultrasound exams. Book online."
+  "desc": "Orlent Medical: diagnosis and treatment of ear, nose and throat conditions, ultrasound exams. Book online.",
+  "tr": [
+   "Modern equipment",
+   "Experienced doctors",
+   "Sterile & safe",
+   "ENT + ultrasound in one place"
+  ],
+  "cta_h": "Take a step toward your health today",
+  "cta_p": "Book an appointment — we'll find a convenient time.",
+  "more": "Book now",
+  "rights": "All rights reserved",
+  "mb_call": "Call",
+  "mb_book": "Book",
+  "hv_t": "ENT center",
+  "menu": "Menu",
+  "dr_ph": "Photo coming soon"
  }
 };
