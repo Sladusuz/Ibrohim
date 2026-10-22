@@ -69,7 +69,7 @@ function render() {
   $('list').innerHTML = rows.map((r) => `
     <div class="req">
       <div class="row"><b>#${r.id} ${esc(r.name)}</b><small>${new Date(r.createdAt).toLocaleString('uz-UZ')}</small></div>
-      <div><a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>${r.sent ? '' : ' <span class="badge">Telegramga yetmadi</span>'}</div>
+      <div><a href="tel:${esc(r.phone)}">${esc(r.phone)}</a> <span class="badge">${r.source === 'bot' ? 'Bot' : 'Sayt'}</span>${r.tgUser ? ' ' + esc(r.tgUser) : ''}${r.sent ? '' : ' <span class="badge">Telegramga yetmadi</span>'}</div>
       ${r.message ? `<div>${esc(r.message)}</div>` : ''}
       <div class="row">
         <select data-id="${r.id}">${Object.entries(L).map(([k, v]) => `<option value="${k}" ${r.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
