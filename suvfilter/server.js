@@ -86,13 +86,16 @@ const send = (chat_id, text, extra = {}) => tg('sendMessage', { chat_id, text, p
 const REMOVE_KB = { remove_keyboard: true };
 
 async function sendWelcome(chat_id) {
-  const photo = new Blob([fs.readFileSync(path.join(__dirname, 'public', 'product.jpg'))], { type: 'image/jpeg' });
+  const pro = path.join(__dirname, 'public', 'product-pro.png');
+  const hasPro = fs.existsSync(pro);
+  const file = hasPro ? pro : path.join(__dirname, 'public', 'product.jpg');
+  const photo = new Blob([fs.readFileSync(file)], { type: hasPro ? 'image/png' : 'image/jpeg' });
   const form = new FormData();
   form.append('chat_id', String(chat_id));
   form.append('caption', WELCOME);
   form.append('parse_mode', 'HTML');
   form.append('reply_markup', JSON.stringify(MENU));
-  form.append('photo', photo, 'product.jpg');
+  form.append('photo', photo, hasPro ? 'product.png' : 'product.jpg');
   const r = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, { method: 'POST', body: form });
   if (!(await r.json()).ok) await send(chat_id, WELCOME, { reply_markup: MENU });
 }
