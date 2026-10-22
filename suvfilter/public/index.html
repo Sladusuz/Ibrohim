@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suv Filter Samarqand — suv tozalash filtrlari</title>
+<meta name="description" content="Samarqandda suv filtrlarini o'rnatish, xizmat ko'rsatish va almashtirish. Zayavka qoldiring — tez orada bog'lanamiz.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap bar">
+    <a class="logo" href="#">💧 Suv Filter <span>Samarqand</span></a>
+    <nav>
+      <a href="#services">Xizmatlar</a>
+      <a href="#why">Afzalliklar</a>
+      <a href="#contact">Aloqa</a>
+      <a class="btn small" href="#apply">Zayavka</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>Uyingizga toza va sog'lom ichimlik suvi</h1>
+    <p>Suv filtrlarini tanlash, o'rnatish va xizmat ko'rsatish. Samarqand bo'ylab.</p>
+    <a class="btn" href="#apply">Bepul maslahat olish</a>
+  </div>
+</section>
+
+<section id="services" class="wrap block">
+  <h2>Xizmatlarimiz</h2>
+  <div class="grid">
+    <div class="card"><b>🚰 Filtr o'rnatish</b><p>Uy, ofis va ishlab chiqarish uchun filtrlarni professional o'rnatish.</p></div>
+    <div class="card"><b>🔧 Xizmat ko'rsatish</b><p>Filtrlarni tekshirish, tozalash va ta'mirlash.</p></div>
+    <div class="card"><b>♻️ Kartrij almashtirish</b><p>Asl ehtiyot qismlar va kartrijlarni o'z vaqtida almashtirish.</p></div>
+    <div class="card"><b>💬 Maslahat</b><p>Suv sifatiga qarab eng mos filtrni tanlashda yordam.</p></div>
+  </div>
+</section>
+
+<section id="why" class="alt">
+  <div class="wrap block">
+    <h2>Nega biz?</h2>
+    <div class="grid">
+      <div class="card"><b>⚡ Tez</b><p>Zayavkadan keyin tez orada bog'lanamiz.</p></div>
+      <div class="card"><b>✅ Kafolat</b><p>O'rnatish va mahsulotlarga kafolat.</p></div>
+      <div class="card"><b>💰 Hamyonbop</b><p>Shaffof narxlar, yashirin to'lovlarsiz.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="apply" class="wrap block">
+  <h2>Zayavka qoldiring</h2>
+  <form id="form" class="form">
+    <input name="name" placeholder="Ismingiz" required maxlength="100">
+    <input name="phone" type="tel" placeholder="Telefon: +998 90 123 45 67" required maxlength="30">
+    <textarea name="message" placeholder="Xabar (ixtiyoriy)" rows="3" maxlength="1000"></textarea>
+    <input name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button class="btn" type="submit">Yuborish</button>
+    <p id="status" role="status"></p>
+  </form>
+</section>
+
+<footer id="contact" class="foot">
+  <div class="wrap">
+    <b>Suv Filter Samarqand</b>
+    <p>📍 Samarqand · 📞 +998 __ ___ __ __ · ✈️ <a href="https://t.me/suvfiltersamarqand_bot">@suvfiltersamarqand_bot</a></p>
+  </div>
+</footer>
+
+<script>
+const form = document.getElementById('form'), st = document.getElementById('status');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = form.querySelector('button');
+  btn.disabled = true; st.className = ''; st.textContent = 'Yuborilmoqda...';
+  try {
+    const r = await fetch('/api/requests', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error);
+    form.reset(); st.className = 'ok'; st.textContent = '✅ Rahmat! Zayavkangiz qabul qilindi, tez orada bog\'lanamiz.';
+  } catch (err) { st.className = 'err'; st.textContent = err.message || 'Xatolik. Qayta urinib ko\'ring.'; }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>

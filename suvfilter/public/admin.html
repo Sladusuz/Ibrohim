@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin panel — Suv Filter</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body{background:var(--bg)}
+.login{max-width:340px;margin:12vh auto;background:#fff;padding:24px;border-radius:14px;border:1px solid var(--line);display:grid;gap:12px}
+.login input{padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit}
+.panel{max-width:1000px;margin:0 auto;padding:16px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.info{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:12px 0}
+.tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;cursor:pointer;font:inherit}
+.tabs button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.req{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:grid;gap:6px}
+.req .row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+.req small{color:#6a8196}
+select,.link{font:inherit;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.del{color:#c62828}
+.badge{font-size:12px;padding:2px 8px;border-radius:10px;background:#e8f3fb}
+.hide{display:none}
+code{background:#eef3f7;padding:2px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<form id="login" class="login">
+  <h2 style="margin:0">Admin kirish</h2>
+  <input name="user" placeholder="Login" autocomplete="username" required>
+  <input name="password" type="password" placeholder="Parol" autocomplete="current-password" required>
+  <button class="btn">Kirish</button>
+  <p id="lerr" class="err" style="margin:0;text-align:center"></p>
+</form>
+
+<div id="panel" class="panel hide">
+  <div class="head"><h2 style="margin:0">Zayavkalar</h2>
+    <div><button class="link" id="test">Telegram testi</button> <button class="link" id="out">Chiqish</button></div></div>
+  <div class="info" id="info"></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="list"></div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const L = { new: 'Yangi', progress: 'Jarayonda', done: 'Bajarildi' };
+let data = { requests: [] }, filter = 'all';
+const api = async (url, opt = {}) => {
+  const r = await fetch(url, { ...opt, headers: { 'Content-Type': 'application/json' } });
+  if (r.status === 401 && url.startsWith('/api/admin')) { show(false); throw new Error('auth'); }
+  const j = await r.json(); if (!r.ok) throw new Error(j.error); return j;
+};
+const show = (on) => { $('login').classList.toggle('hide', on); $('panel').classList.toggle('hide', !on); };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+async function load() {
+  data = await api('/api/admin/requests'); show(true); render();
+}
+function render() {
+  $('info').innerHTML = data.chats
+    ? `✅ Telegram ulangan chatlar: <b>${data.chats}</b>`
+    : `⚠️ Telegram ulanmagan. Botga <code>/start ${esc(data.bindCode)}</code> deb yozing: <a href="https://t.me/suvfiltersamarqand_bot">@suvfiltersamarqand_bot</a>`;
+  const counts = { all: data.requests.length };
+  Object.keys(L).forEach((k) => counts[k] = data.requests.filter((r) => r.status === k).length);
+  $('tabs').innerHTML = ['all', ...Object.keys(L)].map((k) =>
+    `<button data-f="${k}" class="${filter === k ? 'on' : ''}">${k === 'all' ? 'Hammasi' : L[k]} (${counts[k]})</button>`).join('');
+  const rows = data.requests.filter((r) => filter === 'all' || r.status === filter);
+  $('list').innerHTML = rows.map((r) => `
+    <div class="req">
+      <div class="row"><b>#${r.id} ${esc(r.name)}</b><small>${new Date(r.createdAt).toLocaleString('uz-UZ')}</small></div>
+      <div><a href="tel:${esc(r.phone)}">${esc(r.phone)}</a>${r.sent ? '' : ' <span class="badge">Telegramga yetmadi</span>'}</div>
+      ${r.message ? `<div>${esc(r.message)}</div>` : ''}
+      <div class="row">
+        <select data-id="${r.id}">${Object.entries(L).map(([k, v]) => `<option value="${k}" ${r.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
+        <button class="link del" data-del="${r.id}">O'chirish</button>
+      </div>
+    </div>`).join('') || '<p style="text-align:center;color:#6a8196">Zayavkalar yo\'q</p>';
+}
+$('tabs').onclick = (e) => { if (e.target.dataset.f) { filter = e.target.dataset.f; render(); } };
+$('list').onchange = async (e) => { if (e.target.dataset.id) { await api('/api/admin/requests/' + e.target.dataset.id, { method: 'PATCH', body: JSON.stringify({ status: e.target.value }) }); load(); } };
+$('list').onclick = async (e) => {
+  const id = e.target.dataset.del;
+  if (id && confirm('Zayavka o\'chirilsinmi?')) { await api('/api/admin/requests/' + id, { method: 'DELETE' }); load(); }
+};
+$('test').onclick = async () => { try { await api('/api/admin/test', { method: 'POST' }); alert('Test xabar yuborildi'); } catch (e) { alert(e.message); } };
+$('out').onclick = async () => { await api('/api/logout', { method: 'POST' }); show(false); };
+$('login').onsubmit = async (e) => {
+  e.preventDefault(); $('lerr').textContent = '';
+  try { await api('/api/login', { method: 'POST', body: JSON.stringify(Object.fromEntries(new FormData(e.target))) }); load(); }
+  catch (err) { $('lerr').textContent = err.message; }
+};
+load().catch(() => {});
+</script>
+</body>
+</html>
