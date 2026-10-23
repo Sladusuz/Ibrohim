@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dr. Xayot — Xirurg Stomatolog</title>
+<meta name="description" content="Dr. Xayot — xirurg stomatolog. 8 yillik tajriba: tish sug'urish, davolash, protezlash, professional tozalash. Qabulga yoziling: +998 99 840 14 48">
+<meta name="theme-color" content="#070b14">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 240'%3E%3Cpath d='M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z' fill='%235eead4'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="loader" id="loader" aria-hidden="true">
+  <svg viewBox="0 0 200 240" class="loader-tooth"><path pathLength="1" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></svg>
+  <div class="loader-num"><span id="loadNum">0</span>%</div>
+</div>
+
+<div class="progress" id="progress"></div>
+<div class="cursor" id="cursor"></div>
+
+<header class="nav" id="nav">
+  <a href="#top" class="logo" aria-label="Dr. Xayot">
+    <svg viewBox="0 0 200 240"><path d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></svg>
+    <span>Dr. Xayot</span>
+  </a>
+  <nav class="links" id="links">
+    <a href="#about">Shifokor</a>
+    <a href="#services">Xizmatlar</a>
+    <a href="#lab">Tashxis</a>
+    <a href="#process">Jarayon</a>
+    <a href="#faq">Savollar</a>
+    <a href="#contact" class="links-cta">Qabulga yozilish</a>
+  </nav>
+  <a href="tel:+998998401448" class="nav-call magnetic" aria-label="Qo'ng'iroq qilish">
+    <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg>
+    <b>99 840 14 48</b>
+  </a>
+  <button class="burger" id="burger" aria-label="Menyu" aria-expanded="false"><i></i><i></i></button>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero">
+  <canvas id="bg" aria-hidden="true"></canvas>
+  <div class="glow g1"></div><div class="glow g2"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <p class="eyebrow reveal"><span class="dot"></span> Xirurg stomatolog · 8 yillik tajriba</p>
+      <h1 class="split">Sog'lom tish — <em>sizning</em> eng go'zal tabassumingiz</h1>
+      <p class="lead reveal">Tish sug'urish, davolash va protezlash — og'riqsiz, zamonaviy uskunalarda va har bir bemorga alohida e'tibor bilan.</p>
+      <div class="hero-btns reveal">
+        <a href="#contact" class="btn primary magnetic"><span>Qabulga yozilish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#lab" class="btn ghost magnetic"><span>Bepul maslahat</span></a>
+      </div>
+      <ul class="hero-facts reveal">
+        <li><b data-count="8">0</b><span>yillik tajriba</span></li>
+        <li><b data-count="1878" data-sep>0</b><span>kuzatuvchi</span></li>
+        <li><b data-count="304">0</b><span>nashr</span></li>
+      </ul>
+    </div>
+
+    <div class="hero-visual reveal">
+      <div class="orbit">
+        <svg class="ring-text" viewBox="0 0 300 300"><defs><path id="circ" d="M150 150m-125 0a125 125 0 1 1 250 0a125 125 0 1 1-250 0"/></defs><text><textPath href="#circ">XIRURG STOMATOLOG • TISH SUG'URISH • DAVOLASH • PROTEZ • </textPath></text></svg>
+        <div class="photo tilt"><img src="img/doctor.jpg" alt="Dr. Xayot — xirurg stomatolog" width="900" height="900" fetchpriority="high"></div>
+        <div class="chip c1"><i></i>Og'riqsiz davolash</div>
+        <div class="chip c2"><i></i>Bepul maslahat</div>
+        <div class="chip c3"><i></i>IIV poliklinikasi</div>
+      </div>
+    </div>
+  </div>
+  <a href="#about" class="scroll-hint" aria-label="Pastga"><i></i></a>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Tish sug'urish</span><b>✦</b><span>Davolash</span><b>✦</b><span>Protezlash</span><b>✦</b><span>Professional tozalash</span><b>✦</b><span>Gingivit</span><b>✦</b><span>Parodontit</span><b>✦</b>
+    <span>Tish sug'urish</span><b>✦</b><span>Davolash</span><b>✦</b><span>Protezlash</span><b>✦</b><span>Professional tozalash</span><b>✦</b><span>Gingivit</span><b>✦</b><span>Parodontit</span><b>✦</b>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-media reveal">
+      <div class="frame"><img src="img/consult.jpg" alt="Bemor bilan maslahat" loading="lazy"></div>
+      <div class="frame small"><img src="img/xray.jpg" alt="Rentgen tahlili" loading="lazy"></div>
+      <div class="badge"><b>8+</b><span>yil amaliyot</span></div>
+    </div>
+    <div class="about-text">
+      <p class="eyebrow reveal"><span class="dot"></span> Shifokor haqida</p>
+      <h2 class="split">Tish — shunchaki davolanmaydi, <em>asraladi</em></h2>
+      <p class="reveal">Dr. Xayot — IIV Stomatologiya poliklinikasida ishlovchi xirurg stomatolog. U tish sug'urish, davolash va protezlash bo'yicha sakkiz yillik amaliyotga ega.</p>
+      <p class="reveal">Ijtimoiy tarmoqdagi sahifasida u gingivit, parodontit va tish kasalliklarining oldini olish haqida muntazam tushuntirib boradi — chunki to'g'ri ma'lumot, to'g'ri davolashning yarmi.</p>
+      <ul class="ticks reveal">
+        <li>Aniq tashxis va ochiq muloqot</li>
+        <li>Toza, steril va zamonaviy kabinet</li>
+        <li>Davolashdan keyin ham maslahat</li>
+      </ul>
+      <a href="https://www.instagram.com/dr_xayot" target="_blank" rel="noopener" class="btn ghost magnetic reveal"><span>Instagram sahifasi</span><svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec services" id="services">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="dot"></span> Xizmatlar</p>
+    <h2 class="split">Sizga kerakli <em>barcha</em> yo'nalishlar</h2>
+    <div class="acc" id="acc">
+      <article class="panel active" tabindex="0">
+        <img src="img/surgery.jpg" alt="" loading="lazy">
+        <div class="shade"></div>
+        <span class="no">01</span>
+        <div class="body"><h3>Tish sug'urish</h3><p>Xirurgik yondashuv, sifatli og'riqsizlantirish va tiklanish bo'yicha aniq tavsiyalar.</p></div>
+      </article>
+      <article class="panel" tabindex="0">
+        <img src="img/clinic1.jpg" alt="" loading="lazy">
+        <div class="shade"></div>
+        <span class="no">02</span>
+        <div class="body"><h3>Tish davolash</h3><p>Kariyes va asoratlarni erta bosqichda aniqlash hamda tishni saqlab qolish.</p></div>
+      </article>
+      <article class="panel" tabindex="0">
+        <img src="img/aligner.jpg" alt="" loading="lazy">
+        <div class="shade"></div>
+        <span class="no">03</span>
+        <div class="body"><h3>Protezlash</h3><p>Yo'qolgan tishlarni tiklash — qulay, chiroyli va tabiiy ko'rinishda.</p></div>
+      </article>
+      <article class="panel" tabindex="0">
+        <img src="img/tools.jpg" alt="" loading="lazy">
+        <div class="shade"></div>
+        <span class="no">04</span>
+        <div class="body"><h3>Professional tozalash</h3><p>Tosh va karashni olib tashlash, milk salomatligini saqlash.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- LAB -->
+<section class="sec lab" id="lab">
+  <div class="wrap lab-grid">
+    <div class="lab-text">
+      <p class="eyebrow reveal"><span class="dot"></span> Interaktiv tashxis</p>
+      <h2 class="split">Tishingizda <em>nima</em> bo'layotganini bilib oling</h2>
+      <p class="reveal">Tishdagi nuqtalarni bosing — eng ko'p uchraydigan holatlar va ularning belgilari bilan tanishing.</p>
+      <div class="info reveal" id="info" aria-live="polite">
+        <h3 id="infoT">Kariyes</h3>
+        <p id="infoP">Emal yemirilishidan boshlanadi. Dastlab qora dog' yoki shirinlikka sezgirlik bo'lishi mumkin. Erta davolansa, tishni to'liq saqlab qolish oson.</p>
+        <small>Bu umumiy ma'lumot, tashxis emas. Aniq tashxis uchun shifokorga ko'rining.</small>
+      </div>
+    </div>
+    <div class="lab-visual reveal">
+      <div class="tooth-stage tilt" id="stage">
+        <svg viewBox="0 0 200 240" class="tooth">
+          <defs>
+            <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#e9f3f1"/><stop offset="1" stop-color="#a9cfc9"/></linearGradient>
+            <filter id="sh"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#5eead4" flood-opacity=".35"/></filter>
+          </defs>
+          <path filter="url(#sh)" fill="url(#tg)" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/>
+          <path fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3" stroke-linecap="round" d="M52 52c4-14 16-22 30-24"/>
+        </svg>
+        <button class="hot on" data-k="0" style="left:50%;top:14%" aria-label="Kariyes"><i></i></button>
+        <button class="hot" data-k="1" style="left:22%;top:50%" aria-label="Gingivit"><i></i></button>
+        <button class="hot" data-k="2" style="left:78%;top:52%" aria-label="Parodontit"><i></i></button>
+        <button class="hot" data-k="3" style="left:50%;top:82%" aria-label="Tish toshi"><i></i></button>
+        <span class="ring r1"></span><span class="ring r2"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec process" id="process">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="dot"></span> Jarayon</p>
+    <h2 class="split">Qabuldan <em>tabassumgacha</em></h2>
+    <ol class="steps" id="steps">
+      <li class="reveal"><span class="n">1</span><div><h3>Bog'lanish</h3><p>Qo'ng'iroq qiling yoki Telegram orqali yozing — qulay vaqtni birga tanlaymiz.</p></div></li>
+      <li class="reveal"><span class="n">2</span><div><h3>Ko'rik va tashxis</h3><p>Holatni ko'rib chiqamiz, kerak bo'lsa rentgen qilamiz va muammoni tushuntirib beramiz.</p></div></li>
+      <li class="reveal"><span class="n">3</span><div><h3>Davolash</h3><p>Reja kelishilgach, qulay va og'riqsiz davolash boshlanadi.</p></div></li>
+      <li class="reveal"><span class="n">4</span><div><h3>Parvarish</h3><p>Tiklanish va kundalik gigiena bo'yicha aniq tavsiyalar olasiz.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<!-- GALLERY STRIP -->
+<section class="strip" aria-label="Klinika">
+  <div class="strip-row" id="strip">
+    <img src="img/clinic2.jpg" alt="Zamonaviy stomatologik kabinet" loading="lazy">
+    <img src="img/care.jpg" alt="Og'iz gigiyenasi" loading="lazy">
+    <img src="img/tools.jpg" alt="Stomatologik asboblar" loading="lazy">
+    <img src="img/consult.jpg" alt="Maslahat" loading="lazy">
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec faq" id="faq">
+  <div class="wrap faq-grid">
+    <div>
+      <p class="eyebrow reveal"><span class="dot"></span> Savollar</p>
+      <h2 class="split">Ko'p so'raladigan <em>savollar</em></h2>
+    </div>
+    <div class="qa reveal">
+      <details open><summary>Tish sug'urish og'riqlimi?</summary><p>Jarayon mahalliy og'riqsizlantirish ostida o'tadi, shuning uchun og'riq sezilmaydi. Shifokor har bir bosqichni oldindan tushuntiradi.</p></details>
+      <details><summary>Qabulga qanday yozilaman?</summary><p>+998 99 840 14 48 raqamiga qo'ng'iroq qiling yoki Telegram orqali yozing. Telegramda tish bo'yicha bepul maslahat ham beriladi.</p></details>
+      <details><summary>Tishni qanchalik tez-tez tozalatish kerak?</summary><p>Odatda professional tozalash yiliga 1–2 marta tavsiya etiladi. Aniq muddatni shifokor holatingizga qarab aytadi.</p></details>
+      <details><summary>Milk qonashi nimadan darak beradi?</summary><p>Bu gingivit yoki parodontit belgisi bo'lishi mumkin. Bunday holda kechiktirmay shifokorga murojaat qilish kerak.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="sec contact" id="contact">
+  <div class="wrap">
+    <div class="cta-card">
+      <div class="glow g3"></div>
+      <div class="cta-text">
+        <p class="eyebrow"><span class="dot"></span> Qabul uchun yoziling</p>
+        <h2 class="split">Tabassum sari <em>birinchi qadam</em></h2>
+        <p>Ma'lumotlaringizni qoldiring — Telegram orqali shifokorga tayyor xabar yuboriladi.</p>
+        <ul class="contacts">
+          <li><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg><a href="tel:+998998401448">+998 99 840 14 48</a></li>
+          <li><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>IIV Stomatologiya poliklinikasi</span></li>
+          <li><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r=".6"/></svg><a href="https://www.instagram.com/dr_xayot" target="_blank" rel="noopener">@dr_xayot</a></li>
+        </ul>
+      </div>
+      <form class="form" id="form" novalidate>
+        <label>Ismingiz<input name="name" autocomplete="name" placeholder="Ism familiya" required></label>
+        <label>Telefon<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+998 __ ___ __ __" required></label>
+        <label>Xizmat
+          <select name="svc">
+            <option>Maslahat</option><option>Tish sug'urish</option><option>Tish davolash</option><option>Protezlash</option><option>Professional tozalash</option>
+          </select>
+        </label>
+        <button class="btn primary magnetic" type="submit"><span>Telegramda yuborish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <p class="note" id="note"></p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <a href="#top" class="logo"><svg viewBox="0 0 200 240"><path d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></svg><span>Dr. Xayot</span></a>
+    <p>© <span id="yr"></span> Dr. Xayot · Xirurg stomatolog</p>
+  </div>
+</footer>
+
+<div class="dock" id="dock">
+  <a href="tel:+998998401448" class="btn primary"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg><span>Qo'ng'iroq</span></a>
+  <a href="#contact" class="btn ghost"><span>Qabulga yozilish</span></a>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
