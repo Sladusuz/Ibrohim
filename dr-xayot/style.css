@@ -272,10 +272,10 @@ h2{font-size:clamp(2rem,7vw,4rem);margin-bottom:clamp(20px,4vw,40px);max-width:1
 .smile-grid{display:grid;gap:36px;align-items:center}
 .smile-p{color:var(--mute);max-width:44ch}
 .fine{font-size:.78rem;margin-top:12px;color:var(--mute)}
-.ba{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);aspect-ratio:600/260;background:#0b1224;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.ba{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3;background:#0b1224;touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .ba-layer{position:absolute;inset:0}
-.ba-layer svg{width:100%;height:100%;display:block}
-.ba-layer.after{clip-path:inset(0 0 0 var(--x));background:radial-gradient(circle at 70% 50%,rgba(94,234,212,.28),transparent 60%),#0b1224}
+.ba-layer img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.ba-layer.after{clip-path:inset(0 0 0 var(--x))}
 .ba .tag{position:absolute;top:12px;padding:5px 12px;border-radius:99px;background:rgba(7,11,20,.7);backdrop-filter:blur(8px);font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
 .tag.l{left:12px}.tag.r{right:12px;color:var(--mint)}
 .ba-line{position:absolute;top:0;bottom:0;left:var(--x);width:2px;margin-left:-1px;background:var(--ink);pointer-events:none}
