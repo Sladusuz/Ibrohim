@@ -155,6 +155,41 @@
     });
   }
 
+  // studio
+  const SC = [
+    ["Implant o'rnatish", "Yo'qolgan tish ildizi o'rniga titan vint o'rnatiladi, ustiga esa tabiiy ko'rinishdagi qoplama (koronka) qo'yiladi.", ["Tekshiruv va reja", "Implant o'rnatish", "Koronka"]],
+    ["Plomba qo'yish", "Kariesli qism tozalanadi, kovak maxsus material bilan to'ldiriladi va yorug'lik nuri bilan qotiriladi.", ["Kariesni tozalash", "Kovakni to'ldirish", "Nur bilan qotirish"]],
+    ["Professional tozalash (chistka)", "Ultratovush yordamida tish toshi va karash olinadi, tishlar silliq va toza bo'lib qoladi.", ["Ultratovush bilan tozalash", "Karash va toshni olish", "Silliqlash"]],
+    ["Tish sug'urish", "Mahalliy og'riqsizlantirishdan so'ng tish ehtiyotkorlik bilan chiqariladi. Tiklanish bo'yicha tavsiyalar beriladi.", ["Og'riqsizlantirish", "Ehtiyotkor sug'urish", "Tiklanish bo'yicha tavsiya"]],
+    ["Protez va koronka", "Yo'qolgan yoki shikastlangan tishlar o'rniga chiroyli va qulay qoplama yoki ko'prik o'rnatiladi.", ["Tayyorlash va o'lchov", "Protezni yasash", "O'rnatish va moslash"]],
+    ["Tishni oqartirish", "Tozalashdan keyin maxsus gel va yorug'lik yordamida tishlar bir necha tonga ochiladi.", ["Tozalash", "Gel va nur", "Natijani saqlash"]]
+  ];
+  const stage = $('#studioStage'), scs = $$('.sc', stage), tabs = $$('#tabs button'), si = $('#stepInfo');
+  let cur = 0;
+  const play = () => { stage.classList.remove('play'); void stage.offsetWidth; stage.classList.add('play'); };
+  const show = k => {
+    cur = k;
+    tabs.forEach((t, i) => t.classList.toggle('on', i === k));
+    scs.forEach((s, i) => s.classList.toggle('on', i === k));
+    const [t, d, l] = SC[k];
+    $('#siT').textContent = t; $('#siP').textContent = d;
+    $('#siL').innerHTML = l.map(x => `<li>${x}</li>`).join('');
+    si.classList.remove('swap'); void si.offsetWidth; si.classList.add('swap');
+    play();
+  };
+  tabs.forEach((t, i) => t.addEventListener('click', () => { show(i); t.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }));
+  $('#replay').addEventListener('click', play);
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { play(); o.disconnect(); } }, { threshold: .35 }).observe(stage);
+
+  // before / after
+  const ba = $('#ba'), baR = $('#baR');
+  baR.addEventListener('input', () => ba.style.setProperty('--x', baR.value + '%'));
+  if (!reduce) new IntersectionObserver(([e], o) => {
+    if (!e.isIntersecting) return; o.disconnect();
+    let t0 = performance.now();
+    (function a(t) { const k = (t - t0) / 1800; if (k > 1) return; const v = 50 + Math.sin(k * Math.PI * 2) * 30 * (1 - k); ba.style.setProperty('--x', v + '%'); baR.value = v; requestAnimationFrame(a); })(t0);
+  }, { threshold: .6 }).observe(ba);
+
   // form → telegram
   const form = $('#form'), note = $('#note');
   form.addEventListener('submit', e => {
