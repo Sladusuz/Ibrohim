@@ -291,3 +291,16 @@ em{font-style:normal;color:var(--sun)}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* chip row (procedure picker) */
+.chiprow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 calc(var(--gut)*-1) 16px;padding:2px var(--gut) 6px;scroll-padding:0 var(--gut)}
+.chiprow::-webkit-scrollbar{display:none}
+.chiprow button{flex:none;min-height:46px;padding:0 20px;border-radius:99px;background:#e6dfd5;font-weight:700;font-size:.86rem;color:var(--mute);transition:all .4s var(--spring)}
+.chiprow button.on{background:var(--g);color:#fff;transform:scale(1.04);box-shadow:0 10px 20px -10px rgba(15,95,86,.7)}
+.how{counter-reset:h;display:grid;gap:10px;margin:0 0 4px}
+.how li{counter-increment:h;display:flex;gap:12px;align-items:flex-start;font-size:.92rem;line-height:1.45;color:var(--mute);animation:up .6s var(--ease) both;animation-delay:calc(var(--n,0)*70ms)}
+.how li::before{content:counter(h);flex:none;width:26px;height:26px;border-radius:9px;background:var(--sand);color:#7a5210;display:grid;place-items:center;font-weight:800;font-size:.8rem}
+.spec{display:flex;flex-wrap:wrap;gap:8px}
+.spec span{padding:9px 16px;border-radius:99px;background:var(--card);font-weight:700;font-size:.84rem;box-shadow:0 8px 18px -14px rgba(22,37,42,.6)}
+.spec span:nth-child(3n+1){background:var(--sage)}.spec span:nth-child(3n+2){background:var(--blush)}.spec span:nth-child(3n){background:var(--sand)}
+@media (min-width:1000px){.chiprow{margin:0 0 16px;padding-left:0;flex-wrap:wrap;overflow:visible}}
