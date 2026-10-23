@@ -153,8 +153,17 @@
     lightBtn.setAttribute('aria-pressed', on);
     $('span', lightBtn).textContent = on ? 'Yoritishni o\'chirish' : 'Yoritishni yoqish';
   };
-  lightBtn.addEventListener('click', () => setLights(!hero.classList.contains('on-lights')));
-  if (reduce) setLights(true);
+  // the full-light image is only needed once lights go on: fetch it after the page is idle or on first click
+  let fullLoaded = false;
+  const loadFull = () => { if (fullLoaded) return; fullLoaded = true; imgFull.src = matchMedia('(max-width: 900px)').matches ? imgFull.dataset.srcM : imgFull.dataset.src; };
+  addEventListener('load', () => setTimeout(loadFull, 2500), { once: true });
+  lightBtn.addEventListener('click', () => { loadFull(); setLights(!hero.classList.contains('on-lights')); });
+  if (reduce) { loadFull(); setLights(true); }
+
+  /* ================= lazy background for the feature block ================= */
+  const feat = $('.feature');
+  const setBg = () => feat.style.setProperty('--fbg', 'url(' + feat.dataset.bg + ')');
+  if (hasIO) { const bo = new IntersectionObserver(es => { if (es[0].isIntersecting) { setBg(); bo.disconnect(); } }, { rootMargin: '600px 0px' }); bo.observe(feat); } else setBg();
 
   /* ================= service panels ================= */
   const pns = $$('.pn');

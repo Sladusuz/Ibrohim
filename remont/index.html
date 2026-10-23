@@ -8,8 +8,10 @@
 <meta name="theme-color" content="#0a0907">
 <meta property="og:title" content="VIP REMONT | Pod klyuch remont va dizayn">
 <meta property="og:description" content="Orzuyingizdagi uyni biz bilan quring. Premium dizayn asosida pod klyuch remont.">
-<meta property="og:image" content="img/i1.jpg">
-<link rel="icon" href="img/logo.jpg">
+<meta property="og:image" content="img/og.jpg">
+<link rel="icon" href="img/favicon.png">
+<link rel="preload" as="image" href="img/stock/lounge_dark-m.webp" media="(max-width:900px)" fetchpriority="high">
+<link rel="preload" as="image" href="img/stock/lounge_dark.webp" media="(min-width:901px)" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -19,7 +21,7 @@
 
 <div class="curtain" aria-hidden="true">
   <div class="curtain__half"></div><div class="curtain__half"></div>
-  <div class="curtain__logo"><img src="img/logo.jpg" alt=""><span>VIP REMONT</span></div>
+  <div class="curtain__logo"><img src="img/logo.webp" alt=""><span>VIP REMONT</span></div>
 </div>
 <div class="progress" id="progress"></div>
 <div class="cur" id="cur" aria-hidden="true"><i></i><b></b></div>
@@ -27,7 +29,7 @@
 <!-- NAV -->
 <header class="nav" id="nav">
   <a href="#top" class="brand" aria-label="VIP REMONT, bosh sahifa">
-    <img src="img/logo.jpg" alt="" width="44" height="44"><span>VIP <b>REMONT</b></span>
+    <img src="img/logo.webp" alt="" width="44" height="44"><span>VIP <b>REMONT</b></span>
   </a>
   <nav class="nav__links" id="navLinks" aria-label="Asosiy menyu">
     <a href="#xizmatlar" data-s="xizmatlar">Xizmatlar</a>
@@ -74,9 +76,9 @@
 <!-- HERO: light follows the cursor / finger -->
 <section class="hero" id="hero" data-section="top">
   <div class="scene" id="scene" aria-hidden="true">
-    <img class="scene__dark" id="imgDark" src="img/stock/lounge_dark.jpg" alt="" fetchpriority="high">
-    <div class="spot" id="spot"><img id="imgLit" src="img/stock/lounge.jpg" alt=""></div>
-    <img class="scene__full" id="imgFull" src="img/stock/lounge.jpg" alt="">
+    <picture><source media="(max-width:900px)" srcset="img/stock/lounge_dark-m.webp"><img class="scene__dark" id="imgDark" src="img/stock/lounge_dark.webp" alt="" fetchpriority="high"></picture>
+    <div class="spot" id="spot"><picture><source media="(max-width:900px)" srcset="img/stock/lounge-m.webp"><img id="imgLit" src="img/stock/lounge.webp" alt=""></picture></div>
+    <img class="scene__full" id="imgFull" data-src="img/stock/lounge.webp" data-src-m="img/stock/lounge-m.webp" alt="">
   </div>
   <div class="hero__shade"></div>
 
@@ -133,23 +135,23 @@
   </header>
   <div class="pns" id="pns">
     <article class="pn on" tabindex="0" data-cur="Ochish">
-      <img src="img/stock/blueprint.jpg" alt="" loading="lazy" decoding="async">
+      <img src="img/stock/blueprint.webp" alt="" loading="lazy" decoding="async">
       <div class="pn__in"><span class="pn__n">01</span><h3>Dizayn loyiha</h3><p>Reja, 3D vizualizatsiya va materiallar tanlovi. Siz uyni qurilishdan oldin ko'rasiz.</p></div>
     </article>
     <article class="pn" tabindex="0" data-cur="Ochish">
-      <img src="img/stock/build.jpg" alt="" loading="lazy" decoding="async">
+      <img src="img/stock/build.webp" alt="" loading="lazy" decoding="async">
       <div class="pn__in"><span class="pn__n">02</span><h3>Qurilish va ta'mirlash</h3><p>Suvoq, kafel, pol, shiftlar va malyarka. Sifatli materiallar, nazorat ostida.</p></div>
     </article>
     <article class="pn" tabindex="0" data-cur="Ochish">
-      <img src="img/stock/entry.jpg" alt="" loading="lazy" decoding="async">
+      <img src="img/stock/entry.webp" alt="" loading="lazy" decoding="async">
       <div class="pn__in"><span class="pn__n">03</span><h3>Elektr ishlari</h3><p>Xavfsiz elektr tizimlari, yashirin LED yoritish va nuqtalarning aniq rejasi.</p></div>
     </article>
     <article class="pn" tabindex="0" data-cur="Ochish">
-      <img src="img/stock/bath.jpg" alt="" loading="lazy" decoding="async">
+      <img src="img/stock/bath.webp" alt="" loading="lazy" decoding="async">
       <div class="pn__in"><span class="pn__n">04</span><h3>Santexnika ishlari</h3><p>Toza suv va kanalizatsiya tizimlari. Ishonchli montaj va sinov.</p></div>
     </article>
     <article class="pn" tabindex="0" data-cur="Ochish">
-      <img src="img/stock/loft.jpg" alt="" loading="lazy" decoding="async">
+      <img src="img/stock/loft.webp" alt="" loading="lazy" decoding="async">
       <div class="pn__in"><span class="pn__n">05</span><h3>Mebel va interyer</h3><p>Mebel tanlovi, joylashuvi va dekor. Uy to'liq yakunlanadi.</p></div>
     </article>
   </div>
@@ -163,8 +165,8 @@
     <p class="sec-sub" data-r>Chiziqni chapga va o'ngga suring, ikki uslubni solishtiring.</p>
   </header>
   <div class="cmp" id="cmp" data-r data-cur="Surish">
-    <img class="cmp__a" src="img/stock/classic.jpg" alt="Neoklassika uslubidagi mehmonxona" loading="lazy" decoding="async">
-    <img class="cmp__b" src="img/stock/loft.jpg" alt="Minimalizm uslubidagi mehmonxona" loading="lazy" decoding="async">
+    <img class="cmp__a" src="img/stock/classic.webp" alt="Neoklassika uslubidagi mehmonxona" loading="lazy" decoding="async">
+    <img class="cmp__b" src="img/stock/loft.webp" alt="Minimalizm uslubidagi mehmonxona" loading="lazy" decoding="async">
     <span class="cmp__tag cmp__tag--l">Minimalizm</span>
     <span class="cmp__tag cmp__tag--r">Neoklassika</span>
     <div class="cmp__bar" id="cmpBar" role="slider" tabindex="0" aria-label="Uslublarni solishtirish" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50"><i></i></div>
@@ -189,18 +191,18 @@
     <button data-f="hammom">Hammom</button>
   </div>
   <div class="grid" id="grid">
-    <figure class="g" data-c="kirish" data-full="img/i1.jpg" data-cur="Ko'rish"><img src="img/i1.jpg" alt="Yoritilgan oval ko'zgu bilan kirish zonasi" loading="lazy" decoding="async"><figcaption><small>Kirish zonasi</small>LED oval ko'zgu</figcaption></figure>
-    <figure class="g" data-c="mehmonxona" data-full="img/i3.jpg" data-cur="Ko'rish"><img src="img/i3.jpg" alt="Neoklassika uslubidagi TV zona" loading="lazy" decoding="async"><figcaption><small>Mehmonxona</small>Neoklassika TV zona</figcaption></figure>
-    <figure class="g" data-c="mehmonxona" data-full="img/i5.jpg" data-cur="Ko'rish"><img src="img/i5.jpg" alt="Yog'och panelli TV zona" loading="lazy" decoding="async"><figcaption><small>Mehmonxona</small>Yog'och panel va LED</figcaption></figure>
-    <figure class="g" data-c="kirish" data-full="img/i2.jpg" data-cur="Ko'rish"><img src="img/i2.jpg" alt="Katta ko'zgu va konsol" loading="lazy" decoding="async"><figcaption><small>Kirish zonasi</small>Konsol va ko'zgu</figcaption></figure>
-    <figure class="g" data-c="mehmonxona" data-full="img/i4.jpg" data-cur="Ko'rish"><img src="img/i4.jpg" alt="Qora konsolli minimalizm TV zona" loading="lazy" decoding="async"><figcaption><small>Mehmonxona</small>Minimalizm</figcaption></figure>
-    <figure class="g g--s" data-c="yotoqxona" data-full="img/stock/bedroom.jpg" data-cur="Ko'rish"><img src="img/stock/bedroom.jpg" alt="Premium yotoqxona" loading="lazy" decoding="async"><figcaption><small>Yotoqxona</small>Premium yotoqxona<em>Namuna</em></figcaption></figure>
-    <figure class="g g--s" data-c="hammom" data-full="img/stock/bath.jpg" data-cur="Ko'rish"><img src="img/stock/bath.jpg" alt="Zamonaviy hammom" loading="lazy" decoding="async"><figcaption><small>Hammom</small>Zamonaviy hammom<em>Namuna</em></figcaption></figure>
-    <figure class="g g--s" data-c="kirish" data-full="img/stock/entry.jpg" data-cur="Ko'rish"><img src="img/stock/entry.jpg" alt="Yog'och shiftli kirish zonasi" loading="lazy" decoding="async"><figcaption><small>Kirish zonasi</small>Yog'och shift<em>Namuna</em></figcaption></figure>
+    <figure class="g" data-c="kirish" data-full="img/i1.webp" data-cur="Ko'rish"><img src="img/i1.webp" alt="Yoritilgan oval ko'zgu bilan kirish zonasi" loading="lazy" decoding="async"><figcaption><small>Kirish zonasi</small>LED oval ko'zgu</figcaption></figure>
+    <figure class="g" data-c="mehmonxona" data-full="img/i3.webp" data-cur="Ko'rish"><img src="img/i3.webp" alt="Neoklassika uslubidagi TV zona" loading="lazy" decoding="async"><figcaption><small>Mehmonxona</small>Neoklassika TV zona</figcaption></figure>
+    <figure class="g" data-c="mehmonxona" data-full="img/i5.webp" data-cur="Ko'rish"><img src="img/i5.webp" alt="Yog'och panelli TV zona" loading="lazy" decoding="async"><figcaption><small>Mehmonxona</small>Yog'och panel va LED</figcaption></figure>
+    <figure class="g" data-c="kirish" data-full="img/i2.webp" data-cur="Ko'rish"><img src="img/i2.webp" alt="Katta ko'zgu va konsol" loading="lazy" decoding="async"><figcaption><small>Kirish zonasi</small>Konsol va ko'zgu</figcaption></figure>
+    <figure class="g" data-c="mehmonxona" data-full="img/i4.webp" data-cur="Ko'rish"><img src="img/i4.webp" alt="Qora konsolli minimalizm TV zona" loading="lazy" decoding="async"><figcaption><small>Mehmonxona</small>Minimalizm</figcaption></figure>
+    <figure class="g g--s" data-c="yotoqxona" data-full="img/stock/bedroom.webp" data-cur="Ko'rish"><img src="img/stock/bedroom.webp" alt="Premium yotoqxona" loading="lazy" decoding="async"><figcaption><small>Yotoqxona</small>Premium yotoqxona<em>Namuna</em></figcaption></figure>
+    <figure class="g g--s" data-c="hammom" data-full="img/stock/bath.webp" data-cur="Ko'rish"><img src="img/stock/bath.webp" alt="Zamonaviy hammom" loading="lazy" decoding="async"><figcaption><small>Hammom</small>Zamonaviy hammom<em>Namuna</em></figcaption></figure>
+    <figure class="g g--s" data-c="kirish" data-full="img/stock/entry.webp" data-cur="Ko'rish"><img src="img/stock/entry.webp" alt="Yog'och shiftli kirish zonasi" loading="lazy" decoding="async"><figcaption><small>Kirish zonasi</small>Yog'och shift<em>Namuna</em></figcaption></figure>
   </div>
   <p class="grid__note" data-r>«Namuna» belgisi qo'yilgan rasmlar uslub namunasi. Qolganlari VIP REMONT loyihalari.</p>
 
-  <div class="feature" data-r style="--fbg:url(img/stock/night.jpg)">
+  <div class="feature" data-r data-bg="img/stock/night.webp">
     <div class="feature__txt">
       <p class="eyebrow"><span class="line"></span>Joriy loyiha</p>
       <h3>Honabod Avenue</h3>
@@ -210,7 +212,7 @@
         <a class="btn btn--ghost btn--sm" href="https://t.me/vip_remont_uz" target="_blank" rel="noopener"><i class="ico ico-tg"></i><span>Telegram</span></a>
       </div>
     </div>
-    <img src="img/poster1.jpg" alt="Pod klyuch xizmati, VIP Master jamoasi" loading="lazy" decoding="async">
+    <img src="img/poster1.webp" alt="Pod klyuch xizmati, VIP Master jamoasi" loading="lazy" decoding="async">
   </div>
 </section>
 
@@ -222,10 +224,10 @@
   </header>
   <ol class="tl" id="tl">
     <li class="tl__line" aria-hidden="true"><span id="tlFill"></span></li>
-    <li class="tl__it"><div class="tl__card" data-r><b>1</b><h3>Uchrashuv va o'lchov</h3><p>Xohish-istaklaringizni eshitamiz, obyektni o'lchaymiz va bepul dastlabki hisob-kitob beramiz.</p></div><img class="tl__img" data-r src="img/stock/blueprint.jpg" alt="" loading="lazy" decoding="async"></li>
-    <li class="tl__it"><div class="tl__card" data-r><b>2</b><h3>Dizayn loyiha</h3><p>Reja, 3D vizualizatsiya va materiallar bo'yicha aniq smeta tasdiqlanadi.</p></div><img class="tl__img" data-r src="img/i3.jpg" alt="" loading="lazy" decoding="async"></li>
-    <li class="tl__it"><div class="tl__card" data-r><b>3</b><h3>Qurilish va pardozlash</h3><p>Elektrika, santexnika, suvoq, pol, shiftlar. Belgilangan muddatda va nazorat ostida.</p></div><img class="tl__img" data-r src="img/stock/build.jpg" alt="" loading="lazy" decoding="async"></li>
-    <li class="tl__it"><div class="tl__card" data-r><b>4</b><h3>Topshirish va kafolat</h3><p>Tayyor uyni qabul qilasiz. Barcha ishlarga 100% sifat kafolati beramiz.</p></div><img class="tl__img" data-r src="img/stock/bedroom.jpg" alt="" loading="lazy" decoding="async"></li>
+    <li class="tl__it"><div class="tl__card" data-r><b>1</b><h3>Uchrashuv va o'lchov</h3><p>Xohish-istaklaringizni eshitamiz, obyektni o'lchaymiz va bepul dastlabki hisob-kitob beramiz.</p></div><img class="tl__img" data-r src="img/stock/blueprint.webp" alt="" loading="lazy" decoding="async"></li>
+    <li class="tl__it"><div class="tl__card" data-r><b>2</b><h3>Dizayn loyiha</h3><p>Reja, 3D vizualizatsiya va materiallar bo'yicha aniq smeta tasdiqlanadi.</p></div><img class="tl__img" data-r src="img/i3.webp" alt="" loading="lazy" decoding="async"></li>
+    <li class="tl__it"><div class="tl__card" data-r><b>3</b><h3>Qurilish va pardozlash</h3><p>Elektrika, santexnika, suvoq, pol, shiftlar. Belgilangan muddatda va nazorat ostida.</p></div><img class="tl__img" data-r src="img/stock/build.webp" alt="" loading="lazy" decoding="async"></li>
+    <li class="tl__it"><div class="tl__card" data-r><b>4</b><h3>Topshirish va kafolat</h3><p>Tayyor uyni qabul qilasiz. Barcha ishlarga 100% sifat kafolati beramiz.</p></div><img class="tl__img" data-r src="img/stock/bedroom.webp" alt="" loading="lazy" decoding="async"></li>
   </ol>
 </section>
 
@@ -330,7 +332,7 @@
 <footer class="footer">
   <div class="footer__big" aria-hidden="true">VIP REMONT</div>
   <div class="footer__row">
-    <div class="brand"><img src="img/logo.jpg" alt="" width="44" height="44"><span>VIP <b>REMONT</b></span></div>
+    <div class="brand"><img src="img/logo.webp" alt="" width="44" height="44"><span>VIP <b>REMONT</b></span></div>
     <p>&copy; <span id="year">2025</span> VIP REMONT uz. Barcha huquqlar himoyalangan.</p>
     <div class="footer__soc">
       <a href="https://www.instagram.com/vip_remont_uz" target="_blank" rel="noopener" aria-label="Instagram"><i class="ico ico-ig"></i></a>
