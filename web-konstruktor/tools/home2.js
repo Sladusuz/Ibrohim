@@ -4,10 +4,222 @@ const H = require('./home'), { T, SHOW, SHOWN, CHATCSS } = H;
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const strip = (s) => String(s == null ? '' : s).replace(/\*/g, '');
 const X = {
-  uz: { tarBotNote: "Buyurtma Telegramda rasmiylashtiriladi va shu yerning o'zida to'lanadi. To'lovdan keyin buyurtmangiz qabul qilinadi.", ord: 'Buyurtma berish', tarT: 'Tariflar', tarS: 'Xizmatni tanlang, so\'ng buyurtma qoldiring: 1 soat ichida bog\'lanamiz.', tarSite: "O'zingiz yarating", tarSiteS: 'Shablon tanlang, matnni o\'zgartiring. Bir martalik to\'lov.', tarBotS: 'Oddiy bot $15, katalog +$20, mini ilova +$20', tarGo: 'Buyurtma qoldirish', tarFor: 'Buyurtma: ', eye: 'Toshkent · veb-studiya', login: 'Kirish', signup: "Ro'yxatdan o'tish", signupS: "Ro'yxat", cab: 'Kabinet', hb1: 'Shablonlar', hb2: 'Buyurtma berish', galAll: 'Barcha shablonlar', galMoreT: 'Va yana ko\'plab shablonlar', galMoreS: 'Veb-saytlar va vizitkalar: hammasini ko\'ring va o\'zingizga mosini tanlang', hv: ['⚡ 5 daqiqada', '💰 $10 dan', '🤖 Telegram bot'], scroll: 'Pastga suring', st: [['Tanlang', "32 ta kasbiy shablondan o'zingizga mosini."], ['Sozlang', 'Matn, rasm, rang: bepul, natija darrov ko\'rinadi.'], ['Ishga tushiring', 'Sayt va bot tayyor, bir kunda.'], ['Mijozlar keladi', "Bot javob beradi, lid sizga Telegramda keladi."]], notif: [['Yangi buyurtma', 'Telegram · hozir'], ['Uchrashuv band qilindi', 'Ertaga 15:00'], ['Yangi lid', "+998 90 ··· ·· 67"]], galH: "Har kasbga <em>tayyor</em>", galP: "Pastga aylantiring: har biri haqiqiy, jonli sayt.", live: 'Jonli ochish', feH: "Hammasi bitta <em>joyda</em>", rows: [['Premium shablonlar', 'Restoran, klinika, barber, rieltor va yana 28 kasb.'], ['Telegram bot 24/7', "Uch tilda o'zi javob beradi, lidni sizga yetkazadi."], ['3 tilda sayt', "O'zbek, rus, ingliz: uch bozor, bitta platforma."], ['Kunlik hisobot', 'Har kuni Telegramda: mijoz, lid, javobsiz savollar.'], ['Boshqaruv paneli', 'Lidlar va statistika telefoningizda.'], ['Uchrashuv band qilish', 'Mijoz vaqtni o\'zi tanlaydi, eslatma ikkingizga ham keladi.']] },
-  ru: { tarBotNote: 'Заказ оформляется в Telegram и оплачивается там же. После оплаты заказ принимается.', ord: 'Заказать', tarT: 'Тарифы', tarS: 'Выберите услугу и оставьте заявку: свяжемся в течение часа.', tarSite: 'Создайте сами', tarSiteS: 'Выберите шаблон и измените текст. Разовая оплата.', tarBotS: 'Простой бот $15, каталог +$20, мини-приложение +$20', tarGo: 'Оставить заявку', tarFor: 'Заказ: ', eye: 'Ташкент · веб-студия', login: 'Вход', signup: 'Регистрация', signupS: 'Регистрация', cab: 'Кабинет', hb1: 'Шаблоны', hb2: 'Заказать', galAll: 'Все шаблоны', galMoreT: 'И ещё много шаблонов', galMoreS: 'Сайты и визитки: посмотрите все и выберите свой', hv: ['⚡ За 5 минут', '💰 от $10', '🤖 Telegram-бот'], scroll: 'Листайте вниз', st: [['Выберите', 'Из 32 отраслевых шаблонов выберите свой.'], ['Настройте', 'Текст, фото, цвета: бесплатно, результат сразу.'], ['Запустите', 'Сайт и бот готовы за один день.'], ['Приходят клиенты', 'Бот отвечает, лид приходит вам в Telegram.']], notif: [['Новый заказ', 'Telegram · сейчас'], ['Встреча назначена', 'Завтра 15:00'], ['Новый лид', '+998 90 ··· ·· 67']], galH: 'Для каждой профессии <em>готово</em>', galP: 'Листайте вниз: каждый пример это настоящий живой сайт.', live: 'Открыть вживую', feH: 'Всё в <em>одном</em> месте', rows: [['Премиум-шаблоны', 'Рестораны, клиники, барберы, риелторы и ещё 28 профессий.'], ['Telegram-бот 24/7', 'Отвечает сам на трёх языках, лиды приходят вам.'], ['Сайт на 3 языках', 'Узбекский, русский, английский: три рынка, одна платформа.'], ['Ежедневный отчёт', 'Каждый день в Telegram: клиенты, лиды, вопросы без ответа.'], ['Панель управления', 'Лиды и статистика в телефоне.'], ['Запись на встречу', 'Клиент выбирает время, напоминание получаете оба.']] },
-  en: { tarBotNote: 'The order is placed and paid right inside Telegram. After payment it is accepted.', ord: 'Place an order', tarT: 'Pricing', tarS: 'Pick a service, then leave an order: we reply within an hour.', tarSite: 'Build it yourself', tarSiteS: 'Pick a template and edit the text. One-time payment.', tarBotS: 'Basic bot $15, catalog +$20, mini app +$20', tarGo: 'Place an order', tarFor: 'Order: ', eye: 'Tashkent · web studio', login: 'Log in', signup: 'Sign up', signupS: 'Sign up', cab: 'Account', hb1: 'Templates', hb2: 'Place an order', galAll: 'All templates', galMoreT: 'And many more templates', galMoreS: 'Websites and link-in-bio pages: browse them all and pick yours', hv: ['⚡ In 5 minutes', '💰 From $10', '🤖 Telegram bot'], scroll: 'Scroll down', st: [['Choose', 'Pick yours from 32 trade templates.'], ['Customize', 'Text, photos, colors: free, see it instantly.'], ['Launch', 'Site and bot ready in one day.'], ['Clients arrive', 'The bot replies, the lead reaches you on Telegram.']], notif: [['New order', 'Telegram · just now'], ['Meeting booked', 'Tomorrow 15:00'], ['New lead', '+998 90 ··· ·· 67']], galH: 'Ready for <em>every</em> trade', galP: 'Keep scrolling: each one is a real, live website.', live: 'Open live', feH: 'Everything in <em>one</em> place', rows: [['Premium templates', 'Restaurants, clinics, barbers, realtors and 28 more trades.'], ['Telegram bot 24/7', 'Replies by itself in three languages, leads reach you.'], ['Site in 3 languages', 'Uzbek, Russian, English: three markets, one platform.'], ['Daily report', 'Every day in Telegram: customers, leads, unanswered questions.'], ['Control panel', 'Leads and stats on your phone.'], ['Meeting booking', 'The customer picks a time, both get a reminder.']] },
+  uz: { pfTag: "Portfolio", pfH: "Biz yaratgan <em>haqiqiy</em> loyihalar", pfP: "Jonli sayt va GitHub'dagi loyihalarimiz: har biri o'z biznesi uchun alohida o'ylab yaratilgan.", pfOpen: "Saytni ochish", pfCode: "Kod", tarBotNote: "Buyurtma Telegramda rasmiylashtiriladi va shu yerning o'zida to'lanadi. To'lovdan keyin buyurtmangiz qabul qilinadi.", ord: 'Buyurtma berish', tarT: 'Tariflar', tarS: 'Xizmatni tanlang, so\'ng buyurtma qoldiring: 1 soat ichida bog\'lanamiz.', tarSite: "O'zingiz yarating", tarSiteS: 'Shablon tanlang, matnni o\'zgartiring. Bir martalik to\'lov.', tarBotS: 'Oddiy bot $15, katalog +$20, mini ilova +$20', tarGo: 'Buyurtma qoldirish', tarFor: 'Buyurtma: ', eye: 'Toshkent · veb-studiya', login: 'Kirish', signup: "Ro'yxatdan o'tish", signupS: "Ro'yxat", cab: 'Kabinet', hb1: 'Shablonlar', hb2: 'Buyurtma berish', galAll: 'Barcha shablonlar', galMoreT: 'Va yana ko\'plab shablonlar', galMoreS: 'Veb-saytlar va vizitkalar: hammasini ko\'ring va o\'zingizga mosini tanlang', hv: ['⚡ 5 daqiqada', '💰 $10 dan', '🤖 Telegram bot'], scroll: 'Pastga suring', st: [['Tanlang', "32 ta kasbiy shablondan o'zingizga mosini."], ['Sozlang', 'Matn, rasm, rang: bepul, natija darrov ko\'rinadi.'], ['Ishga tushiring', 'Sayt va bot tayyor, bir kunda.'], ['Mijozlar keladi', "Bot javob beradi, lid sizga Telegramda keladi."]], notif: [['Yangi buyurtma', 'Telegram · hozir'], ['Uchrashuv band qilindi', 'Ertaga 15:00'], ['Yangi lid', "+998 90 ··· ·· 67"]], galH: "Har kasbga <em>tayyor</em>", galP: "Pastga aylantiring: har biri haqiqiy, jonli sayt.", live: 'Jonli ochish', feH: "Hammasi bitta <em>joyda</em>", rows: [['Premium shablonlar', 'Restoran, klinika, barber, rieltor va yana 28 kasb.'], ['Telegram bot 24/7', "Uch tilda o'zi javob beradi, lidni sizga yetkazadi."], ['3 tilda sayt', "O'zbek, rus, ingliz: uch bozor, bitta platforma."], ['Kunlik hisobot', 'Har kuni Telegramda: mijoz, lid, javobsiz savollar.'], ['Boshqaruv paneli', 'Lidlar va statistika telefoningizda.'], ['Uchrashuv band qilish', 'Mijoz vaqtni o\'zi tanlaydi, eslatma ikkingizga ham keladi.']] },
+  ru: { pfTag: "Портфолио", pfH: "Реальные проекты, которые мы <em>создали</em>", pfP: "Живые сайты и проекты на GitHub: каждый создан под задачи конкретного бизнеса.", pfOpen: "Открыть сайт", pfCode: "Код", tarBotNote: 'Заказ оформляется в Telegram и оплачивается там же. После оплаты заказ принимается.', ord: 'Заказать', tarT: 'Тарифы', tarS: 'Выберите услугу и оставьте заявку: свяжемся в течение часа.', tarSite: 'Создайте сами', tarSiteS: 'Выберите шаблон и измените текст. Разовая оплата.', tarBotS: 'Простой бот $15, каталог +$20, мини-приложение +$20', tarGo: 'Оставить заявку', tarFor: 'Заказ: ', eye: 'Ташкент · веб-студия', login: 'Вход', signup: 'Регистрация', signupS: 'Регистрация', cab: 'Кабинет', hb1: 'Шаблоны', hb2: 'Заказать', galAll: 'Все шаблоны', galMoreT: 'И ещё много шаблонов', galMoreS: 'Сайты и визитки: посмотрите все и выберите свой', hv: ['⚡ За 5 минут', '💰 от $10', '🤖 Telegram-бот'], scroll: 'Листайте вниз', st: [['Выберите', 'Из 32 отраслевых шаблонов выберите свой.'], ['Настройте', 'Текст, фото, цвета: бесплатно, результат сразу.'], ['Запустите', 'Сайт и бот готовы за один день.'], ['Приходят клиенты', 'Бот отвечает, лид приходит вам в Telegram.']], notif: [['Новый заказ', 'Telegram · сейчас'], ['Встреча назначена', 'Завтра 15:00'], ['Новый лид', '+998 90 ··· ·· 67']], galH: 'Для каждой профессии <em>готово</em>', galP: 'Листайте вниз: каждый пример это настоящий живой сайт.', live: 'Открыть вживую', feH: 'Всё в <em>одном</em> месте', rows: [['Премиум-шаблоны', 'Рестораны, клиники, барберы, риелторы и ещё 28 профессий.'], ['Telegram-бот 24/7', 'Отвечает сам на трёх языках, лиды приходят вам.'], ['Сайт на 3 языках', 'Узбекский, русский, английский: три рынка, одна платформа.'], ['Ежедневный отчёт', 'Каждый день в Telegram: клиенты, лиды, вопросы без ответа.'], ['Панель управления', 'Лиды и статистика в телефоне.'], ['Запись на встречу', 'Клиент выбирает время, напоминание получаете оба.']] },
+  en: { pfTag: "Portfolio", pfH: "Real projects we have <em>built</em>", pfP: "Live sites and GitHub projects: each one crafted for a specific business.", pfOpen: "Open site", pfCode: "Code", tarBotNote: 'The order is placed and paid right inside Telegram. After payment it is accepted.', ord: 'Place an order', tarT: 'Pricing', tarS: 'Pick a service, then leave an order: we reply within an hour.', tarSite: 'Build it yourself', tarSiteS: 'Pick a template and edit the text. One-time payment.', tarBotS: 'Basic bot $15, catalog +$20, mini app +$20', tarGo: 'Place an order', tarFor: 'Order: ', eye: 'Tashkent · web studio', login: 'Log in', signup: 'Sign up', signupS: 'Sign up', cab: 'Account', hb1: 'Templates', hb2: 'Place an order', galAll: 'All templates', galMoreT: 'And many more templates', galMoreS: 'Websites and link-in-bio pages: browse them all and pick yours', hv: ['⚡ In 5 minutes', '💰 From $10', '🤖 Telegram bot'], scroll: 'Scroll down', st: [['Choose', 'Pick yours from 32 trade templates.'], ['Customize', 'Text, photos, colors: free, see it instantly.'], ['Launch', 'Site and bot ready in one day.'], ['Clients arrive', 'The bot replies, the lead reaches you on Telegram.']], notif: [['New order', 'Telegram · just now'], ['Meeting booked', 'Tomorrow 15:00'], ['New lead', '+998 90 ··· ·· 67']], galH: 'Ready for <em>every</em> trade', galP: 'Keep scrolling: each one is a real, live website.', live: 'Open live', feH: 'Everything in <em>one</em> place', rows: [['Premium templates', 'Restaurants, clinics, barbers, realtors and 28 more trades.'], ['Telegram bot 24/7', 'Replies by itself in three languages, leads reach you.'], ['Site in 3 languages', 'Uzbek, Russian, English: three markets, one platform.'], ['Daily report', 'Every day in Telegram: customers, leads, unanswered questions.'], ['Control panel', 'Leads and stats on your phone.'], ['Meeting booking', 'The customer picks a time, both get a reminder.']] },
 };
+const PF = [
+ {
+  "id": "suvfilter",
+  "name": "Aura Cebilon Pro",
+  "url": "https://auracebilion.uz/",
+  "repo": "Sladusuz/suvfilter",
+  "k": {
+   "uz": "Sayt · zayavka · Telegram bot",
+   "ru": "Сайт · заявки · Telegram-бот",
+   "en": "Site · leads · Telegram bot"
+  },
+  "d": {
+   "uz": "Samarqanddagi suv filtri sotuvi: zayavka formasi, admin panel va Telegram bot.",
+   "ru": "Продажа фильтров для воды в Самарканде: форма заявки, админ-панель и Telegram-бот.",
+   "en": "Water filter sales in Samarkand: lead form, admin panel and a Telegram bot."
+  },
+  "t": [
+   "Cloudflare Workers",
+   "Telegram bot",
+   "Admin panel"
+  ]
+ },
+ {
+  "id": "bisraro",
+  "name": "BISRARO",
+  "url": "https://bisraro.uz/",
+  "repo": "Sladusuz/Bisraro",
+  "k": {
+   "uz": "Premium brend sayti",
+   "ru": "Сайт премиум-бренда",
+   "en": "Premium brand site"
+  },
+  "d": {
+   "uz": "Shokolad va qandolat brendi: 5 sahifa, katalog, yutuqlar va aloqa.",
+   "ru": "Бренд шоколада и кондитерских изделий: 5 страниц, каталог, награды и контакты.",
+   "en": "Chocolate and confectionery brand: 5 pages, catalog, awards and contacts."
+  },
+  "t": [
+   "Statik sayt",
+   "SEO",
+   "5 sahifa"
+  ]
+ },
+ {
+  "id": "babusweet",
+  "name": "BabuSweet",
+  "url": "https://babusweet.uz/",
+  "repo": "Sladusuz/BabuSweet",
+  "k": {
+   "uz": "Fabrika sayti",
+   "ru": "Сайт фабрики",
+   "en": "Factory site"
+  },
+  "d": {
+   "uz": "Shokolad fabrikasi: uch tilli sayt, katalog, eksport va hamkorlik, admin panel.",
+   "ru": "Шоколадная фабрика: сайт на трёх языках, каталог, экспорт и партнёрство, админ-панель.",
+   "en": "Chocolate factory: a three-language site, catalog, export and partnership, admin panel."
+  },
+  "t": [
+   "UZ · RU · EN",
+   "Katalog",
+   "Admin"
+  ]
+ },
+ {
+  "id": "vipremont",
+  "name": "VIP REMONT",
+  "url": "https://vipremont.netlify.app/",
+  "repo": "Sladusuz/remont",
+  "k": {
+   "uz": "Xizmat kompaniyasi",
+   "ru": "Сайт компании",
+   "en": "Service company"
+  },
+  "d": {
+   "uz": "Toshkentdagi pod klyuch remont kompaniyasi uchun premium dizaynli sayt.",
+   "ru": "Сайт премиум-класса для ремонтной компании «под ключ» в Ташкенте.",
+   "en": "A premium-design site for a turnkey renovation company in Tashkent."
+  },
+  "t": [
+   "Statik sayt",
+   "Netlify",
+   "Premium dizayn"
+  ]
+ },
+ {
+  "id": "webcompany",
+  "name": "WebCompany.uz",
+  "url": "https://sladusuz.github.io/WebCompany/uz",
+  "repo": "Sladusuz/WebCompany",
+  "k": {
+   "uz": "IT-kompaniya sayti",
+   "ru": "Сайт IT-компании",
+   "en": "IT company site"
+  },
+  "d": {
+   "uz": "Animatsiyali sahifalar, portfolio, xizmatlar va murojaatlar admin paneli. 3 tilda.",
+   "ru": "Анимированные страницы, портфолио, услуги и админ-панель обращений. На 3 языках.",
+   "en": "Animated pages, portfolio, services and an inquiries admin panel. In 3 languages."
+  },
+  "t": [
+   "Next.js",
+   "Prisma",
+   "3 til"
+  ]
+ },
+ {
+  "id": "era",
+  "name": "ERA · Ustaxona",
+  "url": "https://sladusuz.github.io/ERA/",
+  "repo": "Sladusuz/ERA",
+  "k": {
+   "uz": "Sayt + admin panel",
+   "ru": "Сайт + админ-панель",
+   "en": "Site + admin panel"
+  },
+  "d": {
+   "uz": "Poyabzal tozalash va tiklash ustaxonasi: skroll animatsiya, oldin/keyin va zayavkalar.",
+   "ru": "Мастерская чистки и реставрации обуви: скролл-анимация, до/после и заявки.",
+   "en": "Shoe cleaning and restoration workshop: scroll animation, before/after and requests."
+  },
+  "t": [
+   "Animatsiya",
+   "Node.js",
+   "Zayavkalar"
+  ]
+ },
+ {
+  "id": "erauz",
+  "name": "ERA · Biznes platformasi",
+  "url": "https://era.uz/uz",
+  "repo": "",
+  "k": {
+   "uz": "Biznes tizimi",
+   "ru": "Бизнес-система",
+   "en": "Business platform"
+  },
+  "d": {
+   "uz": "Ishlab chiqarishdan sotish va hisobotgacha: har qanday biznes uchun yechimlar.",
+   "ru": "От производства до продаж и отчётов: решения для любого бизнеса.",
+   "en": "From production to sales and reports: solutions for any business."
+  },
+  "t": [
+   "3 til",
+   "Katalog",
+   "Hisobotlar"
+  ]
+ },
+ {
+  "id": "impro",
+  "name": "Impro IT",
+  "url": "https://improuzbekiston.uz/",
+  "repo": "Sladusuz/impro",
+  "k": {
+   "uz": "Sayt konstruktori",
+   "ru": "Конструктор сайтов",
+   "en": "Site builder"
+  },
+  "d": {
+   "uz": "Shablonli sayt konstruktori, Telegram bot yaratuvchi, vizitka-sayt va admin panel.",
+   "ru": "Конструктор сайтов на шаблонах, создатель Telegram-ботов, визитки и админ-панель.",
+   "en": "A template site builder, Telegram bot maker, link-in-bio sites and an admin panel."
+  },
+  "t": [
+   "Konstruktor",
+   "Telegram bot",
+   "Vizitka"
+  ]
+ },
+ {
+  "id": "klinika",
+  "name": "Orlent Medical",
+  "url": "",
+  "repo": "Sladusuz/klinika",
+  "k": {
+   "uz": "Klinika sayti",
+   "ru": "Сайт клиники",
+   "en": "Clinic site"
+  },
+  "d": {
+   "uz": "LOR markazi va UTT diagnostikasi uchun sayt: uch tilda, navbatga yozilish.",
+   "ru": "Сайт ЛОР-центра и УЗИ-диагностики: три языка, запись на приём.",
+   "en": "A site for an ENT center and ultrasound diagnostics: three languages, booking."
+  },
+  "t": [
+   "UZ · RU · EN",
+   "Statik sayt",
+   "Yozilish"
+  ]
+ },
+ {
+  "id": "market",
+  "name": "BabyCheer",
+  "url": "",
+  "repo": "Sladusuz/Market",
+  "k": {
+   "uz": "Onlayn do'kon",
+   "ru": "Интернет-магазин",
+   "en": "Online store"
+  },
+  "d": {
+   "uz": "Bolalar elektromobili do'koni: 3D ko'rinish, katalog, buyurtma va admin panel.",
+   "ru": "Магазин детских электромобилей: 3D-просмотр, каталог, заказы и админ-панель.",
+   "en": "A kids electric-car store: 3D view, catalog, orders and an admin panel."
+  },
+  "t": [
+   "3D ko'rinish",
+   "Supabase",
+   "Admin"
+  ]
+ }
+];
 module.exports = function home2({ site, lang, domain, templates, posts, relay, seo, base = '' }) {
   const t = T[lang], x = X[lang], pre = lang === 'uz' ? '' : '/' + lang, me = `${pre}${base}/`, ct = site.contacts || {};
   const sv = ((site.sections || []).find((s) => (s.services || []).length) || { services: [] }).services;
@@ -38,6 +250,7 @@ h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(56px,11.
 .rv{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}.rv.in{opacity:1;transform:none}
 .gal{position:relative;height:420vh}.gk{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:3.5vh;padding-top:70px}.gh{padding:0 5vw}.gh h2{font-size:clamp(34px,5.2vw,84px)}.gh .lead{margin-top:10px}.trk{display:flex;gap:3vw;padding:0 5vw;will-change:transform}.gc{flex:none;width:min(54vw,calc((100vh - 470px) * 1.6),880px);text-decoration:none;display:block}.gw{border-radius:18px;border:1px solid #ffffff33;background:#12101c;overflow:hidden;box-shadow:0 50px 100px #000a,0 0 90px #8a8fa62e;transition:transform .5s cubic-bezier(.2,.8,.2,1)}.gc:hover .gw{transform:translateY(-10px) rotateX(2deg)}.gv{position:relative}.ph{position:absolute;right:-1.5%;bottom:-9%;width:19%;aspect-ratio:1170/2532;border-radius:clamp(14px,2vw,30px);border:clamp(3px,.45vw,7px) solid #0d0b14;background:#0d0b14;overflow:hidden;box-shadow:0 30px 70px #000b,0 0 0 1px #ffffff3d;transition:transform .5s cubic-bezier(.2,.8,.2,1)}.ph:before{content:"";position:absolute;top:2.2%;left:50%;width:30%;height:2.4%;transform:translateX(-50%);background:#000;border-radius:99px;z-index:2}.ph img{width:100%;height:100%;display:block;object-fit:cover}.gc:hover .ph{transform:translateY(-14px)}.gw .bar{height:30px;display:flex;gap:7px;align-items:center;padding:0 14px;background:#1a1727}.gw .bar i{width:10px;height:10px;border-radius:50%;background:#3b3650}.gw .bar span{margin:0 auto;font:500 11px Inter,sans-serif;color:#8d87a8;background:#0e0c16;padding:3px 30px;border-radius:7px}.gw img{width:100%;height:auto;display:block;aspect-ratio:1440/900;object-fit:cover}.gm{display:flex;justify-content:space-between;align-items:center;margin-top:34px}.gm b{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(30px,3.6vw,54px);letter-spacing:-.02em}.gm span{padding:10px 20px;border-radius:99px;border:1px solid var(--line);background:var(--glass);font-weight:700;font-size:14px}.gc:hover .gm span{background:#fff;color:#0a0814}
 .nums{display:grid;grid-template-columns:repeat(4,1fr);padding:130px 5vw 40px;gap:20px}.nums div{border-top:1px solid var(--line);padding-top:22px}.nums b{display:block;font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(60px,10vw,170px);letter-spacing:-.04em;line-height:.9;background:linear-gradient(180deg,#efe9dc,#6f6a60);-webkit-background-clip:text;background-clip:text;color:transparent}.nums span{color:var(--mut);font-size:15px}
+.pf{padding:120px 5vw 40px}.pf h2{font-size:clamp(34px,5vw,72px);margin:14px 0 10px}.pfl{color:var(--mut);max-width:620px;font-size:clamp(15px,1.5vw,18px);margin:0}.pfg{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;margin-top:44px}.pfc{background:#ffffff0a;border:1px solid var(--line);border-radius:26px;overflow:hidden;display:flex;flex-direction:column;transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .4s}.pfc:hover{transform:translateY(-6px);border-color:#c8a86a88;box-shadow:0 30px 60px -30px #000}.pfi{position:relative;display:block;aspect-ratio:16/10;overflow:hidden;background:#15120d}.pfi img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform 1.6s cubic-bezier(.2,.8,.2,1)}.pfc:hover .pfi img{transform:scale(1.05)}.pfi:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 55%,#0a0a0bd9);pointer-events:none}.pfk{position:absolute;left:14px;top:14px;z-index:1;font:600 11px Inter,sans-serif;letter-spacing:.06em;color:var(--a);background:#0a0a0bb8;border:1px solid #c8a86a55;border-radius:99px;padding:6px 12px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}.pfb{padding:20px 22px 22px;display:flex;flex-direction:column;gap:8px;flex:1}.pfb h3{margin:0;font:400 28px 'Instrument Serif',serif;color:var(--ink)}.pfb p{margin:0;color:var(--mut);font-size:14px;line-height:1.55}.pft{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}.pft i{font:500 11.5px Inter,sans-serif;font-style:normal;color:#cfc7b6;background:#ffffff0f;border:1px solid var(--line);border-radius:99px;padding:4px 10px}.pfa{display:flex;gap:10px;margin-top:auto;padding-top:14px;flex-wrap:wrap}.pfo,.pfq{font:600 13.5px Inter,sans-serif;text-decoration:none;border-radius:12px;padding:11px 16px;transition:.2s}.pfo{background:linear-gradient(135deg,#e6d3a3,#c8a86a 55%,#a8802f);color:#1a1204}.pfq{color:var(--ink);background:#ffffff12;border:1px solid var(--line)}.pfq:hover{background:#ffffff22}@media(max-width:900px){.pf{padding:80px 16px 20px}.pfg{grid-template-columns:1fr}}
 .fe{padding:120px 5vw 40px}.row{display:grid;grid-template-columns:90px 1.1fr 1fr;gap:20px;align-items:baseline;padding:34px 0;border-top:1px solid var(--line);position:relative;transition:padding .45s cubic-bezier(.2,.8,.2,1)}.row:last-child{border-bottom:1px solid var(--line)}.row:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#c8a86a22,#8a8fa600);opacity:0;transition:opacity .4s;pointer-events:none}.row:hover{padding-left:20px}.row:hover:before{opacity:1}.row small{font:500 13px Inter,sans-serif;color:var(--m)}.row h3{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(32px,5vw,74px);letter-spacing:-.025em;line-height:1}.row p{color:var(--mut);font-size:17px}
 .chatc{margin:60px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:5vw;align-items:center}.chat{display:grid;gap:10px;font-size:15px;min-height:230px;align-content:end;padding:26px;border-radius:30px;background:linear-gradient(160deg,#ffffff12,#ffffff05);border:1px solid var(--line)}.chat span{padding:12px 16px;border-radius:18px;max-width:84%;opacity:0;transform:translateY(8px);transition:all .4s}.chat span.on{opacity:1;transform:none}.chat .u{background:linear-gradient(100deg,#e6d3a3,#c8a86a);color:#15110a;justify-self:end}.chat .a{background:#ffffff18}
 .pc{padding:120px 5vw 40px}.pr{display:grid;grid-template-columns:70px 1fr auto;gap:20px;align-items:center;padding:30px 0;border-top:1px solid var(--line);text-decoration:none;position:relative;transition:padding .45s cubic-bezier(.2,.8,.2,1)}.pr:last-of-type{border-bottom:1px solid var(--line)}.pr:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#c8a86a33,#e6d3a300);opacity:0;transition:opacity .4s}.pr:hover:before{opacity:1}.pr:hover{padding-left:22px;padding-right:22px}.pr>*{position:relative}.pr small{font:500 13px Inter,sans-serif;color:var(--a)}.pr h3{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(28px,4.2vw,62px);letter-spacing:-.025em;line-height:1}.pr em{display:block;font:400 italic 18px 'Instrument Serif',serif;color:var(--mut);margin-top:6px;font-size:20px}.pr .pv{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(30px,4.6vw,70px);letter-spacing:-.02em;text-align:right;white-space:nowrap}.pr .pv span{font-size:14px;color:var(--mut);font-weight:500;margin-right:8px;letter-spacing:0}.note{color:var(--mut);margin-top:24px;font-size:14px}
@@ -62,6 +275,7 @@ ${CHATCSS}
 <div class="dk">
 <section class="gal" id="namunalar"><div class="gk"><div class="gh"><div class="eb">${esc(t.shTag)}</div><h2>${x.galH}</h2><p class="lead">${esc(x.galP)}</p><a class="gall mg" href="/yaratish.html">${esc(x.galAll)} →</a></div><div class="trk" id="trk">${ids.map((id) => `<a class="gc" href="/demo/${id}/"><div class="gv"><div class="gw"><div class="bar"><i></i><i></i><i></i><span>${id}.${esc(domain)}</span></div><img src="/img/home/${id}-d.webp" alt="${esc(SHOWN[lang][id])}" loading="lazy" decoding="async" width="2880" height="1800"></div><div class="ph"><img src="/img/home/${id}-m.webp" alt="" loading="lazy" decoding="async" width="1170" height="2532"></div></div><div class="gm"><b>${esc(SHOWN[lang][id])}</b><span>${esc(x.live)} ↗</span></div></a>`).join('')}<a class="gc gend" href="/yaratish.html"><div class="gv ge"><b>${esc(x.galMoreT)}</b><p>${esc(x.galMoreS)}</p><span class="b1">${esc(x.galAll)} →</span></div></a></div></div></section>
 <div class="nums rv">${t.nums.map(([n, l]) => `<div><b data-n="${esc(num(n))}">${esc(num(n))}</b><span>${esc(l)}</span></div>`).join('')}</div>
+<section class="pf" id="ishlar"><div class="eb">${esc(x.pfTag)}</div><h2 class="rv">${x.pfH}</h2><p class="pfl rv">${esc(x.pfP)}</p><div class="pfg">${PF.map((p) => { const tg2 = p.url ? 'a' : 'div'; return `<article class="pfc rv"><${tg2} class="pfi"${p.url ? ` href="${esc(p.url)}" target="_blank" rel="noopener"` : ''}><img src="/img/portfolio/${p.id}.jpg" alt="${esc(p.name)}" width="960" height="600" loading="lazy" decoding="async"><span class="pfk">${esc(p.k[lang])}</span></${tg2}><div class="pfb"><h3>${esc(p.name)}</h3><p>${esc(p.d[lang])}</p><div class="pft">${p.t.map((q) => `<i>${esc(q)}</i>`).join('')}</div><div class="pfa">${p.url ? `<a class="pfo" href="${esc(p.url)}" target="_blank" rel="noopener">${esc(x.pfOpen)} ↗</a>` : ''}${p.repo ? `<a class="pfq" href="https://github.com/${esc(p.repo)}" target="_blank" rel="noopener">GitHub · ${esc(x.pfCode)}</a>` : ''}</div></div></article>`; }).join('')}</div></section>
 <section class="fe" id="imkon"><div class="eb">${esc(t.imTag)}</div><h2 class="rv">${x.feH}</h2><div class="chatc rv"><div class="chat" id="chatd"><span class="u">${esc(t.chat[0])}</span><span class="a">${esc(t.chat[1])}</span><span class="u">${esc(t.chat[2])}</span><span class="a">${esc(t.chat[3])}</span></div><p class="lead" style="margin:0">${esc(t.cards.bot[1])}</p></div><div style="margin-top:60px">${x.rows.map(([a, b], i) => `<div class="row rv"><small>0${i + 1}</small><h3>${esc(a)}</h3><p>${esc(b)}</p></div>`).join('')}</div></section>
 ${sv.length ? `<section class="pc" id="narx"><div class="eb">${esc(t.pcTag)}</div><h2 class="rv">${t.pcH}</h2><div style="margin-top:56px">${sv.map((s, i) => `<a class="pr rv" href="#kontakt"><small>0${i + 1}</small><div><h3>${esc(strip(s.name))}</h3><em>${esc(s.days || '')}</em></div><div class="pv"><span>${esc(t.from)}</span>${fmt(s.price)} <span style="margin:0">${esc(t.som)}</span></div></a>`).join('')}</div><p class="note">${esc(t.pcNote)}</p></section>` : ''}
 ${fq.length ? `<section class="faqs" id="faq"><div class="eb">${esc(t.fqTag)}</div><h2 class="rv">${t.fqH}</h2><div class="faq rv">${fq.map((q) => `<div class="fi"><button type="button" aria-expanded="false">${esc(strip(q.q))}</button><div><p>${esc(q.a)}</p></div></div>`).join('')}</div></section>` : ''}

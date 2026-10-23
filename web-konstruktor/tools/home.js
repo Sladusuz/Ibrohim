@@ -6,7 +6,7 @@ const strip = (s) => String(s == null ? '' : s).replace(/\*/g, '');
 const CHATCSS = fs.readFileSync(path.join(__dirname, 'home-chat.css'), 'utf8');
 const T = {
   uz: {
-    nav: [['namunalar', 'Shablonlar'], ['imkon', 'Imkoniyatlar'], ['narx', 'Narxlar'], ['faq', 'Savollar']], start: 'Boshlash',
+    nav: [['namunalar', 'Shablonlar'], ['imkon', 'Imkoniyatlar'], ['narx', 'Narxlar'], ['ishlar', 'Ishlarimiz'], ['faq', 'Savollar']], start: 'Boshlash',
     pill: '32 premium shablon · 3 til · Telegram bot 24/7', h1a: 'Sayt emas.', h1b: 'Mijoz oqimi.',
     sub: "Biznesingizni onlayn qimmat ko'rsatadigan sayt va mijozga o'zi javob beradigan bot. Soatlarda tayyor, telefonda benuqson.", b1: 'Saytni yaratish', b2: 'Jonli namunalar',
     chip1: ['Yangi buyurtma', 'Telegram bot · hozir'], chip2: ['24/7 avto-javob', "uz · ru · en tillarida"], chip3: ['suhbat', "so'nggi 7 kun"],
@@ -22,7 +22,7 @@ const T = {
     foot: ["Barcha huquqlar himoyalangan", 'Ommaviy oferta', 'Maxfiylik siyosati', 'Qaytarish', 'Blog', 'Investorlar uchun'], chatTitle: 'Yordam chati', hrs: 'Dush–Shan 9:00–18:00',
   },
   ru: {
-    nav: [['namunalar', 'Шаблоны'], ['imkon', 'Возможности'], ['narx', 'Цены'], ['faq', 'Вопросы']], start: 'Начать',
+    nav: [['namunalar', 'Шаблоны'], ['imkon', 'Возможности'], ['narx', 'Цены'], ['ishlar', 'Работы'], ['faq', 'Вопросы']], start: 'Начать',
     pill: '32 премиум-шаблона · 3 языка · Telegram-бот 24/7', h1a: 'Не просто сайт.', h1b: 'Поток клиентов.',
     sub: 'Сайт, который дорого показывает ваш бизнес, и бот, который сам отвечает клиентам. Готово за часы, безупречно на телефоне.', b1: 'Создать сайт', b2: 'Живые примеры',
     chip1: ['Новый заказ', 'Telegram-бот · сейчас'], chip2: ['Автоответ 24/7', 'на uz · ru · en'], chip3: ['диалогов', 'за 7 дней'],
@@ -38,7 +38,7 @@ const T = {
     foot: ['Все права защищены', 'Публичная оферта', 'Политика конфиденциальности', 'Возврат', 'Блог', 'Для инвесторов'], chatTitle: 'Чат поддержки', hrs: 'Пн–Сб 9:00–18:00',
   },
   en: {
-    nav: [['namunalar', 'Templates'], ['imkon', 'Features'], ['narx', 'Pricing'], ['faq', 'FAQ']], start: 'Get started',
+    nav: [['namunalar', 'Templates'], ['imkon', 'Features'], ['narx', 'Pricing'], ['ishlar', 'Our work'], ['faq', 'FAQ']], start: 'Get started',
     pill: '32 premium templates · 3 languages · Telegram bot 24/7', h1a: 'Not just a site.', h1b: 'A flow of clients.',
     sub: 'A website that makes your business look premium, and a bot that answers customers by itself. Ready in hours, flawless on mobile.', b1: 'Create a site', b2: 'Live examples',
     chip1: ['New order', 'Telegram bot · just now'], chip2: ['24/7 auto-reply', 'in uz · ru · en'], chip3: ['chats', 'last 7 days'],

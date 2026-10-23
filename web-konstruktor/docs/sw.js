@@ -1,5 +1,5 @@
-// Impro IT: oflayn ishlash va tezkor takroriy yuklash (v1792607518021)
-const V = 'impro-1792607518021';
+// Impro IT: oflayn ishlash va tezkor takroriy yuklash (v1792787214149)
+const V = 'impro-1792787214149';
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(caches.keys().then((k) => Promise.all(k.filter((x) => x !== V).map((x) => caches.delete(x)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', (e) => {
