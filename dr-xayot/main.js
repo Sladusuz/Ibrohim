@@ -114,8 +114,10 @@
       s.style.transform = `translateX(${-max * Math.max(0, Math.min(1, k))}px)`;
     }
   };
-  addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', onScroll);
+  let ticking = false;
+  const sched = () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; onScroll(); }); } };
+  addEventListener('scroll', sched, { passive: true });
+  addEventListener('resize', sched);
   onScroll();
 
   /* ---------- mobile menu ---------- */
@@ -167,8 +169,10 @@
     const test = document.createElement('canvas');
     if (!(test.getContext('webgl2') || test.getContext('webgl'))) throw new Error('no webgl');
     const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js');
-    const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, powerPreference: 'high-performance' });
-    renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+    const small = innerWidth < 900;
+    const renderer = new THREE.WebGLRenderer({ canvas: cv, antialias: !small, alpha: true, powerPreference: 'high-performance' });
+    let pr = Math.min(devicePixelRatio || 1, small ? 1.25 : 1.5);
+    renderer.setPixelRatio(pr);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
     const scene = new THREE.Scene();
@@ -195,20 +199,20 @@
     C(60, 0, 20, 25, 25, 80); C(28, 120, 45, 140, 50, 190); C(53, 220, 72, 225, 78, 190);
     C(82, 165, 90, 150, 100, 150); C(110, 150, 118, 165, 122, 190); C(128, 225, 147, 220, 150, 190);
     C(155, 140, 172, 120, 175, 80); C(180, 25, 140, 0, 100, 20);
-    const geo = new THREE.ExtrudeGeometry(sh, { depth: .9, bevelEnabled: true, bevelThickness: .55, bevelSize: .5, bevelSegments: 14, curveSegments: 56 });
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: .9, bevelEnabled: true, bevelThickness: .55, bevelSize: .5, bevelSegments: 6, curveSegments: 24 });
     geo.center();
-    const mat = new THREE.MeshPhysicalMaterial({ color: 0xfbf9f4, roughness: .2, metalness: 0, clearcoat: 1, clearcoatRoughness: .05, sheen: 1, sheenColor: new THREE.Color(0xffffff), sheenRoughness: .5, envMapIntensity: 1.1 });
+    const mat = new THREE.MeshStandardMaterial({ color: 0xfbf9f4, roughness: .22, metalness: 0, envMapIntensity: 1.25 });
     const tooth = new THREE.Mesh(geo, mat);
     const rig = new THREE.Group();
     rig.add(tooth);
 
     // orbit rings + sparks
     const ringMat = new THREE.MeshBasicMaterial({ color: 0x5eead4, transparent: true, opacity: .55 });
-    const r1 = new THREE.Mesh(new THREE.TorusGeometry(3.9, .012, 12, 220), ringMat);
-    const r2 = new THREE.Mesh(new THREE.TorusGeometry(4.7, .008, 12, 220), new THREE.MeshBasicMaterial({ color: 0x6aa7ff, transparent: true, opacity: .4 }));
+    const r1 = new THREE.Mesh(new THREE.TorusGeometry(3.9, .012, 6, 120), ringMat);
+    const r2 = new THREE.Mesh(new THREE.TorusGeometry(4.7, .008, 6, 120), new THREE.MeshBasicMaterial({ color: 0x6aa7ff, transparent: true, opacity: .4 }));
     r1.rotation.x = 1.15; r2.rotation.set(1.9, .4, .3);
     rig.add(r1, r2);
-    const N = 140, pos = new Float32Array(N * 3);
+    const N = small ? 50 : 90, pos = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) {
       const r = 3 + Math.random() * 3.4, a = Math.random() * 6.283, b = Math.acos(2 * Math.random() - 1);
       pos.set([r * Math.sin(b) * Math.cos(a), r * Math.cos(b) * .8, r * Math.sin(b) * Math.sin(a)], i * 3);
@@ -220,7 +224,7 @@
 
     const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-4, 6, 8); scene.add(key);
     const mint = new THREE.PointLight(0x5eead4, 14, 30); mint.position.set(5, -2, 5); scene.add(mint);
-    const blue = new THREE.PointLight(0x6aa7ff, 12, 30); blue.position.set(-6, 3, -2); scene.add(blue);
+    const blue = { position: { y: 0 } };
 
     // state driven by sections (data-gl="x,y,scale,rotY")
     const st = { x: .5, y: 0, s: 0, ry: -.4 };
@@ -262,8 +266,11 @@
     targets.forEach(t => io2.observe(t));
 
     const clock = new THREE.Clock();
+    let frames = 0, acc = 0, lastT = performance.now();
     renderer.setAnimationLoop(() => {
-      if (!vis) return;
+      if (!vis || document.hidden) { lastT = performance.now(); return; }
+      const now = performance.now(), dt = now - lastT; lastT = now;
+      if (frames < 90) { frames++; acc += dt; if (frames === 90 && acc / 90 > 24 && pr > 1) { pr = 1; renderer.setPixelRatio(1); size(); sparks.visible = false; } }
       const t = clock.getElapsedTime();
       mouse.x += (mouse.tx - mouse.x) * .06; mouse.y += (mouse.ty - mouse.y) * .06;
       const base = (innerWidth < 900 ? .46 : .52) * halfH * 2 / 5.2;
@@ -275,7 +282,7 @@
       rig.rotation.z = Math.sin(t * .4) * .04 - .05;
       r1.rotation.z = t * .35; r2.rotation.z = -t * .22;
       sparks.rotation.y = t * .06; sparks.rotation.x = t * .02;
-      mint.position.x = 5 + Math.sin(t * .8) * 2; blue.position.y = 3 + Math.cos(t * .6) * 2;
+      mint.position.x = 5 + Math.sin(t * .8) * 2;
       renderer.render(scene, camera);
     });
   }

@@ -1,8 +1,6 @@
 /* ===== v2 — cinematic layer ===== */
 :root{--bg:#05070d;--bg2:#090d18;--pearl:#f3efe7}
 body{background:var(--bg)}
-body::after{content:"";position:fixed;inset:-50%;z-index:90;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(6) infinite}
-@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
 #gl{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 main>section,main>.mq2{position:relative;z-index:2}
 .btn.dark{background:#0b0f1a;color:#f3efe7}
@@ -38,9 +36,9 @@ main>section,main>.mq2{position:relative;z-index:2}
 
 /* marquee */
 .mq2{background:var(--bg);border-block:1px solid var(--line);overflow:hidden;padding:18px 0;display:grid;gap:6px}
-.mq2 .row{display:flex;gap:34px;width:max-content;font:300 clamp(3rem,11vw,9rem)/1.05 var(--serif);white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(244,241,234,.38);animation:mq 46s linear infinite}
-.mq2 .row.rev{animation-direction:reverse;animation-duration:58s;-webkit-text-stroke-color:rgba(94,234,212,.5)}
-.mq2 b{color:var(--mint);-webkit-text-stroke:0;font-size:.5em;align-self:center}
+.mq2 .row{display:flex;gap:34px;width:max-content;font:300 clamp(3rem,11vw,9rem)/1.05 var(--serif);white-space:nowrap;color:rgba(244,241,234,.09);animation:mq 46s linear infinite;will-change:transform;backface-visibility:hidden}
+.mq2 .row.rev{animation-direction:reverse;animation-duration:58s;color:rgba(94,234,212,.1)}
+.mq2 b{color:var(--mint);font-size:.5em;align-self:center}
 @keyframes mq{to{transform:translateX(-50%)}}
 
 /* about */
@@ -122,3 +120,14 @@ h2{font-size:clamp(2.2rem,8vw,5rem);max-width:18ch}
 .hx-cta .btn{white-space:nowrap;flex:1 1 auto}
 @media (min-width:900px){.nums-grid{grid-template-columns:repeat(2,1fr);max-width:58%;margin-left:auto;gap:50px 30px}}
 @media (max-width:899px){.hx-eyebrow{font-size:.66rem;text-shadow:0 2px 12px #05070d}}
+
+/* performance */
+.nav.solid{background:rgba(7,11,20,.94);backdrop-filter:none;-webkit-backdrop-filter:none}
+.dock{background:rgba(10,16,32,.96);backdrop-filter:none;-webkit-backdrop-filter:none}
+.btn.ghost,.chip,.tag{backdrop-filter:none;-webkit-backdrop-filter:none}
+.links{backdrop-filter:none;background:rgba(7,11,20,.99)}
+.cursor{mix-blend-mode:normal}
+.svc-track,.mq2 .row,.strip-row{will-change:transform}
+.sv-scene:not(.play) .beam,.sv-scene:not(.play) .wave,.sv-scene:not(.play) .dash{animation:none}
+.sv-scene:not(.play) *{animation-play-state:paused}
+.sv{contain:layout paint}
