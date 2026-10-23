@@ -116,8 +116,10 @@
   /* header */
   const hdr = $('#hdr'), menu = $('#menu'), burger = $('#burger'), dock = $('#dock');
   let lastY = 0, queued = false;
+  const prog = $('#progress');
   const onScroll = () => {
     queued = false; const y = scrollY;
+    const H = document.documentElement.scrollHeight - innerHeight; prog.style.transform = `scaleX(${H > 0 ? y / H : 0})`;
     hdr.classList.toggle('shadow', y > 10);
     hdr.classList.toggle('hide', y > lastY && y > 500 && !menu.classList.contains('open'));
     lastY = y;
@@ -143,7 +145,7 @@
   const REELB = '<span class="reel"><svg viewBox="0 0 24 24"><use href="#i-play"/></svg>REEL</span>';
   function openLb(i) {
     lbi = (i + WORKS.length) % WORKS.length; const w = WORKS[lbi];
-    $('#lbImg').src = w.src; $('#lbImg').alt = w.t; $('#lbT').textContent = w.t; $('#lbD').textContent = w.d;
+    $('#lbImg').src = w.src; $('.lb-img').style.setProperty('--bgimg', `url(${w.src})`); $('#lbImg').alt = w.t; $('#lbT').textContent = w.t; $('#lbD').textContent = w.d;
     $('#lbTag').textContent = w.reel ? 'Instagram reels' : 'Instagram plakat';
     $('#lbBtn').dataset.svc = w.svc;
     lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false');
@@ -154,6 +156,13 @@
   $('#lbBtn').addEventListener('click', e => { sel.value = e.currentTarget.dataset.svc; closeLb(); });
   addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); if (lb.classList.contains('open')) { if (e.key === 'ArrowRight') openLb(lbi + 1); if (e.key === 'ArrowLeft') openLb(lbi - 1); } });
   $$('.float').forEach(b => b.addEventListener('click', () => openLb(+b.dataset.w)));
+
+  /* reel strip + posters */
+  const stHTML = WORKS.map((w, i) => `<button class="st" data-i="${i}"><img src="${w.src}" alt="${w.t}" loading="lazy">${w.reel ? REELB : ''}</button>`).join('');
+  $('#strip').innerHTML = stHTML + stHTML;
+  $$('#strip .st').forEach(b => b.addEventListener('click', () => openLb(+b.dataset.i)));
+  $('#posters').innerHTML = [0, 1, 2].map(i => `<button class="po" data-i="${i}"><img src="${WORKS[i].src}" alt="${WORKS[i].t}" loading="lazy"><span>${WORKS[i].t}</span></button>`).join('');
+  $$('#posters .po').forEach(b => b.addEventListener('click', () => openLb(+b.dataset.i)));
 
   /* works */
   const grid = $('#wgrid');
