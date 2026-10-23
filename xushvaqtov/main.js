@@ -5,9 +5,9 @@
   /* splash */
   const splash = $('#splash'), bar = $('#spBar');
   let p = 0, started = false;
-  const tick = () => { p = Math.min(100, p + 12 + Math.random() * 16); bar.style.width = p + '%'; p < 100 ? setTimeout(tick, 70) : setTimeout(start, 250); };
-  function start() { if (started) return; started = true; splash.classList.add('done'); setTimeout(() => splash.remove(), 1000); }
-  tick(); setTimeout(start, 2400);
+  const tick = () => { p = Math.min(100, p + 14 + Math.random() * 16); bar.style.width = p + '%'; p < 100 ? setTimeout(tick, 70) : setTimeout(start, 200); };
+  function start() { if (started) return; started = true; splash.classList.add('done'); setTimeout(() => splash.remove(), 1000); observe(); }
+  tick(); setTimeout(start, 2200);
 
   /* real works (from the doctor's own Instagram posts) */
   const R = 'img/real/';
@@ -94,33 +94,49 @@
   ];
 
 
-  /* router */
-  const VIEWS = ['home', 'works', 'proc', 'plan', 'contact'];
-  const tabs = $$('#tabs a'), pill = $('#pill');
-  let current = null;
-  function show(v) {
-    if (!VIEWS.includes(v)) v = 'home';
-    if (v === current) return; current = v;
-    $$('.view').forEach(el => el.classList.toggle('on', el.dataset.v === v));
-    tabs.forEach(a => a.classList.toggle('on', a.dataset.v === v));
-    pill.style.setProperty('--i', VIEWS.indexOf(v));
-    const el = $('#v-' + v);
-    [...el.children].forEach((c, i) => c.style.setProperty('--n', Math.min(i, 8)));
-    scrollTo(0, 0);
-    $$('[data-count]', el).forEach(count);
-    if (v === 'plan') renderRec(recK);
-  }
-  const route = () => show((location.hash.replace('#/', '') || 'home').split('?')[0]);
-  addEventListener('hashchange', route);
-  route(); if (!current) show('home');
 
+  /* reveal + counters */
+  function observe() {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add('in');
+      $$('[data-count]', e.target).forEach(count);
+      io.unobserve(e.target);
+    }), { threshold: .12 });
+    $$('.rv').forEach(el => io.observe(el));
+  }
   function count(el) {
     if (el.dataset.done) return; el.dataset.done = 1;
-    const to = +el.dataset.count, sep = 'sep' in el.dataset, t0 = performance.now(), d = 1400;
+    const to = +el.dataset.count, sep = 'sep' in el.dataset, t0 = performance.now(), d = 1500;
     const fmt = v => sep ? v.toLocaleString('ru-RU').replace(/ /g, ' ') : v;
     const f = t => { const k = Math.min(1, (t - t0) / d); el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(f); };
     requestAnimationFrame(f);
   }
+
+  /* header */
+  const hdr = $('#hdr'), menu = $('#menu'), burger = $('#burger'), dock = $('#dock');
+  let lastY = 0, queued = false;
+  const onScroll = () => {
+    queued = false; const y = scrollY;
+    hdr.classList.toggle('shadow', y > 10);
+    hdr.classList.toggle('hide', y > lastY && y > 500 && !menu.classList.contains('open'));
+    lastY = y;
+  };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  const toggle = o => {
+    burger.setAttribute('aria-expanded', o); menu.classList.toggle('open', o);
+    document.body.style.overflow = o ? 'hidden' : ''; hdr.classList.remove('hide');
+  };
+  burger.onclick = () => toggle(burger.getAttribute('aria-expanded') !== 'true');
+  $$('a', menu).forEach(a => a.addEventListener('click', () => toggle(false)));
+  addEventListener('keydown', e => e.key === 'Escape' && toggle(false));
+  // scrollspy
+  const links = $$('.mi'), secs = ['home', 'proc', 'works', 'doctor', 'recovery', 'faq', 'contact'];
+  const spy = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) links.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + e.target.id));
+  }), { rootMargin: '-40% 0px -55% 0px' });
+  secs.forEach(id => { const el = document.getElementById(id); el && spy.observe(el); });
+  new IntersectionObserver(([e]) => dock.classList.toggle('hide', e.isIntersecting), { threshold: .15 }).observe($('#contact'));
 
   /* lightbox */
   const lb = $('#lb'); let lbi = 0; const sel = $('#svcSel');
@@ -139,7 +155,7 @@
   addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); if (lb.classList.contains('open')) { if (e.key === 'ArrowRight') openLb(lbi + 1); if (e.key === 'ArrowLeft') openLb(lbi - 1); } });
   $$('.float').forEach(b => b.addEventListener('click', () => openLb(+b.dataset.w)));
 
-  /* works grid + filters */
+  /* works */
   const grid = $('#wgrid');
   function renderWorks(f) {
     const list = WORKS.map((w, i) => [w, i]).filter(([w]) => f === 'all' || w.cat.includes(f));
@@ -149,43 +165,38 @@
   renderWorks('all');
   $$('#wf button').forEach(b => b.addEventListener('click', () => { $$('#wf button').forEach(x => x.classList.toggle('on', x === b)); renderWorks(b.dataset.f); }));
 
-  /* home: works strip + procedure rows */
-  $('#homeWorks').innerHTML = WORKS.slice(0, 8).map((w, i) => `<button class="wcard" data-i="${i}"><img src="${w.src}" alt="${w.t}" loading="lazy">${w.reel ? REELB : ''}<span>${w.t}</span></button>`).join('');
-  $$('#homeWorks .wcard').forEach(b => b.addEventListener('click', () => openLb(+b.dataset.i)));
-  $('#plist').innerHTML = PROC.map((d, i) => `<a class="prow" href="#/proc" data-go="${i}"><span class="no">${i + 1}</span><span class="th">${d.img ? `<img src="${d.img}" alt="">` : `<svg class="ic"><use href="#${d.icon}"/></svg>`}</span><span class="tx"><b>${d.t}</b><span>${d.sub}</span></span><svg class="ic"><use href="#i-arrow"/></svg></a>`).join('');
-
-  /* procedures */
-  const seg = $('#seg'), pd = $('#pd');
-  seg.innerHTML = PROC.map((d, i) => `<button data-k="${i}">${d.t}</button>`).join('');
-  const segBtns = $$('button', seg);
-  function setProc(k) {
+  /* procedures: cards + detail */
+  const cards = $('#cards'), pd = $('#pd');
+  cards.innerHTML = PROC.map((d, i) => `<button class="pc pop" data-k="${i}">${d.img ? `<img src="${d.img}" alt="${d.t}" loading="lazy">` : `<div class="brand"><svg class="ic"><use href="#${d.icon}"/></svg></div>`}<span class="go"><svg class="ic" style="width:20px;height:20px"><use href="#i-arrow"/></svg></span><span class="tx"><span class="no">0${i + 1}</span><b>${d.t}</b><span class="s">${d.tag}</span></span></button>`).join('');
+  const pcs = $$('.pc', cards);
+  function setProc(k, scroll) {
     const d = PROC[k];
-    segBtns.forEach((b, i) => b.classList.toggle('on', i === k));
+    pcs.forEach((b, i) => b.classList.toggle('on', i === k));
     $('#pdMedia').classList.toggle('contain', !!(d.img && d.img.includes('poster')));
     $('#pdMedia').innerHTML = d.img ? `<img src="${d.img}" alt="${d.t}">` : `<div class="brandart"><svg class="ic"><use href="#${d.icon}"/></svg><span class="script">Doctor Xushvaqtov</span><b>${d.t}</b></div>`;
     $('#pdTag').textContent = d.tag; $('#pdT').textContent = d.t; $('#pdSub').textContent = d.sub; $('#pdP').textContent = d.p;
-    const li = (arr) => arr.map((x, i) => `<li style="--n:${i}">${x}</li>`).join('');
+    const li = arr => arr.map((x, i) => `<li style="--n:${i}">${x}</li>`).join('');
     $('#pdList').innerHTML = li(d.list); $('#pdHow').innerHTML = li(d.how); $('#pdFor').innerHTML = li(d.who);
     $('#pdFacts').innerHTML = d.facts.map(f => `<div><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
     $('#pdWorksWrap').style.display = d.works.length ? '' : 'none';
     $('#pdWorks').innerHTML = d.works.map(i => `<button data-i="${i}"><img src="${WORKS[i].src}" alt="${WORKS[i].t}"></button>`).join('');
     $$('#pdWorks button').forEach(b => b.addEventListener('click', () => openLb(+b.dataset.i)));
     $('#pdBtn').dataset.svc = d.t;
-    const act = segBtns[k]; if (act && innerWidth < 1000) seg.scrollTo({ left: act.offsetLeft - 18, behavior: 'smooth' });
     pd.style.animation = 'none'; void pd.offsetWidth; pd.style.animation = '';
+    if (scroll) pd.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-  segBtns.forEach((b, i) => b.addEventListener('click', () => setProc(i)));
-  setProc(0);
-  $$('[data-go]').forEach(a => a.addEventListener('click', () => setProc(+a.dataset.go)));
+  pcs.forEach((b, i) => b.addEventListener('click', () => setProc(i, true)));
+  setProc(0, false);
   $('#pdBtn').addEventListener('click', e => { sel.value = e.currentTarget.dataset.svc; });
+  // pop-in for cards
+  pcs.forEach((b, i) => { b.classList.add('rv'); b.style.setProperty('--d', (i % 4) * .08 + 's'); });
 
   /* recovery */
-  let recK = 0;
   const rseg = $('#rseg');
   rseg.innerHTML = REC.map((r, i) => `<button data-k="${i}">${r[0]}</button>`).join('');
   const rb = $$('button', rseg);
   function renderRec(k) {
-    recK = k; rb.forEach((b, i) => b.classList.toggle('on', i === k));
+    rb.forEach((b, i) => b.classList.toggle('on', i === k));
     $('#tl').innerHTML = REC[k][1].map(([t, d], i) => `<li style="--i:${i}"><b>${t}</b><p>${d}</p></li>`).join('');
   }
   rb.forEach((b, i) => b.addEventListener('click', () => renderRec(i)));
@@ -210,9 +221,10 @@
     const f = new FormData(form), name = f.get('name').trim(), phone = f.get('phone').trim();
     const okPhone = phone.replace(/\D/g, '').length >= 9;
     form.name.classList.toggle('bad', !name); form.phone.classList.toggle('bad', !okPhone);
-    if (!name || !okPhone) { note.style.color = '#ff9a8a'; note.textContent = "Iltimos, ism va telefon raqamini to'g'ri kiriting."; return; }
+    if (!name || !okPhone) { note.style.color = '#d9483b'; note.textContent = "Iltimos, ism va telefon raqamini to'g'ri kiriting."; return; }
     const msg = `Assalomu alaykum, Dr. Xushvaqtov! Bepul konsultatsiyaga yozilmoqchiman.\nIsm: ${name}\nTelefon: ${phone}\nYo'nalish: ${f.get('svc')}`;
     note.style.color = ''; note.textContent = 'Telegram ochilmoqda…';
     window.open('https://t.me/dr_xushvaqtov1?text=' + encodeURIComponent(msg), '_blank', 'noopener');
   });
+  $('#yr').textContent = new Date().getFullYear();
 })();
