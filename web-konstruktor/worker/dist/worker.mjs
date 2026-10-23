@@ -1674,7 +1674,7 @@ async function calcCallback(env, st, q, arg) {
 async function healthOrder(env, st, admins, now) { // buyurtma boti webhook'i: yo'qolsa o'zi tiklaydi, bo'lmasa egasiga xabar
   if (!ORDER_ON(env)) return;
   try {
-    const e2 = orderEnv(env), wi = await tg(e2, 'getWebhookInfo', {}); let problem = '';
+    const e2 = orderEnv(env); let wi = await tg(e2, 'getWebhookInfo', {}); if (!wi) { await new Promise((r) => setTimeout(r, 1500)); wi = await tg(e2, 'getWebhookInfo', {}); } let problem = '';
     if (!wi) problem = "Buyurtma boti bilan aloqa yo'q (token bekor qilingan bo'lishi mumkin)";
     else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(e2, 'setWebhook', { url: o + '/hook2/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'] }); problem = r ? '' : "Buyurtma boti webhook'ini o'rnatib bo'lmadi"; } else problem = "Buyurtma boti webhook'i o'rnatilmagan"; }
     else if (wi.last_error_date && now / 1000 - wi.last_error_date < 600) problem = 'Buyurtma botida yetkazish xatosi: ' + String(wi.last_error_message || '').slice(0, 120);
@@ -1686,7 +1686,7 @@ async function healthOrder(env, st, admins, now) { // buyurtma boti webhook'i: y
 }
 async function health(env, st, admins, now) {
   try {
-    const wi = await tg(env, 'getWebhookInfo', {}); let problem = ''; if (wi && typeof wi !== 'object') return;
+    let wi = await tg(env, 'getWebhookInfo', {}); if (!wi) { await new Promise((r) => setTimeout(r, 1500)); wi = await tg(env, 'getWebhookInfo', {}); } let problem = ''; if (wi && typeof wi !== 'object') return; // bir martalik uzilishda yolg'on signal bermaslik uchun qayta urinib ko'ramiz
     if (!wi) problem = 'Telegram bilan aloqa yo\'q (token noto\'g\'ri bo\'lishi mumkin)';
     else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(env, 'setWebhook', { url: o + '/hook/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'] }); problem = r ? '' : 'Webhook yo\'q edi, tiklashga urinildi: bo\'lmadi'; if (r) await st.put('hl:healed', now, 86400); } else problem = 'Webhook o\'rnatilmagan: /setup ni oching'; }
     else if (wi.last_error_date && now / 1000 - wi.last_error_date < 600) problem = 'Telegram yetkazishda xato: ' + String(wi.last_error_message || '').slice(0, 120);
