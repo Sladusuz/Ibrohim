@@ -4,337 +4,193 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dr. Xayot — Xirurg Stomatolog</title>
-<meta name="description" content="Dr. Xayot — xirurg stomatolog. 8 yillik tajriba: tish sug'urish, davolash, protezlash, professional tozalash. Qabulga yoziling: +998 99 840 14 48">
-<meta name="theme-color" content="#070b14">
+<meta name="description" content="Dr. Xayot — xirurg stomatolog. 8 yillik tajriba: implant, plomba, professional tozalash, tish sug'urish, protez. Qabul: +998 99 840 14 48">
+<meta name="theme-color" content="#5b3bff">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%235b3bff'/%3E%3Ctext x='32' y='42' font-size='30' font-weight='800' text-anchor='middle' fill='%23ffc83d' font-family='Arial'%3EX%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Manrope:wght@300..800&display=swap" rel="stylesheet">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 240'%3E%3Cpath d='M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z' fill='%235eead4'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Manrope:wght@400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="v2.css">
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-<radialGradient id="tbody" cx=".38" cy=".25" r=".95"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#f1f6f5"/><stop offset=".8" stop-color="#cfe3e1"/><stop offset="1" stop-color="#a9c9c6"/></radialGradient>
-<linearGradient id="trim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".7" stop-color="#5eead4" stop-opacity=".0"/><stop offset="1" stop-color="#5eead4" stop-opacity=".75"/></linearGradient>
-<radialGradient id="tglow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#5eead4" stop-opacity=".45"/><stop offset="1" stop-color="#5eead4" stop-opacity="0"/></radialGradient>
-<clipPath id="tclip"><path id="tpath" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></clipPath>
-<symbol id="toothArt" viewBox="-40 -20 280 290" stroke="none">
- <use href="#tpath" fill="url(#tbody)"/>
- <g clip-path="url(#tclip)">
-  <use href="#tpath" fill="none" stroke="url(#trim)" stroke-width="16"/>
-  <path d="M0 60 C60 40 140 60 200 40 V0 H0Z" fill="#fff" opacity=".35"/>
-  <path d="M50 150 C60 190 70 215 78 222 L50 230 L30 150Z" fill="#9fc3c0" opacity=".25"/>
-  <path d="M150 150 C140 190 130 215 122 222 L150 230 L170 150Z" fill="#9fc3c0" opacity=".25"/>
- </g>
- <path d="M44 62c3-18 16-30 34-34" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".95"/>
- <path d="M38 92c-1-6-1-11 0-16" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".7"/>
- <ellipse cx="142" cy="46" rx="9" ry="4" transform="rotate(-30 142 46)" fill="#fff" opacity=".8"/>
-</symbol></defs></svg>
 
-<div class="loader" id="loader" aria-hidden="true">
-  <svg viewBox="0 0 200 240" class="loader-tooth"><path pathLength="1" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></svg>
-  <div class="loader-num"><span id="loadNum">0</span>%</div>
-</div>
-
+<div class="loader" id="loader" aria-hidden="true"><div class="ld"><b>Dr. Xayot</b><span><i id="ldBar"></i></span></div></div>
 <div class="progress" id="progress"></div>
-<div class="cursor" id="cursor"></div>
 
 <header class="nav" id="nav">
-  <a href="#top" class="logo" aria-label="Dr. Xayot">
-    <svg viewBox="0 0 200 240"><path d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></svg>
-    <span>Dr. Xayot</span>
-  </a>
+  <a href="#top" class="logo"><i>X</i><span>Dr. Xayot</span></a>
   <nav class="links" id="links">
     <a href="#about">Shifokor</a>
     <a href="#services">Xizmatlar</a>
-    <a href="#lab">Tashxis</a>
+    <a href="#smile">Natija</a>
     <a href="#process">Jarayon</a>
     <a href="#faq">Savollar</a>
     <a href="#contact" class="links-cta">Qabulga yozilish</a>
   </nav>
-  <a href="tel:+998998401448" class="nav-call magnetic" aria-label="Qo'ng'iroq qilish">
-    <svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg>
-    <b>99 840 14 48</b>
-  </a>
+  <a href="tel:+998998401448" class="nav-call"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg><b>99 840 14 48</b></a>
   <button class="burger" id="burger" aria-label="Menyu" aria-expanded="false"><i></i><i></i></button>
 </header>
 
-<main>
+<main id="top">
+
 <!-- HERO -->
-<section class="hx" id="top">
-  <div class="hx-glow"></div>
-  <div class="hx-tooth" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="sp s1"></i><i class="sp s2"></i><i class="sp s3"></i><svg viewBox="-40 -20 280 290"><use href="#toothArt"/></svg></div>
-  <p class="eyebrow hx-eyebrow reveal"><span class="dot"></span> Xirurg stomatolog · IIV Stomatologiya poliklinikasi</p>
-  <h1 class="hx-title" aria-label="Mukammal tabassum">
-    <span class="ln"><span>Mukammal</span></span>
-    <span class="ln"><span><em>tabassum</em></span></span>
-  </h1>
-  <div class="hx-bottom">
-    <div class="doc-card reveal">
-      <img src="img/doctor.jpg" alt="Dr. Xayot" width="120" height="120">
-      <div><b>Dr. Xayot</b><span>8 yillik tajriba · tish sug'urish, davolash, protez</span></div>
+<section class="hero">
+  <i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i>
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <p class="pill pop"><span class="live"></span> Xirurg stomatolog · IIV Stomatologiya poliklinikasi</p>
+      <h1 class="pop" style="--d:.1s">Sog'lom tish — <span class="hl">go'zal</span> tabassum!</h1>
+      <p class="lead pop" style="--d:.2s">Implant, plomba, professional tozalash, tish sug'urish va protez. Og'riqsiz, ehtiyotkor va har bir bemorga alohida e'tibor bilan.</p>
+      <div class="hero-btns pop" style="--d:.3s">
+        <a href="#contact" class="btn sun"><span>Qabulga yozilish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="tel:+998998401448" class="btn glass"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg><span>99 840 14 48</span></a>
+      </div>
+      <ul class="trust pop" style="--d:.4s">
+        <li><b>8+</b><span>yillik tajriba</span></li>
+        <li><b>Bepul</b><span>maslahat</span></li>
+        <li><b>Steril</b><span>kabinet</span></li>
+      </ul>
     </div>
-    <div class="hx-cta reveal">
-      <a href="#contact" class="btn primary magnetic"><span>Qabulga yozilish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-      <a href="tel:+998998401448" class="btn ghost magnetic"><span>99 840 14 48</span></a>
+
+    <div class="hero-visual pop" style="--d:.2s">
+      <div class="doc-wrap">
+        <span class="ring r1"></span><span class="ring r2"></span>
+        <div class="doc"><img src="img/doctor.jpg" alt="Dr. Xayot — xirurg stomatolog" width="900" height="900" fetchpriority="high"></div>
+        <div class="chip c1"><i class="g"></i>Og'riqsiz davolash</div>
+        <div class="chip c2"><i class="y"></i>Zamonaviy uskunalar</div>
+        <div class="chip c3"><i class="p"></i>Rentgen tahlili</div>
+        <div class="sticker"><svg viewBox="0 0 200 200"><defs><path id="sc" d="M100 100m-80 0a80 80 0 1 1 160 0a80 80 0 1 1-160 0"/></defs><text><textPath href="#sc">QABULGA YOZILING • QABULGA YOZILING • </textPath></text></svg><b>→</b></div>
+      </div>
     </div>
-    <ul class="hx-stats reveal">
-      <li><b data-count="8">0</b><span>yil tajriba</span></li>
-      <li><b data-count="1878" data-sep>0</b><span>kuzatuvchi</span></li>
-      <li><b data-count="304">0</b><span>nashr</span></li>
-    </ul>
   </div>
-  <a href="#about" class="scroll-hint" aria-label="Pastga"><i></i></a>
+  <svg class="wave" viewBox="0 0 1440 90" preserveAspectRatio="none"><path d="M0 40C240 100 480 0 720 40s480 60 720 0V90H0Z"/></svg>
 </section>
 
 <!-- MARQUEE -->
-<div class="mq2" aria-hidden="true">
-  <div class="row"><span>Implant</span><b>✦</b><span>Plomba</span><b>✦</b><span>Chistka</span><b>✦</b><span>Protez</span><b>✦</b><span>Implant</span><b>✦</b><span>Plomba</span><b>✦</b><span>Chistka</span><b>✦</b><span>Protez</span><b>✦</b></div>
-  <div class="row rev"><span>Tish sug'urish</span><b>✦</b><span>Oqartirish</span><b>✦</b><span>Davolash</span><b>✦</b><span>Gingivit</span><b>✦</b><span>Tish sug'urish</span><b>✦</b><span>Oqartirish</span><b>✦</b><span>Davolash</span><b>✦</b><span>Gingivit</span><b>✦</b></div>
-</div>
+<div class="mq" aria-hidden="true"><div class="mq-row">
+  <span>Implant</span><i>✺</i><span>Plomba</span><i>✺</i><span>Professional tozalash</span><i>✺</i><span>Tish sug'urish</span><i>✺</i><span>Protez</span><i>✺</i><span>Oqartirish</span><i>✺</i>
+  <span>Implant</span><i>✺</i><span>Plomba</span><i>✺</i><span>Professional tozalash</span><i>✺</i><span>Tish sug'urish</span><i>✺</i><span>Protez</span><i>✺</i><span>Oqartirish</span><i>✺</i>
+</div></div>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="st c-violet pop"><b data-count="8">0</b><span>yillik tajriba</span></div>
+    <div class="st c-coral pop" style="--d:.08s"><b data-count="1878" data-sep>0</b><span>kuzatuvchi</span></div>
+    <div class="st c-mint pop" style="--d:.16s"><b data-count="304">0</b><span>nashr</span></div>
+    <div class="st c-sun pop" style="--d:.24s"><b data-count="6">0</b><span>asosiy yo'nalish</span></div>
+  </div>
+</section>
 
 <!-- ABOUT -->
-<section class="sec ab light" id="about">
-  <div class="wrap ab-grid">
-    <div class="arch-wrap">
-      <div class="arch" id="arch"><img src="img/doctor.jpg" alt="Dr. Xayot — xirurg stomatolog" loading="lazy"></div>
-      <svg class="seal" viewBox="0 0 200 200"><defs><path id="sl" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0"/></defs><text><textPath href="#sl">SOG'LOM TISH • MUKAMMAL TABASSUM • </textPath></text><path class="seal-t" d="M100 78c-9-6-22-2-21 11 1 8 6 11 7 21 1 8 6 8 8 0 1-5 3-8 6-8s5 3 6 8c2 8 7 8 8 0 1-10 6-13 7-21 1-13-12-17-21-11z"/></svg>
+<section class="sec about" id="about">
+  <div class="wrap about-grid">
+    <div class="photos pop">
+      <figure class="ph p1"><img src="img/consult.jpg" alt="Bemor bilan maslahat" loading="lazy"></figure>
+      <figure class="ph p2"><img src="img/xray.jpg" alt="Rentgen tahlili" loading="lazy"></figure>
+      <div class="note-card"><b>Aniq tashxis</b><span>Muammo nimada ekanini ochiq tushuntiramiz</span></div>
     </div>
-    <div class="ab-text">
-      <p class="eyebrow reveal"><span class="dot"></span> Shifokor haqida</p>
-      <p class="mani" id="mani">Dr. Xayot — xirurg stomatolog. Sakkiz yil davomida tish sug'urish, davolash va protezlash bilan shug'ullanadi. Maqsad oddiy: aniq tashxis, og'riqsiz davolash va siz tabassum qilishdan tortinmaydigan natija.</p>
-      <ul class="ab-cards">
-        <li class="reveal"><b>Aniq tashxis</b><span>Muammo nimada ekanini ochiq tushuntiradi</span></li>
-        <li class="reveal"><b>Toza va steril</b><span>Zamonaviy, tartibli kabinet</span></li>
-        <li class="reveal"><b>Parvarish</b><span>Davolashdan keyin ham maslahat</span></li>
+    <div class="about-text">
+      <p class="tag pop">Shifokor haqida</p>
+      <h2 class="pop">Tishingiz <span class="hl">ishonchli</span> qo'llarda</h2>
+      <p class="pop">Dr. Xayot — IIV Stomatologiya poliklinikasida ishlovchi xirurg stomatolog. Sakkiz yillik amaliyotida tish sug'urish, davolash va protezlash bilan shug'ullangan.</p>
+      <p class="pop">Instagram sahifasida u gingivit, parodontit va tish kasalliklarining oldini olish haqida muntazam tushuntirib boradi: to'g'ri ma'lumot to'g'ri davolashning yarmi.</p>
+      <ul class="ticks pop">
+        <li>Aniq tashxis va ochiq muloqot</li>
+        <li>Toza, steril va zamonaviy kabinet</li>
+        <li>Davolashdan keyin ham maslahat</li>
       </ul>
-      <a href="https://www.instagram.com/dr_xayot" target="_blank" rel="noopener" class="btn dark magnetic reveal"><span>Instagram: @dr_xayot</span><svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+      <a href="https://www.instagram.com/dr_xayot" target="_blank" rel="noopener" class="btn ink pop"><span>Instagram: @dr_xayot</span><svg viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
     </div>
   </div>
 </section>
 
-<!-- SERVICES (horizontal) -->
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <defs>
-    <linearGradient id="gum" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4a3ae"/><stop offset="1" stop-color="#d4677a"/></linearGradient>
-    <linearGradient id="bone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9dab8"/><stop offset="1" stop-color="#c7b087"/></linearGradient>
-    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#e8eef5"/><stop offset=".5" stop-color="#8a9bb0"/><stop offset="1" stop-color="#e8eef5"/></linearGradient>
-    <path id="star" d="M0-11 3-3 11 0 3 3 0 11-3 3-11 0-3-3Z"/>
-    <symbol id="row" viewBox="0 0 600 220"><g fill="currentColor"><rect x="10" y="30" width="92" height="170" rx="40"/><rect x="106" y="14" width="92" height="190" rx="40"/><rect x="202" y="6" width="92" height="200" rx="42"/><rect x="298" y="6" width="92" height="200" rx="42"/><rect x="394" y="14" width="92" height="190" rx="40"/><rect x="490" y="30" width="92" height="170" rx="40"/></g><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".45"><path d="M32 70v50M128 60v60M224 56v64M320 56v64M416 60v60M512 70v50"/></g></symbol>
-  </defs>
-</svg>
-<section class="svc" id="services">
-  <div class="svc-head wrap">
-    <div>
-      <p class="eyebrow"><span class="dot"></span> Xizmatlar</p>
-      <h2>Har bir davolash — <em>jonli</em></h2>
+<!-- SERVICES -->
+<section class="sec services" id="services">
+  <div class="wrap">
+    <p class="tag pop">Xizmatlar</p>
+    <h2 class="pop">Tishga oid <span class="hl">hamma narsa</span> bir joyda</h2>
+    <div class="cards">
+      <a href="#contact" class="card c-violet pop">
+        <div class="img"><img src="img/scan.jpg" alt="Implant" loading="lazy"></div>
+        <span class="num">01</span><h3>Implant</h3>
+        <p>Yo'qolgan tish o'rniga titan vint va tabiiy ko'rinishdagi koronka.</p>
+        <span class="more">Yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a href="#contact" class="card c-coral pop" style="--d:.06s">
+        <div class="img"><img src="img/smile.jpg" alt="Plomba" loading="lazy"></div>
+        <span class="num">02</span><h3>Plomba</h3>
+        <p>Kariesni tozalash va kovakni zamonaviy material bilan to'ldirish.</p>
+        <span class="more">Yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a href="#contact" class="card c-mint pop" style="--d:.12s">
+        <div class="img"><img src="img/tools.jpg" alt="Professional tozalash" loading="lazy"></div>
+        <span class="num">03</span><h3>Professional tozalash</h3>
+        <p>Ultratovush bilan tish toshi va karashni olish, tishlarni silliqlash.</p>
+        <span class="more">Yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a href="#contact" class="card c-sun pop">
+        <div class="img"><img src="img/surgery.jpg" alt="Tish sug'urish" loading="lazy"></div>
+        <span class="num">04</span><h3>Tish sug'urish</h3>
+        <p>Mahalliy og'riqsizlantirish ostida ehtiyotkor xirurgik yondashuv.</p>
+        <span class="more">Yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a href="#contact" class="card c-pink pop" style="--d:.06s">
+        <div class="img"><img src="img/aligner.jpg" alt="Protez" loading="lazy"></div>
+        <span class="num">05</span><h3>Protez va koronka</h3>
+        <p>Yo'qolgan yoki shikastlangan tishlar o'rniga qulay va chiroyli qoplama.</p>
+        <span class="more">Yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a href="#contact" class="card c-blue pop" style="--d:.12s">
+        <div class="img"><img src="img/smile_after.jpg" alt="Oqartirish" loading="lazy"></div>
+        <span class="num">06</span><h3>Tishni oqartirish</h3>
+        <p>Maxsus gel va yorug'lik yordamida tishlarni bir necha tonga ochish.</p>
+        <span class="more">Yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
     </div>
-    <div class="svc-nav"><button id="svPrev" aria-label="Oldingi"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button id="svNext" aria-label="Keyingi"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
-  </div>
-  <div class="svc-track" id="svcTrack">
-      <article class="sv">
-        <div class="sv-scene"><svg class="sc on" viewBox="0 0 400 300" role="img" aria-label="Implant o'rnatish animatsiyasi">
-          <rect y="206" width="400" height="94" fill="url(#bone)"/>
-          <path d="M104 186C104 236 112 262 122 262S146 236 148 186Z" fill="#f1e8d4"/>
-          <path d="M252 186C254 236 268 262 278 262S296 236 296 186Z" fill="#f1e8d4"/>
-          <path d="M100 190C94 142 104 112 126 112S156 142 150 190Z" fill="url(#tg)"/>
-          <path d="M250 190C244 142 254 112 276 112S306 142 300 190Z" fill="url(#tg)"/>
-          <path d="M0 180H100Q125 176 150 186Q200 196 250 186Q275 176 300 180H400V212H0Z" fill="url(#gum)"/>
-          <rect class="fadein" x="189" y="192" width="22" height="74" rx="5" fill="#a98f63" style="--dl:.1s"/>
-          <g class="drop" style="--dy:-250px;--dl:.7s;--du:1.4s">
-            <rect x="188" y="190" width="24" height="76" rx="6" fill="url(#metal)"/>
-            <path d="M188 204H212M188 214H212M188 224H212M188 234H212M188 244H212M188 254H212" stroke="#6b7a8c" stroke-width="2"/>
-          </g>
-          <rect class="fadein" x="192" y="168" width="16" height="26" rx="3" fill="#e8c27a" style="--dl:2.2s"/>
-          <g class="drop" style="--dy:-180px;--dl:2.7s;--du:1.1s">
-            <path d="M168 184C160 138 172 106 200 106S240 138 232 184Z" fill="url(#tg)"/>
-            <path d="M180 132C182 122 188 116 196 114" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>
-          </g>
-          <g transform="translate(206 92)"><use href="#star" class="pop" style="--dl:3.8s" fill="#5eead4"/></g>
-          <g transform="translate(246 118)"><use href="#star" class="pop" style="--dl:4.1s" fill="#e8c27a"/></g>
-          <g transform="translate(160 122)"><use href="#star" class="pop" style="--dl:4.4s" fill="#6aa7ff"/></g>
-        </svg><span class="sv-n">01</span></div>
-        <h3>Implant</h3><p>Yo'qolgan tish o'rniga titan vint o'rnatiladi, ustiga tabiiy ko'rinishdagi koronka qo'yiladi.</p>
-        <ul><li>Tekshiruv va reja</li><li>Implant o'rnatish</li><li>Koronka</li></ul>
-      </article>
-      <article class="sv">
-        <div class="sv-scene"><svg class="sc on" viewBox="0 0 400 300" role="img" aria-label="Plomba qo'yish animatsiyasi">
-          <g transform="translate(30 50) scale(.85)">
-            <path d="M110 120C110 70 150 60 200 66 250 60 290 70 290 120 290 160 272 175 268 215 264 262 246 270 238 236 232 212 218 200 200 200 182 200 168 212 162 236 154 270 136 262 132 215 128 175 110 160 110 120Z" fill="url(#tg)"/>
-            <path d="M174 66C178 118 222 118 226 66Z" fill="#4a2b1a"/>
-            <path class="rise" d="M174 66C178 118 222 118 226 66Z" fill="#f2e6c2" style="--dl:2.1s;--du:1.1s"/>
-            <g class="pass" style="--du:2s;--dl:.2s"><g class="shake">
-              <rect x="186" y="-60" width="28" height="42" rx="7" fill="#33405a"/>
-              <rect x="194" y="-20" width="12" height="62" fill="url(#metal)"/>
-              <path d="M197 42h6l-3 36z" fill="#b9c4d2"/>
-            </g></g>
-            <g class="fadein" style="--dl:3.4s">
-              <polygon class="beam" points="184,30 216,30 244,100 156,100" fill="#6aa7ff" opacity=".35"/>
-              <rect x="180" y="-6" width="40" height="38" rx="10" fill="#6aa7ff"/>
-              <rect x="212" y="-40" width="14" height="40" rx="5" fill="#33405a" transform="rotate(25 219 -20)"/>
-            </g>
-            <g transform="translate(250 70)"><use href="#star" class="pop" style="--dl:4.7s" fill="#fff"/></g>
-            <g transform="translate(150 60)"><use href="#star" class="pop" style="--dl:5s" fill="#5eead4"/></g>
-          </g>
-        </svg><span class="sv-n">02</span></div>
-        <h3>Plomba</h3><p>Kariesli qism tozalanadi, kovak maxsus material bilan to'ldirilib, nur bilan qotiriladi.</p>
-        <ul><li>Kariesni tozalash</li><li>To'ldirish</li><li>Nur bilan qotirish</li></ul>
-      </article>
-      <article class="sv">
-        <div class="sv-scene"><svg class="sc on" viewBox="0 0 400 300" role="img" aria-label="Professional tozalash animatsiyasi">
-          <g fill="url(#tg)"><rect x="60" y="96" width="64" height="112" rx="26"/><rect x="136" y="96" width="64" height="112" rx="26"/><rect x="212" y="96" width="64" height="112" rx="26"/><rect x="288" y="96" width="64" height="112" rx="26"/></g>
-          <g fill="#d4a64a" opacity=".62">
-            <rect class="fadeout" x="60" y="96" width="64" height="112" rx="26" style="--dl:.6s"/>
-            <rect class="fadeout" x="136" y="96" width="64" height="112" rx="26" style="--dl:1.7s"/>
-            <rect class="fadeout" x="212" y="96" width="64" height="112" rx="26" style="--dl:2.8s"/>
-            <rect class="fadeout" x="288" y="96" width="64" height="112" rx="26" style="--dl:3.9s"/>
-          </g>
-          <g fill="#7a5a22">
-            <ellipse class="fadeout" cx="76" cy="190" rx="10" ry="6" style="--dl:.6s"/><ellipse class="fadeout" cx="108" cy="176" rx="8" ry="5" style="--dl:.7s"/>
-            <ellipse class="fadeout" cx="152" cy="192" rx="10" ry="6" style="--dl:1.7s"/><ellipse class="fadeout" cx="184" cy="178" rx="8" ry="5" style="--dl:1.8s"/>
-            <ellipse class="fadeout" cx="228" cy="190" rx="10" ry="6" style="--dl:2.8s"/><ellipse class="fadeout" cx="260" cy="176" rx="8" ry="5" style="--dl:2.9s"/>
-            <ellipse class="fadeout" cx="304" cy="192" rx="10" ry="6" style="--dl:3.9s"/><ellipse class="fadeout" cx="336" cy="178" rx="8" ry="5" style="--dl:4s"/>
-          </g>
-          <path d="M0 106Q48 84 96 106T192 106T288 106T400 106V0H0Z" fill="url(#gum)"/>
-          <g transform="translate(54 0)"><g class="sweep">
-            <rect x="22" y="18" width="16" height="70" rx="8" fill="#33405a"/>
-            <path d="M30 88V150l8 14" stroke="#cfd8e3" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle class="wave" cx="38" cy="164" r="10" fill="none" stroke="#5eead4" stroke-width="3"/>
-            <circle class="wave" cx="38" cy="164" r="10" fill="none" stroke="#5eead4" stroke-width="3" style="animation-delay:.4s"/>
-          </g></g>
-          <g transform="translate(92 70)"><use href="#star" class="pop" style="--dl:1.3s" fill="#fff"/></g>
-          <g transform="translate(168 70)"><use href="#star" class="pop" style="--dl:2.4s" fill="#fff"/></g>
-          <g transform="translate(244 70)"><use href="#star" class="pop" style="--dl:3.5s" fill="#fff"/></g>
-          <g transform="translate(320 70)"><use href="#star" class="pop" style="--dl:4.6s" fill="#5eead4"/></g>
-        </svg><span class="sv-n">03</span></div>
-        <h3>Professional tozalash</h3><p>Ultratovush bilan tish toshi va karash olinadi, tishlar silliq va toza bo'ladi.</p>
-        <ul><li>Ultratovush</li><li>Karashni olish</li><li>Silliqlash</li></ul>
-      </article>
-      <article class="sv">
-        <div class="sv-scene"><svg class="sc on" viewBox="0 -40 400 300" role="img" aria-label="Tish sug'urish animatsiyasi">
-          <rect y="180" width="400" height="120" fill="url(#bone)"/>
-          <ellipse class="heal" cx="200" cy="222" rx="30" ry="46" fill="#c0566c"/>
-          <g class="lift" style="--dl:2.2s"><g class="wig" style="--dl:.9s">
-            <g transform="translate(50 40)"><path d="M110 120C110 70 150 60 200 66 250 60 290 70 290 120 290 160 272 175 268 215 264 262 246 270 238 236 232 212 218 200 200 200 182 200 168 212 162 236 154 270 136 262 132 215 128 175 110 160 110 120Z" fill="url(#tg)"/></g>
-            <g class="drop" style="--dy:-130px;--dl:0s;--du:.8s">
-              <path d="M140 0L168 116" stroke="url(#metal)" stroke-width="12" stroke-linecap="round"/>
-              <path d="M260 0L232 116" stroke="url(#metal)" stroke-width="12" stroke-linecap="round"/>
-              <circle cx="200" cy="-6" r="10" fill="#33405a"/>
-            </g>
-          </g></g>
-          <path d="M0 150H110Q150 150 160 176 200 196 240 176 250 150 290 150H400V190H0Z" fill="url(#gum)" opacity="0"/>
-          <path d="M0 150H400V194H0Z" fill="url(#gum)"/>
-          <g class="fadein" style="--dl:3.7s"><rect x="236" y="36" width="140" height="38" rx="19" fill="#5eead4"/><text x="306" y="60" text-anchor="middle" font-size="14" font-weight="700" fill="#04211c" font-family="Manrope,sans-serif">Tiklanish ✓</text></g>
-        </svg><span class="sv-n">04</span></div>
-        <h3>Tish sug'urish</h3><p>Mahalliy og'riqsizlantirishdan so'ng tish ehtiyotkorlik bilan chiqariladi.</p>
-        <ul><li>Og'riqsizlantirish</li><li>Sug'urish</li><li>Tiklanish tavsiyasi</li></ul>
-      </article>
-      <article class="sv">
-        <div class="sv-scene"><svg class="sc on" viewBox="0 0 400 300" role="img" aria-label="Protez va koronka animatsiyasi">
-          <rect y="214" width="400" height="86" fill="url(#bone)"/>
-          <path d="M70 196L78 136Q100 122 122 136L130 196Z" fill="#d9c9a6"/>
-          <path d="M270 196L278 136Q300 122 322 136L330 196Z" fill="#d9c9a6"/>
-          <path class="dash" d="M130 196V132Q200 110 270 132V196" fill="none" stroke="#5eead4" stroke-width="2.5" stroke-dasharray="7 7"/>
-          <path d="M0 192H70Q100 190 130 200 200 210 270 200 300 190 330 192H400V220H0Z" fill="url(#gum)"/>
-          <g class="drop" style="--dy:-190px;--dl:.9s;--du:1.2s">
-            <path d="M58 196C52 134 68 98 100 98 120 98 130 108 142 112 162 100 178 100 200 100 222 100 238 100 258 112 270 108 280 98 300 98 332 98 348 134 342 196Z" fill="url(#tg)"/>
-            <path d="M138 114V196M262 114V196" stroke="#bcd6d1" stroke-width="2" fill="none"/>
-            <path d="M74 130C76 118 84 112 94 110M174 120C180 114 190 112 198 112M274 130C278 118 286 112 296 110" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"/>
-          </g>
-          <g transform="translate(100 88)"><use href="#star" class="pop" style="--dl:2.3s" fill="#e8c27a"/></g>
-          <g transform="translate(200 84)"><use href="#star" class="pop" style="--dl:2.6s" fill="#5eead4"/></g>
-          <g transform="translate(300 88)"><use href="#star" class="pop" style="--dl:2.9s" fill="#6aa7ff"/></g>
-        </svg><span class="sv-n">05</span></div>
-        <h3>Protez va koronka</h3><p>Yo'qolgan yoki shikastlangan tishlar o'rniga qulay va chiroyli qoplama o'rnatiladi.</p>
-        <ul><li>O'lchov</li><li>Yasash</li><li>O'rnatish</li></ul>
-      </article>
-      <article class="sv">
-        <div class="sv-scene"><svg class="sc on" viewBox="0 0 400 300" role="img" aria-label="Tishni oqartirish animatsiyasi">
-          <g>
-            <rect class="wt" x="30" y="96" width="62" height="118" rx="26" style="--dl:.4s"/>
-            <rect class="wt" x="98" y="96" width="62" height="118" rx="26" style="--dl:.9s"/>
-            <rect class="wt" x="166" y="96" width="68" height="118" rx="28" style="--dl:1.4s"/>
-            <rect class="wt" x="240" y="96" width="62" height="118" rx="26" style="--dl:1.9s"/>
-            <rect class="wt" x="308" y="96" width="62" height="118" rx="26" style="--dl:2.4s"/>
-          </g>
-          <path d="M0 106Q50 84 100 106T200 106T300 106T400 106V0H0Z" fill="url(#gum)"/>
-          <polygon class="beam" points="110,34 290,34 340,200 60,200" fill="#6aa7ff" opacity=".18"/>
-          <rect x="110" y="14" width="180" height="26" rx="13" fill="#6aa7ff"/>
-          <rect x="60" y="248" width="280" height="8" rx="4" fill="#1b2740"/>
-          <rect class="grow" x="60" y="248" width="280" height="8" rx="4" fill="#5eead4" style="--dl:.4s;--du:2.6s"/>
-          <text x="60" y="280" font-size="13" font-weight="700" fill="#9aa6bb" font-family="Manrope,sans-serif">A3.5</text>
-          <text x="340" y="280" text-anchor="end" font-size="13" font-weight="700" fill="#5eead4" font-family="Manrope,sans-serif">B1</text>
-          <g transform="translate(61 150)"><use href="#star" class="pop" style="--dl:1s" fill="#fff"/></g>
-          <g transform="translate(199 150)"><use href="#star" class="pop" style="--dl:2s" fill="#fff"/></g>
-          <g transform="translate(339 150)"><use href="#star" class="pop" style="--dl:3s" fill="#fff"/></g>
-        </svg><span class="sv-n">06</span></div>
-        <h3>Tishni oqartirish</h3><p>Maxsus gel va yorug'lik yordamida tishlar bir necha tonga ochiladi.</p>
-        <ul><li>Tozalash</li><li>Gel va nur</li><li>Natijani saqlash</li></ul>
-      </article>
-  </div>
-  <div class="svc-prog"><i id="svcProg"></i></div>
-  <p class="svc-note wrap">Animatsiyalar umumiy tushuntirish uchun. Aniq davolash rejasi shifokor ko'rigidan so'ng belgilanadi.</p>
-</section>
-
-<!-- NUMBERS -->
-<section class="nums">
-  <div class="nums-tooth" aria-hidden="true"><svg viewBox="-40 -20 280 290"><use href="#toothArt"/></svg></div>
-  <div class="wrap nums-grid">
-    <div class="reveal"><b data-count="8">0</b><span>yillik tajriba</span></div>
-    <div class="reveal"><b data-count="1878" data-sep>0</b><span>kuzatuvchi</span></div>
-    <div class="reveal"><b data-count="304">0</b><span>nashr</span></div>
-    <div class="reveal"><b data-count="6">0</b><span>asosiy yo'nalish</span></div>
+    <p class="fine">Aniq davolash rejasi shifokor ko'rigidan so'ng belgilanadi.</p>
   </div>
 </section>
 
-<!-- SMILE SLIDER -->
-<section class="sec smile light" id="smile">
+<!-- BEFORE / AFTER -->
+<section class="sec smile" id="smile">
   <div class="wrap smile-grid">
     <div>
-      <p class="eyebrow reveal"><span class="dot"></span> Tabassum tajribasi</p>
-      <h2 class="split">Oldin va <em>keyin</em> farqni his qiling</h2>
-      <p class="reveal smile-p">Slayderni suring: sarg'ish tishlar professional tozalash va oqartirishdan keyin qanday tovlanishini ko'ring.</p>
-      <p class="reveal fine">Namoyish: bitta real fotosurat, tish rangi ishlov berilgan. Haqiqiy natija tish holatiga bog'liq.</p>
+      <p class="tag light pop">Tabassum natijasi</p>
+      <h2 class="pop">Oldin va <span class="hl y">keyin</span> farqni his qiling</h2>
+      <p class="pop smile-p">Slayderni suring: sarg'ish tishlar tozalash va oqartirishdan keyin qanday tovlanadi.</p>
+      <p class="pop fine w">Namoyish: bitta real fotosurat, tish rangi ishlov berilgan. Haqiqiy natija tish holatiga bog'liq.</p>
     </div>
-    <div class="ba reveal" id="ba" style="--x:50%">
-      <div class="ba-layer"><img src="img/smile_before.jpg" alt="Oldin: sarg'ish tishlar" loading="lazy" draggable="false"></div>
-      <div class="ba-layer after"><img src="img/smile_after.jpg" alt="Keyin: oq tishlar" loading="lazy" draggable="false"></div>
-      <span class="tag l">Oldin</span><span class="tag r">Keyin</span>
+    <div class="ba pop" id="ba" style="--x:50%">
+      <div class="ba-layer"><img src="img/smile_before.jpg" alt="Oldin" loading="lazy" draggable="false"></div>
+      <div class="ba-layer after"><img src="img/smile_after.jpg" alt="Keyin" loading="lazy" draggable="false"></div>
+      <span class="bt l">Oldin</span><span class="bt r">Keyin</span>
       <i class="ba-line"><b><svg viewBox="0 0 24 24"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></b></i>
       <input type="range" min="0" max="100" value="50" id="baR" aria-label="Oldin va keyin slayderi">
     </div>
   </div>
 </section>
 
-<!-- LAB -->
-<section class="sec lab" id="lab">
-  <div class="wrap lab-grid">
-    <div class="lab-text">
-      <p class="eyebrow reveal"><span class="dot"></span> Interaktiv tashxis</p>
-      <h2 class="split">Tishingizda <em>nima</em> bo'layotganini bilib oling</h2>
-      <p class="reveal">Tishdagi nuqtalarni bosing — eng ko'p uchraydigan holatlar va ularning belgilari bilan tanishing.</p>
-      <div class="info reveal" id="info" aria-live="polite">
-        <h3 id="infoT">Kariyes</h3>
-        <p id="infoP">Emal yemirilishidan boshlanadi. Dastlab qora dog' yoki shirinlikka sezgirlik bo'lishi mumkin. Erta davolansa, tishni to'liq saqlab qolish oson.</p>
-        <small>Bu umumiy ma'lumot, tashxis emas. Aniq tashxis uchun shifokorga ko'rining.</small>
-      </div>
+<!-- PROBLEMS -->
+<section class="sec probs" id="probs">
+  <div class="wrap">
+    <p class="tag pop">Tashxis</p>
+    <h2 class="pop">Sizni nima <span class="hl">bezovta</span> qilyapti?</h2>
+    <div class="chips pop" id="chips" role="tablist">
+      <button class="on" data-k="0">Qora dog' (kariyes)</button>
+      <button data-k="1">Milk qonashi</button>
+      <button data-k="2">Tish qimirlashi</button>
+      <button data-k="3">Tish toshi, sarg'ayish</button>
+      <button data-k="4">Tish yo'qolgan</button>
     </div>
-    <div class="lab-visual reveal">
-      <div class="tooth-stage tilt" id="stage">
-        <svg viewBox="0 0 200 240" class="tooth">
-          <defs>
-            <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#e9f3f1"/><stop offset="1" stop-color="#a9cfc9"/></linearGradient>
-            <filter id="sh"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#5eead4" flood-opacity=".35"/></filter>
-          </defs>
-          <path fill="url(#tg)" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/>
-          <path fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3" stroke-linecap="round" d="M52 52c4-14 16-22 30-24"/>
-        </svg>
-        <button class="hot on" data-k="0" style="left:50%;top:14%" aria-label="Kariyes"><i></i></button>
-        <button class="hot" data-k="1" style="left:22%;top:50%" aria-label="Gingivit"><i></i></button>
-        <button class="hot" data-k="2" style="left:78%;top:52%" aria-label="Parodontit"><i></i></button>
-        <button class="hot" data-k="3" style="left:50%;top:82%" aria-label="Tish toshi"><i></i></button>
-        <span class="ring r1"></span><span class="ring r2"></span>
+    <div class="answer pop" id="answer" aria-live="polite">
+      <div class="ans-img"><img id="ansImg" src="img/smile.jpg" alt=""></div>
+      <div class="ans-body">
+        <span class="badge" id="ansTag">Plomba</span>
+        <h3 id="ansT">Kariyes</h3>
+        <p id="ansP">Emal yemirilishidan boshlanadi. Dastlab qora dog' yoki shirinlikka sezgirlik bo'lishi mumkin. Erta davolansa, tishni to'liq saqlab qolish oson.</p>
+        <a href="#contact" class="btn ink"><span>Maslahat olish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <small>Bu umumiy ma'lumot, tashxis emas. Aniq tashxis uchun shifokorga ko'ring.</small>
       </div>
     </div>
   </div>
@@ -343,43 +199,27 @@
 <!-- PROCESS -->
 <section class="sec process" id="process">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="dot"></span> Jarayon</p>
-    <h2 class="split">Qabuldan <em>tabassumgacha</em></h2>
-    <ol class="steps" id="steps">
-      <li class="reveal"><span class="n">1</span><div><h3>Bog'lanish</h3><p>Qo'ng'iroq qiling yoki Telegram orqali yozing — qulay vaqtni birga tanlaymiz.</p></div></li>
-      <li class="reveal"><span class="n">2</span><div><h3>Ko'rik va tashxis</h3><p>Holatni ko'rib chiqamiz, kerak bo'lsa rentgen qilamiz va muammoni tushuntirib beramiz.</p></div></li>
-      <li class="reveal"><span class="n">3</span><div><h3>Davolash</h3><p>Reja kelishilgach, qulay va og'riqsiz davolash boshlanadi.</p></div></li>
-      <li class="reveal"><span class="n">4</span><div><h3>Parvarish</h3><p>Tiklanish va kundalik gigiena bo'yicha aniq tavsiyalar olasiz.</p></div></li>
+    <p class="tag pop">Jarayon</p>
+    <h2 class="pop">Qabuldan <span class="hl">tabassumgacha</span></h2>
+    <ol class="steps">
+      <li class="pop c-violet"><span>1</span><h3>Bog'lanish</h3><p>Qo'ng'iroq qiling yoki Telegram'da yozing. Qulay vaqtni birga tanlaymiz.</p></li>
+      <li class="pop c-coral" style="--d:.08s"><span>2</span><h3>Ko'rik va tashxis</h3><p>Holatni ko'ramiz, kerak bo'lsa rentgen qilamiz va muammoni tushuntiramiz.</p></li>
+      <li class="pop c-mint" style="--d:.16s"><span>3</span><h3>Davolash</h3><p>Reja kelishilgach, qulay va og'riqsiz davolash boshlanadi.</p></li>
+      <li class="pop c-sun" style="--d:.24s"><span>4</span><h3>Parvarish</h3><p>Tiklanish va kundalik gigiena bo'yicha aniq tavsiyalar olasiz.</p></li>
     </ol>
   </div>
 </section>
 
-<!-- GALLERY STRIP -->
-<section class="strip" aria-label="Klinika">
-  <div class="strip-row" id="strip">
-    <img src="img/clinic2.jpg" alt="Zamonaviy stomatologik kabinet" loading="lazy">
-    <img src="img/care.jpg" alt="Og'iz gigiyenasi" loading="lazy">
-    <img src="img/tools.jpg" alt="Stomatologik asboblar" loading="lazy">
-    <img src="img/consult.jpg" alt="Maslahat" loading="lazy">
-    <img src="img/scan.jpg" alt="Raqamli tish skaneri" loading="lazy">
-    <img src="img/smile.jpg" alt="Tish ko'rigi" loading="lazy">
-  </div>
-</section>
-
-<!-- FACTS -->
-<section class="sec facts"  id="facts">
+<!-- HABITS -->
+<section class="sec habits">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="dot"></span> Foydali odatlar</p>
-    <h2 class="split">Tishni asrash <em>oson</em></h2>
+    <p class="tag pop">Foydali odatlar</p>
+    <h2 class="pop">Tishni asrash <span class="hl">oson</span></h2>
     <div class="bento">
-      <div class="fc reveal">
-        <svg viewBox="0 0 120 120" class="rg"><circle cx="60" cy="60" r="50" class="bgc"/><circle cx="60" cy="60" r="50" class="fg"/></svg>
-        <div><b>2 daqiqa</b><span>Har safar cho'tkalash</span></div>
-      </div>
-      <div class="fc reveal"><div class="big"><i data-count="2">0</i>×</div><div><b>Kuniga 2 marta</b><span>Ertalab va kechqurun</span></div></div>
-      <div class="fc reveal"><div class="big"><i data-count="32">0</i></div><div><b>32 ta tish</b><span>Voyaga yetgan odamda</span></div></div>
-      <div class="fc reveal"><div class="big"><i data-count="6">0</i><small>oy</small></div><div><b>Har 6 oyda ko'rik</b><span>Muammoni erta ushlash uchun</span></div></div>
-      <div class="fc reveal"><div class="big"><i data-count="3">0</i><small>oy</small></div><div><b>Cho'tkani almashtiring</b><span>Yoki tuklari yoyilganda</span></div></div>
+      <div class="hb c-violet pop"><b><i data-count="2">0</i> daqiqa</b><span>Har safar cho'tkalash</span></div>
+      <div class="hb c-sun pop" style="--d:.06s"><b><i data-count="2">0</i> marta</b><span>Kuniga: ertalab va kechqurun</span></div>
+      <div class="hb c-mint pop" style="--d:.12s"><b><i data-count="6">0</i> oy</b><span>Profilaktik ko'rik muddati</span></div>
+      <div class="hb c-coral pop" style="--d:.18s"><b><i data-count="3">0</i> oy</b><span>Cho'tkani almashtiring</span></div>
     </div>
   </div>
 </section>
@@ -388,14 +228,15 @@
 <section class="sec faq" id="faq">
   <div class="wrap faq-grid">
     <div>
-      <p class="eyebrow reveal"><span class="dot"></span> Savollar</p>
-      <h2 class="split">Ko'p so'raladigan <em>savollar</em></h2>
+      <p class="tag pop">Savollar</p>
+      <h2 class="pop">Ko'p so'raladigan <span class="hl">savollar</span></h2>
     </div>
-    <div class="qa reveal">
+    <div class="qa pop">
       <details open><summary>Tish sug'urish og'riqlimi?</summary><p>Jarayon mahalliy og'riqsizlantirish ostida o'tadi, shuning uchun og'riq sezilmaydi. Shifokor har bir bosqichni oldindan tushuntiradi.</p></details>
-      <details><summary>Qabulga qanday yozilaman?</summary><p>+998 99 840 14 48 raqamiga qo'ng'iroq qiling yoki Telegram orqali yozing. Telegramda tish bo'yicha bepul maslahat ham beriladi.</p></details>
+      <details><summary>Qabulga qanday yozilaman?</summary><p>+998 99 840 14 48 raqamiga qo'ng'iroq qiling yoki Telegram orqali yozing. Tish bo'yicha bepul maslahat ham beriladi.</p></details>
       <details><summary>Tishni qanchalik tez-tez tozalatish kerak?</summary><p>Odatda professional tozalash yiliga 1–2 marta tavsiya etiladi. Aniq muddatni shifokor holatingizga qarab aytadi.</p></details>
-      <details><summary>Milk qonashi nimadan darak beradi?</summary><p>Bu gingivit yoki parodontit belgisi bo'lishi mumkin. Bunday holda kechiktirmay shifokorga murojaat qilish kerak.</p></details>
+      <details><summary>Milk qonashi nimadan darak beradi?</summary><p>Bu gingivit yoki parodontit belgisi bo'lishi mumkin. Bunday holda kechiktirmay shifokorga murojaat qiling.</p></details>
+      <details><summary>Implant kimlarga mos?</summary><p>Bu individual: suyak va milk holati, umumiy salomatlik hisobga olinadi. Shifokor ko'rik va rentgendan keyin aytadi.</p></details>
     </div>
   </div>
 </section>
@@ -403,12 +244,12 @@
 <!-- CONTACT -->
 <section class="sec contact" id="contact">
   <div class="wrap">
-    <div class="cta-card">
-      <div class="glow g3"></div>
+    <div class="cta">
+      <i class="blob b4"></i>
       <div class="cta-text">
-        <p class="eyebrow"><span class="dot"></span> Qabul uchun yoziling</p>
-        <h2 class="split">Tabassum sari <em>birinchi qadam</em></h2>
-        <p>Ma'lumotlaringizni qoldiring — Telegram orqali shifokorga tayyor xabar yuboriladi.</p>
+        <p class="tag light">Qabul uchun yoziling</p>
+        <h2>Tabassum sari <span class="hl y">birinchi qadam</span></h2>
+        <p>Ma'lumotlaringizni qoldiring: Telegram orqali shifokorga tayyor xabar yuboriladi.</p>
         <ul class="contacts">
           <li><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg><a href="tel:+998998401448">+998 99 840 14 48</a></li>
           <li><svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg><span>IIV Stomatologiya poliklinikasi</span></li>
@@ -419,11 +260,9 @@
         <label>Ismingiz<input name="name" autocomplete="name" placeholder="Ism familiya" required></label>
         <label>Telefon<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+998 __ ___ __ __" required></label>
         <label>Xizmat
-          <select name="svc">
-            <option>Maslahat</option><option>Tish sug'urish</option><option>Tish davolash</option><option>Protezlash</option><option>Professional tozalash</option>
-          </select>
+          <select name="svc"><option>Maslahat</option><option>Implant</option><option>Plomba</option><option>Professional tozalash</option><option>Tish sug'urish</option><option>Protez</option><option>Oqartirish</option></select>
         </label>
-        <button class="btn primary magnetic" type="submit"><span>Telegramda yuborish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <button class="btn sun" type="submit"><span>Telegramda yuborish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         <p class="note" id="note"></p>
       </form>
     </div>
@@ -433,14 +272,14 @@
 
 <footer class="foot">
   <div class="wrap foot-in">
-    <a href="#top" class="logo"><svg viewBox="0 0 200 240"><path d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></svg><span>Dr. Xayot</span></a>
+    <a href="#top" class="logo dark"><i>X</i><span>Dr. Xayot</span></a>
     <p>© <span id="yr"></span> Dr. Xayot · Xirurg stomatolog</p>
   </div>
 </footer>
 
 <div class="dock" id="dock">
-  <a href="tel:+998998401448" class="btn primary"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg><span>Qo'ng'iroq</span></a>
-  <a href="#contact" class="btn ghost"><span>Qabulga yozilish</span></a>
+  <a href="tel:+998998401448" class="btn sun"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11 11 0 0 0 3.5.55 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.2.2 2.4.55 3.5a1 1 0 0 1-.25 1z"/></svg><span>Qo'ng'iroq</span></a>
+  <a href="#contact" class="btn ink"><span>Qabulga yozilish</span></a>
 </div>
 
 <script src="main.js"></script>
