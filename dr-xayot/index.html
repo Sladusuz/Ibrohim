@@ -14,8 +14,24 @@
 <link rel="stylesheet" href="v2.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<radialGradient id="tbody" cx=".38" cy=".25" r=".95"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#f1f6f5"/><stop offset=".8" stop-color="#cfe3e1"/><stop offset="1" stop-color="#a9c9c6"/></radialGradient>
+<linearGradient id="trim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".7" stop-color="#5eead4" stop-opacity=".0"/><stop offset="1" stop-color="#5eead4" stop-opacity=".75"/></linearGradient>
+<radialGradient id="tglow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#5eead4" stop-opacity=".45"/><stop offset="1" stop-color="#5eead4" stop-opacity="0"/></radialGradient>
+<clipPath id="tclip"><path id="tpath" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></clipPath>
+<symbol id="toothArt" viewBox="-40 -20 280 290" stroke="none">
+ <use href="#tpath" fill="url(#tbody)"/>
+ <g clip-path="url(#tclip)">
+  <use href="#tpath" fill="none" stroke="url(#trim)" stroke-width="16"/>
+  <path d="M0 60 C60 40 140 60 200 40 V0 H0Z" fill="#fff" opacity=".35"/>
+  <path d="M50 150 C60 190 70 215 78 222 L50 230 L30 150Z" fill="#9fc3c0" opacity=".25"/>
+  <path d="M150 150 C140 190 130 215 122 222 L150 230 L170 150Z" fill="#9fc3c0" opacity=".25"/>
+ </g>
+ <path d="M44 62c3-18 16-30 34-34" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".95"/>
+ <path d="M38 92c-1-6-1-11 0-16" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+ <ellipse cx="142" cy="46" rx="9" ry="4" transform="rotate(-30 142 46)" fill="#fff" opacity=".8"/>
+</symbol></defs></svg>
 
-<canvas id="gl" aria-hidden="true"></canvas>
 <div class="loader" id="loader" aria-hidden="true">
   <svg viewBox="0 0 200 240" class="loader-tooth"><path pathLength="1" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/></svg>
   <div class="loader-num"><span id="loadNum">0</span>%</div>
@@ -46,8 +62,9 @@
 
 <main>
 <!-- HERO -->
-<section class="hx" id="top" data-gl=".56,-.02,1,-.55" data-glm="0,.4,.62,-.3">
+<section class="hx" id="top">
   <div class="hx-glow"></div>
+  <div class="hx-tooth" aria-hidden="true"><i class="orb o1"></i><i class="orb o2"></i><i class="sp s1"></i><i class="sp s2"></i><i class="sp s3"></i><svg viewBox="-40 -20 280 290"><use href="#toothArt"/></svg></div>
   <p class="eyebrow hx-eyebrow reveal"><span class="dot"></span> Xirurg stomatolog · IIV Stomatologiya poliklinikasi</p>
   <h1 class="hx-title" aria-label="Mukammal tabassum">
     <span class="ln"><span>Mukammal</span></span>
@@ -107,13 +124,13 @@
     <symbol id="row" viewBox="0 0 600 220"><g fill="currentColor"><rect x="10" y="30" width="92" height="170" rx="40"/><rect x="106" y="14" width="92" height="190" rx="40"/><rect x="202" y="6" width="92" height="200" rx="42"/><rect x="298" y="6" width="92" height="200" rx="42"/><rect x="394" y="14" width="92" height="190" rx="40"/><rect x="490" y="30" width="92" height="170" rx="40"/></g><g fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".45"><path d="M32 70v50M128 60v60M224 56v64M320 56v64M416 60v60M512 70v50"/></g></symbol>
   </defs>
 </svg>
-<section class="svc" id="services" data-gl="0,0,0,0">
+<section class="svc" id="services">
   <div class="svc-head wrap">
     <div>
       <p class="eyebrow"><span class="dot"></span> Xizmatlar</p>
       <h2>Har bir davolash — <em>jonli</em></h2>
     </div>
-    <p class="svc-hint">Suring <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></p>
+    <div class="svc-nav"><button id="svPrev" aria-label="Oldingi"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button><button id="svNext" aria-label="Keyingi"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
   </div>
   <div class="svc-track" id="svcTrack">
       <article class="sv">
@@ -261,7 +278,8 @@
 </section>
 
 <!-- NUMBERS -->
-<section class="nums" data-gl="-.52,0,1.1,3.1" data-glm="0,-.62,.5,3.1">
+<section class="nums">
+  <div class="nums-tooth" aria-hidden="true"><svg viewBox="-40 -20 280 290"><use href="#toothArt"/></svg></div>
   <div class="wrap nums-grid">
     <div class="reveal"><b data-count="8">0</b><span>yillik tajriba</span></div>
     <div class="reveal"><b data-count="1878" data-sep>0</b><span>kuzatuvchi</span></div>
@@ -309,7 +327,7 @@
             <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".6" stop-color="#e9f3f1"/><stop offset="1" stop-color="#a9cfc9"/></linearGradient>
             <filter id="sh"><feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#5eead4" flood-opacity=".35"/></filter>
           </defs>
-          <path filter="url(#sh)" fill="url(#tg)" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/>
+          <path fill="url(#tg)" d="M100 20C60 0 20 25 25 80c3 40 20 60 25 110 3 30 22 35 28 0 4-25 12-40 22-40s18 15 22 40c6 35 25 30 28 0 5-50 22-70 25-110C180 25 140 0 100 20Z"/>
           <path fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3" stroke-linecap="round" d="M52 52c4-14 16-22 30-24"/>
         </svg>
         <button class="hot on" data-k="0" style="left:50%;top:14%" aria-label="Kariyes"><i></i></button>
@@ -425,9 +443,6 @@
   <a href="#contact" class="btn ghost"><span>Qabulga yozilish</span></a>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="main.js"></script>
 </body>
 </html>

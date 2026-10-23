@@ -1,7 +1,6 @@
 /* ===== v2 — cinematic layer ===== */
 :root{--bg:#05070d;--bg2:#090d18;--pearl:#f3efe7}
 body{background:var(--bg)}
-#gl{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
 main>section,main>.mq2{position:relative;z-index:2}
 .btn.dark{background:#0b0f1a;color:#f3efe7}
 .btn.dark:hover{background:#18203a}
@@ -131,3 +130,67 @@ h2{font-size:clamp(2.2rem,8vw,5rem);max-width:18ch}
 .sv-scene:not(.play) .beam,.sv-scene:not(.play) .wave,.sv-scene:not(.play) .dash{animation:none}
 .sv-scene:not(.play) *{animation-play-state:paused}
 .sv{contain:layout paint}
+
+/* ===== lean pass ===== */
+.cursor{display:none!important}
+@media (min-width:900px){body,a,button,.panel,summary{cursor:auto}a,button,summary{cursor:pointer}}
+.dot{animation:none}
+.chip,.badge,.tooth{animation:none}
+.r2{animation:none}
+.seal{animation:none}
+.scroll-hint i{animation:none}
+.wave,.beam,.dash{animation:none}
+.play .wave{animation:wave 1.1s ease-out infinite}
+.play .beam{animation:beam 1.8s ease-in-out infinite}
+.play .dash{animation:dashm 1.2s linear infinite}
+.reveal{transition-duration:.7s}
+.mq2 .row{font-size:clamp(2.6rem,9vw,7rem)}
+
+/* hero tooth (pure CSS motion, transform only) */
+.hx-tooth{position:absolute;z-index:0;right:4%;top:14%;width:min(36vw,520px);aspect-ratio:280/290;pointer-events:none}
+.hx-tooth svg{width:100%;height:100%;display:block;animation:bob 7s ease-in-out infinite;will-change:transform}
+.hx-tooth .orb{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgba(94,234,212,.4);transform:translate(-50%,-50%) rotateX(68deg);animation:orb 18s linear infinite}
+.hx-tooth .o1{width:112%;aspect-ratio:1}
+.hx-tooth .o2{width:140%;aspect-ratio:1;border-color:rgba(106,167,255,.28);animation-duration:28s;animation-direction:reverse}
+.hx-tooth .sp{position:absolute;width:6px;height:6px;border-radius:50%;background:#9ff5e6;opacity:.8;animation:tw 3s ease-in-out infinite}
+.hx-tooth .s1{left:6%;top:20%}.hx-tooth .s2{right:2%;top:46%;animation-delay:1s}.hx-tooth .s3{left:18%;bottom:6%;animation-delay:2s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-18px) rotate(3deg)}}
+@keyframes orb{to{transform:translate(-50%,-50%) rotateX(68deg) rotateZ(360deg)}}
+@keyframes tw{50%{opacity:.15;transform:scale(.5)}}
+.hx-title,.hx-bottom,.hx-eyebrow{position:relative;z-index:1}
+@media (max-width:899px){
+  .hx-tooth{width:min(62vw,300px);right:50%;margin-right:-min(31vw,150px);top:11%}
+  .hx-tooth{left:50%;right:auto;transform:translateX(-50%);margin:0}
+}
+.nums{position:relative;overflow:hidden}
+.nums-tooth{position:absolute;left:6%;top:50%;width:min(30vw,420px);aspect-ratio:280/290;transform:translateY(-50%);opacity:.95;pointer-events:none}
+.nums-tooth svg{width:100%;height:100%;animation:bob 8s ease-in-out infinite}
+@media (max-width:899px){.nums-tooth{display:none}}
+.nums-grid{position:relative}
+
+/* services: native scroller */
+.svc{height:auto!important;display:block!important;overflow:visible!important}
+.svc-track{flex-direction:column}
+.svc-nav{display:none}
+@media (min-width:900px){
+  .svc{padding:100px 0 40px}
+  .svc-track{flex-direction:row;width:auto;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px var(--gut) 18px;scrollbar-width:none;overscroll-behavior-x:contain}
+  .svc-track::-webkit-scrollbar{display:none}
+  .sv{scroll-snap-align:start;width:min(500px,42vw)}
+  .svc-nav{display:flex;gap:10px}
+  .svc-nav button{width:54px;height:54px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:background .3s}
+  .svc-nav button:hover{background:rgba(94,234,212,.15)}
+  .svc-nav svg{width:22px;height:22px}
+  .svc-prog{display:block}
+}
+.sv:hover{transform:none}
+.sv{contain:none}
+.mani .w{opacity:.14;transition:opacity .6s ease;transition-delay:calc(var(--i)*35ms)}
+.mani.in .w{opacity:1}
+.steps::before{background:var(--mint)!important;opacity:.35}
+.strip{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.strip-row{transform:none!important;will-change:auto}
+.hx-glow{display:none}
+
+.hx-tooth::before,.nums-tooth::before{content:"";position:absolute;inset:-30%;background:radial-gradient(closest-side,rgba(94,234,212,.28),transparent);pointer-events:none}

@@ -357,7 +357,7 @@ h2{font-size:clamp(2rem,7vw,4rem);margin-bottom:clamp(20px,4vw,40px);max-width:1
   .cursor{display:block;position:fixed;left:0;top:0;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:1.5px solid var(--mint);pointer-events:none;z-index:200;transition:width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),background .3s,opacity .3s;mix-blend-mode:difference;opacity:0}
   .cursor.on{opacity:1}
   .cursor.big{width:70px;height:70px;margin:-35px 0 0 -35px;background:rgba(94,234,212,.2)}
-  @media (hover:hover){body,a,button,.panel,summary{cursor:none}}
+  
 }
 
 @media (max-width:380px){
