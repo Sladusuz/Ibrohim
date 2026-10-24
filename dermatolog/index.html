@@ -2,93 +2,397 @@
 <html lang="uz-Cyrl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Дерматолог Захид — Тери касалликлари ечими</title>
-<meta name="description" content="Тери касалликларини ечими ва даволаш сирлари. 15+ йиллик тажриба, 30 000 мижоз. Дерматовенеролог консультацияси.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Дерматовенеролог Захид — Тери ечими</title>
+<meta name="description" content="Тери касалликларини ечими ва даволаш сирлари. 15+ йиллик тажриба, 30 000 мижоз. Онлайн консультация ва уйга чақириш.">
+<meta name="theme-color" content="#06191b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6fbfa; --surface:#fff; --ink:#0f2a2e; --muted:#51696d;
-  --brand:#0f8b8d; --brand-d:#0a6567; --accent:#ffb347; --line:#dcebea;
-  --radius:18px;
+  --bg:#06191b; --bg2:#0a2427; --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+  --ink:#eef8f7; --muted:#9db8b9; --teal:#2fd3c9; --teal2:#0f8b8d; --gold:#f2c46d; --gold2:#ffdf9e;
+  --r:22px; --serif:"Playfair Display",Georgia,serif; --sans:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
-@media (prefers-color-scheme:dark){
-  :root{--bg:#0b1a1c; --surface:#12282b; --ink:#eaf6f5; --muted:#9bb5b7; --line:#1f3d40; --brand:#3cc4c6; --brand-d:#7de0e1}
-}
-*{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
-.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
-section{padding:56px 0}
-h1{font-size:clamp(28px,6vw,52px);line-height:1.15;letter-spacing:-.02em}
-h2{font-size:clamp(22px,4vw,34px);margin-bottom:24px;text-align:center}
-.btn{display:inline-block;background:var(--accent);color:#1b1200;font-weight:700;padding:16px 30px;border-radius:999px;text-decoration:none;box-shadow:0 8px 24px rgba(255,179,71,.35);transition:transform .15s}
-.btn:hover{transform:translateY(-2px)}
-/* 1. hero */
-.hero{background:linear-gradient(140deg,#0a6567,#0f8b8d 60%,#3cc4c6);color:#fff;padding:72px 0 64px}
-.hero .wrap{display:grid;gap:32px;align-items:center}
-@media(min-width:800px){.hero .wrap{grid-template-columns:1.3fr .7fr}}
-.hero p.sub{margin:20px 0 28px;font-size:15px;opacity:.92;max-width:62ch}
-.hero .doc{aspect-ratio:1;max-width:320px;width:100%;margin:0 auto;border-radius:50%;background:rgba(255,255,255,.15);border:6px solid rgba(255,255,255,.4);display:grid;place-items:center;font-size:88px;overflow:hidden}
-.hero .doc img{width:100%;height:100%;object-fit:cover}
-/* 2. trust */
-.stats{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
-.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 20px;text-align:center}
-.stat .n{font-size:40px;font-weight:800;color:var(--brand)}
-.stat .ic{font-size:34px}
-.stat p{color:var(--muted);font-weight:600}
-.trust{text-align:center;margin-top:28px;font-size:20px;font-weight:700}
-/* 3. conditions */
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
-.chip{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;font-weight:600;display:flex;gap:10px;align-items:center}
-.chip::before{content:"✓";color:#fff;background:var(--brand);width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:13px;flex:none}
-.cta-end{text-align:center;margin-top:36px}
-footer{padding:28px 0;text-align:center;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
-footer a{color:var(--brand)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);line-height:1.65;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1160px;margin:0 auto;padding:0 18px}
+section{position:relative;padding:96px 0}
+.eyebrow{display:inline-flex;gap:10px;align-items:center;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.eyebrow::before{content:"";width:28px;height:1px;background:var(--gold)}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.12;letter-spacing:-.01em}
+h2{font-size:clamp(30px,5vw,50px);margin:14px 0 18px}
+h2 em,h1 em{font-style:italic;background:linear-gradient(100deg,var(--gold2),var(--gold) 50%,var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--muted);max-width:60ch;font-size:17px}
+.center{text-align:center}.center .lead{margin:0 auto}.center .eyebrow{justify-content:center}
+
+/* progress + cursor glow */
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));z-index:100}
+#glow{position:fixed;width:520px;height:520px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(47,211,201,.13),transparent 65%);transform:translate(-50%,-50%);left:50%;top:30%;transition:opacity .3s}
+main,header,footer{position:relative;z-index:1}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:90;transition:.35s}
+nav.stuck{background:rgba(6,25,27,.78);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:70px}
+.logo{font-family:var(--serif);font-size:22px;font-weight:700}
+.logo span{color:var(--gold)}
+.menu{display:none;gap:30px;font-size:14px;font-weight:600;color:var(--muted)}
+.menu a:hover{color:var(--ink)}
+@media(min-width:900px){.menu{display:flex}}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;padding:16px 30px;border-radius:999px;font-weight:800;font-size:15px;border:0;cursor:pointer;overflow:hidden;transition:transform .2s,box-shadow .3s}
+.btn.gold{background:linear-gradient(120deg,var(--gold2),var(--gold));color:#2a1b00;box-shadow:0 10px 34px rgba(242,196,109,.28)}
+.btn.gold:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(242,196,109,.4)}
+.btn.gold::after{content:"";position:absolute;top:0;left:-70%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);animation:shine 3.4s infinite}
+@keyframes shine{0%,60%{left:-70%}100%{left:130%}}
+.btn.ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--teal);transform:translateY(-3px)}
+.btn.sm{padding:11px 20px;font-size:13px}
+
+/* hero */
+.hero{min-height:100svh;display:flex;align-items:center;padding:120px 0 70px;overflow:hidden}
+#cells{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;animation:float 16s ease-in-out infinite}
+.b1{width:480px;height:480px;background:#0f8b8d;top:-120px;right:-80px}
+.b2{width:380px;height:380px;background:#7a5b14;bottom:-120px;left:-100px;animation-delay:-6s;opacity:.35}
+@keyframes float{50%{transform:translate(40px,-50px) scale(1.12)}}
+.hero .wrap{position:relative;z-index:2;display:grid;gap:50px;align-items:center}
+@media(min-width:900px){.hero .wrap{grid-template-columns:1.2fr .8fr}}
+.badge{display:inline-flex;gap:10px;align-items:center;padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:var(--card);font-size:13px;font-weight:600;color:var(--muted);margin-bottom:24px}
+.badge i{width:8px;height:8px;border-radius:50%;background:#37e08a;box-shadow:0 0 0 0 rgba(55,224,138,.7);animation:pulse 2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(55,224,138,0)}100%{box-shadow:0 0 0 0 rgba(55,224,138,0)}}
+h1{font-size:clamp(38px,7vw,74px)}
+.hero p.lead{margin:24px 0 34px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.mini{display:flex;gap:30px;margin-top:44px;flex-wrap:wrap}
+.mini b{display:block;font-family:var(--serif);font-size:30px;color:var(--gold)}
+.mini small{color:var(--muted);font-size:13px}
+.portrait{position:relative;max-width:400px;width:100%;margin:0 auto;aspect-ratio:4/5;transform-style:preserve-3d;transition:transform .15s}
+.portrait .frame{position:absolute;inset:0;border-radius:200px 200px 28px 28px;background:linear-gradient(160deg,rgba(47,211,201,.28),rgba(242,196,109,.2));border:1px solid var(--line);overflow:hidden;display:grid;place-items:center}
+.portrait .frame::before{content:"";position:absolute;inset:-2px;border-radius:inherit;background:conic-gradient(from 0deg,transparent,var(--teal),transparent 30%,var(--gold),transparent 60%);animation:spin 8s linear infinite;z-index:-1;filter:blur(14px);opacity:.6}
+@keyframes spin{to{transform:rotate(360deg)}}
+.portrait img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
+.mono{font-family:var(--serif);font-size:120px;color:var(--gold);opacity:.9}
+.float-card{position:absolute;background:rgba(10,36,39,.85);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:16px;padding:12px 16px;font-size:13px;font-weight:700;display:flex;gap:10px;align-items:center;animation:bob 5s ease-in-out infinite;z-index:3;box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.float-card.a{left:-24px;bottom:18%}.float-card.b{right:-18px;top:12%;animation-delay:-2.5s}
+@keyframes bob{50%{transform:translateY(-12px)}}
+.scroll{position:absolute;bottom:22px;left:50%;width:24px;height:40px;border:2px solid var(--line);border-radius:14px;z-index:2}
+.scroll::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;margin-left:-2px;border-radius:2px;background:var(--teal);animation:wheel 1.8s infinite}
+@keyframes wheel{to{transform:translateY(14px);opacity:0}}
+
+/* marquee */
+.marq{overflow:hidden;border-block:1px solid var(--line);padding:18px 0;background:var(--bg2);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;gap:44px;width:max-content;animation:mq 60s linear infinite}
+.marq:hover .track{animation-play-state:paused}
+.track span{font-family:var(--serif);font-size:22px;color:var(--muted);white-space:nowrap;display:flex;gap:44px;align-items:center}
+.track span::after{content:"✦";color:var(--gold);font-size:14px}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* trust */
+.stats{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:54px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:34px 28px;position:relative;overflow:hidden;transition:transform .3s,border-color .3s}
+.card:hover{border-color:rgba(47,211,201,.5)}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%),rgba(47,211,201,.12),transparent 40%);opacity:0;transition:.3s}
+.card:hover::before{opacity:1}
+.stat .n{font-family:var(--serif);font-size:clamp(44px,6vw,64px);color:var(--gold);line-height:1}
+.stat p{color:var(--muted);margin-top:10px;font-weight:600}
+.certs{display:flex;gap:14px;margin-top:6px}
+.cert{width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,rgba(242,196,109,.2),rgba(47,211,201,.12));border:1px solid var(--line)}
+.trust-line{margin-top:56px;font-family:var(--serif);font-size:clamp(26px,4vw,40px);text-align:center}
+
+/* services */
+.srv{display:grid;gap:18px;margin-top:50px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.srv .ic{width:60px;height:60px;border-radius:18px;display:grid;place-items:center;font-size:28px;background:linear-gradient(135deg,var(--teal2),var(--teal));margin-bottom:22px}
+.srv h3{font-size:24px;margin-bottom:10px}
+.srv p{color:var(--muted);font-size:15px}
+.price{display:inline-block;margin-top:18px;padding:6px 14px;border-radius:999px;background:rgba(242,196,109,.12);color:var(--gold);font-weight:800;font-size:13px}
+
+/* photos */
+.ph{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);aspect-ratio:4/3}
+.ph img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.2,1);filter:saturate(1.05) contrast(1.03)}
+.ph:hover img{transform:scale(1.08)}
+.ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(6,25,27,.75))}
+.ph figcaption{position:absolute;left:20px;bottom:16px;z-index:2;font-family:var(--serif);font-size:20px}
+.gal{display:grid;gap:16px;margin-top:54px;grid-template-columns:1fr}
+@media(min-width:800px){.gal{grid-template-columns:1.4fr 1fr 1fr}.gal .ph:first-child{grid-row:span 2;aspect-ratio:auto;min-height:420px}}
+.srv .ph{aspect-ratio:16/10;margin:-34px -28px 22px;border:0;border-radius:0}
+.srv .card{padding-top:34px}
+.band{position:relative;margin:0 18px;border-radius:36px;overflow:hidden;min-height:420px;display:grid;place-items:center;text-align:center;padding:60px 22px}
+.band img{position:absolute;inset:-12% 0;width:100%;height:124%;object-fit:cover;will-change:transform}
+.band::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(120deg,rgba(6,25,27,.88),rgba(6,25,27,.55))}
+.band>div{position:relative;z-index:2;max-width:720px}
+.band h2{font-size:clamp(28px,5vw,48px)}
+/* conditions */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:40px 0 30px}
+.tab{padding:11px 22px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--muted);font:700 14px var(--sans);cursor:pointer;transition:.25s}
+.tab:hover{color:var(--ink)}
+.tab.on{background:linear-gradient(120deg,var(--teal2),var(--teal));color:#031112;border-color:transparent}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.chip{display:flex;gap:12px;align-items:center;padding:16px 18px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-weight:700;transition:.3s;animation:pop .45s both}
+.chip::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal);flex:none}
+.chip:hover{transform:translateY(-4px) scale(1.02);border-color:var(--gold)}
+@keyframes pop{from{opacity:0;transform:translateY(16px) scale(.96)}}
+
+/* steps */
+.steps{display:grid;gap:18px;margin-top:54px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));counter-reset:s}
+.step{counter-increment:s}
+.step::after{content:"0" counter(s);position:absolute;right:20px;top:6px;font-family:var(--serif);font-size:84px;color:rgba(255,255,255,.05);font-weight:700}
+.step h3{font-size:22px;margin-bottom:8px}.step p{color:var(--muted);font-size:15px}
+
+/* faq */
+.faq{max-width:820px;margin:50px auto 0;display:grid;gap:12px}
+details{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0 24px;transition:.3s}
+details[open]{border-color:rgba(47,211,201,.45);background:rgba(47,211,201,.05)}
+summary{list-style:none;cursor:pointer;padding:22px 0;font-weight:700;font-size:17px;display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--gold);font-size:26px;line-height:1;transition:.3s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);padding-bottom:22px}
+
+/* final cta */
+.final{margin:0 18px;border-radius:36px;padding:80px 22px;text-align:center;background:radial-gradient(800px circle at 20% 0%,rgba(47,211,201,.28),transparent 60%),radial-gradient(700px circle at 90% 100%,rgba(242,196,109,.25),transparent 60%),var(--bg2);border:1px solid var(--line);overflow:hidden}
+.final h2{font-size:clamp(32px,6vw,58px)}
+.final .cta-row{justify-content:center;margin-top:34px}
+footer{padding:40px 0 110px;text-align:center;color:var(--muted);font-size:13px}
+footer p{max-width:70ch;margin:12px auto 0;opacity:.75}
+
+/* sticky mobile cta */
+.sticky{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:80;display:flex;transform:translateY(140%);transition:transform .4s}
+.sticky.show{transform:none}.sticky .btn{flex:1;justify-content:center}
+@media(min-width:900px){.sticky{display:none}footer{padding-bottom:40px}}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
+<div id="bar"></div><div id="glow"></div>
 
-<!-- 1. Сарлавха -->
-<header class="hero">
+<nav id="nav"><div class="wrap">
+  <a href="#top" class="logo">Dr.&nbsp;<span>Захид</span></a>
+  <div class="menu"><a href="#xizmat">Хизматлар</a><a href="#kasallik">Касалликлар</a><a href="#jarayon">Жараён</a><a href="#faq">Саволлар</a></div>
+  <a class="btn gold sm" data-book href="#aloqa">Ёзилиш</a>
+</div></nav>
+
+<!-- 1. HERO -->
+<header class="hero" id="top">
+  <canvas id="cells"></canvas><div class="blob b1"></div><div class="blob b2"></div>
   <div class="wrap">
     <div>
-      <h1>Тери касалликларини ечими ва даволаш сирлари</h1>
-      <p class="sub">Акне, Витилиго, Псориаз, Атопик дерматит, Экзема, Угри, Папилома, Кондилома, Бородавка, Сўгаллар, Грибок, Соч тукилиши, Очаговая Алопеция, Андрогенная Алопеция, Герпес Зостр, Генитал герпес, Гипергидроз, Нейродермит, Пигментациялар, Себорейный дерматит, келлоид чандиклар, Импетиго, Фурункул, Фолликулит, Аллергодерматитлар, кератодермиялар, контагиоз моллюск, Розовый лишай Жибера, Микозы, микоз стоп, периоральный дерматит, венерик касалликлар, токсикодермия, Эритразма</p>
-      <a class="btn" href="https://instagram.com/zakhidaf" target="_blank" rel="noopener">Консультацияга ёзилиш</a>
+      <div class="badge"><i></i> Онлайн консультация ва уйга чақириш мавжуд</div>
+      <h1>Тери касалликларини <em>ечими</em> ва даволаш <em>сирлари</em></h1>
+      <p class="lead">Дерматовенеролог шифокор. Акне, витилиго, псориаздан тортиб герпес ва соч тўкилишигача — аниқ ташхис ва индивидуал даволаш режаси.</p>
+      <div class="cta-row">
+        <a class="btn gold" data-book href="#aloqa">Консультацияга ёзилиш →</a>
+        <a class="btn ghost" href="#kasallik">Касалликлар рўйхати</a>
+      </div>
+      <div class="mini">
+        <div><b data-count="15" data-suf="+">0</b><small>йиллик тажриба</small></div>
+        <div><b data-count="30000" data-fmt="1">0</b><small>мижоз</small></div>
+        <div><b data-count="34" data-suf="+">0</b><small>касаллик турлари</small></div>
+      </div>
     </div>
-    <!-- Шифокор расмини shu yerga qo'ying: <img src="doctor.jpg" alt="Дерматолог Захид"> -->
-    <div class="doc" aria-hidden="true">🧑‍⚕️</div>
+    <div class="portrait" id="tilt">
+      <div class="float-card b">🏅 Халқаро сертификатлар</div>
+      <div class="frame">
+        <!-- Шифокор расмини shu papkaga doctor.jpg nomi bilan qo'ying -->
+        <img src="doctor.jpg" alt="Дерматовенеролог Захид" onerror="this.onerror=null;this.src='img/muolaja.jpg'">
+      </div>
+      <div class="float-card a">⭐ Сиз ишонадиган дерматолог</div>
+    </div>
   </div>
+  <div class="scroll"></div>
 </header>
 
-<!-- 2. Ишонч -->
-<section>
+<div class="marq"><div class="track" id="track"></div></div>
+
+<main>
+<!-- 2. ISHONCH -->
+<section id="ishonch">
   <div class="wrap">
+    <div class="center rv"><span class="eyebrow">Нега айнан мен</span><h2>Тажриба, рақамлар ва <em>ишонч</em></h2>
+    <p class="lead">Ҳар бир бемор — алоҳида ҳолат. Тери муаммосининг сабабини топиб, натижага йўналтирилган даволаш тайинлайман.</p></div>
     <div class="stats">
-      <div class="stat"><div class="n">15+</div><p>йиллик тажриба</p></div>
-      <div class="stat"><div class="n">30 000</div><p>мижоз</p></div>
-      <div class="stat"><div class="ic">🏅🎓📜</div><p>Халқаро миқёсдаги сертификатлар</p></div>
+      <div class="card stat rv"><div class="n"><span data-count="15" data-suf="+">0</span></div><p>йиллик тажриба</p></div>
+      <div class="card stat rv" style="--d:.1s"><div class="n"><span data-count="30000" data-fmt="1">0</span></div><p>даволанган мижоз</p></div>
+      <div class="card stat rv" style="--d:.2s"><div class="certs"><div class="cert">🏅</div><div class="cert">🎓</div><div class="cert">📜</div></div><p style="margin-top:22px">Халқаро миқёсдаги сертификатлар</p></div>
     </div>
-    <p class="trust">Сиз ишонадиган дерматолог</p>
+    <div class="gal">
+      <figure class="ph rv"><img loading="lazy" src="img/diagnostika.jpg" alt="Дерматоскопия — холни текшириш"><figcaption>Аниқ ташхис</figcaption></figure>
+      <figure class="ph rv" style="--d:.1s"><img loading="lazy" src="img/muolaja.jpg" alt="Тери муолажаси"><figcaption>Замонавий муолажалар</figcaption></figure>
+      <figure class="ph rv" style="--d:.2s"><img loading="lazy" src="img/parvarish.jpg" alt="Тери парвариши"><figcaption>Парвариш</figcaption></figure>
+    </div>
+    <p class="trust-line rv">Сиз ишонадиган <em>дерматолог</em></p>
   </div>
 </section>
 
-<!-- 3. Касалликлар -->
-<section style="background:var(--surface)">
+<!-- Xizmatlar -->
+<section id="xizmat" style="background:var(--bg2)">
   <div class="wrap">
-    <h2>Қандай муаммолар билан ёрдам бераман</h2>
-    <div class="grid" id="list"></div>
-    <div class="cta-end"><a class="btn" href="https://instagram.com/zakhidaf" target="_blank" rel="noopener">Консультацияга ёзилиш</a></div>
+    <div class="center rv"><span class="eyebrow">Хизматлар</span><h2>Сизга қулай <em>форматда</em></h2></div>
+    <div class="srv">
+      <div class="card rv"><figure class="ph"><img loading="lazy" src="img/davolash.jpg" alt="Онлайн консультация"></figure><h3>Онлайн консультация</h3><p>Уйдан чиқмай, видео ёки чат орқали ташхис, тавсиялар ва даволаш режаси.</p><span class="price" data-price>150 000 сўмдан</span></div>
+      <div class="card rv" style="--d:.1s"><figure class="ph"><img loading="lazy" src="img/parvarish.jpg" alt="Врач на вызов"></figure><h3>Врач на вызов</h3><p>Шифокор манзилингизга боради. Қариялар, болалар ва банд инсонлар учун қулай.</p></div>
+      <div class="card rv" style="--d:.2s"><figure class="ph"><img loading="lazy" src="img/diagnostika.jpg" alt="Қабулда кўрик"></figure><h3>Қабулда кўрик</h3><p>Дерматоскопия, тери ва соч ташхиси, зарур таҳлилларга йўлланма.</p></div>
+      <div class="card rv" style="--d:.3s"><figure class="ph"><img loading="lazy" src="img/inyeksiya.jpg" alt="Муолажалар"></figure><h3>Муолажалар</h3><p>Папилома, сўгал ва кондиломаларни олиб ташлаш, инъекцион муолажалар.</p></div>
+    </div>
   </div>
 </section>
 
-<footer>
-  <div class="wrap">Instagram: <a href="https://instagram.com/zakhidaf" target="_blank" rel="noopener">@zakhidaf</a></div>
-</footer>
+<!-- 3. KASALLIKLAR -->
+<section id="kasallik">
+  <div class="wrap">
+    <div class="center rv"><span class="eyebrow">Ихтисослик</span><h2>Қандай муаммолар билан <em>ёрдам бераман</em></h2>
+    <p class="lead">Рўйхатда ўз муаммоингизни топмасангиз ҳам ёзинг — кўриб чиқамиз.</p></div>
+    <div class="tabs rv" id="tabs"></div>
+    <div class="grid" id="list"></div>
+    <div class="center" style="margin-top:44px"><a class="btn gold" data-book href="#aloqa">Консультацияга ёзилиш →</a></div>
+  </div>
+</section>
+
+<!-- Jarayon -->
+<section id="jarayon" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="center rv"><span class="eyebrow">Жараён</span><h2>Даволаш <em>4 қадамда</em></h2></div>
+    <div class="steps">
+      <div class="card step rv"><h3>Ариза қолдиринг</h3><p>Телеграм ёки телефон орқали ёзилинг, қулай вақтни танланг.</p></div>
+      <div class="card step rv" style="--d:.1s"><h3>Ташхис</h3><p>Шикоят, расмлар ва таҳлиллар асосида муаммо сабаби аниқланади.</p></div>
+      <div class="card step rv" style="--d:.2s"><h3>Даволаш режаси</h3><p>Дори, парвариш ва турмуш тарзи бўйича аниқ, тушунарли кўрсатмалар.</p></div>
+      <div class="card step rv" style="--d:.3s"><h3>Назорат</h3><p>Натижани кузатиб бориб, зарур бўлса режани тузатамиз.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="band rv"><img data-par loading="lazy" src="img/muolaja.jpg" alt=""><div><span class="eyebrow">Ваъда</span><h2>Тери — соғлиғингиз <em>кўзгуси</em>. Уни мутахассисга ишонинг.</h2></div></div>
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="center rv"><span class="eyebrow">Саволлар</span><h2>Кўп бериладиган <em>саволлар</em></h2></div>
+    <div class="faq rv">
+      <details><summary>Онлайн консультация ташхис қўя оладими?</summary><p>Кўп ҳолларда ҳа: шикоят ва аниқ расмлар асосида дастлабки ташхис ва даволаш режаси берилади. Зарур бўлса, юзма-юз кўрик ёки таҳлил тавсия этилади.</p></details>
+      <details><summary>Даволаш қанча вақт олади?</summary><p>Касалликка боғлиқ: ўткир ҳолатлар кунлар ичида яхшиланади, витилиго, псориаз ва атопик дерматит каби сурункали ҳолатлар узоқ назоратни талаб қилади.</p></details>
+      <details><summary>Уйга чақириш қандай ишлайди?</summary><p>Манзил ва муаммони ёзиб қолдирасиз, келишилган вақтда шифокор келиб кўрик ўтказади.</p></details>
+      <details><summary>Маълумотларим махфий сақланадими?</summary><p>Ҳа. Бемор ҳақидаги барча маълумотлар ва расмлар тиббий махфийлик остида.</p></details>
+      <details><summary>Венерик касалликлар бўйича ҳам мурожаат қилса бўладими?</summary><p>Ҳа, шифокор дерматовенеролог. Мурожаатлар қатъий махфий қабул қилинади.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="aloqa" style="padding-top:20px">
+  <div class="final rv">
+    <span class="eyebrow">Бугун бошланг</span>
+    <h2>Тоза ва соғлом тери — <em>биринчи қадамдан</em> бошланади</h2>
+    <p class="lead">Ёзилинг — шифокор сизга қулай вақтда жавоб беради.</p>
+    <div class="cta-row">
+      <a class="btn gold" data-tg target="_blank" rel="noopener">✈ Телеграмда ёзиш</a>
+      <a class="btn ghost" data-ig target="_blank" rel="noopener">📷 Instagram @zakhidaf</a>
+      <a class="btn ghost" data-tel>📞 Қўнғироқ қилиш</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <div class="logo">Dr. <span>Захид</span></div>
+  <p>Ушбу сайтдаги маълумотлар умумий тавсиф характерига эга ва шифокор кўригини алмаштирмайди. Ўз-ўзини даволамасдан, мутахассисга мурожаат қилинг.</p>
+</div></footer>
+
+<div class="sticky" id="sticky"><a class="btn gold" data-book href="#aloqa">Консультацияга ёзилиш</a></div>
 
 <script>
-const items=["Акне","Витилиго","Псориаз","Атопик дерматит","Экзема","Угри","Папилома","Кондилома","Бородавка","Сўгаллар","Грибок","Соч тукилиши","Очаговая Алопеция","Андрогенная Алопеция","Герпес Зостр","Генитал герпес","Гипергидроз","Нейродермит","Пигментациялар","Себорейный дерматит","Келлоид чандиклар","Импетиго","Фурункул","Фолликулит","Аллергодерматитлар","Кератодермиялар","Контагиоз моллюск","Розовый лишай Жибера","Микозы","Микоз стоп","Периоральный дерматит","Венерик касалликлар","Токсикодермия","Эритразма"];
-document.getElementById("list").innerHTML=items.map(t=>`<div class="chip">${t}</div>`).join("");
+/* ===== SOZLAMALAR: shu yerni o'zgartiring ===== */
+const CONFIG={
+  instagram:"https://instagram.com/zakhidaf",
+  telegram:"",          // masalan: "https://t.me/username"
+  phone:""              // masalan: "+998901234567"
+};
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+
+/* links */
+$$("[data-ig]").forEach(a=>a.href=CONFIG.instagram);
+$$("[data-tg]").forEach(a=>a.href=CONFIG.telegram||CONFIG.instagram);
+$$("[data-tel]").forEach(a=>{if(CONFIG.phone)a.href="tel:"+CONFIG.phone;else{a.href=CONFIG.instagram;a.target="_blank";a.textContent="💬 Директга ёзиш"}});
+$$("[data-book]").forEach(a=>{if(a.closest(".sticky")&&CONFIG.telegram){a.href=CONFIG.telegram;a.target="_blank"}});
+
+/* conditions data */
+const DATA={
+ "Тери":["Акне","Угри","Витилиго","Псориаз","Атопик дерматит","Экзема","Нейродермит","Себорейный дерматит","Периоральный дерматит","Розовый лишай Жибера","Пигментациялар","Келлоид чандиклар","Кератодермиялар","Гипергидроз","Аллергодерматитлар","Токсикодермия"],
+ "Инфекция":["Грибок","Микозы","Микоз стоп","Эритразма","Импетиго","Фурункул","Фолликулит","Контагиоз моллюск"],
+ "Вирус":["Папилома","Кондилома","Бородавка","Сўгаллар","Герпес Зостр","Генитал герпес"],
+ "Соч":["Соч тукилиши","Очаговая Алопеция","Андрогенная Алопеция"],
+ "Венерик":["Венерик касалликлар"]
+};
+const ALL=Object.values(DATA).flat();
+const tabs=$("#tabs"),list=$("#list");
+function show(k){
+  const items=k==="Ҳаммаси"?ALL:DATA[k];
+  list.innerHTML=items.map((t,i)=>`<div class="chip" style="animation-delay:${i*.03}s">${t}</div>`).join("");
+  $$(".tab").forEach(b=>b.classList.toggle("on",b.dataset.k===k));
+}
+tabs.innerHTML=["Ҳаммаси",...Object.keys(DATA)].map(k=>`<button class="tab" data-k="${k}">${k}</button>`).join("");
+tabs.addEventListener("click",e=>{const b=e.target.closest(".tab");if(b)show(b.dataset.k)});
+show("Ҳаммаси");
+
+/* marquee */
+const mq=ALL.map(t=>`<span>${t}</span>`).join("");
+$("#track").innerHTML=mq+mq;
+
+/* scroll: progress, nav, sticky, parallax glow */
+const bar=$("#bar"),nav=$("#nav"),st=$("#sticky");
+addEventListener("scroll",()=>{
+  const h=document.documentElement,y=h.scrollTop;
+  bar.style.width=(y/(h.scrollHeight-h.clientHeight)*100)+"%";
+  nav.classList.toggle("stuck",y>40);
+  st.classList.toggle("show",y>innerHeight*.7);
+},{passive:true});
+addEventListener("pointermove",e=>{const g=$("#glow");g.style.left=e.clientX+"px";g.style.top=e.clientY+"px"},{passive:true});
+
+/* parallax */
+const par=$$("[data-par]");
+addEventListener("scroll",()=>par.forEach(i=>{const r=i.parentElement.getBoundingClientRect();i.style.transform=`translateY(${(r.top+r.height/2-innerHeight/2)*-.12}px)`}),{passive:true});
+/* card spotlight */
+$$(".card").forEach(c=>c.addEventListener("pointermove",e=>{const r=c.getBoundingClientRect();c.style.setProperty("--mx",(e.clientX-r.left)+"px");c.style.setProperty("--my",(e.clientY-r.top)+"px")}));
+
+/* reveal + counters */
+function count(el){
+  const to=+el.dataset.count,suf=el.dataset.suf||"",fmt=el.dataset.fmt;let t0;
+  const f=t=>{t0??=t;const p=Math.min((t-t0)/1800,1),v=Math.round(to*(1-Math.pow(1-p,4)));
+    el.textContent=(fmt?v.toLocaleString("ru-RU"):v)+(p===1?suf:"");if(p<1)requestAnimationFrame(f)};
+  requestAnimationFrame(f);
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");$$("[data-count]",e.target).forEach(count);io.unobserve(e.target)}}),{threshold:.15});
+$$(".rv").forEach(el=>io.observe(el));
+$$(".mini b").forEach(count);
+
+/* portrait 3D tilt */
+const tilt=$("#tilt");
+if(matchMedia("(hover:hover)").matches){
+  tilt.parentElement.addEventListener("pointermove",e=>{const r=tilt.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;tilt.style.transform=`perspective(900px) rotateY(${x*12}deg) rotateX(${-y*12}deg)`});
+  tilt.parentElement.addEventListener("pointerleave",()=>tilt.style.transform="");
+}
+
+/* hero canvas: floating "cells" connected by light threads */
+(()=>{
+  const c=$("#cells"),x=c.getContext("2d");let W,H,P=[];
+  const rs=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;P=Array.from({length:Math.min(46,W/22|0)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*3+1,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,g:Math.random()<.25}))};
+  rs();addEventListener("resize",rs);
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  (function loop(){
+    x.clearRect(0,0,W,H);
+    P.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+      x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fillStyle=p.g?"rgba(242,196,109,.7)":"rgba(47,211,201,.6)";x.fill();
+      for(let j=i+1;j<P.length;j++){const q=P[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<130){x.strokeStyle=`rgba(47,211,201,${.14*(1-d/130)})`;x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}});
+    requestAnimationFrame(loop);
+  })();
+})();
 </script>
 </body>
 </html>
