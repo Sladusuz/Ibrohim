@@ -5,402 +5,462 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Дерматолог Захид</title>
 <meta name="description" content="Тери касалликларини ечими ва даволаш сирлари. 15+ йиллик тажриба, 30 000 мижоз. Онлайн консультация ва уйга чақириш.">
-<meta name="theme-color" content="#0a1322">
+<meta name="theme-color" content="#100b09">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* Layout: ink hero → ice sections → ink contact. Display = Unbounded, body = Onest. */
+/* Concept: luxury skincare atelier. Espresso ground, bone type, clay accent, arch-cropped photos. Display = Cormorant Garamond, body = Manrope. */
 :root{
-  --ink:#0a1322; --ink2:#111d33; --ice:#eaf2f3; --paper:#ffffff;
-  --teal:#10d9c9; --teal-d:#08857d; --coral:#ff6a57; --txt:#0a1322; --mut:#5b6b7c; --mut-d:#9fb0c3;
-  --line:#d6e2e5; --line-d:rgba(255,255,255,.12);
-  --display:"Unbounded","Onest",system-ui,sans-serif; --sans:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --r:24px; --gut:max(16px,env(safe-area-inset-left,0px)); --gutr:max(16px,env(safe-area-inset-right,0px));
-  color-scheme:light;
+  --bg:#110c0a; --bg2:#1a120f; --bg3:#241915; --bone:#f1e7d9; --mut:#ab9b8b; --clay:#e3925f; --blush:#f4cfb0; --sage:#a9b8a0;
+  --line:rgba(241,231,217,.14);
+  --serif:"Cormorant Garamond","Times New Roman",serif; --sans:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --gut:max(18px,env(safe-area-inset-left,0px)); --gutr:max(18px,env(safe-area-inset-right,0px));
+  color-scheme:dark;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:var(--sans);background:var(--paper);color:var(--txt);line-height:1.6;overflow-x:hidden;font-size:16px}
+html{-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:var(--sans);background:var(--bg);color:var(--bone);line-height:1.65;font-size:16px;overflow-x:hidden}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
-button{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--teal);outline-offset:3px;border-radius:8px}
-.wrap{max-width:1200px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gutr)}
-section{padding-block:clamp(64px,10vw,128px)}
-h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.08;letter-spacing:-.02em;text-wrap:balance}
-h2{font-size:clamp(28px,5.2vw,56px)}
-h2 .hl{color:var(--teal-d)}
-.dark h2 .hl,.hero h1 .hl{color:var(--teal)}
-.kicker{display:inline-flex;align-items:center;gap:10px;font:600 12px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--teal-d);margin-bottom:18px}
-.kicker::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--coral)}
-.dark .kicker{color:var(--teal)}
-.sub{color:var(--mut);font-size:clamp(16px,1.6vw,19px);max-width:58ch;margin-top:18px}
-.dark .sub{color:var(--mut-d)}
-.dark{background:var(--ink);color:#fff}
-.ice{background:var(--ice)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--clay);color:var(--bg)}
+:focus-visible{outline:2px solid var(--clay);outline-offset:4px;border-radius:6px}
+.wrap{max-width:1360px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gutr)}
+section{position:relative}
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:.98;letter-spacing:-.015em;text-wrap:balance}
+em{font-style:italic;color:var(--clay);font-weight:300}
+.kick{display:inline-flex;align-items:center;gap:14px;font:600 11.5px var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--clay)}
+.kick::before{content:"";width:40px;height:1px;background:currentColor}
+.h2{font-size:clamp(40px,7.2vw,112px);margin-top:22px}
+.lead{color:var(--mut);font-size:clamp(16px,1.35vw,19px);max-width:54ch;margin-top:26px}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em}
+.wi{display:inline-block;will-change:transform}
 
-/* progress + announcement */
-#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--teal),var(--coral));z-index:200}
-.ann{background:var(--teal);color:#032421;text-align:center;font-weight:600;font-size:13px;padding:9px var(--gutr) 9px var(--gut)}
-.ann a{text-decoration:underline;text-underline-offset:3px}
+/* grain */
+.grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:300;pointer-events:none;opacity:.09;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:gr 1.2s steps(6) infinite}
+@keyframes gr{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
 
-/* nav */
-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:150;padding:12px var(--gutr) 0 var(--gut);margin-bottom:-78px}
-.nav{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 22px;border-radius:999px;background:rgba(10,19,34,.62);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--line-d);color:#fff}
-.logo{font:600 17px var(--display)}.logo b{color:var(--teal)}
-.menu{display:none;gap:28px;font-weight:500;font-size:14px;color:#cfdbe8}
-.menu a:hover{color:#fff}
-.burger{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-d);background:transparent;cursor:pointer;display:grid;place-items:center}
-.burger i,.burger i::before{display:block;width:18px;height:2px;background:#fff;position:relative;border-radius:2px;transition:.3s}
+/* preloader */
+#pre{position:fixed;inset:0;z-index:400;background:var(--bg);display:grid;place-items:center;animation:preOut .7s 3.2s forwards}
+#pre .in{text-align:center}
+#pre .n{font:300 clamp(80px,16vw,200px)/1 var(--serif);color:var(--bone)}
+#pre .l{font:600 11px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--clay);margin-top:6px}
+@keyframes preOut{to{opacity:0;visibility:hidden}}
+
+/* cursor */
+#cur,#cur2{position:fixed;left:0;top:0;z-index:350;pointer-events:none;border-radius:50%;display:none}
+@media(hover:hover) and (pointer:fine){#cur,#cur2{display:grid}body.cc *{cursor:none!important}}
+#cur{width:8px;height:8px;margin:-4px 0 0 -4px;background:var(--clay)}
+#cur2{width:44px;height:44px;margin:-22px 0 0 -22px;border:1px solid rgba(241,231,217,.5);place-items:center;font:700 10px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--bg);transition:width .35s,height .35s,margin .35s,background .35s,border-color .35s}
+#cur2.big{width:84px;height:84px;margin:-42px 0 0 -42px;background:var(--clay);border-color:var(--clay)}
+#cur2.sm{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgba(241,231,217,.12);backdrop-filter:blur(2px)}
+
+/* header */
+header.top{position:fixed;top:0;left:0;right:0;z-index:150;padding:max(18px,env(safe-area-inset-top,0px)) var(--gutr) 0 var(--gut);mix-blend-mode:normal;transition:transform .5s,background .4s}
+header.top.hide{transform:translateY(-110%)}
+header.top.solid{background:rgba(17,12,10,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding-bottom:8px;border-bottom:1px solid var(--line)}
+.hd{max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0}
+.logo{font:500 26px var(--serif);letter-spacing:.01em}.logo i{color:var(--clay)}
+.menu{display:none;gap:36px;font:600 12px var(--sans);letter-spacing:.16em;text-transform:uppercase}
+.menu a{position:relative;padding:6px 0;color:var(--bone)}
+.menu a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--clay);transform:scaleX(0);transform-origin:right;transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.menu a:hover::after{transform:scaleX(1);transform-origin:left}
+.hr{display:flex;align-items:center;gap:10px}
+.pillbtn{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 24px;border-radius:999px;background:var(--bone);color:var(--bg);font:700 13px var(--sans);letter-spacing:.06em;transition:background .3s,color .3s}
+.pillbtn:hover{background:var(--clay)}
+.burger{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;position:relative;z-index:210}
+.burger i,.burger i::before{display:block;width:18px;height:1.5px;background:var(--bone);position:relative;transition:.35s}
 .burger i::before{content:"";position:absolute;top:6px}
-.drawer{position:fixed;inset:0;z-index:140;background:var(--ink);display:flex;flex-direction:column;justify-content:center;gap:8px;padding:90px var(--gutr) 40px var(--gut);transform:translateY(-100%);transition:transform .5s cubic-bezier(.7,0,.2,1)}
-.drawer.open{transform:none}
-.drawer a{font:600 clamp(28px,8vw,44px) var(--display);color:#fff;padding:8px 0;border-bottom:1px solid var(--line-d)}
-@media(min-width:960px){.menu{display:flex}.burger{display:none}.drawer{display:none}}
-
-/* buttons */
-.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;border-radius:999px;font:600 15px var(--sans);border:0;cursor:pointer;overflow:hidden;transition:transform .25s,box-shadow .3s,background .25s}
-.btn.coral{background:var(--coral);color:#fff;box-shadow:0 12px 32px rgba(255,106,87,.38)}
-.btn.coral:hover{transform:translateY(-3px);box-shadow:0 18px 42px rgba(255,106,87,.5)}
-.btn.coral::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);transform:skewX(-20deg);animation:shine 3.6s infinite}
-@keyframes shine{0%,55%{left:-80%}100%{left:140%}}
-.btn.line{border:1.5px solid var(--line-d);background:rgba(255,255,255,.05);color:#fff}
-.btn.line:hover{border-color:var(--teal);transform:translateY(-3px)}
-.btn.sm{min-height:44px;padding:0 20px;font-size:14px}
+.burger.on i{transform:translateY(3px) rotate(45deg)}.burger.on i::before{transform:translateY(-6px) rotate(-90deg);top:6px}
+.drawer{position:fixed;inset:0;z-index:200;background:var(--bg2);display:flex;flex-direction:column;justify-content:center;padding:90px var(--gutr) 40px var(--gut);clip-path:circle(0% at calc(100% - 40px) 40px);transition:clip-path .8s cubic-bezier(.7,0,.2,1)}
+.drawer.open{clip-path:circle(150% at calc(100% - 40px) 40px)}
+.drawer a{font:300 clamp(42px,12vw,80px)/1.12 var(--serif);border-bottom:1px solid var(--line);padding:6px 0}
+.drawer a:hover{color:var(--clay);font-style:italic}
+@media(min-width:1000px){.menu{display:flex}.burger,.drawer{display:none}}
 
 /* hero */
-.hero{position:relative;background:var(--ink);color:#fff;padding-top:150px;padding-bottom:0;overflow:hidden;isolation:isolate}
-.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(900px 600px at 85% 10%,rgba(16,217,201,.28),transparent 60%),radial-gradient(700px 500px at 0% 90%,rgba(255,106,87,.16),transparent 60%)}
-#cells{position:absolute;inset:0;width:100%;height:100%;z-index:-1;opacity:.7}
-.hero .wrap{display:grid;gap:56px;align-items:center}
-.hero .wrap>*{min-width:0}
-@media(min-width:960px){.hero .wrap{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
-.pill{display:inline-flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--line-d);font-size:13px;font-weight:500;color:#d6e2ee;margin-bottom:26px}
-.pill i{width:9px;height:9px;border-radius:50%;background:#35e08c;animation:pulse 2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(53,224,140,.7)}80%,100%{box-shadow:0 0 0 12px rgba(53,224,140,0)}}
-.hero h1{font-size:clamp(29px,4.2vw,54px);line-height:1.08;overflow-wrap:break-word}
-.hero .lead{margin:26px 0 34px;color:#b9c8d9;font-size:clamp(16px,1.7vw,19px);max-width:52ch}
-.cta-row{display:flex;gap:14px;flex-wrap:wrap}
-.hero-stats{display:flex;gap:clamp(20px,4vw,44px);flex-wrap:wrap;margin-top:44px;padding-top:28px;border-top:1px solid var(--line-d)}
-.hero-stats b{display:block;font:600 clamp(26px,3.4vw,38px) var(--display);color:#fff}
-.hero-stats small{color:var(--mut-d);font-size:13px}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:140px var(--gutr) 34px var(--gut);overflow:hidden;isolation:isolate}
+.hero-bg{position:absolute;inset:-6% 0;z-index:-2}
+.hero-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.52) saturate(1.15) contrast(1.05)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(17,12,10,.55) 0%,rgba(17,12,10,0) 30%,rgba(17,12,10,.2) 55%,var(--bg) 100%),radial-gradient(900px 500px at 15% 80%,rgba(227,146,95,.18),transparent 70%)}
+.hero .in{max-width:1360px;width:100%;margin:0 auto}
+.hero h1{font-weight:300;font-size:clamp(46px,10vw,168px);line-height:.92;letter-spacing:-.025em;max-width:13ch}
+.hero h1 em{font-weight:300}
+.hero-row{display:flex;justify-content:space-between;align-items:flex-end;gap:36px;flex-wrap:wrap;margin-top:clamp(28px,4vw,54px)}
+.hero-row p{max-width:42ch;color:#d6c9b9;font-size:clamp(15px,1.3vw,18px)}
+.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:12px;height:58px;padding:0 34px;border-radius:999px;font:700 14px var(--sans);letter-spacing:.06em;overflow:hidden;transition:transform .3s}
+.btn.clay{background:var(--clay);color:#1b0f08}
+.btn.clay::before{content:"";position:absolute;inset:0;background:var(--bone);transform:translateY(101%);transition:transform .5s cubic-bezier(.7,0,.2,1)}
+.btn.clay:hover::before{transform:none}
+.btn span,.btn svg{position:relative;z-index:1}
+.btn.ghost{border:1px solid rgba(241,231,217,.35);color:var(--bone);backdrop-filter:blur(6px);background:rgba(17,12,10,.25)}
+.btn.ghost:hover{border-color:var(--clay);color:var(--clay)}
+.badge{position:relative;width:clamp(120px,12vw,168px);aspect-ratio:1;flex:none;display:grid;place-items:center}
+.badge svg.rot{position:absolute;inset:0;width:100%;height:100%;animation:spin 18s linear infinite}
+.badge text{font:600 14.5px var(--sans);fill:var(--bone);letter-spacing:.16em}
+.badge .ar{width:34%;height:34%;border-radius:50%;background:var(--clay);display:grid;place-items:center;color:#1b0f08}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hstats{display:flex;gap:clamp(24px,5vw,72px);flex-wrap:wrap;margin-top:clamp(34px,5vw,64px);padding-top:26px;border-top:1px solid var(--line)}
+.hstats b{display:block;font:300 clamp(34px,4.6vw,64px)/1 var(--serif)}
+.hstats small{color:var(--mut);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase}
 
-.collage{position:relative;max-width:520px;width:100%;margin:0 auto;aspect-ratio:1/1.12}
-.collage figure{position:absolute;overflow:hidden;border-radius:var(--r);border:1px solid var(--line-d);box-shadow:0 30px 80px rgba(0,0,0,.45);will-change:transform}
-.collage img{width:100%;height:100%;object-fit:cover}
-.c1{inset:0 14% 18% 0;border-radius:200px 200px var(--r) var(--r)!important}
-.c2{width:42%;aspect-ratio:4/5;right:0;top:8%}
-.c3{width:46%;aspect-ratio:4/5;right:6%;bottom:0}
-.collage figcaption,.tag{position:absolute;left:10px;bottom:10px;padding:6px 12px;border-radius:999px;background:rgba(10,19,34,.78);backdrop-filter:blur(8px);font-size:12px;font-weight:600;color:#fff}
-.chip-f{position:absolute;left:-4%;bottom:26%;z-index:3;display:flex;gap:12px;align-items:center;padding:12px 18px;border-radius:18px;background:#fff;color:var(--ink);font-weight:600;font-size:14px;box-shadow:0 20px 50px rgba(0,0,0,.35);animation:bob 5s ease-in-out infinite}
-.chip-f b{font:600 22px var(--display);color:var(--teal-d)}
-@keyframes bob{50%{transform:translateY(-12px)}}
+/* marquee */
+.mq{padding:clamp(44px,7vw,100px) 0;overflow:hidden;border-block:1px solid var(--line);background:var(--bg)}
+.mq-row{display:flex;width:max-content;will-change:transform}
+.mq-row span{font:300 clamp(54px,9vw,150px)/1.15 var(--serif);white-space:nowrap;padding:0 .35em;color:transparent;-webkit-text-stroke:1px rgba(241,231,217,.45);display:flex;align-items:center;gap:.7em}
+.mq-row span:nth-child(3n+1){color:var(--bone);-webkit-text-stroke:0}
+.mq-row span:nth-child(3n+2){font-style:italic}
+.mq-row span::after{content:"";width:.12em;height:.12em;border-radius:50%;background:var(--clay)}
 
-.marq{margin-top:72px;border-top:1px solid var(--line-d);background:rgba(255,255,255,.03);overflow:hidden;padding:20px 0}
-.track{display:flex;width:max-content;animation:mq 70s linear infinite}
-.marq:hover .track{animation-play-state:paused}
-.track span{font:500 clamp(18px,2.4vw,26px) var(--display);color:#6f87a3;white-space:nowrap;padding:0 26px;display:flex;align-items:center;gap:52px}
-.track span::after{content:"✚";color:var(--coral);font-size:14px}
-@keyframes mq{to{transform:translateX(-50%)}}
+/* statement */
+.st{padding:clamp(100px,16vw,240px) 0}
+.st p{font:300 clamp(32px,5.6vw,92px)/1.08 var(--serif);letter-spacing:-.02em;max-width:19ch;max-width:min(100%,22ch)}
+.st p .sw{display:inline-block;white-space:pre-wrap}
+.st .meta{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:clamp(40px,6vw,90px);color:var(--mut);font-size:14px}
 
-/* cases scroller */
-.head-row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:44px}
-.arrows{display:flex;gap:10px}
-.arrows button{width:54px;height:54px;border-radius:50%;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-size:20px;transition:.25s}
-.arrows button:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
-.scroller{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px var(--gutr) 28px var(--gut);scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab}
-.scroller::-webkit-scrollbar{display:none}
-.scroller.drag{cursor:grabbing;scroll-snap-type:none}
-.case{flex:0 0 clamp(250px,26vw,330px);scroll-snap-align:start;background:#fff;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);transition:transform .4s,box-shadow .4s;display:flex;flex-direction:column}
-.case:hover{transform:translateY(-8px);box-shadow:0 30px 60px rgba(10,19,34,.14)}
-.case .ph{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--ice)}
-.case .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1);-webkit-user-drag:none;user-select:none}
-.case:hover .ph img{transform:scale(1.07)}
-.case .tag{background:var(--coral)}
-.case .bd{padding:20px 22px 24px}
-.case h3{font-size:19px;margin-bottom:8px}
-.case p{color:var(--mut);font-size:14.5px}
-.pbar{height:4px;background:var(--line);border-radius:4px;margin-top:6px;overflow:hidden}
-.pbar i{display:block;height:100%;width:20%;background:var(--coral);border-radius:4px;transition:width .15s}
-.note{font-size:13px;color:var(--mut);margin-top:14px}
+/* cases pinned */
+.hs{background:var(--bg2)}
+.hs-pin{height:100svh;overflow:hidden;display:flex;align-items:center;position:relative}
+.hs-track{display:flex;align-items:center;gap:clamp(24px,4vw,72px);padding:0 8vw;will-change:transform}
+.hs-intro{flex:0 0 min(44vw,560px)}
+.hs-intro .h2{font-size:clamp(44px,6vw,100px)}
+.hc{flex:0 0 clamp(270px,27vw,420px);position:relative}
+.hc .im{aspect-ratio:4/5;overflow:hidden;border-radius:999px 999px 20px 20px;background:var(--bg3);position:relative}
+.hc:nth-child(even) .im{border-radius:20px 20px 999px 999px}
+.hc .im img{width:100%;height:112%;object-fit:cover;filter:saturate(.95) contrast(1.04)}
+.hc .no{position:absolute;top:-34px;left:-6px;font:300 clamp(64px,7vw,104px)/1 var(--serif);color:transparent;-webkit-text-stroke:1px rgba(241,231,217,.4);z-index:2;pointer-events:none}
+.hc h3{font-size:clamp(28px,2.6vw,40px);margin:22px 0 8px;font-weight:400}
+.hc p{color:var(--mut);font-size:14.5px;max-width:34ch}
+.hc .tg{position:absolute;right:14px;bottom:14px;z-index:3;padding:6px 14px;border-radius:999px;background:rgba(17,12,10,.72);backdrop-filter:blur(8px);font:700 10.5px var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.hc:nth-child(even) .tg{bottom:auto;top:14px}
+.hs-ui{position:absolute;left:var(--gut);right:var(--gutr);bottom:clamp(20px,4vh,44px);display:flex;align-items:center;gap:22px;font:600 12px var(--sans);letter-spacing:.14em;color:var(--mut)}
+.hs-ui .bar{flex:1;height:1px;background:var(--line);position:relative}
+.hs-ui .bar i{position:absolute;left:0;top:-1px;height:3px;width:8%;background:var(--clay);border-radius:3px}
+.hs-ui b{color:var(--bone);font-weight:600}
+.hs-note{position:absolute;right:var(--gutr);top:max(96px,12vh);font-size:12px;color:var(--mut);max-width:30ch;text-align:right;display:none}
+@media(min-width:900px){.hs-note{display:block}}
+@media(max-width:899px){
+  .hs-pin{height:auto;display:block;padding:clamp(80px,14vw,120px) 0 80px}
+  .hs-track{overflow-x:auto;scroll-snap-type:x mandatory;padding:0 var(--gutr) 20px var(--gut);scrollbar-width:none;align-items:flex-start;gap:18px;margin-top:40px}
+  .hs-track::-webkit-scrollbar{display:none}
+  .hs-intro{flex:none;padding:0 var(--gutr) 0 var(--gut)}
+  .hs-track .hs-intro{display:none}
+  .mi{display:block!important;padding:0 var(--gutr) 0 var(--gut)}
+  .hc{flex:0 0 74vw;scroll-snap-align:center}
+  .hs-ui{display:none}
+}
+.mi{display:none}
 
-/* conditions */
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:36px 0 26px}
-.tab{padding:12px 22px;border-radius:999px;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-weight:600;font-size:14px;transition:.25s}
-.tab:hover{border-color:var(--ink)}
-.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr))}
-.chip{display:flex;align-items:center;gap:12px;padding:16px 18px;border-radius:16px;background:#fff;border:1px solid var(--line);font-weight:600;animation:pop .5s both;transition:.3s}
-.chip::before{content:"";width:10px;height:10px;flex:none;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(16,217,201,.2)}
-.chip:hover{transform:translateY(-4px);border-color:var(--coral)}
-@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}}
-
-/* bento */
-.bento{display:grid;gap:16px;margin-top:52px;grid-template-columns:repeat(6,1fr)}
-.bx{position:relative;overflow:hidden;border-radius:var(--r);padding:30px;background:var(--ink2);border:1px solid var(--line-d);grid-column:span 6;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;gap:24px;transition:transform .4s,border-color .4s}
-.bx:hover{transform:translateY(-6px);border-color:rgba(16,217,201,.5)}
-@media(min-width:760px){.bx.s2{grid-column:span 3}.bx.s3{grid-column:span 2}.bx.s4{grid-column:span 4}}
-.bx .big{font:600 clamp(48px,7vw,88px)/1 var(--display);background:linear-gradient(120deg,#fff,var(--teal));-webkit-background-clip:text;background-clip:text;color:transparent}
-.bx h3{font-size:22px;margin-bottom:8px}.bx p{color:var(--mut-d);font-size:15px}
-.bx.photo{padding:0;min-height:300px}.bx.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.bx.photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(10,19,34,.92))}
-.bx.photo>div{position:absolute;left:28px;right:28px;bottom:26px;z-index:2}
-.bx.acc{background:linear-gradient(135deg,var(--teal),#0aa89b);color:#032421;border:0}
-.bx.acc p{color:#06403b}.bx.acc .big{background:none;color:#032421;-webkit-text-fill-color:#032421}
-.certs{display:flex;gap:12px;flex-wrap:wrap}
-.cert{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;background:rgba(255,255,255,.07);border:1px solid var(--line-d)}
-.cert svg{width:30px;height:30px;stroke:var(--teal);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+/* numbers */
+.num{padding:clamp(90px,13vw,200px) 0;overflow:hidden}
+.num-bg{position:absolute;inset:0;z-index:0;opacity:.3}
+.num-bg img{width:100%;height:120%;object-fit:cover;filter:saturate(.8) brightness(.7)}
+.num::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--bg) 20%,rgba(17,12,10,.55)),linear-gradient(180deg,var(--bg),transparent 25%,transparent 75%,var(--bg))}
+.num .wrap{position:relative;z-index:2}
+.ngrid{display:grid;margin-top:clamp(40px,6vw,90px);border-top:1px solid var(--line)}
+@media(min-width:800px){.ngrid{grid-template-columns:repeat(3,1fr)}.ncell+.ncell{border-left:1px solid var(--line)}}
+.ncell{padding:clamp(28px,4vw,56px) clamp(0px,2vw,32px) clamp(28px,4vw,56px) 0}
+@media(min-width:800px){.ncell+.ncell{padding-left:clamp(24px,3vw,48px)}}
+.ncell b{display:block;font:300 clamp(72px,10vw,170px)/.95 var(--serif);letter-spacing:-.03em;background:linear-gradient(180deg,var(--bone) 30%,var(--clay));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ncell p{margin-top:14px;color:var(--mut);max-width:26ch}
+.ncell h3{font-size:22px;margin-top:6px}
+.certs{display:flex;gap:12px;margin-top:22px}
+.certs span{width:62px;height:62px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}
+.certs svg{width:28px;height:28px;stroke:var(--clay);fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
 
 /* services */
-.srv{display:grid;gap:20px;margin-top:52px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
-.sv{background:#fff;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);transition:transform .4s,box-shadow .4s;display:flex;flex-direction:column}
-.sv:hover{transform:translateY(-8px);box-shadow:0 30px 60px rgba(10,19,34,.14)}
-.sv .ph{aspect-ratio:16/11;overflow:hidden}.sv .ph img{width:100%;height:100%;object-fit:cover;transition:transform 1s}
-.sv:hover .ph img{transform:scale(1.08)}
-.sv .bd{padding:24px;display:flex;flex-direction:column;gap:10px;flex:1}
-.sv h3{font-size:19px}.sv p{color:var(--mut);font-size:15px;flex:1}
-.price{align-self:flex-start;padding:6px 14px;border-radius:999px;background:rgba(255,106,87,.12);color:#c9361f;font-weight:700;font-size:13px}
+.sv{padding:clamp(90px,13vw,200px) 0}
+.svl{list-style:none;margin-top:clamp(40px,6vw,80px);border-top:1px solid var(--line)}
+.svl li{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:clamp(14px,3vw,48px);align-items:center;padding:clamp(24px,3.4vw,46px) 0;border-bottom:1px solid var(--line);transition:padding .5s cubic-bezier(.2,.7,.2,1),background .4s}
+.svl .ix{font:600 12px var(--sans);letter-spacing:.2em;color:var(--clay)}
+.svl h3{font-size:clamp(34px,5.4vw,84px);font-weight:300;transition:transform .5s cubic-bezier(.2,.7,.2,1),font-style .3s}
+.svl .d{display:block;margin-top:10px;color:var(--mut);font:400 15px var(--sans);max-width:52ch}
+.svl .pr{font:600 13px var(--sans);letter-spacing:.06em;color:var(--clay);text-align:right;white-space:nowrap}
+.svl .ar{display:inline-grid;place-items:center;width:52px;height:52px;border-radius:50%;border:1px solid var(--line);margin-left:16px;transition:.4s;vertical-align:middle}
+.svl li:hover .ar{background:var(--clay);border-color:var(--clay);color:#1b0f08;transform:rotate(-45deg)}
+.svl .th{display:none}
+@media(hover:hover){.svl li:hover{padding-left:clamp(10px,2vw,28px)}.svl li:hover h3{font-style:italic;color:var(--blush)}}
+@media(max-width:700px){.svl li{grid-template-columns:1fr}.svl .ix,.svl .pr{text-align:left}.svl .th{display:block;aspect-ratio:16/10;border-radius:16px;overflow:hidden;margin-bottom:6px}.svl .th img{width:100%;height:100%;object-fit:cover}.svl .ar{display:none}}
+#pv{position:fixed;left:0;top:0;width:min(26vw,340px);aspect-ratio:4/5;z-index:40;pointer-events:none;border-radius:999px 999px 18px 18px;overflow:hidden;opacity:0;transform:scale(.7);transition:opacity .35s,transform .45s cubic-bezier(.2,.7,.2,1);display:none}
+#pv.on{opacity:1;transform:scale(1)}
+#pv img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s}
+#pv img.on{opacity:1}
+@media(hover:hover) and (pointer:fine) and (min-width:701px){#pv{display:block}}
 
-/* steps */
-.steps{display:grid;gap:18px;margin-top:52px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));counter-reset:st}
-.st{position:relative;padding:32px 28px;border-radius:var(--r);background:var(--ink2);border:1px solid var(--line-d);counter-increment:st}
-.st::before{content:"0" counter(st);font:600 14px var(--display);color:var(--ink);background:var(--teal);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;margin-bottom:22px}
-.st h3{font-size:20px;margin-bottom:8px}.st p{color:var(--mut-d);font-size:15px}
+/* process */
+.pr-s{padding:clamp(90px,13vw,200px) 0;background:var(--bg2)}
+.pgrid{display:grid;gap:50px}
+@media(min-width:900px){.pgrid{grid-template-columns:.8fr 1.2fr;gap:8vw}.pgrid .stick{position:sticky;top:130px;align-self:start}}
+.step{display:grid;grid-template-columns:auto 1fr;gap:clamp(18px,3vw,44px);padding:clamp(28px,4vw,56px) 0;border-top:1px solid var(--line)}
+.step:last-child{border-bottom:1px solid var(--line)}
+.step .nn{font:300 clamp(70px,9vw,150px)/.85 var(--serif);color:transparent;-webkit-text-stroke:1px var(--clay)}
+.step h3{font-size:clamp(30px,3.6vw,52px);font-weight:400}
+.step p{color:var(--mut);margin-top:12px;max-width:46ch}
 
 /* doctor */
-.doc{display:grid;gap:48px;align-items:center}
-@media(min-width:900px){.doc{grid-template-columns:.9fr 1.1fr}}
-.docph{position:relative;max-width:460px;width:100%;margin:0 auto;aspect-ratio:4/5;border-radius:var(--r);overflow:hidden;background:var(--ink)}
-.docph img{width:100%;height:100%;object-fit:cover}
-.docph .badge{position:absolute;left:16px;bottom:16px;right:16px;display:flex;justify-content:space-between;gap:10px;padding:14px 18px;border-radius:18px;background:rgba(10,19,34,.82);backdrop-filter:blur(10px);color:#fff;font-size:13px}
-.docph .badge b{display:block;font:600 18px var(--display);color:var(--teal)}
-.ticks{display:grid;gap:12px;margin:28px 0 34px;list-style:none}
-.ticks li{display:flex;gap:14px;align-items:flex-start;font-weight:500}
-.ticks li::before{content:"";flex:none;width:24px;height:24px;margin-top:2px;border-radius:50%;background:var(--teal) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23032421' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12l4 4 8-9'/%3E%3C/svg%3E") center/14px no-repeat}
+.dr{padding:clamp(90px,13vw,200px) 0}
+.dgrid{display:grid;gap:clamp(40px,6vw,100px);align-items:center}
+@media(min-width:900px){.dgrid{grid-template-columns:.85fr 1.15fr}}
+.dph{position:relative;max-width:520px;width:100%;margin:0 auto}
+.dph .im{aspect-ratio:4/5.2;border-radius:999px 999px 24px 24px;overflow:hidden;background:var(--bg3)}
+.dph .im{position:relative;background:linear-gradient(rgba(17,12,10,.55),rgba(17,12,10,.8)),url(img/skin-macro.jpg) center/cover}
+.dph .mono{position:absolute;inset:0;display:grid;place-items:center;align-content:center;text-align:center;font:italic 300 clamp(120px,18vw,240px)/1 var(--serif);color:var(--clay)}
+.dph .mono small{display:block;font:600 11px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--bone);margin-top:10px}
+.dph .im img{position:relative;width:100%;height:115%;object-fit:cover}
+.dph .ring{position:absolute;inset:-16px;border:1px solid var(--line);border-radius:999px 999px 36px 36px;pointer-events:none}
+.dph .bd{position:absolute;right:-8px;bottom:36px;background:var(--bone);color:var(--bg);padding:16px 22px;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.dph .bd b{display:block;font:500 34px/1 var(--serif)}
+.dph .bd small{font:600 11px var(--sans);letter-spacing:.1em;text-transform:uppercase;opacity:.7}
+.quote{font:300 clamp(28px,3.8vw,58px)/1.1 var(--serif);margin:26px 0 34px;letter-spacing:-.015em}
+.cred{list-style:none;display:grid;gap:0;margin:0 0 38px;border-top:1px solid var(--line)}
+.cred li{padding:16px 0;border-bottom:1px solid var(--line);display:flex;gap:18px;align-items:baseline;color:#d9ccbc}
+.cred li b{font:600 11px var(--sans);letter-spacing:.2em;color:var(--clay);min-width:34px}
+
+/* conditions */
+.cd{padding:clamp(90px,13vw,200px) 0;background:var(--bg2)}
+.tabs{display:flex;gap:6px 30px;flex-wrap:wrap;margin:36px 0 10px}
+.tab{padding:8px 0;font:600 12px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--mut);position:relative;transition:color .3s}
+.tab::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--clay);transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.tab:hover{color:var(--bone)}.tab.on{color:var(--bone)}.tab.on::after{transform:scaleX(1)}
+.clist{list-style:none;display:grid;column-gap:clamp(24px,5vw,80px);margin-top:22px}
+@media(min-width:760px){.clist{grid-template-columns:1fr 1fr}}
+@media(min-width:1200px){.clist{grid-template-columns:1fr 1fr 1fr}}
+.clist li{display:flex;align-items:baseline;gap:16px;padding:15px 0;border-bottom:1px solid var(--line);font:400 clamp(20px,1.8vw,26px)/1.2 var(--serif);animation:fi .6s both;transition:padding .35s,color .3s}
+.clist li::before{content:attr(data-n);font:600 10.5px var(--sans);letter-spacing:.16em;color:var(--clay);min-width:22px}
+.clist li:hover{padding-left:14px;color:var(--blush);font-style:italic}
+@keyframes fi{from{opacity:0;transform:translateY(12px)}}
 
 /* faq */
-.faq{max-width:860px;margin:52px auto 0;display:grid;gap:12px}
-details{background:#fff;border:1px solid var(--line);border-radius:20px;padding:0 26px;transition:.3s}
-details[open]{border-color:var(--teal-d);box-shadow:0 14px 40px rgba(8,133,125,.12)}
-summary{list-style:none;cursor:pointer;padding:22px 0;font-weight:600;font-size:17px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.fq{padding:clamp(90px,13vw,200px) 0}
+.fgrid{display:grid;gap:44px}
+@media(min-width:900px){.fgrid{grid-template-columns:.8fr 1.2fr;gap:8vw}}
+details{border-bottom:1px solid var(--line)}
+details:first-of-type{border-top:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;padding:28px 0;font:400 clamp(22px,2.4vw,34px)/1.15 var(--serif);display:flex;justify-content:space-between;gap:20px;align-items:center}
 summary::-webkit-details-marker{display:none}
-summary::after{content:"+";flex:none;width:36px;height:36px;border-radius:50%;background:var(--ice);display:grid;place-items:center;font-size:22px;transition:.3s}
-details[open] summary::after{transform:rotate(45deg);background:var(--teal)}
-details p{color:var(--mut);padding-bottom:22px}
+summary::after{content:"";flex:none;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:linear-gradient(var(--bone),var(--bone)) center/12px 1px no-repeat,linear-gradient(var(--bone),var(--bone)) center/1px 12px no-repeat;transition:.4s}
+details[open] summary::after{transform:rotate(135deg);background-color:var(--clay);border-color:var(--clay)}
+details[open] summary{color:var(--blush)}
+details p{color:var(--mut);padding:0 0 28px;max-width:58ch}
 
 /* contact */
-.contact{position:relative;overflow:hidden;isolation:isolate}
-.contact::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(800px 500px at 100% 0%,rgba(16,217,201,.25),transparent 60%),radial-gradient(700px 500px at 0% 100%,rgba(255,106,87,.2),transparent 60%)}
-.cgrid{display:grid;gap:44px;align-items:center}
-@media(min-width:900px){.cgrid{grid-template-columns:1fr 1fr}}
-form{display:grid;gap:14px;padding:clamp(22px,3vw,36px);border-radius:var(--r);background:rgba(255,255,255,.06);border:1px solid var(--line-d);backdrop-filter:blur(12px)}
-label{font-size:13px;font-weight:600;color:#b9c8d9;display:grid;gap:8px}
-input,select,textarea{width:100%;min-height:52px;padding:0 18px;border-radius:14px;border:1.5px solid var(--line-d);background:rgba(255,255,255,.06);color:#fff;font:500 16px var(--sans)}
-textarea{padding:14px 18px;min-height:96px;resize:vertical}
-select option{color:#000}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);background:rgba(255,255,255,.1)}
-.ok{display:none;padding:14px 18px;border-radius:14px;background:rgba(53,224,140,.14);color:#8cf0bd;font-weight:600}
-.ok.show{display:block}
-.social{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-footer{background:var(--ink);color:var(--mut-d);padding:48px 0 120px;font-size:13px;border-top:1px solid var(--line-d)}
-footer p{max-width:80ch;margin-top:12px}
-footer details{background:none;border:0;padding:0;margin-top:16px;box-shadow:none}
-footer summary{font-size:13px;padding:8px 0;font-weight:600;color:#cfdbe8}
-footer summary::after{display:none}
-footer details p{color:var(--mut-d);padding:0}
+.ct{padding:clamp(100px,14vw,220px) 0 clamp(60px,8vw,100px);background:var(--bone);color:var(--bg);overflow:hidden}
+.ct .kick{color:#b2552a}
+.ct h2{font-weight:300;font-size:clamp(56px,13vw,230px);line-height:.88;letter-spacing:-.035em;margin-top:24px}
+.ct h2 em{color:#b2552a}
+.cgrid{display:grid;gap:clamp(36px,6vw,90px);margin-top:clamp(40px,6vw,90px)}
+@media(min-width:900px){.cgrid{grid-template-columns:.9fr 1.1fr}}
+.ct .lead{color:#5b4a3d}
+.soc{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.soc a{height:50px;padding:0 24px;border-radius:999px;border:1px solid rgba(17,12,10,.25);display:inline-flex;align-items:center;font:700 13px var(--sans);letter-spacing:.06em;transition:.3s}
+.soc a:hover{background:var(--bg);color:var(--bone)}
+form{display:grid;gap:0}
+.f{position:relative;border-bottom:1px solid rgba(17,12,10,.25);padding:18px 0 8px}
+.f label{display:block;font:700 10.5px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#7a6657}
+.f input,.f select,.f textarea{width:100%;background:none;border:0;outline:0;font:400 clamp(22px,2.2vw,30px)/1.3 var(--serif);color:var(--bg);padding:6px 0;resize:none}
+.f select{appearance:none;cursor:pointer}
+.f textarea{min-height:56px}
+.f input::placeholder,.f textarea::placeholder{color:#a79684}
+.f:focus-within{border-color:#b2552a}
+.fs{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:30px}
+.fs .btn.clay{background:var(--bg);color:var(--bone)}.fs .btn.clay::before{background:#b2552a}
+.fs .btn.clay:hover{color:#fff}
+.ok{font-weight:600;color:#2f6b3f;display:none}.ok.show{display:block}.ok.er{color:#b2552a}
+footer{background:var(--bone);color:var(--bg);padding:0 0 110px;overflow:hidden}
+footer .big{font:300 clamp(100px,25vw,520px)/.78 var(--serif);letter-spacing:-.05em;color:var(--bg);text-align:center;margin:clamp(30px,5vw,70px) 0 0;user-select:none;white-space:nowrap;padding-bottom:.1em}
+footer .row{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:12.5px;color:#6b5a4c;border-top:1px solid rgba(17,12,10,.2);padding-top:22px}
+footer p{max-width:70ch}
+footer details{border:0;margin-top:12px}footer details:first-of-type{border:0}
+footer summary{font:600 12px var(--sans);padding:6px 0;color:#4a3a2e;letter-spacing:.06em}footer summary::after{display:none}
+footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
+@media(min-width:1000px){footer{padding-bottom:40px}}
 
 /* sticky mobile */
-.sticky{position:fixed;left:var(--gut);right:var(--gutr);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:130;display:flex;gap:10px;transform:translateY(160%);transition:transform .45s}
-.sticky.show{transform:none}.sticky .btn{flex:1}
-@media(min-width:960px){.sticky{display:none}footer{padding-bottom:48px}}
-
-/* reveal */
-.js .rv{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
-.js .rv.in{opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+.stk{position:fixed;left:var(--gut);right:var(--gutr);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:120;transform:translateY(160%);transition:transform .5s}
+.stk.show{transform:none}.stk .btn{width:100%;box-shadow:0 16px 44px rgba(0,0,0,.5)}
+@media(min-width:1000px){.stk{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#pre{display:none}}
 </style>
 </head>
 <body>
-<div id="bar"></div>
-<div class="ann">Онлайн консультация — <a data-book href="#aloqa">150 000 сўмдан</a> · Уйга чақириш мавжуд</div>
+<div class="grain" aria-hidden="true"></div>
+<div id="pre"><div class="in"><div class="n" id="pn">0</div><div class="l">Dr. Захид · Дерматовенеролог</div></div></div>
+<div id="cur"></div><div id="cur2"></div>
+<div id="pv" aria-hidden="true"></div>
 
-<nav><div class="nav">
-  <a href="#top" class="logo">Dr. <b>Захид</b></a>
-  <div class="menu"><a href="#holatlar">Ҳолатлар</a><a href="#nega">Нега мен</a><a href="#xizmat">Хизматлар</a><a href="#doktor">Шифокор</a><a href="#faq">Саволлар</a></div>
-  <div style="display:flex;gap:8px;align-items:center"><a class="btn coral sm" data-book href="#aloqa">Ёзилиш</a><button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><i></i></button></div>
-</div></nav>
-<div class="drawer" id="drawer"><a href="#holatlar">Ҳолатлар</a><a href="#nega">Нега мен</a><a href="#xizmat">Хизматлар</a><a href="#doktor">Шифокор</a><a href="#faq">Саволлар</a><a href="#aloqa" style="color:var(--coral)">Ёзилиш →</a></div>
-
-<!-- 1. HERO -->
-<header class="hero" id="top">
-  <canvas id="cells" aria-hidden="true"></canvas>
-  <div class="wrap">
-    <div>
-      <div class="pill"><i></i> Врач на вызов · Онлайн консультация</div>
-      <h1>Тери касалликларини <span class="hl">ечими</span> ва даволаш <span class="hl">сирлари</span></h1>
-      <p class="lead">Дерматовенеролог шифокор. Витилиго, псориаз, акне, герпес, соч тўкилиши ва бошқа 30+ ҳолатда аниқ ташхис ва индивидуал даволаш режаси.</p>
-      <div class="cta-row">
-        <a class="btn coral" data-book href="#aloqa">Консультацияга ёзилиш →</a>
-        <a class="btn line" href="#holatlar">Ҳолатларни кўриш</a>
-      </div>
-      <div class="hero-stats">
-        <div><b data-count="15" data-suf="+">0</b><small>йиллик тажриба</small></div>
-        <div><b data-count="30000" data-fmt="1">0</b><small>мижоз</small></div>
-        <div><b data-count="34" data-suf="+">0</b><small>касаллик тури</small></div>
-      </div>
-    </div>
-    <div class="collage" id="collage">
-      <figure class="c1" data-speed="0.05"><img src="doctor.jpg" alt="Дерматовенеролог Захид" onerror="this.onerror=null;this.src='img/muolaja.jpg'"></figure>
-      <figure class="c2" data-speed="-0.08"><img src="img/cases/vitiligo.jpg" alt="Витилиго" loading="eager"><figcaption>Витилиго</figcaption></figure>
-      <figure class="c3" data-speed="0.1"><img src="img/cases/zoster.jpg" alt="Герпес Зостер" loading="eager"><figcaption>Герпес Зостер</figcaption></figure>
-      <div class="chip-f"><b>30 000</b><span>даволанган<br>мижоз</span></div>
-    </div>
-  </div>
-  <div class="marq"><div class="track" id="track"></div></div>
-</header>
+<header class="top" id="top"><div class="hd">
+  <a href="#hero" class="logo">Dr.&nbsp;<i>Захид</i></a>
+  <nav class="menu" aria-label="Меню"><a href="#holatlar">Ҳолатлар</a><a href="#xizmat">Хизматлар</a><a href="#doktor">Шифокор</a><a href="#royxat">Рўйхат</a><a href="#faq">Саволлар</a></nav>
+  <div class="hr"><a class="pillbtn" data-mag href="#aloqa">Ёзилиш</a><button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><i></i></button></div>
+</div></header>
+<div class="drawer" id="drawer"><a href="#holatlar">Ҳолатлар</a><a href="#xizmat">Хизматлар</a><a href="#doktor">Шифокор</a><a href="#royxat">Рўйхат</a><a href="#faq">Саволлар</a><a href="#aloqa" style="color:var(--clay);font-style:italic">Ёзилиш →</a></div>
 
 <main>
-<!-- 2. HOLATLAR -->
-<section class="ice" id="holatlar" style="padding-bottom:40px">
-  <div class="wrap head-row rv">
-    <div><span class="kicker">Ихтисослик</span><h2>Қайси <span class="hl">ҳолат</span> билан<br>ёрдам бераман</h2>
-    <p class="sub">Суратларни суриб кўринг. Муаммонгизни топмасангиз ҳам ёзинг, кўриб чиқамиз.</p></div>
-    <div class="arrows"><button id="prev" aria-label="Олдинги">←</button><button id="next" aria-label="Кейинги">→</button></div>
-  </div>
-  <div class="scroller" id="scroller"></div>
-  <div class="wrap"><div class="pbar"><i id="pb"></i></div><p class="note">Суратлар намуна сифатида берилган, ташхис фақат шифокор кўригида қўйилади.</p></div>
-</section>
-
-<section class="ice" style="padding-top:40px">
-  <div class="wrap">
-    <div class="rv"><span class="kicker">Тўлиқ рўйхат</span><h2>Барча <span class="hl">йўналишлар</span></h2></div>
-    <div class="tabs" id="tabs"></div>
-    <div class="grid" id="list"></div>
-    <div style="margin-top:44px"><a class="btn coral" data-book href="#aloqa">Консультацияга ёзилиш →</a></div>
-  </div>
-</section>
-
-<!-- 3. NEGA MEN -->
-<section class="dark" id="nega">
-  <div class="wrap">
-    <div class="rv"><span class="kicker">Нега айнан мен</span><h2>Сиз <span class="hl">ишонадиган</span> дерматолог</h2>
-    <p class="sub">Ҳар бир бемор алоҳида ҳолат. Тери муаммосининг сабабини топиб, натижага йўналтирилган даволаш тайинлайман.</p></div>
-    <div class="bento">
-      <div class="bx s2 rv"><div class="big"><span data-count="15" data-suf="+">0</span></div><div><h3>йиллик тажриба</h3><p>Дерматология ва венерологиядаги амалий иш.</p></div></div>
-      <div class="bx s2 acc rv" style="--d:.08s"><div class="big"><span data-count="30000" data-fmt="1">0</span></div><div><h3>мижоз</h3><p>Ҳар бири учун индивидуал даволаш режаси.</p></div></div>
-      <div class="bx s4 photo rv" style="--d:.12s"><img loading="lazy" src="img/diagnostika.jpg" alt="Дерматоскопия"><div><h3>Аниқ ташхис</h3><p style="color:#cfdbe8">Кўрик, дерматоскопия ва керакли таҳлиллар асосида.</p></div></div>
-      <div class="bx s3 rv" style="--d:.16s">
-        <div class="certs">
-          <span class="cert"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 22l5-3 5 3-1.5-7.5"/></svg></span>
-          <span class="cert"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg></span>
-          <span class="cert"><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h6"/></svg></span>
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"><img id="hbg" src="img/skin-macro.jpg" alt=""></div>
+  <div class="in">
+    <h1 id="h1">Тери касалликларини <em>ечими</em> ва даволаш <em>сирлари</em></h1>
+    <div class="hero-row">
+      <div>
+        <p>Дерматовенеролог шифокор. Витилиго, псориаз, акне, герпес, соч тўкилиши ва бошқа 30+ ҳолатда аниқ ташхис ва индивидуал даволаш режаси.</p>
+        <div class="cta">
+          <a class="btn clay" data-mag data-cur="Ёзил" href="#aloqa"><span>Консультацияга ёзилиш</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="btn ghost" href="#holatlar"><span>Ҳолатларни кўриш</span></a>
         </div>
-        <div><h3>Халқаро сертификатлар</h3><p>Хорижий малака ошириш ва халқаро миқёсдаги сертификатлар.</p></div>
       </div>
-      <div class="bx s2 rv" style="--d:.2s"><div class="big" style="font-size:clamp(34px,4.4vw,52px)">Онлайн</div><div><h3>Ва уйингизда</h3><p>Видео консультация ёки шифокор манзилингизга боради.</p></div></div>
-      <div class="bx s2 rv" style="--d:.24s"><div class="big" style="font-size:clamp(34px,4.4vw,52px)">100%</div><div><h3>Махфийлик</h3><p>Барча маълумот ва расмлар тиббий сир остида.</p></div></div>
+      <a class="badge" href="#xizmat" aria-label="Хизматлар">
+        <svg class="rot" viewBox="0 0 200 200"><defs><path id="cp" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"/></defs><text><textPath href="#cp" textLength="480" lengthAdjust="spacing">ОНЛАЙН КОНСУЛЬТАЦИЯ • ВРАЧ НА ВЫЗОВ • </textPath></text></svg>
+        <span class="ar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10M17 8v9H8"/></svg></span>
+      </a>
+    </div>
+    <div class="hstats">
+      <div><b data-count="15" data-suf="+">15+</b><small>йиллик тажриба</small></div>
+      <div><b data-count="30000" data-fmt="1">30 000</b><small>мижоз</small></div>
+      <div><b data-count="34" data-suf="+">34+</b><small>касаллик тури</small></div>
     </div>
   </div>
 </section>
 
-<!-- Xizmatlar -->
-<section id="xizmat" class="ice">
+<!-- MARQUEE -->
+<div class="mq" aria-hidden="true"><div class="mq-row" id="mq1"></div></div>
+
+<!-- STATEMENT -->
+<section class="st"><div class="wrap">
+  <p id="stm">Тери — организмнинг кўзгуси. Ҳар бир тошма, доғ ва қичишиш ортида сабаб бор. Мен уни топаман ва сизга аниқ йўл кўрсатаман.</p>
+  <div class="meta"><span>Дерматовенеролог · Онлайн ва уйда</span><span>Instagram @zakhidaf</span></div>
+</div></section>
+
+<!-- CASES -->
+<section class="hs" id="holatlar">
+  <div class="hs-pin" data-cur="Суринг">
+    <div class="wrap mi"><span class="kick">Ихтисослик</span><h2 class="h2" style="font-size:clamp(44px,13vw,80px)">Қайси <em>ҳолат</em> билан ёрдам бераман</h2></div>
+    <div class="hs-track" id="track">
+      <div class="hs-intro"><span class="kick">Ихтисослик</span><h2 class="h2">Қайси <em>ҳолат</em> билан ёрдам бераман</h2><p class="lead">Суринг ва муаммони топинг. Рўйхатда йўқ бўлса ҳам ёзинг, кўриб чиқамиз.</p></div>
+    </div>
+    <div class="hs-note">Суратлар намуна сифатида. Ташхис фақат шифокор кўригида қўйилади.</div>
+    <div class="hs-ui"><span><b id="hc">01</b> / <span id="ht">12</span></span><div class="bar"><i id="hbar"></i></div><span>Ҳолатлар</span></div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="num" id="nega">
+  <div class="num-bg"><img data-par src="img/skin-freckles.jpg" alt="" loading="lazy"></div>
   <div class="wrap">
-    <div class="rv"><span class="kicker">Хизматлар</span><h2>Сизга қулай <span class="hl">форматда</span></h2></div>
-    <div class="srv">
-      <article class="sv rv"><div class="ph"><img loading="lazy" src="img/davolash.jpg" alt="Онлайн консультация"></div><div class="bd"><h3>Онлайн консультация</h3><p>Уйдан чиқмай ташхис, тавсия ва даволаш режаси. Видео ёки чат орқали.</p><span class="price">150 000 сўмдан</span></div></article>
-      <article class="sv rv" style="--d:.08s"><div class="ph"><img loading="lazy" src="img/parvarish.jpg" alt="Врач на вызов"></div><div class="bd"><h3>Врач на вызов</h3><p>Шифокор манзилингизга боради. Болалар, қариялар ва банд инсонлар учун қулай.</p></div></article>
-      <article class="sv rv" style="--d:.16s"><div class="ph"><img loading="lazy" src="img/diagnostika.jpg" alt="Қабулда кўрик"></div><div class="bd"><h3>Қабулда кўрик</h3><p>Тери ва соч ташхиси, дерматоскопия, таҳлилларга йўлланма.</p></div></article>
-      <article class="sv rv" style="--d:.24s"><div class="ph"><img loading="lazy" src="img/inyeksiya.jpg" alt="Муолажалар"></div><div class="bd"><h3>Муолажалар</h3><p>Сўгал, папилома олиб ташлаш ва инъекцион муолажалар.</p></div></article>
+    <span class="kick" data-up>Нега айнан мен</span>
+    <h2 class="h2" data-up>Сиз <em>ишонадиган</em> дерматолог</h2>
+    <div class="ngrid">
+      <div class="ncell" data-up><b data-count="15" data-suf="+">15+</b><h3>йиллик тажриба</h3><p>Дерматология ва венерологиядаги амалий иш.</p></div>
+      <div class="ncell" data-up><b data-count="30000" data-fmt="1">30 000</b><h3>мижоз</h3><p>Ҳар бири учун индивидуал даволаш режаси.</p></div>
+      <div class="ncell" data-up><div class="certs">
+        <span><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 22l5-3 5 3-1.5-7.5"/></svg></span>
+        <span><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg></span>
+        <span><svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h6"/></svg></span></div>
+        <h3 style="margin-top:26px">Халқаро сертификатлар</h3><p>Хорижий малака ошириш ва халқаро миқёсдаги сертификатлар.</p></div>
     </div>
   </div>
 </section>
 
-<!-- Jarayon -->
-<section class="dark" id="jarayon">
-  <div class="wrap">
-    <div class="rv"><span class="kicker">Жараён</span><h2>Даволаш <span class="hl">4 қадамда</span></h2></div>
-    <div class="steps">
-      <div class="st rv"><h3>Ариза қолдиринг</h3><p>Телеграм, Instagram ёки форма орқали ёзилинг ва қулай вақтни танланг.</p></div>
-      <div class="st rv" style="--d:.08s"><h3>Ташхис</h3><p>Шикоят, расмлар ва таҳлиллар асосида муаммо сабаби аниқланади.</p></div>
-      <div class="st rv" style="--d:.16s"><h3>Даволаш режаси</h3><p>Дори, парвариш ва турмуш тарзи бўйича тушунарли кўрсатмалар.</p></div>
-      <div class="st rv" style="--d:.24s"><h3>Назорат</h3><p>Натижани кузатиб борамиз ва зарур бўлса режани тузатамиз.</p></div>
-    </div>
-  </div>
-</section>
+<!-- SERVICES -->
+<section class="sv" id="xizmat"><div class="wrap">
+  <span class="kick" data-up>Хизматлар</span>
+  <h2 class="h2" data-up>Сизга қулай <em>форматда</em></h2>
+  <ul class="svl" id="svl">
+    <li data-img="img/davolash.jpg"><div class="th"><img loading="lazy" src="img/davolash.jpg" alt=""></div><span class="ix">01</span><div><h3>Онлайн консультация</h3><span class="d">Уйдан чиқмай ташхис, тавсия ва даволаш режаси. Видео ёки чат орқали.</span></div><span class="pr">150 000 сўмдан<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/hand-drop.jpg"><div class="th"><img loading="lazy" src="img/hand-drop.jpg" alt=""></div><span class="ix">02</span><div><h3>Врач на вызов</h3><span class="d">Шифокор манзилингизга боради. Болалар, қариялар ва банд инсонлар учун қулай.</span></div><span class="pr">Келишув асосида<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/diagnostika.jpg"><div class="th"><img loading="lazy" src="img/diagnostika.jpg" alt=""></div><span class="ix">03</span><div><h3>Қабулда кўрик</h3><span class="d">Тери ва соч ташхиси, дерматоскопия, таҳлилларга йўлланма.</span></div><span class="pr">Юзма-юз<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/inyeksiya.jpg"><div class="th"><img loading="lazy" src="img/inyeksiya.jpg" alt=""></div><span class="ix">04</span><div><h3>Муолажалар</h3><span class="d">Сўгал, папилома олиб ташлаш ва инъекцион муолажалар.</span></div><span class="pr">Хизмат бўйича<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+  </ul>
+</div></section>
 
-<!-- Doktor -->
-<section id="doktor">
-  <div class="wrap doc">
-    <div class="docph rv">
-      <img src="doctor.jpg" alt="Дерматовенеролог Захид" onerror="this.onerror=null;this.src='img/parvarish.jpg'">
-      <div class="badge"><div><b>15+</b>йил тажриба</div><div><b>30 000</b>мижоз</div><div><b>1 553</b>Instagram</div></div>
-    </div>
-    <div class="rv" style="--d:.1s">
-      <span class="kicker">Шифокор ҳақида</span>
-      <h2>Дерматовенеролог <span class="hl">Захид</span></h2>
-      <p class="sub">Йиллар давомида минглаб беморларга тери муаммоларини ҳал қилишда ёрдам берганман. Мақсадим: сабабини топиш ва сизга тушунарли, аниқ даволаш режаси бериш.</p>
-      <ul class="ticks">
-        <li>Акне ва витилигодан герпес ва соч тўкилишигача 30+ йўналиш</li>
-        <li>Онлайн консультация ва уйга чақириш</li>
-        <li>Халқаро сертификатлар ва доимий малака ошириш</li>
-        <li>Барча мурожаатлар тиббий махфийлик остида</li>
-      </ul>
-      <a class="btn coral" data-book href="#aloqa">Шифокорга ёзилиш →</a>
-    </div>
+<!-- PROCESS -->
+<section class="pr-s" id="jarayon"><div class="wrap pgrid">
+  <div class="stick"><span class="kick" data-up>Жараён</span><h2 class="h2" data-up>Даволаш <em>4 қадамда</em></h2><p class="lead" data-up>Аниқ тартиб: ариза, ташхис, режа ва назорат. Ҳар босқичда нима бўлишини олдиндан биласиз.</p></div>
+  <div>
+    <div class="step" data-up><span class="nn">01</span><div><h3>Ариза қолдиринг</h3><p>Телеграм, Instagram ёки форма орқали ёзилинг ва қулай вақтни танланг.</p></div></div>
+    <div class="step" data-up><span class="nn">02</span><div><h3>Ташхис</h3><p>Шикоят, расмлар ва таҳлиллар асосида муаммо сабаби аниқланади.</p></div></div>
+    <div class="step" data-up><span class="nn">03</span><div><h3>Даволаш режаси</h3><p>Дори, парвариш ва турмуш тарзи бўйича тушунарли кўрсатмалар.</p></div></div>
+    <div class="step" data-up><span class="nn">04</span><div><h3>Назорат</h3><p>Натижани кузатиб борамиз ва зарур бўлса режани тузатамиз.</p></div></div>
   </div>
-</section>
+</div></section>
+
+<!-- DOCTOR -->
+<section class="dr" id="doktor"><div class="wrap dgrid">
+  <div class="dph" data-up>
+    <div class="ring"></div>
+    <div class="im" id="dim"><div class="mono">З<small>Dr. Захид</small></div><img data-par src="doctor.jpg" alt="Дерматовенеролог Захид" onerror="this.onerror=null;this.style.display='none'"></div>
+    <div class="bd"><b>1 553</b><small>Instagram обуначи</small></div>
+  </div>
+  <div>
+    <span class="kick" data-up>Шифокор ҳақида</span>
+    <p class="quote" data-up>«Мақсадим — сабабини топиш ва сизга тушунарли, аниқ даволаш режаси бериш.»</p>
+    <ul class="cred" data-up>
+      <li><b>01</b>Дерматовенеролог, 15+ йиллик амалий тажриба</li>
+      <li><b>02</b>Акне ва витилигодан герпес ва соч тўкилишигача 30+ йўналиш</li>
+      <li><b>03</b>Онлайн консультация ва уйга чақириш</li>
+      <li><b>04</b>Халқаро сертификатлар ва доимий малака ошириш</li>
+      <li><b>05</b>Барча мурожаатлар тиббий махфийлик остида</li>
+    </ul>
+    <a class="btn clay" data-mag href="#aloqa"><span>Шифокорга ёзилиш</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</div></section>
+
+<!-- CONDITIONS LIST -->
+<section class="cd" id="royxat"><div class="wrap">
+  <span class="kick" data-up>Тўлиқ рўйхат</span>
+  <h2 class="h2" data-up>Барча <em>йўналишлар</em></h2>
+  <div class="tabs" id="tabs"></div>
+  <ul class="clist" id="list"></ul>
+</div></section>
 
 <!-- FAQ -->
-<section class="ice" id="faq">
-  <div class="wrap">
-    <div class="rv" style="text-align:center"><span class="kicker">Саволлар</span><h2>Кўп бериладиган <span class="hl">саволлар</span></h2></div>
-    <div class="faq rv">
-      <details><summary>Онлайн консультация ташхис қўя оладими?</summary><p>Кўп ҳолларда ҳа: шикоят ва аниқ расмлар асосида дастлабки ташхис ва даволаш режаси берилади. Зарур бўлса, юзма-юз кўрик ёки таҳлил тавсия этилади.</p></details>
-      <details><summary>Даволаш қанча вақт олади?</summary><p>Касалликка боғлиқ. Ўткир ҳолатлар кунлар ичида яхшиланади, витилиго, псориаз ва атопик дерматит каби сурункали ҳолатлар узоқ назоратни талаб қилади.</p></details>
-      <details><summary>Уйга чақириш қандай ишлайди?</summary><p>Манзил ва муаммони ёзиб қолдирасиз, келишилган вақтда шифокор келиб кўрик ўтказади.</p></details>
-      <details><summary>Маълумотларим махфий сақланадими?</summary><p>Ҳа. Бемор ҳақидаги барча маълумот ва расмлар тиббий махфийлик остида.</p></details>
-      <details><summary>Венерик касалликлар бўйича ҳам мурожаат қилса бўладими?</summary><p>Ҳа, шифокор дерматовенеролог. Мурожаатлар қатъий махфий қабул қилинади.</p></details>
-    </div>
+<section class="fq" id="faq"><div class="wrap fgrid">
+  <div><span class="kick" data-up>Саволлар</span><h2 class="h2" data-up>Кўп бериладиган <em>саволлар</em></h2></div>
+  <div data-up>
+    <details><summary>Онлайн консультация ташхис қўя оладими?</summary><p>Кўп ҳолларда ҳа: шикоят ва аниқ расмлар асосида дастлабки ташхис ва даволаш режаси берилади. Зарур бўлса, юзма-юз кўрик ёки таҳлил тавсия этилади.</p></details>
+    <details><summary>Даволаш қанча вақт олади?</summary><p>Касалликка боғлиқ. Ўткир ҳолатлар кунлар ичида яхшиланади, витилиго, псориаз ва атопик дерматит каби сурункали ҳолатлар узоқ назоратни талаб қилади.</p></details>
+    <details><summary>Уйга чақириш қандай ишлайди?</summary><p>Манзил ва муаммони ёзиб қолдирасиз, келишилган вақтда шифокор келиб кўрик ўтказади.</p></details>
+    <details><summary>Маълумотларим махфий сақланадими?</summary><p>Ҳа. Бемор ҳақидаги барча маълумот ва расмлар тиббий махфийлик остида.</p></details>
+    <details><summary>Венерик касалликлар бўйича ҳам мурожаат қилса бўладими?</summary><p>Ҳа, шифокор дерматовенеролог. Мурожаатлар қатъий махфий қабул қилинади.</p></details>
   </div>
-</section>
+</div></section>
 
-<!-- Contact -->
-<section class="dark contact" id="aloqa">
-  <div class="wrap cgrid">
-    <div class="rv">
-      <span class="kicker">Бугун бошланг</span>
-      <h2>Тоза ва соғлом тери — <span class="hl">биринчи қадамдан</span></h2>
-      <p class="sub">Аризани қолдиринг, шифокор қулай вақтда жавоб беради.</p>
-      <div class="social">
-        <a class="btn line" data-tg target="_blank" rel="noopener">Телеграм</a>
-        <a class="btn line" data-ig target="_blank" rel="noopener">Instagram @zakhidaf</a>
-        <a class="btn line" data-tel>Қўнғироқ</a>
-      </div>
+<!-- CONTACT -->
+<section class="ct" id="aloqa"><div class="wrap">
+  <span class="kick" data-up>Бугун бошланг</span>
+  <h2 id="cth">Ёзилинг, <em>ечим</em> топамиз</h2>
+  <div class="cgrid">
+    <div data-up>
+      <p class="lead" style="margin-top:0">Аризани қолдиринг, шифокор қулай вақтда жавоб беради. Ёки тўғридан-тўғри ёзинг.</p>
+      <div class="soc"><a data-tg target="_blank" rel="noopener">Телеграм</a><a data-ig target="_blank" rel="noopener">Instagram @zakhidaf</a><a data-tel>Қўнғироқ</a></div>
     </div>
-    <form id="form" class="rv" style="--d:.1s" novalidate>
-      <label for="f-name">Исмингиз<input id="f-name" name="name" autocomplete="name" placeholder="Масалан: Алишер" required></label>
-      <label for="f-phone">Телефон ёки Телеграм<input id="f-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+998 __ ___ __ __" required></label>
-      <label for="f-type">Қайси хизмат керак
-        <select id="f-type" name="type"><option>Онлайн консультация</option><option>Врач на вызов</option><option>Қабулда кўрик</option><option>Муолажа</option></select></label>
-      <label for="f-msg">Муаммо (ихтиёрий)<textarea id="f-msg" name="msg" placeholder="Қисқача ёзинг: нима безовта қилмоқда?"></textarea></label>
-      <button class="btn coral" type="submit">Аризани юбориш →</button>
-      <div class="ok" id="ok" role="status"></div>
+    <form id="form" data-up novalidate>
+      <div class="f"><label for="f-name">Исмингиз</label><input id="f-name" name="name" autocomplete="name" placeholder="Масалан: Алишер"></div>
+      <div class="f"><label for="f-phone">Телефон ёки Телеграм</label><input id="f-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="+998 __ ___ __ __"></div>
+      <div class="f"><label for="f-type">Хизмат</label><select id="f-type" name="type"><option>Онлайн консультация</option><option>Врач на вызов</option><option>Қабулда кўрик</option><option>Муолажа</option></select></div>
+      <div class="f"><label for="f-msg">Муаммо (ихтиёрий)</label><textarea id="f-msg" name="msg" rows="2" placeholder="Нима безовта қилмоқда?"></textarea></div>
+      <div class="fs"><button class="btn clay" data-mag type="submit"><span>Аризани юбориш</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button><div class="ok" id="ok" role="status"></div></div>
     </form>
   </div>
-</section>
+</div></section>
 </main>
 
 <footer><div class="wrap">
-  <div class="logo" style="color:#fff">Dr. <b>Захид</b></div>
-  <p>Сайтдаги маълумотлар умумий тавсиф характерига эга ва шифокор кўригини алмаштирмайди. Ўз-ўзини даволамасдан, мутахассисга мурожаат қилинг.</p>
+  <div class="big" aria-hidden="true">ЗАХИД</div>
+  <div class="row"><p>Сайтдаги маълумотлар умумий тавсиф характерига эга ва шифокор кўригини алмаштирмайди. Ўз-ўзини даволамасдан, мутахассисга мурожаат қилинг.</p><span>© Dr. Захид</span></div>
   <details><summary>Суратлар манбаси</summary>
-    <p>Муолажа ва парвариш суратлари: Unsplash (бепул лицензия). Витилиго ва герпес зостер суратлари — шифокор архиви. Қолган клиник суратлар Wikimedia Commons'дан: Acne Vulgaris 12 (CC BY-SA 4.0), Allopecia areata (public domain), Seborrhoeic dermatitis highres (CC BY-SA 3.0), Periorale Dermatitis (CC BY-SA 4.0), Pityriasis rosea-2 (public domain), Keloid-Face (CC BY-SA 3.0), Toefungus (public domain), Plantar wart at heel (CC BY-SA 4.0), Psoriasis on back (CC BY-SA 3.0), Atopic dermatitis child (CC BY-SA 3.0). Муаллифлар ва лицензия матнлари: commons.wikimedia.org</p></details>
+    <p>Фон ва муолажа суратлари: Unsplash (бепул лицензия). Витилиго ва герпес зостер суратлари — шифокор архиви. Қолган клиник суратлар Wikimedia Commons'дан: Acne Vulgaris 12 (CC BY-SA 4.0), Allopecia areata (public domain), Seborrhoeic dermatitis highres (CC BY-SA 3.0), Periorale Dermatitis (CC BY-SA 4.0), Pityriasis rosea-2 (public domain), Keloid-Face (CC BY-SA 3.0), Toefungus (public domain), Plantar wart at heel (CC BY-SA 4.0), Psoriasis on back (CC BY-SA 3.0), Atopic dermatitis child (CC BY-SA 3.0). Муаллифлар ва лицензия матнлари: commons.wikimedia.org</p></details>
 </div></footer>
 
-<div class="sticky" id="sticky"><a class="btn coral" data-book href="#aloqa">Консультацияга ёзилиш</a></div>
+<div class="stk" id="stk"><a class="btn clay" href="#aloqa"><span>Консультацияга ёзилиш</span></a></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
 <script>
 /* ===== СОЗЛАМАЛАР: шу ерни ўзгартиринг ===== */
 const CONFIG={
@@ -408,21 +468,16 @@ const CONFIG={
   telegram:"",   // масалан: "https://t.me/username"
   phone:""       // масалан: "+998901234567"
 };
-document.documentElement.classList.add("js");
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const G=window.gsap&&window.ScrollTrigger,RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const FINE=matchMedia("(hover:hover) and (pointer:fine)").matches;
 
 /* links */
 $$("[data-ig]").forEach(a=>a.href=CONFIG.instagram);
 $$("[data-tg]").forEach(a=>a.href=CONFIG.telegram||CONFIG.instagram);
 $$("[data-tel]").forEach(a=>{if(CONFIG.phone)a.href="tel:"+CONFIG.phone;else{a.href=CONFIG.instagram;a.target="_blank";a.rel="noopener";a.textContent="Директга ёзиш"}});
 
-/* drawer */
-const dr=$("#drawer"),bg=$("#burger");
-function tog(o){dr.classList.toggle("open",o);bg.setAttribute("aria-expanded",o);bg.firstElementChild.style.background=o?"transparent":"";document.body.style.overflow=o?"hidden":""}
-bg.onclick=()=>tog(!dr.classList.contains("open"));
-$$("a",dr).forEach(a=>a.onclick=()=>tog(false));
-
-/* cases */
+/* data */
 const CASES=[
  ["vitiligo","Витилиго","Тери","Пигмент йўқолиши туфайли терида оқ доғлар пайдо бўлади."],
  ["zoster","Герпес Зостер","Вирус","Нерв бўйлаб тошма ва оғриқ. Эрта даво асоратларни камайтиради."],
@@ -437,20 +492,6 @@ const CASES=[
  ["fungus","Грибок (тирноқ)","Инфекция","Тирноқ сарғайиши, қалинлашиши ва мўртлашиши."],
  ["wart","Сўгал, бородавка","Вирус","Вирусли тери ўсимтаси. Олиб ташлаш мумкин."]
 ];
-const sc=$("#scroller");
-sc.innerHTML=CASES.map(([k,t,g,d],i)=>`<article class="case"><div class="ph"><img src="img/cases/${k}.jpg" alt="${t}" ${i>2?'loading="lazy"':''} draggable="false"><span class="tag">${g}</span></div><div class="bd"><h3>${t}</h3><p>${d}</p></div></article>`).join("");
-const pb=$("#pb");
-function prog(){const m=sc.scrollWidth-sc.clientWidth;pb.style.width=(20+(m>0?sc.scrollLeft/m:0)*80)+"%"}
-sc.addEventListener("scroll",prog,{passive:true});prog();
-const step=()=>($(".case",sc).offsetWidth+18);
-$("#prev").onclick=()=>sc.scrollBy({left:-step()*1.5,behavior:"smooth"});
-$("#next").onclick=()=>sc.scrollBy({left:step()*1.5,behavior:"smooth"});
-let down=false,sx=0,sl=0,moved=0;
-sc.addEventListener("pointerdown",e=>{if(e.pointerType!=="mouse")return;down=true;moved=0;sx=e.clientX;sl=sc.scrollLeft;sc.classList.add("drag")});
-addEventListener("pointermove",e=>{if(!down)return;moved=e.clientX-sx;sc.scrollLeft=sl-moved});
-addEventListener("pointerup",()=>{if(!down)return;down=false;sc.classList.remove("drag")});
-
-/* conditions */
 const DATA={
  "Тери":["Акне","Угри","Витилиго","Псориаз","Атопик дерматит","Экзема","Нейродермит","Себорейный дерматит","Периоральный дерматит","Розовый лишай Жибера","Пигментациялар","Келлоид чандиклар","Кератодермиялар","Гипергидроз","Аллергодерматитлар","Токсикодермия"],
  "Инфекция":["Грибок","Микозы","Микоз стоп","Эритразма","Импетиго","Фурункул","Фолликулит","Контагиоз моллюск"],
@@ -458,46 +499,143 @@ const DATA={
  "Соч":["Соч тукилиши","Очаговая Алопеция","Андрогенная Алопеция"],
  "Венерик":["Венерик касалликлар"]
 };
-const ALL=Object.values(DATA).flat(),tabs=$("#tabs"),list=$("#list");
-function show(k){list.innerHTML=(k==="Ҳаммаси"?ALL:DATA[k]).map((t,i)=>`<div class="chip" style="animation-delay:${i*.03}s">${t}</div>`).join("");$$(".tab").forEach(b=>b.classList.toggle("on",b.dataset.k===k))}
+const ALL=Object.values(DATA).flat();
+const pad=n=>String(n).padStart(2,"0");
+
+/* build: cases */
+const track=$("#track");
+track.insertAdjacentHTML("beforeend",CASES.map(([k,t,g,d],i)=>`<article class="hc"><span class="no">${pad(i+1)}</span><div class="im"><img src="img/cases/${k}.jpg" alt="${t}" draggable="false"><span class="tg">${g}</span></div><h3>${t}</h3><p>${d}</p></article>`).join(""));
+$("#ht").textContent=pad(CASES.length);
+
+/* build: marquee */
+const mqText=ALL.map(t=>`<span>${t}</span>`).join("");
+$("#mq1").innerHTML=mqText+mqText;
+
+/* build: conditions */
+const tabs=$("#tabs"),list=$("#list");
+function show(k){list.innerHTML=(k==="Ҳаммаси"?ALL:DATA[k]).map((t,i)=>`<li data-n="${pad(i+1)}" style="animation-delay:${i*.025}s">${t}</li>`).join("");$$(".tab").forEach(b=>b.classList.toggle("on",b.dataset.k===k))}
 tabs.innerHTML=["Ҳаммаси",...Object.keys(DATA)].map(k=>`<button class="tab" data-k="${k}">${k}</button>`).join("");
 tabs.onclick=e=>{const b=e.target.closest(".tab");if(b)show(b.dataset.k)};
 show("Ҳаммаси");
-const mq=ALL.map(t=>`<span>${t}</span>`).join("");$("#track").innerHTML=mq+mq;
 
-/* scroll */
-const bar=$("#bar"),st=$("#sticky"),sp=$$("[data-speed]");
-function onScroll(){const h=document.documentElement,y=h.scrollTop;bar.style.width=(y/(h.scrollHeight-h.clientHeight)*100)+"%";st.classList.toggle("show",y>innerHeight*.8&&!(innerHeight+y>h.scrollHeight-innerHeight*.9));
-  if(y<innerHeight*1.4)sp.forEach(e=>e.style.transform=`translateY(${y*parseFloat(e.dataset.speed)*-1}px)`)}
-addEventListener("scroll",onScroll,{passive:true});onScroll();
+/* split words */
+function split(el,cls){el.innerHTML=el.innerHTML.replace(/(<[^>]+>)|([^\s<]+)/g,(m,tag,w)=>tag?tag:(cls==="mask"?`<span class="w"><span class="wi">${w}</span></span>`:`<span class="sw">${w} </span>`))}
 
-/* reveal + counters */
-function count(el){const to=+el.dataset.count,suf=el.dataset.suf||"",f=el.dataset.fmt;let t0;
-  const r=t=>{t0??=t;const p=Math.min((t-t0)/1800,1),v=Math.round(to*(1-Math.pow(1-p,4)));el.textContent=(f?v.toLocaleString("ru-RU"):v)+(p===1?suf:"");if(p<1)requestAnimationFrame(r)};requestAnimationFrame(r)}
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");$$("[data-count]",e.target).forEach(count);io.unobserve(e.target)}}),{threshold:.12});
-$$(".rv").forEach(el=>io.observe(el));$$(".hero-stats b").forEach(count);
-setTimeout(()=>$$(".rv").forEach(el=>{const r=el.getBoundingClientRect();if(r.top<innerHeight)el.classList.add("in")}),400);
+/* drawer */
+const dr=$("#drawer"),bg=$("#burger");
+function tog(o){dr.classList.toggle("open",o);bg.classList.toggle("on",o);bg.setAttribute("aria-expanded",o);document.body.style.overflow=o?"hidden":""}
+bg.onclick=()=>tog(!dr.classList.contains("open"));
 
 /* form */
 $("#form").addEventListener("submit",e=>{
-  e.preventDefault();const f=e.target,n=f.name.value.trim(),p=f.phone.value.trim();
-  const ok=$("#ok");ok.classList.add("show");
-  if(!n||!p){ok.style.background="rgba(255,106,87,.16)";ok.style.color="#ffb4aa";ok.textContent="Исм ва телефонни ёзинг.";return}
-  ok.style.background="";ok.style.color="";
+  e.preventDefault();const f=e.target,n=f.name.value.trim(),p=f.phone.value.trim(),ok=$("#ok");ok.className="ok show";
+  if(!n||!p){ok.classList.add("er");ok.textContent="Исм ва телефонни ёзинг.";return}
   const text=`Салом! Исмим: ${n}\nАлоқа: ${p}\nХизмат: ${f.type.value}\n${f.msg.value.trim()}`;
   try{navigator.clipboard&&navigator.clipboard.writeText(text).catch(()=>{})}catch(_){}
-  ok.textContent="Раҳмат! Матн нусхаланди. Очилган чатга қўйиб юборинг.";
-  const base=CONFIG.telegram?CONFIG.telegram+"?text="+encodeURIComponent(text):CONFIG.instagram;
-  window.open(base,"_blank","noopener");
+  ok.textContent="Раҳмат! Матн нусхаланди, очилган чатга қўйиб юборинг.";
+  window.open(CONFIG.telegram?CONFIG.telegram+"?text="+encodeURIComponent(text):CONFIG.instagram,"_blank","noopener");
 });
 
-/* hero canvas */
-(()=>{const c=$("#cells"),x=c.getContext("2d");let W,H,P=[];
-  const rs=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;P=Array.from({length:Math.min(50,W/20|0)},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*2.6+1,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,c:Math.random()<.25}))};
-  rs();addEventListener("resize",rs);if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
-  (function L(){x.clearRect(0,0,W,H);P.forEach((p,i)=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
-    x.beginPath();x.arc(p.x,p.y,p.r,0,7);x.fillStyle=p.c?"rgba(255,106,87,.7)":"rgba(16,217,201,.6)";x.fill();
-    for(let j=i+1;j<P.length;j++){const q=P[j],d=Math.hypot(p.x-q.x,p.y-q.y);if(d<120){x.strokeStyle=`rgba(16,217,201,${.16*(1-d/120)})`;x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.stroke()}}});requestAnimationFrame(L)})()})();
+/* sticky cta + header hide */
+const stk=$("#stk"),hdr=$("#top");let lastY=0;
+function onScroll(y){hdr.classList.toggle("solid",y>60);stk.classList.toggle("show",y>innerHeight*.8&&y<document.documentElement.scrollHeight-innerHeight*1.6);
+  hdr.classList.toggle("hide",y>innerHeight*.9&&y>lastY+2&&!dr.classList.contains("open"));if(Math.abs(y-lastY)>2)lastY=y}
+
+/* counters */
+function count(el){const to=+el.dataset.count,suf=el.dataset.suf||"",f=el.dataset.fmt,o={v:0};
+  gsap.to(o,{v:to,duration:2.2,ease:"power3.out",onUpdate(){el.textContent=(f?Math.round(o.v).toLocaleString("ru-RU"):Math.round(o.v))+(o.v>=to-.5?suf:"")},onComplete(){el.textContent=(f?to.toLocaleString("ru-RU"):to)+suf}})}
+
+/* cursor */
+function cursor(){
+  if(!FINE||!G)return;
+  const c=$("#cur"),c2=$("#cur2"),xc=gsap.quickTo(c,"x",{duration:.1}),yc=gsap.quickTo(c,"y",{duration:.1}),x2=gsap.quickTo(c2,"x",{duration:.45,ease:"power3"}),y2=gsap.quickTo(c2,"y",{duration:.45,ease:"power3"});
+  addEventListener("pointermove",e=>{xc(e.clientX);yc(e.clientY);x2(e.clientX);y2(e.clientY)},{passive:true});
+  document.addEventListener("pointerover",e=>{const t=e.target.closest("[data-cur],a,button,summary,.tab,input,select,textarea");
+    if(!t){c2.className="";c2.textContent="";return}
+    const l=t.closest("[data-cur]")?.dataset.cur;
+    if(l){c2.className="big";c2.textContent=l}else{c2.className="sm";c2.textContent=""}});
+}
+
+/* main */
+function init(){
+  document.body.classList.toggle("cc",FINE&&!!G&&!RM);
+  if(!G||RM){$("#pre").remove();return}
+  gsap.registerPlugin(ScrollTrigger);
+  let lenis;
+  if(window.Lenis){lenis=new Lenis({lerp:.09,wheelMultiplier:.95});lenis.on("scroll",e=>{ScrollTrigger.update();onScroll(e.scroll)});gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)}
+  else addEventListener("scroll",()=>onScroll(scrollY),{passive:true});
+  $$('a[href^="#"]').forEach(a=>a.addEventListener("click",e=>{const id=a.getAttribute("href");if(id.length<2)return;const t=$(id);if(!t)return;e.preventDefault();tog(false);setTimeout(()=>{lenis?lenis.scrollTo(t,{offset:id==="#hero"?0:-10,duration:1.6}):t.scrollIntoView({behavior:"smooth"})},dr.classList.contains("open")?50:0)}));
+  cursor();
+
+  /* magnetic */
+  if(FINE)$$("[data-mag]").forEach(el=>{const xt=gsap.quickTo(el,"x",{duration:.5,ease:"power3"}),yt=gsap.quickTo(el,"y",{duration:.5,ease:"power3"});
+    el.addEventListener("pointermove",e=>{const r=el.getBoundingClientRect();xt((e.clientX-r.left-r.width/2)*.3);yt((e.clientY-r.top-r.height/2)*.4)});
+    el.addEventListener("pointerleave",()=>{xt(0);yt(0)})});
+
+  /* preloader → hero intro */
+  split($("#h1"),"mask");
+  const words=$$("#h1 .wi");gsap.set(words,{yPercent:115});
+  gsap.set(".hero-row,.hstats",{opacity:0,y:40});gsap.set("#hbg",{scale:1.25});
+  const o={v:0},pn=$("#pn");
+  const tl=gsap.timeline({defaults:{ease:"power3.out"}});
+  tl.to(o,{v:100,duration:1.1,ease:"power2.inOut",onUpdate(){pn.textContent=Math.round(o.v)}})
+    .to("#pre .in",{y:-30,opacity:0,duration:.4},">")
+    .to("#pre",{yPercent:-100,duration:.9,ease:"power4.inOut",onComplete(){$("#pre").remove()}},"<.1")
+    .to("#hbg",{scale:1,duration:2.2},"<")
+    .to(words,{yPercent:0,duration:1.3,stagger:.07},"<.35")
+    .to(".hero-row",{opacity:1,y:0,duration:1},"<.5")
+    .to(".hstats",{opacity:1,y:0,duration:1},"<.15")
+    .add(()=>$$(".hstats b").forEach(count),"<");
+  setTimeout(()=>{const p=$("#pre");if(p&&tl.progress()<1)tl.progress(1)},4500);
+
+  /* hero parallax */
+  gsap.to("#hbg",{yPercent:12,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
+
+  /* marquee with velocity */
+  const mq=gsap.to("#mq1",{xPercent:-50,duration:60,ease:"none",repeat:-1});
+  ScrollTrigger.create({onUpdate:s=>{mq.timeScale(1+Math.min(Math.abs(s.getVelocity())/260,7))}});
+  gsap.ticker.add(()=>{const ts=mq.timeScale();mq.timeScale(ts+(1-ts)*.05)});
+
+  /* statement scrub */
+  const st=$("#stm");split(st,"sw");
+  gsap.fromTo($$("#stm .sw"),{opacity:.12},{opacity:1,stagger:.18,ease:"none",scrollTrigger:{trigger:st,start:"top 78%",end:"bottom 48%",scrub:true}});
+
+  /* fade ups */
+  $$("[data-up]").forEach(el=>gsap.from(el,{y:60,opacity:0,duration:1.2,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 90%",once:true}}));
+  /* counters */
+  $$(".ncell b").forEach(el=>ScrollTrigger.create({trigger:el,start:"top 88%",once:true,onEnter:()=>count(el)}));
+  /* image parallax */
+  $$("[data-par]").forEach(img=>gsap.fromTo(img,{yPercent:-7},{yPercent:7,ease:"none",scrollTrigger:{trigger:img.parentElement,start:"top bottom",end:"bottom top",scrub:true}}));
+  /* doctor reveal */
+  gsap.from("#dim",{clipPath:"inset(100% 0 0 0)",duration:1.6,ease:"power4.inOut",scrollTrigger:{trigger:"#dim",start:"top 82%",once:true}});
+  /* contact headline */
+  split($("#cth"),"mask");
+  gsap.from("#cth .wi",{yPercent:115,duration:1.2,stagger:.08,ease:"power4.out",scrollTrigger:{trigger:"#cth",start:"top 85%",once:true}});
+  /* big footer word */
+  gsap.from("footer .big",{yPercent:30,opacity:0,duration:1.4,ease:"power3.out",scrollTrigger:{trigger:"footer",start:"top 85%",once:true}});
+
+  /* pinned horizontal cases */
+  const mm=gsap.matchMedia();
+  mm.add("(min-width:900px)",()=>{
+    const dist=()=>track.scrollWidth-innerWidth+0;
+    const hc=$("#hc"),bar=$("#hbar"),n=CASES.length;
+    const tw=gsap.to(track,{x:()=>-dist(),ease:"none",scrollTrigger:{trigger:".hs",start:"top top",end:()=>"+="+dist(),pin:".hs-pin",scrub:.8,invalidateOnRefresh:true,anticipatePin:1,
+      onUpdate:s=>{hc.textContent=pad(Math.min(n,Math.floor(s.progress*n)+1));bar.style.width=(8+s.progress*92)+"%"}}});
+    $$(".hc .im img").forEach(img=>gsap.fromTo(img,{yPercent:-6},{yPercent:6,ease:"none",scrollTrigger:{trigger:img.parentElement,containerAnimation:tw,start:"left right",end:"right left",scrub:true}}));
+  });
+
+  /* service hover preview */
+  const pv=$("#pv");
+  if(FINE){
+    $$("#svl li").forEach((li,i)=>{const im=document.createElement("img");im.src=li.dataset.img;im.alt="";pv.appendChild(im)});
+    const px=gsap.quickTo(pv,"x",{duration:.6,ease:"power3"}),py=gsap.quickTo(pv,"y",{duration:.6,ease:"power3"});
+    const imgs=$$("img",pv);
+    $("#svl").addEventListener("pointermove",e=>{px(e.clientX+34);py(e.clientY-pv.offsetHeight/2)});
+    $$("#svl li").forEach((li,i)=>{li.addEventListener("pointerenter",()=>{pv.classList.add("on");imgs.forEach((m,j)=>m.classList.toggle("on",i===j))});li.addEventListener("pointerleave",()=>pv.classList.remove("on"))});
+  }
+  addEventListener("load",()=>ScrollTrigger.refresh());
+}
+if(document.readyState==="complete")init();else addEventListener("load",init);
 </script>
 </body>
 </html>
