@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEURO CLINICS — Asab tizimi va umurtqa kasalliklari markazi</title>
+<meta name="description" content="NEURO CLINICS: bosh miya tekshiruvi (EEG), fizioterapiya va ignaterapiya, kompyuter traksion — umurtqani tortish. Asab tizimi va umurtqa kasalliklarini zamonaviy davolash.">
+<meta name="theme-color" content="#050b1a">
+<meta property="og:title" content="NEURO CLINICS — Asab tizimi va umurtqa kasalliklari">
+<meta property="og:description" content="Bosh miya tekshiruvi, fizioterapiya, ignaterapiya va kompyuter traksion.">
+<meta property="og:image" content="assets/logo.png">
+<link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="preloader" id="preloader">
+  <img src="assets/logo.png" alt="">
+  <div class="pre-bar"><span></span></div>
+</div>
+<div class="progress" id="progress"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<header class="nav" id="nav">
+  <a href="#home" class="brand">
+    <img src="assets/logo.png" alt="NEURO CLINICS logotipi">
+    <span>NEURO <b>CLINICS</b></span>
+  </a>
+  <nav class="links" id="links">
+    <a href="#xizmatlar">Xizmatlar</a>
+    <a href="#eeg">Miya tekshiruvi</a>
+    <a href="#traksion">Traksion</a>
+    <a href="#jarayon">Jarayon</a>
+    <a href="#savol">Savollar</a>
+    <a href="#aloqa">Aloqa</a>
+    <a href="#aloqa" class="btn btn-sm mobile-only">Qabulga yozilish</a>
+  </nav>
+  <a href="#aloqa" class="btn btn-sm desktop-only">Qabulga yozilish</a>
+  <button class="burger" id="burger" aria-label="Menyu"><span></span><span></span></button>
+</header>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="home">
+  <canvas id="neural"></canvas>
+  <div class="hero-grid container">
+    <div class="hero-text">
+      <span class="chip reveal"><i class="dot"></i> Asab tizimi va umurtqa kasalliklari markazi</span>
+      <h1 class="reveal d1">Miya va umurtqa <span class="grad">salomatligi</span> — ishonchli qo'llarda</h1>
+      <p class="lead reveal d2">Zamonaviy diagnostika va davolash usullari: bosh miya tekshiruvi, fizioterapiya, ignaterapiya hamda kompyuter traksion orqali umurtqani tortish.</p>
+      <div class="cta reveal d3">
+        <a href="#aloqa" class="btn">Qabulga yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#xizmatlar" class="btn btn-ghost">Xizmatlarni ko'rish</a>
+      </div>
+      <ul class="trust reveal d4">
+        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Zamonaviy uskunalar</li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Individual yondashuv</li>
+        <li><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>Xavfsiz muolajalar</li>
+      </ul>
+    </div>
+    <div class="hero-visual reveal d2">
+      <div class="orbit o1"></div><div class="orbit o2"></div><div class="orbit o3"></div>
+      <div class="logo-wrap tilt" data-tilt>
+        <img src="assets/logo.png" alt="Miya va umurtqa — NEURO CLINICS">
+      </div>
+      <div class="float-card fc1"><b>EEG</b><span>Miya faolligi</span><svg class="mini-wave" viewBox="0 0 100 24"><path d="M0 12 L10 12 L14 3 L20 21 L26 12 L40 12 L44 6 L50 18 L56 12 L100 12"/></svg></div>
+      <div class="float-card fc2"><b>Traksion</b><span>Umurtqa uchun</span></div>
+      <div class="float-card fc3"><b>Ignaterapiya</b><span>Tabiiy yengillik</span></div>
+    </div>
+  </div>
+  <a href="#xizmatlar" class="scroll-hint" aria-label="Pastga"><span></span></a>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee" aria-hidden="true">
+  <div class="track">
+    <span>Bosh miya tekshiruvi</span><i>✦</i><span>Fizioterapiya</span><i>✦</i><span>Ignaterapiya</span><i>✦</i><span>Kompyuter traksion</span><i>✦</i><span>Asab tizimi</span><i>✦</i><span>Umurtqa kasalliklari</span><i>✦</i>
+    <span>Bosh miya tekshiruvi</span><i>✦</i><span>Fizioterapiya</span><i>✦</i><span>Ignaterapiya</span><i>✦</i><span>Kompyuter traksion</span><i>✦</i><span>Asab tizimi</span><i>✦</i><span>Umurtqa kasalliklari</span><i>✦</i>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="xizmatlar">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Xizmatlarimiz</span>
+      <h2>Asab tizimi va umurtqa uchun <span class="grad">to'liq yechim</span></h2>
+      <p>Tashxisdan tiklanishgacha — barcha bosqichlar bir joyda, mutaxassislar nazoratida.</p>
+    </div>
+    <div class="cards">
+      <article class="card reveal" data-tilt>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M9.5 3A3.5 3.5 0 0 0 6 6.5a3.5 3.5 0 0 0-2 3.2 3.4 3.4 0 0 0 1 2.4A3.5 3.5 0 0 0 6 17.5 3.5 3.5 0 0 0 9.5 21c1.4 0 2.5-.8 2.5-2V5c0-1.200-1.100-2-2.500-2ZM14.500 3C13.100 3 12 3.800 12 5v14c0 1.200 1.100 2 2.500 2a3.500 3.500 0 0 0 3.500-3.500 3.500 3.500 0 0 0 1-5.400 3.400 3.400 0 0 0 1-2.400 3.500 3.500 0 0 0-2-3.200A3.500 3.500 0 0 0 14.500 3Z"/></svg></div>
+        <h3>Bosh miya tekshiruvi</h3>
+        <p>EEG orqali miya elektr faolligini o'rganish. Bosh og'riq, bosh aylanish, uyqu buzilishi va boshqa asab belgilarida aniq tashxis uchun.</p>
+        <a href="#eeg" class="more">Batafsil <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </article>
+      <article class="card reveal d1" data-tilt>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg></div>
+        <h3>Fizioterapiya</h3>
+        <p>Elektr, lazer, magnit va boshqa fizioterapevtik muolajalar: og'riqni kamaytirish, yallig'lanishni bosish va qon aylanishni yaxshilash.</p>
+        <a href="#jarayon" class="more">Batafsil <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </article>
+      <article class="card reveal d2" data-tilt>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="m3 21 9-9M14 5l5 5M12 7l5 5-3 3-5-5 3-3ZM17 3l4 4"/></svg></div>
+        <h3>Ignaterapiya</h3>
+        <p>Akupunktur usuli — organizmning tabiiy tiklanish imkoniyatlarini faollashtiradi, mushak tarangligi va og'riqni yengillashtiradi.</p>
+        <a href="#jarayon" class="more">Batafsil <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </article>
+      <article class="card reveal d3" data-tilt>
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3v18M8 6h8M7.500 10h9M8 14h8M9 18h6"/></svg></div>
+        <h3>Kompyuter traksion</h3>
+        <p>Umurtqani kompyuter nazoratida yumshoq tortish: disklar orasidagi bosimni kamaytiradi, bel va bo'yin og'rig'ini yengillashtiradi.</p>
+        <a href="#traksion" class="more">Batafsil <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- EEG -->
+<section class="section dark" id="eeg">
+  <div class="container split">
+    <div class="eeg-panel reveal" data-tilt>
+      <div class="eeg-top"><span class="live"><i></i> JONLI EEG</span><span>Kanal Fp1–O1</span></div>
+      <canvas id="eegCanvas"></canvas>
+      <div class="eeg-foot"><div><b id="hz">10.0</b><small>Hz alfa</small></div><div><b>16+</b><small>elektrod</small></div><div><b>100%</b><small>xavfsiz</small></div></div>
+    </div>
+    <div class="reveal d1">
+      <span class="eyebrow">Bosh miya tekshiruvi</span>
+      <h2>Miya faolligini <span class="grad">aniq ko'rib</span>, to'g'ri tashxis qo'yamiz</h2>
+      <p class="muted">Elektroensefalografiya (EEG) — bosh terisiga o'rnatilgan datchiklar orqali miyaning elektr signallarini yozib olish usuli. Muolaja og'riqsiz va xavfsiz.</p>
+      <ul class="checks">
+        <li>Bosh og'riqlari va migren sabablarini aniqlash</li>
+        <li>Bosh aylanish, hushdan ketish holatlari</li>
+        <li>Uyqu buzilishi va asabiy charchoq</li>
+        <li>Bolalar va kattalar uchun mos tekshiruv</li>
+      </ul>
+      <a href="#aloqa" class="btn">EEG uchun yozilish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- TRACTION -->
+<section class="section" id="traksion">
+  <div class="container split rev">
+    <div class="reveal">
+      <span class="eyebrow">Kompyuter traksion</span>
+      <h2>Umurtqani tortish — <span class="grad">og'riqdan xalos</span> bo'lish yo'li</h2>
+      <p class="muted">Kompyuter traksion umurtqa pog'onasini aniq o'lchangan kuch bilan asta-sekin cho'zadi. Natijada umurtqalar orasi kengayib, asab ildizlariga bosim kamayadi.</p>
+      <ul class="checks">
+        <li>Bel va bo'yin og'rig'i</li>
+        <li>Umurtqalararo churra va protrusiya</li>
+        <li>Osteoxondroz</li>
+        <li>Qo'l-oyoqlarda uvishish va og'riq</li>
+      </ul>
+      <a href="#aloqa" class="btn">Maslahat olish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="spine-demo reveal d1">
+      <div class="spine" id="spine"></div>
+      <div class="spine-label"><span>Muolajagacha</span><span class="after">Muolajadan keyin</span></div>
+      <div class="arrow up"></div><div class="arrow down"></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="section dark" id="nega">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Nega NEURO CLINICS</span>
+      <h2>Sizning salomatligingiz — <span class="grad">bizning mas'uliyatimiz</span></h2>
+    </div>
+    <div class="why">
+      <div class="why-item reveal"><div class="num">01</div><h4>Aniq diagnostika</h4><p>Davolashdan oldin sababni topamiz — taxmin bilan emas, tekshiruv bilan ishlaymiz.</p></div>
+      <div class="why-item reveal d1"><div class="num">02</div><h4>Kompleks yondashuv</h4><p>Traksion, fizioterapiya va ignaterapiya — bir davolash rejasida uyg'unlashadi.</p></div>
+      <div class="why-item reveal d2"><div class="num">03</div><h4>Zamonaviy uskunalar</h4><p>Kompyuter boshqaruvidagi apparatlar aniq va xavfsiz natija beradi.</p></div>
+      <div class="why-item reveal d3"><div class="num">04</div><h4>Individual reja</h4><p>Har bir bemor uchun alohida davolash dasturi tuziladi.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="section" id="jarayon">
+  <div class="container">
+    <div class="head reveal">
+      <span class="eyebrow">Davolash jarayoni</span>
+      <h2>Qabuldan <span class="grad">tiklanishgacha</span> 4 qadam</h2>
+    </div>
+    <div class="steps">
+      <div class="line"><span id="lineFill"></span></div>
+      <div class="step reveal"><div class="s-dot">1</div><h4>Qabul va suhbat</h4><p>Shikoyatlaringizni tinglab, holatingizni baholaymiz.</p></div>
+      <div class="step reveal d1"><div class="s-dot">2</div><h4>Tekshiruv</h4><p>Zarur bo'lsa EEG va boshqa tekshiruvlar o'tkaziladi.</p></div>
+      <div class="step reveal d2"><div class="s-dot">3</div><h4>Davolash rejasi</h4><p>Traksion, fizio- va ignaterapiyadan iborat dastur tuziladi.</p></div>
+      <div class="step reveal d3"><div class="s-dot">4</div><h4>Nazorat</h4><p>Natijani kuzatib boramiz va tavsiyalar beramiz.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="band">
+  <div class="container band-in reveal">
+    <div>
+      <h2>Og'riq kutib turmaydi. Bugun qabulga yoziling.</h2>
+      <p>Mutaxassislarimiz sizga to'g'ri yo'nalishni tanlashda yordam beradi.</p>
+    </div>
+    <a href="#aloqa" class="btn btn-white">Qabulga yozilish</a>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="savol">
+  <div class="container narrow">
+    <div class="head reveal">
+      <span class="eyebrow">Ko'p beriladigan savollar</span>
+      <h2>Savollaringizga <span class="grad">javoblar</span></h2>
+    </div>
+    <div class="faq reveal">
+      <details open><summary>EEG tekshiruvi og'riqlimi?</summary><p>Yo'q. Bosh terisiga datchiklar o'rnatiladi, ular faqat miya signallarini qayd etadi. Tekshiruv butunlay og'riqsiz va xavfsiz.</p></details>
+      <details><summary>Kompyuter traksion kimlarga mos keladi?</summary><p>Bel va bo'yin og'rig'i, osteoxondroz, umurtqalararo churra kabi holatlarda qo'llanadi. Muolaja oldidan shifokor ko'rigi va qarshi ko'rsatmalar tekshiriladi.</p></details>
+      <details><summary>Ignaterapiya xavfsizmi?</summary><p>Bir martalik steril ignalar ishlatiladi va muolaja malakali mutaxassis tomonidan o'tkaziladi.</p></details>
+      <details><summary>Muolaja kursi necha seansdan iborat?</summary><p>Seanslar soni tashxis va holatingizga qarab individual belgilanadi. Aniq reja shifokor ko'rigidan so'ng tuziladi.</p></details>
+      <details><summary>Qabulga qanday yozilsam bo'ladi?</summary><p>Quyidagi shaklni to'ldiring, Telegram yoki Instagram orqali yozing yoki bevosita qo'ng'iroq qiling.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section dark" id="aloqa">
+  <div class="container split">
+    <div class="reveal">
+      <span class="eyebrow">Aloqa</span>
+      <h2>Qabulga <span class="grad">yoziling</span></h2>
+      <p class="muted">Ma'lumotlaringizni qoldiring — administratorimiz siz bilan bog'lanadi.</p>
+      <ul class="contacts">
+        <li><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.200 2 19.800 19.800 0 0 1-8.600-3.100 19.500 19.500 0 0 1-6-6A19.800 19.800 0 0 1 2.100 4.200 2 2 0 0 1 4.100 2h3a2 2 0 0 1 2 1.700c.1 1 .4 1.900.7 2.800a2 2 0 0 1-.5 2.100L8.100 9.900a16 16 0 0 0 6 6l1.300-1.300a2 2 0 0 1 2.100-.4c.9.300 1.800.6 2.800.7a2 2 0 0 1 1.700 2Z"/></svg><div><small>Telefon</small><a href="tel:+998000000000" data-todo>+998 (00) 000-00-00</a></div></li>
+        <li><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.500" cy="6.500" r=".6"/></svg><div><small>Instagram</small><a href="https://www.instagram.com/neuro_clinics" target="_blank" rel="noopener">@neuro_clinics</a></div></li>
+        <li><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg><div><small>Manzil</small><span data-todo>Manzil tez orada qo'shiladi</span></div></li>
+        <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><div><small>Ish vaqti</small><span data-todo>Dush–Shan: 09:00 – 18:00</span></div></li>
+      </ul>
+    </div>
+    <form class="form reveal d1" id="form" novalidate>
+      <label><span>Ismingiz</span><input name="name" required placeholder="Ism familiya" autocomplete="name"></label>
+      <label><span>Telefon raqam</span><input name="phone" required type="tel" placeholder="+998 __ ___ __ __" autocomplete="tel"></label>
+      <label><span>Xizmat</span>
+        <select name="service">
+          <option>Bosh miya tekshiruvi (EEG)</option>
+          <option>Fizioterapiya</option>
+          <option>Ignaterapiya</option>
+          <option>Kompyuter traksion</option>
+          <option>Maslahat kerak</option>
+        </select>
+      </label>
+      <label><span>Izoh (ixtiyoriy)</span><textarea name="msg" rows="3" placeholder="Sizni nima bezovta qilyapti?"></textarea></label>
+      <button class="btn" type="submit">Yuborish <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <p class="form-note" id="formNote">Yuborilgach, ma'lumotlar Telegram orqali ochiladi.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="container foot-in">
+    <a href="#home" class="brand"><img src="assets/logo.png" alt=""><span>NEURO <b>CLINICS</b></span></a>
+    <p>Asab tizimi va umurtqa kasalliklari markazi</p>
+    <div class="foot-links"><a href="#xizmatlar">Xizmatlar</a><a href="#jarayon">Jarayon</a><a href="#aloqa">Aloqa</a><a href="https://www.instagram.com/neuro_clinics" target="_blank" rel="noopener">Instagram</a></div>
+  </div>
+  <div class="container copy">© <span id="yr"></span> NEURO CLINICS. Ushbu sayt ma'lumot uchun; tashxis va davolash faqat shifokor ko'rigidan so'ng belgilanadi.</div>
+</footer>
+
+<a href="#aloqa" class="fab" aria-label="Qabulga yozilish"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.200 2 19.800 19.800 0 0 1-8.600-3.100 19.500 19.500 0 0 1-6-6A19.800 19.800 0 0 1 2.100 4.200 2 2 0 0 1 4.100 2h3a2 2 0 0 1 2 1.700c.1 1 .4 1.900.7 2.800a2 2 0 0 1-.5 2.100L8.100 9.900a16 16 0 0 0 6 6l1.300-1.300a2 2 0 0 1 2.100-.4c.9.300 1.800.6 2.800.7a2 2 0 0 1 1.700 2Z"/></svg></a>
+
+<script src="script.js"></script>
+</body>
+</html>
