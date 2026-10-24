@@ -240,7 +240,9 @@
         <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><div><small>Ish vaqti</small><span data-todo>Dush–Shan: 09:00 – 18:00</span></div></li>
       </ul>
     </div>
-    <form class="form reveal d1" id="form" novalidate>
+    <form class="form reveal d1" id="form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+      <input type="hidden" name="form-name" value="contact">
+      <p hidden><label>Bot: <input name="bot-field"></label></p>
       <label><span>Ismingiz</span><input name="name" required placeholder="Ism familiya" autocomplete="name"></label>
       <label><span>Telefon raqam</span><input name="phone" required type="tel" placeholder="+998 __ ___ __ __" autocomplete="tel"></label>
       <label><span>Xizmat</span>

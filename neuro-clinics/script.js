@@ -98,6 +98,7 @@
     ['name','phone'].forEach(function(n){var i=f.elements[n];var bad=i.value.trim().length<(n==='phone'?7:2);i.classList.toggle('err',bad);if(bad)ok=false});
     if(!ok){note.textContent='Iltimos, ism va telefon raqamni to\'g\'ri kiriting.';return}
     var d=f.elements,text='NEURO CLINICS — yangi so\'rov\nIsm: '+d.name.value+'\nTelefon: '+d.phone.value+'\nXizmat: '+d.service.value+(d.msg.value?'\nIzoh: '+d.msg.value:'');
+    if(location.protocol.indexOf('http')===0){try{fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(f)).toString()})}catch(_){}}
     window.open('https://t.me/share/url?url=%20&text='+encodeURIComponent(text),'_blank');
     note.textContent='Rahmat! So\'rovingiz tayyor — Telegram orqali yuboring.';f.reset();
   });
