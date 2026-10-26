@@ -37,11 +37,12 @@ em{font-style:italic;color:var(--clay);font-weight:300}
 .h2{font-size:clamp(40px,7.2vw,112px);margin-top:22px}
 .lead{color:var(--mut);font-size:clamp(16px,1.35vw,19px);max-width:54ch;margin-top:26px}
 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em}
-.wi{display:inline-block;will-change:transform}
+.wi{display:inline-block}
 
 /* grain */
-.grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:300;pointer-events:none;opacity:.09;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:gr 1.2s steps(6) infinite}
-@keyframes gr{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+.grain{position:fixed;inset:0;z-index:300;pointer-events:none;opacity:.045;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@media(max-width:900px){.grain{display:none}}
+
 
 /* preloader */
 #pre{position:fixed;inset:0;z-index:400;background:var(--bg);display:grid;place-items:center;animation:preOut .7s 3.2s forwards}
@@ -61,7 +62,7 @@ em{font-style:italic;color:var(--clay);font-weight:300}
 /* header */
 header.top{position:fixed;top:0;left:0;right:0;z-index:150;padding:max(18px,env(safe-area-inset-top,0px)) var(--gutr) 0 var(--gut);mix-blend-mode:normal;transition:transform .5s,background .4s}
 header.top.hide{transform:translateY(-110%)}
-header.top.solid{background:rgba(17,12,10,.82);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding-bottom:8px;border-bottom:1px solid var(--line)}
+header.top.solid{background:rgba(17,12,10,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);padding-bottom:8px;border-bottom:1px solid var(--line)}
 .hd{max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0}
 .logo{font:500 26px var(--serif);letter-spacing:.01em}.logo i{color:var(--clay)}
 .menu{display:none;gap:36px;font:600 12px var(--sans);letter-spacing:.16em;text-transform:uppercase}
@@ -313,7 +314,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 <main>
 <!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-bg"><img id="hbg" src="img/skin-macro.jpg" alt=""></div>
+  <div class="hero-bg"><img decoding="async" id="hbg" src="img/skin-macro.jpg" alt=""></div>
   <div class="in">
     <h1 id="h1">Тери касалликларини <em>ечими</em> ва даволаш <em>сирлари</em></h1>
     <div class="hero-row">
@@ -360,7 +361,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 
 <!-- NUMBERS -->
 <section class="num" id="nega">
-  <div class="num-bg"><img data-par src="img/skin-freckles.jpg" alt="" loading="lazy"></div>
+  <div class="num-bg"><img decoding="async" data-par src="img/skin-freckles.jpg" alt="" loading="lazy"></div>
   <div class="wrap">
     <span class="kick" data-up>Нега айнан мен</span>
     <h2 class="h2" data-up>Сиз <em>ишонадиган</em> дерматолог</h2>
@@ -381,10 +382,10 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
   <span class="kick" data-up>Хизматлар</span>
   <h2 class="h2" data-up>Сизга қулай <em>форматда</em></h2>
   <ul class="svl" id="svl">
-    <li data-img="img/davolash.jpg"><div class="th"><img loading="lazy" src="img/davolash.jpg" alt=""></div><span class="ix">01</span><div><h3>Онлайн консультация</h3><span class="d">Шикоят ва суратлар асосида ташхис, даволаш режаси ва аниқ тавсиялар. Видео ёки чат орқали, уйдан чиқмасдан.</span></div><span class="pr">150 000 сўмдан<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
-    <li data-img="img/hand-drop.jpg"><div class="th"><img loading="lazy" src="img/hand-drop.jpg" alt=""></div><span class="ix">02</span><div><h3>Врач на вызов</h3><span class="d">Шифокор манзилингизга келади. Болалар, кексалар ва вақти тиғиз инсонлар учун қулай.</span></div><span class="pr">Келишув асосида<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
-    <li data-img="img/diagnostika.jpg"><div class="th"><img loading="lazy" src="img/diagnostika.jpg" alt=""></div><span class="ix">03</span><div><h3>Қабулда кўрик</h3><span class="d">Дерматоскопия, тери ва соч ташхиси, зарур таҳлилларга йўлланма.</span></div><span class="pr">Юзма-юз<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
-    <li data-img="img/inyeksiya.jpg"><div class="th"><img loading="lazy" src="img/inyeksiya.jpg" alt=""></div><span class="ix">04</span><div><h3>Муолажалар</h3><span class="d">Сўгал ва папиломаларни олиб ташлаш, инъекцион муолажалар.</span></div><span class="pr">Хизмат бўйича<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/davolash.jpg"><div class="th"><img decoding="async" loading="lazy" src="img/davolash.jpg" alt=""></div><span class="ix">01</span><div><h3>Онлайн консультация</h3><span class="d">Шикоят ва суратлар асосида ташхис, даволаш режаси ва аниқ тавсиялар. Видео ёки чат орқали, уйдан чиқмасдан.</span></div><span class="pr">150 000 сўмдан<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/hand-drop.jpg"><div class="th"><img decoding="async" loading="lazy" src="img/hand-drop.jpg" alt=""></div><span class="ix">02</span><div><h3>Врач на вызов</h3><span class="d">Шифокор манзилингизга келади. Болалар, кексалар ва вақти тиғиз инсонлар учун қулай.</span></div><span class="pr">Келишув асосида<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/diagnostika.jpg"><div class="th"><img decoding="async" loading="lazy" src="img/diagnostika.jpg" alt=""></div><span class="ix">03</span><div><h3>Қабулда кўрик</h3><span class="d">Дерматоскопия, тери ва соч ташхиси, зарур таҳлилларга йўлланма.</span></div><span class="pr">Юзма-юз<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/inyeksiya.jpg"><div class="th"><img decoding="async" loading="lazy" src="img/inyeksiya.jpg" alt=""></div><span class="ix">04</span><div><h3>Муолажалар</h3><span class="d">Сўгал ва папиломаларни олиб ташлаш, инъекцион муолажалар.</span></div><span class="pr">Хизмат бўйича<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
   </ul>
 </div></section>
 
@@ -403,7 +404,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 <section class="dr" id="doktor"><div class="wrap dgrid">
   <div class="dph" data-up>
     <div class="ring"></div>
-    <div class="im" id="dim"><div class="mono">З<small>Dr. Зохид</small></div><img data-par src="doctor.jpg" alt="Дерматовенеролог Зохид Аширов" width="1000" height="1300" onerror="this.onerror=null;this.style.display='none'"></div>
+    <div class="im" id="dim"><div class="mono">З<small>Dr. Зохид</small></div><img decoding="async" data-par src="doctor.jpg" alt="Дерматовенеролог Зохид Аширов" width="1000" height="1300" onerror="this.onerror=null;this.style.display='none'"></div>
     <div class="bd"><b>15+</b><small>йил тажриба</small></div>
   </div>
   <div>
@@ -480,7 +481,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 <script>
 /* ===== СОЗЛАМАЛАР: шу ерни ўзгартиринг ===== */
 const CONFIG={
-  instagram:"https://instagram.com/zakhidaf",
+  instagram:"https://www.instagram.com/zakhidaf/",
   telegram:"https://t.me/+998909885752",   // агар Телеграмда username бўлса: "https://t.me/username"
   phone:"+998909885752"
 };
@@ -518,7 +519,7 @@ const pad=n=>String(n).padStart(2,"0");
 
 /* build: cases */
 const track=$("#track");
-track.insertAdjacentHTML("beforeend",CASES.map(([k,t,g,d],i)=>`<article class="hc"><span class="no">${pad(i+1)}</span><div class="im"><img src="img/cases/${k}.jpg" alt="${t}" draggable="false"><span class="tg">${g}</span></div><h3>${t}</h3><p>${d}</p></article>`).join(""));
+track.insertAdjacentHTML("beforeend",CASES.map(([k,t,g,d],i)=>`<article class="hc"><span class="no">${pad(i+1)}</span><div class="im"><img decoding="async" src="img/cases/${k}.jpg" alt="${t}" draggable="false"><span class="tg">${g}</span></div><h3>${t}</h3><p>${d}</p></article>`).join(""));
 $("#ht").textContent=pad(CASES.length);
 
 /* build: marquee */
@@ -575,6 +576,7 @@ function init(){
   document.body.classList.toggle("cc",FINE&&!!G&&!RM);
   if(!G||RM){$("#pre").remove();return}
   gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ignoreMobileResize:true});
   let lenis;
   if(window.Lenis){lenis=new Lenis({lerp:.09,wheelMultiplier:.95});lenis.on("scroll",e=>{ScrollTrigger.update();onScroll(e.scroll)});gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)}
   else addEventListener("scroll",()=>onScroll(scrollY),{passive:true});
@@ -609,6 +611,7 @@ function init(){
   const mq=gsap.to("#mq1",{xPercent:-50,duration:60,ease:"none",repeat:-1});
   ScrollTrigger.create({onUpdate:s=>{mq.timeScale(1+Math.min(Math.abs(s.getVelocity())/260,7))}});
   gsap.ticker.add(()=>{const ts=mq.timeScale();mq.timeScale(ts+(1-ts)*.05)});
+  ScrollTrigger.create({trigger:".mq",start:"top bottom",end:"bottom top",onToggle:t=>t.isActive?mq.play():mq.pause()});
 
   /* statement scrub */
   const st=$("#stm");split(st,"sw");
