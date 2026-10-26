@@ -1,0 +1,12 @@
+{
+  "name": "basra-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Basra Ta’lim Markazi — Telegram bot va mini ilova server qismi",
+  "main": "bot.js",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node bot.js",
+    "test": "node test/smoke.js"
+  }
+}
