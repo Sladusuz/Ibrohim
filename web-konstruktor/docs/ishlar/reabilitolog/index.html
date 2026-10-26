@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dr. Azizbek Norjigitov</title>
+<meta name="description" content="Reabilitolog, fizioterapevt va iglaterapevt Azizbek Norjigitov. Insultdan keyingi reabilitatsiya, fizioterapiya, akupunktura, xijoma, manual terapiya. Kattalar va bolalar uchun. 4 yillik tajriba.">
+<meta property="og:title" content="Dr. Azizbek Norjigitov — Reabilitolog va Fizioterapevt">
+<meta property="og:description" content="Insultdan keyingi reabilitatsiya, fizioterapiya, akupunktura va manual terapiya.">
+<meta property="og:image" content="img/doctor.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'"><noscript><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="preload" aria-hidden="true">
+  <svg viewBox="0 0 120 60" class="preload__ecg"><path d="M0 30h30l8-22 12 44 10-30 6 8h54" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+<div class="progress" id="progress"></div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+<canvas id="neural" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <div class="nav__bar">
+    <a href="#top" class="logo" aria-label="Bosh sahifa">
+      <span class="logo__mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+      <span class="logo__t">Dr. Norjigitov</span>
+    </a>
+    <nav class="nav__links" id="links">
+      <a href="#xizmatlar">Xizmatlar</a>
+      <a href="#insult">Insultdan keyin</a>
+      <a href="#jarayon">Jarayon</a>
+      <a href="#haqida">Shifokor</a>
+      <a href="#savollar">Savollar</a>
+    </nav>
+    <a href="#aloqa" class="btn btn--sm nav__cta magnet">Qabulga yozilish</a>
+    <button class="burger" id="burger" aria-label="Menyu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div class="hero__txt">
+      <span class="tag rv"><i class="dot"></i> Qabulga yozilish ochiq</span>
+      <h1 class="h1">
+        <span class="ln"><span>Harakatni</span></span>
+        <span class="ln"><span class="grad">qaytaramiz,</span></span>
+        <span class="ln"><span>hayotni tiklaymiz.</span></span>
+      </h1>
+      <p class="lead rv">Reabilitolog, fizioterapevt va iglaterapevt <b>Azizbek Norjigitov</b>. Insultdan keyingi tiklanish, kattalar va bolalar reabilitatsiyasi, har bir bemor uchun shaxsiy reja bilan.</p>
+      <div class="hero__btns rv">
+        <a href="tel:+998930868425" class="btn btn--main magnet"><span>+998 93 086 84 25</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="https://t.me/+8hJkWYKNcU9mNGZi" target="_blank" rel="noopener" class="btn btn--ghost magnet">Telegram kanal</a>
+      </div>
+      <div class="scrollcue rv"><span></span> Pastga aylantiring</div>
+    </div>
+
+    <div class="hero__vis">
+      <div class="orb orb--1"></div><div class="orb orb--2"></div>
+      <div class="portrait tilt" data-tilt="10">
+        <div class="portrait__pulse"></div><div class="portrait__pulse p2"></div>
+        <svg class="ringtxt" viewBox="0 0 400 400" aria-hidden="true">
+          <defs><path id="circ" d="M200,200 m-176,0 a176,176 0 1,1 352,0 a176,176 0 1,1 -352,0"/></defs>
+          <text><textPath href="#circ" textLength="1100" lengthAdjust="spacing">REABILITOLOG • FIZIOTERAPEVT • IGLATERAPEVT •</textPath></text>
+        </svg>
+        <div class="portrait__img"><img src="img/doctor.jpg" alt="Dr. Azizbek Norjigitov" width="836" height="836"></div>
+        <div class="glass g1"><span class="g__ic">✓</span><div><b>4+ yil</b><small>amaliy tajriba</small></div></div>
+        <div class="glass g2"><span class="g__ic g__ic--w">♥</span><div><b>Insultdan keyin</b><small>reabilitatsiya</small></div></div>
+        <div class="glass g3"><b>Kattalar</b> + <b>bolalar</b></div>
+      </div>
+    </div>
+  </div>
+  <svg class="ecg" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60h520l24-6 18 6h30l22-44 28 92 26-70 16 22h60l24-10 20 10h652" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="mq" aria-hidden="true"><div class="mq__in">
+  <span>Reabilitatsiya</span><span class="o">Fizioterapiya</span><span>Akupunktura</span><span class="o">Xijoma</span><span>Manual terapiya</span><span class="o">Insultdan keyin</span>
+  <span>Reabilitatsiya</span><span class="o">Fizioterapiya</span><span>Akupunktura</span><span class="o">Xijoma</span><span>Manual terapiya</span><span class="o">Insultdan keyin</span>
+</div></div>
+
+<!-- ================= STATS ================= -->
+<section class="stats">
+  <div class="wrap stats__grid">
+    <div class="stat rv"><b><i data-count="4">0</i>+</b><span>yil amaliy tajriba</span></div>
+    <div class="stat rv"><b><i data-count="3">0</i></b><span>yo'nalish: reabilitatsiya, fizioterapiya, iglaterapiya</span></div>
+    <div class="stat rv"><b><i data-count="6">0</i></b><span>xil davolash usuli</span></div>
+    <div class="stat rv"><b>1:1</b><span>har bir bemorga shaxsiy reja</span></div>
+  </div>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="sec" id="xizmatlar">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow rv">Xizmatlar</span>
+      <h2 class="split">Tiklanish uchun to'liq yondashuv</h2>
+      <p class="sub rv">Usullar har bir bemor uchun alohida tanlanadi. Ko'pincha ular birgalikda eng yaxshi natija beradi.</p>
+    </div>
+
+    <div class="bento">
+      <article class="card card--img c-stroke rv tilt spot" data-tilt="4">
+        <img src="img/rehab.jpg" alt="Yurishni tiklash mashqlari" loading="lazy">
+        <div class="card__body">
+          <span class="chipx">Asosiy yo'nalish</span>
+          <h3>Insultdan keyingi reabilitatsiya</h3>
+          <p>Harakat, muvozanat, yurish va kundalik ko'nikmalarni bosqichma-bosqich tiklash.</p>
+        </div>
+      </article>
+
+      <article class="card card--img c-acu rv tilt spot" data-tilt="4">
+        <img src="img/needles.jpg" alt="Iglaterapiya (akupunktura) jarayoni" loading="lazy" style="object-position:50% 30%">
+        <div class="card__body">
+          <span class="chipx">Iglaterapiya</span>
+          <h3>Akupunktura</h3>
+          <p>Og'riq va nevrologik holatlarda, insultdan keyingi tiklanishda qo'shimcha usul.</p>
+        </div>
+      </article>
+
+      <article class="card c-phys rv tilt spot" data-tilt="6">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <h3>Fizioterapiya</h3>
+        <p>Og'riqni kamaytirish, mushak va bo'g'imlar funksiyasini tiklash.</p>
+      </article>
+
+      <article class="card c-man rv tilt spot" data-tilt="6">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.9-5.9-2.4L3.4 16a2 2 0 0 1 3-2.7L8 15"/></svg></div>
+        <h3>Manual terapiya</h3>
+        <p>Umurtqa va bo'g'imlar bilan qo'l texnikasi orqali ishlash.</p>
+      </article>
+
+      <article class="card c-hij rv tilt spot" data-tilt="6">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/></svg></div>
+        <h3>Xijoma (hijama)</h3>
+        <p>An'anaviy usul. Faqat ko'rik va qarshi ko'rsatmalar baholangandan keyin.</p>
+      </article>
+
+      <article class="card card--img c-kids rv tilt spot" data-tilt="4">
+        <img src="img/kids.jpg" alt="Bolalar reabilitatsiyasi mashg'uloti" loading="lazy">
+        <div class="card__body">
+          <span class="chipx">Yosh guruhlari</span>
+          <h3>Kattalar va bolalar reabilitatsiyasi</h3>
+          <p>Bolalar uchun yumshoq, o'yin shaklidagi mashqlar. Kattalar uchun funksional tiklanish.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STROKE TIMELINE ================= -->
+<section class="sec sec--deep" id="insult">
+  <div class="wrap tl">
+    <div class="tl__side">
+      <div class="tl__sticky">
+        <span class="eyebrow rv">Asosiy yo'nalish</span>
+        <h2 class="split">Insultdan keyin vaqt eng muhim omil</h2>
+        <p class="sub rv">Dastlabki oylar miya o'zini qayta tashkil etishi (neyroplastiklik) uchun eng faol davr. Reabilitatsiyani imkon qadar erta, mutaxassis nazoratida boshlash tavsiya etiladi.</p>
+        <div class="science rv">
+          <b>Ilm-fan nima deydi?</b>
+          <p>Sharhlar akupunktura standart reabilitatsiyaga <u>qo'shimcha</u> sifatida qo'l funksiyasi, yutish buzilishi va og'riqda foyda berishi mumkinligini ko'rsatadi, ammo ko'p ishlarning sifati o'rtacha. Asosiy davo fizioterapiya va faol mashqlar bo'lib qoladi.</p>
+          <small><a href="https://www.frontiersin.org/articles/10.3389/fneur.2025.1589874/full" target="_blank" rel="noopener">Frontiers in Neurology, 2025</a> · <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4642304/" target="_blank" rel="noopener">GRADE sharhi</a></small>
+        </div>
+      </div>
+    </div>
+    <div class="tl__list" id="tl">
+      <div class="tl__line"><i id="tlFill"></i></div>
+      <article class="stage"><span class="stage__dot"></span><small>1-bosqich</small><h3>Baholash</h3><p>Nevrolog xulosasi, harakat doirasi, mushak kuchi, muvozanat va kundalik imkoniyatlar ko'rib chiqiladi.</p></article>
+      <article class="stage"><span class="stage__dot"></span><small>2-bosqich</small><h3>Faollashtirish</h3><p>Erta, yumshoq mashqlar, to'g'ri joylashtirish, mushak tonusi va og'riq bilan ishlash.</p></article>
+      <article class="stage"><span class="stage__dot"></span><small>3-bosqich</small><h3>Funksional tiklanish</h3><p>Qo'l va barmoq harakati, o'tirish, turish, yurish va muvozanat ko'nikmalari.</p></article>
+      <article class="stage"><span class="stage__dot"></span><small>4-bosqich</small><h3>Mustaqillik</h3><p>Uyda bajariladigan mashqlar, yaqinlar uchun yo'riqnoma va natijani kuzatish.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROCESS ================= -->
+<section class="sec" id="jarayon">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow rv">Jarayon</span>
+      <h2 class="split">Qabul qanday o'tadi</h2>
+    </div>
+    <div class="steps">
+      <article class="step rv spot"><b>01</b><h3>Aloqa</h3><p>Qo'ng'iroq qiling yoki Telegram orqali yozing. Holatingizni qisqacha ayting.</p></article>
+      <article class="step rv spot"><b>02</b><h3>Ko'rik</h3><p>Harakat, kuch, og'riq va mavjud tibbiy hujjatlar baholanadi.</p></article>
+      <article class="step rv spot"><b>03</b><h3>Reja</h3><p>Maqsadlar va usullar (fizioterapiya, igna, manual, xijoma) belgilanadi.</p></article>
+      <article class="step rv spot"><b>04</b><h3>Davolash</h3><p>Mashg'ulotlar, natijani kuzatish va uyda bajariladigan mashqlar.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="sec sec--deep" id="haqida">
+  <div class="wrap about">
+    <div class="about__vis rv">
+      <div class="about__ring"></div>
+      <div class="about__img"><img src="img/doctor.jpg" alt="Dr. Azizbek Norjigitov" loading="lazy" width="836" height="836"></div>
+      <div class="glass g4"><span class="g__ic">✓</span><div><b>Iglaterapevt</b><small>akupunktura</small></div></div>
+    </div>
+    <div>
+      <span class="eyebrow rv">Shifokor haqida</span>
+      <h2 class="split">Norjigitov Azizbek Zohidovich</h2>
+      <p class="sub rv">Reabilitolog, fizioterapevt va iglaterapevt. 4 yillik amaliy tajriba. Asosiy yo'nalishi insultdan keyingi reabilitatsiya, shuningdek kattalar va bolalar uchun tiklanish dasturlari.</p>
+      <p class="sub rv">Davolashda bir nechta usulni birlashtiradi: fizioterapiya, xijoma, manual terapiya va akupunktura. Har bir bemorga alohida moslab.</p>
+      <div class="tags rv"><span>Reabilitolog</span><span>Fizioterapevt</span><span>Iglaterapevt</span><span>Xijoma</span><span>Manual terapiya</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="sec" id="savollar">
+  <div class="wrap faq">
+    <div class="head faq__head">
+      <span class="eyebrow rv">Savollar</span>
+      <h2 class="split">Ko'p beriladigan savollar</h2>
+    </div>
+    <div class="acc rv" id="acc">
+      <div class="acc__i open"><button class="acc__q" aria-expanded="true">Insultdan keyin reabilitatsiyani qachon boshlash kerak?<i></i></button><div class="acc__a"><div><p>Imkon qadar erta, shifokor holat barqaror deb hisoblagach. Muddatni nevrolog va reabilitolog birgalikda belgilaydi.</p></div></div></div>
+      <div class="acc__i"><button class="acc__q" aria-expanded="false">Birinchi qabulga nima olib kelish kerak?<i></i></button><div class="acc__a"><div><p>Mavjud xulosalar, MRT/KT natijalari, tahlillar va qabul qilayotgan dorilar ro'yxati. Bo'lmasa ham, ko'rikdan boshlash mumkin.</p></div></div></div>
+      <div class="acc__i"><button class="acc__q" aria-expanded="false">Bolalar uchun ham dastur bormi?<i></i></button><div class="acc__a"><div><p>Ha, bolalar reabilitatsiyasi yoshga mos, yumshoq usullar bilan olib boriladi.</p></div></div></div>
+      <div class="acc__i"><button class="acc__q" aria-expanded="false">Akupunktura va xijoma xavfsizmi?<i></i></button><div class="acc__a"><div><p>To'g'ri ko'rsatma va steril jihozlar bilan o'tkazilganda odatda xavfsiz. Qon ketish bilan bog'liq kasalliklar, homiladorlik va boshqa holatlarda avval baholash o'tkaziladi.</p></div></div></div>
+      <div class="acc__i"><button class="acc__q" aria-expanded="false">Necha mashg'ulot kerak bo'ladi?<i></i></button><div class="acc__a"><div><p>Bu tashxis, holat og'irligi va maqsadga bog'liq. Ko'rikdan so'ng taxminiy reja aytiladi.</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="cta" id="aloqa">
+  <div class="cta__orb c1"></div><div class="cta__orb c2"></div>
+  <div class="wrap cta__in">
+    <h2 class="split big">Tiklanish yo'lini bugun boshlang</h2>
+    <p class="sub rv">Savolingiz bormi? Qo'ng'iroq qiling yoki yozing, qabul vaqtini kelishib olamiz.</p>
+    <div class="phone rv">
+      <a href="tel:+998930868425" class="phone__n">+998 93 086 84 25</a>
+      <button class="copy" id="copy" type="button">Nusxalash</button>
+    </div>
+    <div class="cta__btns rv">
+      <a href="tel:+998930868425" class="btn btn--main magnet"><span>Qo'ng'iroq qilish</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a href="https://t.me/+8hJkWYKNcU9mNGZi" target="_blank" rel="noopener" class="btn btn--ghost magnet">Telegram</a>
+      <a href="https://instagram.com/dr_norjigitov" target="_blank" rel="noopener" class="btn btn--ghost magnet">@dr_norjigitov</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot__in">
+    <span>© <span id="yr"></span> Dr. Azizbek Norjigitov</span>
+    <span class="foot__n">Sayt ma'lumot uchun. Tashxis va davo faqat shifokor ko'rigidan so'ng belgilanadi.</span>
+    <span class="foot__n">Rasmlar: <a href="https://commons.wikimedia.org/wiki/File:AWH_Pediatric_Physical_Therapy.JPG" target="_blank" rel="noopener">Wikimedia Commons (CC BY-SA 4.0)</a>, <a href="https://commons.wikimedia.org/wiki/File:Meaning_beyond_movement-_JTF-Bravo_physical_therapist_provides_hope_to_Honduran_communities_(9352736).jpg" target="_blank" rel="noopener">DVIDS (public domain)</a>.</span>
+  </div>
+</footer>
+
+<a href="tel:+998930868425" class="fab" aria-label="Qo'ng'iroq qilish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+
+<script src="script.js"></script>
+<script src="/native.js" defer></script></body>
+</html>

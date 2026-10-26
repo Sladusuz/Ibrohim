@@ -84,6 +84,7 @@ if (!fs.existsSync(path.join(OUT, 'config.js'))) fs.copyFileSync(path.join(P, 'c
 if (process.env.RELAY) fs.writeFileSync(path.join(OUT, 'config.js'), fs.readFileSync(path.join(OUT, 'config.js'), 'utf8').replace(/window\.__RELAY__ = '[^']*';/, `window.__RELAY__ = '${String(process.env.RELAY).replace(/'/g, '')}';`));
 if (!/__RELAY__/.test(fs.readFileSync(path.join(OUT, 'config.js'), 'utf8'))) fs.appendFileSync(path.join(OUT, 'config.js'), "\nwindow.__RELAY__ = '';\n");
 fs.cpSync(path.join(P, 'img'), path.join(OUT, 'img'), { recursive: true });
+if (fs.existsSync(path.join(P, 'ishlar'))) fs.cpSync(path.join(P, 'ishlar'), path.join(OUT, 'ishlar'), { recursive: true });
 if (fs.existsSync(path.join(P, 'smm'))) fs.cpSync(path.join(P, 'smm'), path.join(OUT, 'smm'), { recursive: true });
 fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
 // Shablonlarning jonli namuna sahifalari: /demo/<id>/ (umumiy css va engine fayllari bilan, yengil)
