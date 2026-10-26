@@ -210,7 +210,11 @@ header.top.solid{background:rgba(17,12,10,.82);backdrop-filter:blur(16px);-webki
 .dph .im{position:relative;background:linear-gradient(rgba(17,12,10,.55),rgba(17,12,10,.8)),url(img/skin-macro.jpg) center/cover}
 .dph .mono{position:absolute;inset:0;display:grid;place-items:center;align-content:center;text-align:center;font:italic 300 clamp(120px,18vw,240px)/1 var(--serif);color:var(--clay)}
 .dph .mono small{display:block;font:600 11px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--bone);margin-top:10px}
-.dph .im img{position:relative;width:100%;height:115%;object-fit:cover}
+.dph .im img{position:absolute;left:0;top:-12%;width:100%;height:124%;object-fit:cover;object-position:50% 18%}
+.dph .im::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(17,12,10,.55));pointer-events:none}
+.nm{display:flex;flex-direction:column;gap:4px;margin:0 0 30px}
+.nm b{font:400 clamp(30px,3.2vw,46px)/1.05 var(--serif);letter-spacing:-.01em}
+.nm span{font:600 11.5px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--clay)}
 .dph .ring{position:absolute;inset:-16px;border:1px solid var(--line);border-radius:999px 999px 36px 36px;pointer-events:none}
 .dph .bd{position:absolute;right:-8px;bottom:36px;background:var(--bone);color:var(--bg);padding:16px 22px;border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
 .dph .bd b{display:block;font:500 34px/1 var(--serif)}
@@ -307,7 +311,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
     <h1 id="h1">Тери касалликларини <em>ечими</em> ва даволаш <em>сирлари</em></h1>
     <div class="hero-row">
       <div>
-        <p>Дерматовенеролог шифокор. Витилиго, псориаз, акне, герпес, соч тўкилиши ва бошқа 30+ ҳолатда аниқ ташхис ва индивидуал даволаш режаси.</p>
+        <p>Дерматовенеролог шифокор. Акне, витилиго, псориаз, герпес, соч тўкилиши ва яна 30 дан ортиқ ҳолатда: аниқ ташхис ва сизга мос шахсий даволаш режаси.</p>
         <div class="cta">
           <a class="btn clay" data-mag data-cur="Ёзил" href="#aloqa"><span>Консультацияга ёзилиш</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <a class="btn ghost" href="#holatlar"><span>Ҳолатларни кўриш</span></a>
@@ -331,7 +335,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 
 <!-- STATEMENT -->
 <section class="st"><div class="wrap">
-  <p id="stm">Тери — организмнинг кўзгуси. Ҳар бир тошма, доғ ва қичишиш ортида сабаб бор. Мен уни топаман ва сизга аниқ йўл кўрсатаман.</p>
+  <p id="stm">Тери — соғлиғингиз кўзгуси. Ҳар бир тошма, доғ ва қичишиш ортида сабаб бор. Мен уни топаман ва сизга аниқ йўл кўрсатаман.</p>
   <div class="meta"><span>Дерматовенеролог · Онлайн ва уйда</span><span>Instagram @zakhidaf</span></div>
 </div></section>
 
@@ -340,7 +344,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
   <div class="hs-pin" data-cur="Суринг">
     <div class="wrap mi"><span class="kick">Ихтисослик</span><h2 class="h2" style="font-size:clamp(44px,13vw,80px)">Қайси <em>ҳолат</em> билан ёрдам бераман</h2></div>
     <div class="hs-track" id="track">
-      <div class="hs-intro"><span class="kick">Ихтисослик</span><h2 class="h2">Қайси <em>ҳолат</em> билан ёрдам бераман</h2><p class="lead">Суринг ва муаммони топинг. Рўйхатда йўқ бўлса ҳам ёзинг, кўриб чиқамиз.</p></div>
+      <div class="hs-intro"><span class="kick">Ихтисослик</span><h2 class="h2">Қайси <em>ҳолат</em> билан ёрдам бераман</h2><p class="lead">Суринг ва ўз ҳолатингизни топинг. Рўйхатда бўлмаса ҳам ёзинг: ҳар бир мурожаат кўриб чиқилади.</p></div>
     </div>
     <div class="hs-note">Суратлар намуна сифатида. Ташхис фақат шифокор кўригида қўйилади.</div>
     <div class="hs-ui"><span><b id="hc">01</b> / <span id="ht">12</span></span><div class="bar"><i id="hbar"></i></div><span>Ҳолатлар</span></div>
@@ -354,8 +358,8 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
     <span class="kick" data-up>Нега айнан мен</span>
     <h2 class="h2" data-up>Сиз <em>ишонадиган</em> дерматолог</h2>
     <div class="ngrid">
-      <div class="ncell" data-up><b data-count="15" data-suf="+">15+</b><h3>йиллик тажриба</h3><p>Дерматология ва венерологиядаги амалий иш.</p></div>
-      <div class="ncell" data-up><b data-count="30000" data-fmt="1">30 000</b><h3>мижоз</h3><p>Ҳар бири учун индивидуал даволаш режаси.</p></div>
+      <div class="ncell" data-up><b data-count="15" data-suf="+">15+</b><h3>йиллик тажриба</h3><p>Дерматология ва венерологиядаги клиник иш.</p></div>
+      <div class="ncell" data-up><b data-count="30000" data-fmt="1">30 000</b><h3>мижоз</h3><p>Ҳар бирига шахсий даволаш режаси.</p></div>
       <div class="ncell" data-up><div class="certs">
         <span><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.5L7 22l5-3 5 3-1.5-7.5"/></svg></span>
         <span><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.5V16c0 1.5 3 3 6 3s6-1.5 6-3v-4.5"/></svg></span>
@@ -370,21 +374,21 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
   <span class="kick" data-up>Хизматлар</span>
   <h2 class="h2" data-up>Сизга қулай <em>форматда</em></h2>
   <ul class="svl" id="svl">
-    <li data-img="img/davolash.jpg"><div class="th"><img loading="lazy" src="img/davolash.jpg" alt=""></div><span class="ix">01</span><div><h3>Онлайн консультация</h3><span class="d">Уйдан чиқмай ташхис, тавсия ва даволаш режаси. Видео ёки чат орқали.</span></div><span class="pr">150 000 сўмдан<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
-    <li data-img="img/hand-drop.jpg"><div class="th"><img loading="lazy" src="img/hand-drop.jpg" alt=""></div><span class="ix">02</span><div><h3>Врач на вызов</h3><span class="d">Шифокор манзилингизга боради. Болалар, қариялар ва банд инсонлар учун қулай.</span></div><span class="pr">Келишув асосида<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
-    <li data-img="img/diagnostika.jpg"><div class="th"><img loading="lazy" src="img/diagnostika.jpg" alt=""></div><span class="ix">03</span><div><h3>Қабулда кўрик</h3><span class="d">Тери ва соч ташхиси, дерматоскопия, таҳлилларга йўлланма.</span></div><span class="pr">Юзма-юз<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
-    <li data-img="img/inyeksiya.jpg"><div class="th"><img loading="lazy" src="img/inyeksiya.jpg" alt=""></div><span class="ix">04</span><div><h3>Муолажалар</h3><span class="d">Сўгал, папилома олиб ташлаш ва инъекцион муолажалар.</span></div><span class="pr">Хизмат бўйича<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/davolash.jpg"><div class="th"><img loading="lazy" src="img/davolash.jpg" alt=""></div><span class="ix">01</span><div><h3>Онлайн консультация</h3><span class="d">Шикоят ва суратлар асосида ташхис, даволаш режаси ва аниқ тавсиялар. Видео ёки чат орқали, уйдан чиқмасдан.</span></div><span class="pr">150 000 сўмдан<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/hand-drop.jpg"><div class="th"><img loading="lazy" src="img/hand-drop.jpg" alt=""></div><span class="ix">02</span><div><h3>Врач на вызов</h3><span class="d">Шифокор манзилингизга келади. Болалар, кексалар ва вақти тиғиз инсонлар учун қулай.</span></div><span class="pr">Келишув асосида<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/diagnostika.jpg"><div class="th"><img loading="lazy" src="img/diagnostika.jpg" alt=""></div><span class="ix">03</span><div><h3>Қабулда кўрик</h3><span class="d">Дерматоскопия, тери ва соч ташхиси, зарур таҳлилларга йўлланма.</span></div><span class="pr">Юзма-юз<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
+    <li data-img="img/inyeksiya.jpg"><div class="th"><img loading="lazy" src="img/inyeksiya.jpg" alt=""></div><span class="ix">04</span><div><h3>Муолажалар</h3><span class="d">Сўгал ва папиломаларни олиб ташлаш, инъекцион муолажалар.</span></div><span class="pr">Хизмат бўйича<a class="ar" href="#aloqa" aria-label="Ёзилиш">→</a></span></li>
   </ul>
 </div></section>
 
 <!-- PROCESS -->
 <section class="pr-s" id="jarayon"><div class="wrap pgrid">
-  <div class="stick"><span class="kick" data-up>Жараён</span><h2 class="h2" data-up>Даволаш <em>4 қадамда</em></h2><p class="lead" data-up>Аниқ тартиб: ариза, ташхис, режа ва назорат. Ҳар босқичда нима бўлишини олдиндан биласиз.</p></div>
+  <div class="stick"><span class="kick" data-up>Жараён</span><h2 class="h2" data-up>Даволаш <em>4 қадамда</em></h2><p class="lead" data-up>Тушунарли тартиб: ариза, ташхис, режа ва назорат. Ҳар босқичда нима бўлишини олдиндан биласиз.</p></div>
   <div>
-    <div class="step" data-up><span class="nn">01</span><div><h3>Ариза қолдиринг</h3><p>Телеграм, Instagram ёки форма орқали ёзилинг ва қулай вақтни танланг.</p></div></div>
-    <div class="step" data-up><span class="nn">02</span><div><h3>Ташхис</h3><p>Шикоят, расмлар ва таҳлиллар асосида муаммо сабаби аниқланади.</p></div></div>
-    <div class="step" data-up><span class="nn">03</span><div><h3>Даволаш режаси</h3><p>Дори, парвариш ва турмуш тарзи бўйича тушунарли кўрсатмалар.</p></div></div>
-    <div class="step" data-up><span class="nn">04</span><div><h3>Назорат</h3><p>Натижани кузатиб борамиз ва зарур бўлса режани тузатамиз.</p></div></div>
+    <div class="step" data-up><span class="nn">01</span><div><h3>Ариза қолдиринг</h3><p>Телеграм, Instagram ёки форма орқали ёзилинг, қулай вақтни танланг.</p></div></div>
+    <div class="step" data-up><span class="nn">02</span><div><h3>Ташхис</h3><p>Шикоят, суратлар ва таҳлиллар асосида муаммонинг сабаби аниқланади.</p></div></div>
+    <div class="step" data-up><span class="nn">03</span><div><h3>Даволаш режаси</h3><p>Дори, парвариш ва турмуш тарзи бўйича аниқ, тушунарли кўрсатмалар.</p></div></div>
+    <div class="step" data-up><span class="nn">04</span><div><h3>Назорат</h3><p>Натижани кузатиб борамиз ва керак бўлса режани тузатамиз.</p></div></div>
   </div>
 </div></section>
 
@@ -392,18 +396,19 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 <section class="dr" id="doktor"><div class="wrap dgrid">
   <div class="dph" data-up>
     <div class="ring"></div>
-    <div class="im" id="dim"><div class="mono">З<small>Dr. Захид</small></div><img data-par src="doctor.jpg" alt="Дерматовенеролог Захид" onerror="this.onerror=null;this.style.display='none'"></div>
-    <div class="bd"><b>1 553</b><small>Instagram обуначи</small></div>
+    <div class="im" id="dim"><div class="mono">З<small>Dr. Захид</small></div><img data-par src="doctor.jpg" alt="Дерматовенеролог Захид Аширов" width="1000" height="1300" onerror="this.onerror=null;this.style.display='none'"></div>
+    <div class="bd"><b>15+</b><small>йил тажриба</small></div>
   </div>
   <div>
     <span class="kick" data-up>Шифокор ҳақида</span>
-    <p class="quote" data-up>«Мақсадим — сабабини топиш ва сизга тушунарли, аниқ даволаш режаси бериш.»</p>
+    <div class="nm" data-up><b>Захид Аширов</b><span>Дерматовенеролог · 15+ йиллик тажриба</span></div>
+    <p class="quote" data-up>«Ҳар бир тошма ортида сабаб бор. Менинг ишим — уни топиш ва сизга аниқ, тушунарли ечим бериш.»</p>
     <ul class="cred" data-up>
-      <li><b>01</b>Дерматовенеролог, 15+ йиллик амалий тажриба</li>
-      <li><b>02</b>Акне ва витилигодан герпес ва соч тўкилишигача 30+ йўналиш</li>
-      <li><b>03</b>Онлайн консультация ва уйга чақириш</li>
+      <li><b>01</b>Дерматовенеролог, 15 йилдан ортиқ клиник тажриба</li>
+      <li><b>02</b>30 000 дан ортиқ мижоз: акне ва витилигодан герпес, псориаз ва соч тўкилишигача</li>
+      <li><b>03</b>Онлайн консультация ва уйга чақириш, сизга қулай вақтда</li>
       <li><b>04</b>Халқаро сертификатлар ва доимий малака ошириш</li>
-      <li><b>05</b>Барча мурожаатлар тиббий махфийлик остида</li>
+      <li><b>05</b>Тўлиқ махфийлик: ҳар бир мурожаат тиббий сир остида</li>
     </ul>
     <a class="btn clay" data-mag href="#aloqa"><span>Шифокорга ёзилиш</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
   </div>
