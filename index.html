@@ -259,6 +259,12 @@ details p{color:var(--mut);padding:0 0 28px;max-width:58ch}
 .cgrid{display:grid;gap:clamp(36px,6vw,90px);margin-top:clamp(40px,6vw,90px)}
 @media(min-width:900px){.cgrid{grid-template-columns:.9fr 1.1fr}}
 .ct .lead{color:#5b4a3d}
+.addr{display:grid;gap:0;margin-top:34px;border-top:1px solid rgba(17,12,10,.22)}
+.addr>div{display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:baseline;padding:16px 0;border-bottom:1px solid rgba(17,12,10,.22)}
+.addr small{font:700 10.5px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:#7a6657}
+.addr b,.addr a.ph{font:400 clamp(21px,2vw,28px)/1.25 var(--serif);color:var(--bg)}
+.addr a.ph:hover,.addr a.mp:hover{color:#b2552a}
+.addr .mp{display:inline-block;margin-top:6px;font:700 12px var(--sans);letter-spacing:.08em;color:#b2552a;border-bottom:1px solid currentColor}
 .soc{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
 .soc a{height:50px;padding:0 24px;border-radius:999px;border:1px solid rgba(17,12,10,.25);display:inline-flex;align-items:center;font:700 13px var(--sans);letter-spacing:.06em;transition:.3s}
 .soc a:hover{background:var(--bg);color:var(--bone)}
@@ -289,6 +295,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 @media(min-width:1000px){.stk{display:none}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#pre{display:none}}
 </style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Physician", "name": "Зохид Аширов", "medicalSpecialty": "Dermatology", "telephone": "+998909885752", "address": {"@type": "PostalAddress", "streetAddress": "Юнусобод тумани, 17-квартал, 22а", "addressLocality": "Тошкент", "addressCountry": "UZ"}, "sameAs": ["https://instagram.com/zakhidaf"]}</script>
 </head>
 <body>
 <div class="grain" aria-hidden="true"></div>
@@ -441,7 +448,11 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
   <div class="cgrid">
     <div data-up>
       <p class="lead" style="margin-top:0">Аризани қолдиринг, шифокор қулай вақтда жавоб беради. Ёки тўғридан-тўғри ёзинг.</p>
-      <div class="soc"><a data-tg target="_blank" rel="noopener">Телеграм</a><a data-ig target="_blank" rel="noopener">Instagram @zakhidaf</a><a data-tel>Қўнғироқ</a></div>
+      <div class="addr">
+        <div><small>Манзил</small><span><b>Тошкент, Юнусобод тумани, 17-квартал, 22а уй</b><br><a class="mp" href="https://www.google.com/maps/search/?api=1&query=%D0%AE%D0%BD%D1%83%D1%81%D0%BE%D0%B1%D0%BE%D0%B4%2017-%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B0%D0%BB%2022%D0%B0%2C%20%D0%A2%D0%BE%D1%88%D0%BA%D0%B5%D0%BD%D1%82" target="_blank" rel="noopener">Харитада очиш →</a></span></div>
+        <div><small>Телефон</small><a class="ph" href="tel:+998909885752">+998 90 988 57 52</a></div>
+      </div>
+      <div class="soc"><a data-tg target="_blank" rel="noopener">Телеграм</a><a data-ig target="_blank" rel="noopener">Instagram @zakhidaf</a><a data-tel>Қўнғироқ қилиш</a></div>
     </div>
     <form id="form" data-up novalidate>
       <div class="f"><label for="f-name">Исмингиз</label><input id="f-name" name="name" autocomplete="name" placeholder="Масалан: Алишер"></div>
@@ -456,7 +467,7 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 
 <footer><div class="wrap">
   <div class="big" aria-hidden="true">ЗОХИД</div>
-  <div class="row"><p>Сайтдаги маълумотлар умумий тавсиф характерига эга ва шифокор кўригини алмаштирмайди. Ўз-ўзини даволамасдан, мутахассисга мурожаат қилинг.</p><span>© Dr. Зохид</span></div>
+  <div class="row"><p>Сайтдаги маълумотлар умумий тавсиф характерига эга ва шифокор кўригини алмаштирмайди. Ўз-ўзини даволамасдан, мутахассисга мурожаат қилинг.</p><span>Тошкент, Юнусобод, 17-квартал, 22а<br><a href="tel:+998909885752">+998 90 988 57 52</a></span></div>
   <details><summary>Суратлар манбаси</summary>
     <p>Фон, муолажа, витилиго ва пигментация суратлари: Unsplash (бепул лицензия). Клиник суратлар Wikimedia Commons'дан: Herpes zoster 3days passed (CC BY-SA 4.0), DermApp (CC BY-SA 4.0), Atopic dermatitis on finger 02 (CC BY-SA 4.0), Acne Vulgaris 12 (CC BY-SA 4.0), Seborrhoeic dermatitis highres (CC BY-SA 3.0), Keloid-Face (CC BY-SA 3.0), Allopecia areata (public domain), Toefungus (public domain). Муаллифлар ва лицензия матнлари: commons.wikimedia.org</p></details>
 </div></footer>
@@ -470,8 +481,8 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 /* ===== СОЗЛАМАЛАР: шу ерни ўзгартиринг ===== */
 const CONFIG={
   instagram:"https://instagram.com/zakhidaf",
-  telegram:"",   // масалан: "https://t.me/username"
-  phone:""       // масалан: "+998901234567"
+  telegram:"https://t.me/+998909885752",   // агар Телеграмда username бўлса: "https://t.me/username"
+  phone:"+998909885752"
 };
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const G=window.gsap&&window.ScrollTrigger,RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
