@@ -34,6 +34,13 @@ function splitWords(el) {
   });
   walk(el);
 }
+window.__t = t; window.__lang = () => lang;
+window.__open = url => {
+  const wa = window.Telegram && window.Telegram.WebApp;
+  if (wa && wa.initData && wa.openTelegramLink && /^https:\/\/t\.me\//.test(url)) { wa.openTelegramLink(url); return; }
+  const w = window.open(url, '_blank');
+  if (!w) location.href = url; else { try { w.opener = null; } catch (e) { /* ignore */ } }
+};
 function setText(el, html) { el.innerHTML = html; if (el.hasAttribute('data-split')) splitWords(el); }
 
 function setLang(l, save = true) {
@@ -53,6 +60,7 @@ function setLang(l, save = true) {
   if (on) { pill.style.width = on.offsetWidth + 'px'; pill.style.transform = `translateX(${on.offsetLeft - 3}px)`; }
   if (save) store.set('lang', lang);
   renderCfgText(); calc();
+  document.dispatchEvent(new CustomEvent('langchange', { detail: lang }));
 }
 $$('.lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
 
@@ -64,7 +72,7 @@ $$('.pic img').forEach(img => {
 });
 
 /* ---------- nav, progress, dock ---------- */
-const nav = $('#nav'), bar = $('#progress'), dock = $('#dock'), mbar = $('#mbar'), hero = $('#top');
+const nav = $('#nav'), bar = $('#progress'), dock = $('#dock'), hero = $('#top');
 let ticking = false;
 const par = $$('[data-par]'), slidesEl = $('#slides');
 function frame() {
@@ -73,7 +81,7 @@ function frame() {
   nav.classList.toggle('scrolled', y > 40);
   const max = root.scrollHeight - h;
   bar.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
-  dock.classList.toggle('show', y > h * .7); mbar.classList.toggle('show', y > h * .5);
+  dock.classList.toggle('show', y > h * .7);
   if (!reduce) {
     if (y < h * 1.1) slidesEl.style.transform = `translate3d(0,${(y * .28).toFixed(1)}px,0)`;
     par.forEach(el => {
@@ -277,20 +285,7 @@ function filterGroup(boxSel, itemSel, attr) {
     });
   });
 }
-filterGroup('#mFilters', '#cards .card', 'c');
 filterGroup('#gFilters', '#gal .g', 'cat');
-
-/* ---------- horizontal rail ---------- */
-const rail = $('#rail');
-const step = () => Math.max(260, rail.clientWidth * .7);
-$('.rail-p').addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
-$('.rail-n').addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
-if (fine) {
-  let down = false, sx0 = 0, sl0 = 0, moved = false;
-  rail.addEventListener('pointerdown', e => { down = true; moved = false; sx0 = e.clientX; sl0 = rail.scrollLeft; });
-  addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - sx0; if (Math.abs(dx) > 4) { moved = true; rail.classList.add('drag'); } rail.scrollLeft = sl0 - dx; });
-  addEventListener('pointerup', () => { down = false; rail.classList.remove('drag'); });
-}
 
 /* ---------- gallery lightbox (follows the current filter) ---------- */
 const lb = $('#lb'), lbImg = $('#lbImg'), lbC = $('#lbC');
@@ -326,7 +321,6 @@ lb.addEventListener('touchstart', e => { sx = e.touches[0].clientX; }, { passive
 lb.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) show(li + (dx < 0 ? 1 : -1)); }, { passive: true });
 
 /* ---------- contact ---------- */
-$$('[data-model]').forEach(b => b.addEventListener('click', () => { $('#model').value = b.dataset.model; $('#fm').value = ''; }));
 $('#copy').addEventListener('click', async e => {
   const b = e.currentTarget, old = b.innerHTML;
   try { await navigator.clipboard.writeText('+998888885582'); b.textContent = '✓'; } catch (err) { b.textContent = '+998888885582'; }
@@ -338,7 +332,7 @@ $('#form').addEventListener('submit', e => {
   const model = f.get('model') === 'Custom' ? t('k_other') : f.get('model');
   const text = t('msg', { name: f.get('name'), phone: f.get('phone'), model, msg: f.get('msg') || '-' });
   const url = 'https://t.me/+998888885582?text=' + encodeURIComponent(text);
-  if (!window.open(url, '_blank', 'noopener')) location.href = url;
+  window.__open(url);
 });
 $('#yr').textContent = new Date().getFullYear();
 

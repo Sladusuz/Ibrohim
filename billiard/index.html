@@ -16,12 +16,13 @@
 <link rel="preload" as="image" href="img/opt/z08-960.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script>document.documentElement.classList.add("js")</script>
+<script src="https://telegram.org/js/telegram-web-app.js" async></script>
 <link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","name":"Bilyard ishlab chiqarish","telephone":"+998888885582","address":{"@type":"PostalAddress","addressLocality":"Samarqand","addressCountry":"UZ"},"description":"Snooker va bilyard stollari ishlab chiqarish, eksport, dastavka va o'rnatish.","sameAs":["https://www.instagram.com/bilyard_ishlab_chiqarish"]}
 </script>
 </head>
-<body class="loading">
+<body class="loading" data-view="home">
 
 <div class="loader" id="loader" aria-hidden="true"><div class="loader-ball">8</div><div class="loader-line"></div></div>
 <div class="progress" id="progress"></div>
@@ -30,14 +31,16 @@
   <div class="wrap nav-in">
     <a href="#top" class="logo" aria-label="Bilyard Ishlab Chiqarish"><span class="ball">8</span><span class="logo-t"><small data-i18n="logo1">Bilyard</small><b data-i18n="logo2">Ishlab Chiqarish</b></span></a>
     <nav id="menu" aria-label="Menu">
-      <a href="#models" data-i18n="n_models">Stollar</a>
-      <a href="#prices" data-i18n="n_prices">Narxlar</a>
+      <a href="#catalog" data-i18n="n_catalog">Katalog</a>
+      <a href="#prices" data-i18n="n_prices">Slanets</a>
       <a href="#config" data-i18n="n_config">Konfigurator</a>
       <a href="#export" data-i18n="n_export">Eksport</a>
       <a href="#gallery" data-i18n="n_gallery">Galereya</a>
       <a href="#contact" data-i18n="n_contact">Aloqa</a>
     </nav>
     <div class="nav-r">
+      <button class="icon-btn" id="btnAcc" aria-label="Profil" type="button"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></button>
+      <button class="icon-btn" id="btnCart" aria-label="Savat" type="button"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h10L20 7H6"/><circle cx="9" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg><b class="badge" id="cartBadge" hidden>0</b></button>
       <div class="lang" role="group" aria-label="Language"><button data-lang="uz" class="on">UZ</button><button data-lang="ru">RU</button><button data-lang="en">EN</button><i class="lang-pill"></i></div>
       <a class="btn btn-gold nav-cta" href="#contact"><span data-i18n="n_cta">Buyurtma</span></a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
@@ -61,7 +64,7 @@
     <h1 id="h1" data-i18n="h_h1" data-split>Samarqanddan — butun dunyo <em>bilyard</em> xonalariga</h1>
     <p class="hero-p" data-i18n="h_p">Snooker va bilyard stollarini o'zimiz ishlab chiqaramiz. Marmar va grafit slanets, eksport, dastavka va o'rnatish.</p>
     <div class="hero-btns">
-      <a class="btn btn-gold magnet" href="#models"><span data-i18n="h_b1">Stollarni ko'rish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-gold magnet" href="#catalog"><span data-i18n="h_b1">Katalogni ko'rish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <a class="btn btn-ghost magnet" href="#prices"><span data-i18n="h_b2">Narxlar</span></a>
     </div>
   </div>
@@ -81,66 +84,57 @@
   </div>
 </div>
 
-<!-- ABOUT -->
-<section class="sec" id="about">
-  <div class="wrap two about">
-    <div class="about-media rv">
-      <div class="about-img" data-par="0.08"><span class="pic" style="--bg:#83816f"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAACwBACdASoYACAAPuVepU2pJSOiMAwBIByJZgDGfBQVO+2vteQ6va0X0NUOBDcAAMtIGRA6xAqe4bCbBoPl8GZb2goSOoDvbPTxcD/uPDCrTpo3RLuJIBBVyJ6wxbU//7pqbMMg2W6pGLBSqjq0PTLvef9HTLsiGGHHy4ynfD9GfpRrBh0cVS3GFfJvz6sPyl3SurUBLxyGEbiB9xjhEXXJFjpM/Thrk/WGjr89MN1nMY/F7W/V7KOmUzSG8hzTJk8R6FlH9n9xQDkfM2AAAA==)"></i><img class="lz" src="img/opt/o3-960.webp" srcset="img/opt/o3-480.webp 480w, img/opt/o3-960.webp 960w" sizes="(min-width:900px) 40vw,100vw" width="960" height="1280" alt="Black and gold snooker table" decoding="async" loading="lazy" ></span></div>
-      <div class="about-img small" data-par="-0.06"><span class="pic" style="--bg:#867c77"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRr4AAABXRUJQVlA4ILIAAADwBQCdASoYACsAPu1ip04ppaMiMBVdUTAdiUAWo2q4kYEIbn4wik6crKNsfdKHsfm8J9dOA8QWAAD+33+/JEpSlKPLQBgx2FLnkPXk2+pf9TGz1hx+qh0nAbGcl2C2vvtS1cFUyaMaADSxUUha+gS08DIerQuQILCpzkcDkUm4+hRnbQhc0V61Kq3lEcul8syHxIxK26V9+DrERBtRCMAeVUsnn+frbUwhoOtiNqrMYAAA)"></i><img class="lz" src="img/opt/z23-960.webp" srcset="img/opt/z23-480.webp 480w, img/opt/z23-960.webp 720w" sizes="(min-width:900px) 20vw,50vw" width="720" height="1280" alt="Mahogany snooker table in a lounge" decoding="async" loading="lazy" ></span></div>
+
+<!-- SHOP (home) -->
+<section class="sec" id="shop">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow" data-i18n="sh_eb">Do'kon</span>
+      <h2 data-i18n="sh_h">Nima <em>qidiryapsiz?</em></h2>
+      <p data-i18n="sh_p">Mahsulot nomini yozing yoki bo'limni tanlang. Narxlari ochiq.</p>
     </div>
-    <div class="rv">
-      <span class="eyebrow" data-i18n="a_eb">Biz haqimizda</span>
-      <h2 data-i18n="a_h">Ipak yo'li shahridan <em>stol ustalari</em></h2>
-      <p class="lead" data-i18n="a_p1">Biz Samarqandda snooker va bilyard stollarini o'zimiz ishlab chiqaramiz. Ramka, oyoq, bort va bezak bir joyda tayyorlanadi, shuning uchun sifatni har bosqichda nazorat qilamiz.</p>
-      <p class="lead" data-i18n="a_p2">Klub, restoran, mehmonxona yoki uy uchun buyurtma qabul qilamiz. Rang, oyoq shakli va naqsh sizning interyeringizga moslashtiriladi.</p>
-      <div class="spec">
-        <div class="spec-n"><span class="count" data-count="3569">3569</span> × <span class="count" data-count="1778">1778</span><small>mm</small></div>
-        <p data-i18n="a_spec">12 futlik snooker stolining o'yin maydoni. Biz shu standart o'lchamga amal qilamiz.</p>
-      </div>
-    </div>
+    <form class="bigsearch rv" id="shopSearch" role="search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="shopQ" type="search" data-i18n-ph="search_ph" placeholder="Mahsulot nomi bilan qidirish" autocomplete="off" aria-label="Search">
+      <button class="btn btn-gold" type="submit"><span data-i18n="search_btn">Qidirish</span></button>
+    </form>
+    <div class="tiles rv" id="tiles"></div>
+    <h3 class="sub rv" data-i18n="sh_pop">Mashhur mahsulotlar</h3>
+    <div class="grid" id="featured"></div>
+    <p class="center"><a class="btn btn-line" href="#catalog"><span data-i18n="sh_all">Barcha mahsulotlar</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
   </div>
 </section>
 
-<!-- MODELS -->
-<section class="sec dark" id="models">
+<!-- CATALOG (separate page view) -->
+<section class="sec catalog-view" id="catalog">
+  <div class="wrap">
+    <a class="back" href="#top"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span data-i18n="sh_back">Bosh sahifa</span></a>
+    <div class="cv-head"><div><span class="eyebrow" data-i18n="cg_eb">Katalog</span><h2 id="cgTitle">Barcha mahsulotlar</h2><p class="small" id="cgCount"></p></div></div>
+    <div class="shop-bar" id="shopBar">
+      <div class="cats" id="cats" role="tablist"></div>
+      <div class="tools">
+        <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" data-i18n-ph="search_ph" placeholder="Mahsulot nomi bilan qidirish" autocomplete="off" aria-label="Search"><button type="button" id="clearQ" class="clr" aria-label="Clear">×</button></label>
+        <select id="sort" aria-label="Sort"><option value="def" data-i18n="sort_def">Tartib bo'yicha</option><option value="asc" data-i18n="sort_asc">Arzonroq</option><option value="desc" data-i18n="sort_desc">Qimmatroq</option></select>
+      </div>
+    </div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <p class="empty" id="empty" hidden data-i18n="no_results">Hech narsa topilmadi.</p>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="sec dark" id="why">
   <div class="wrap">
     <div class="sec-head rv">
-      <span class="eyebrow" data-i18n="m_eb">Katalog</span>
-      <h2 data-i18n="m_h">Stol <em>dizaynlari</em></h2>
-      <p data-i18n="m_p">Eng ko'p buyurtma qilinadigan uslublar. Boshqa rang, oyoq yoki bezak kerak bo'lsa, o'zingizga moslab tayyorlaymiz.</p>
+      <span class="eyebrow" data-i18n="wy_eb">Biz haqimizda</span>
+      <h2 data-i18n="wy_h">Samarqanddan <em>ishonchli</em> stollar</h2>
+      <p data-i18n="wy_p">Stollarni o'zimiz ishlab chiqaramiz. Tanlashdan o'rnatishgacha hammasi bir joyda.</p>
     </div>
-    <div class="filters rv" id="mFilters" role="group">
-      <button class="on" data-f="all" data-i18n="fl_all">Barchasi</button>
-      <button data-f="black" data-i18n="fl_black">Qora</button>
-      <button data-f="white" data-i18n="fl_white">Oq</button>
-      <button data-f="wood" data-i18n="fl_wood">Yog'och</button>
-      <button data-f="marble" data-i18n="fl_marble">Marmar oyoqli</button>
-    </div>
-    <div class="cards" id="cards">
-      <article class="card tilt rv" data-c="black" style="--d:0s">
-        <div class="card-img"><span class="pic" style="--bg:#83816f"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAACwBACdASoYACAAPuVepU2pJSOiMAwBIByJZgDGfBQVO+2vteQ6va0X0NUOBDcAAMtIGRA6xAqe4bCbBoPl8GZb2goSOoDvbPTxcD/uPDCrTpo3RLuJIBBVyJ6wxbU//7pqbMMg2W6pGLBSqjq0PTLvef9HTLsiGGHHy4ynfD9GfpRrBh0cVS3GFfJvz6sPyl3SurUBLxyGEbiB9xjhEXXJFjpM/Thrk/WGjr89MN1nMY/F7W/V7KOmUzSG8hzTJk8R6FlH9n9xQDkfM2AAAA==)"></i><img class="lz" src="img/opt/o3-960.webp" srcset="img/opt/o3-480.webp 480w, img/opt/o3-960.webp 960w" sizes="(min-width:1000px) 33vw,100vw" width="960" height="1280" alt="Klassik Gold snooker table" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip1">Eng ko'p tanlanadi</span></div>
-        <div class="card-body"><h3>Klassik Gold</h3><p data-i18n="m1p">Qora lak ramka, oltin naqshli yon panel va o'ymakor oltin oyoqlar. Klub va VIP zallar uchun.</p><div class="spec-line" data-i18n="m1s">12 ft · qora lak · oltin oyoqlar</div><a class="btn btn-line" href="#contact" data-model="Klassik Gold"><span data-i18n="ask">Narx so'rash</span></a></div>
-      </article>
-      <article class="card tilt rv" data-c="white" style="--d:.08s">
-        <div class="card-img"><span class="pic" style="--bg:#757d7d"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABwBACdASoYABIAPu1irVAppSQmsBgIATAdiWcAuwAQ9US4O+EtsYfD8IRaAAD32fxy/1GGoNocu7M4HrSp+NB4rLSM0JuvoaL4O+tpengNNEQlndOzIe+y9RdYYwVcOHFP26nQ+xxLiLx9eXEZXKExGxZQez0226i23as4mLVphQj695TW+ul2hVb9tS6DB1eJI7QAAAA=)"></i><img class="lz" src="img/opt/o5-960.webp" srcset="img/opt/o5-480.webp 480w, img/opt/o5-960.webp 960w, img/opt/o5-1280.webp 1280w" sizes="(min-width:1000px) 33vw,100vw" width="1280" height="960" alt="Premium White snooker table" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip2">Zamonaviy</span></div>
-        <div class="card-body"><h3>Premium White</h3><p data-i18n="m2p">Oq lak va kumush rang naqsh. Yorug' interyer, kafe va uy bilyard xonasi uchun yengil ko'rinish.</p><div class="spec-line" data-i18n="m2s">12 ft · oq lak · qirrali oyoqlar</div><a class="btn btn-line" href="#contact" data-model="Premium White"><span data-i18n="ask">Narx so'rash</span></a></div>
-      </article>
-      <article class="card tilt rv" data-c="white" style="--d:.16s">
-        <div class="card-img"><span class="pic" style="--bg:#6c7762"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRvYAAABXRUJQVlA4IOoAAABQBQCdASoYACAAPu1srVIppaQiqAgBMB2JbAC7AYzb+uWQh8uVdI5ZL5y91qtifnZVeUwA/r3wfw+P1Iy42rNW8zh6yCSLIStkkwp5CU+1mAKy6Iv72K+b0RQv9tzsuIJz1lnhbnyEdJ1IrY3E+atOXuiyftIqRbvgEd1l8u7Vhwh/PK1UuZeVIBF6j4il7PTkCE+1JJnYsVtxKx0a1KsInctMuVhEB/eY64wKpJv7nxEipR/3YCReKfSzJYMJG2tz3IpDdZ16y7Vc5KttYBNDjso8EUWebX8rBSTSnjF5qFZ+I+YrAVbMAAA=)"></i><img class="lz" src="img/opt/z35-960.webp" srcset="img/opt/z35-480.webp 480w, img/opt/z35-960.webp 960w" sizes="(min-width:1000px) 33vw,100vw" width="960" height="1280" alt="Modern Black and White snooker table with lamps" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip3">Minimalizm</span></div>
-        <div class="card-body"><h3>Modern B&amp;W</h3><p data-i18n="m3p">Kvadrat ustun oyoqlar va qora-oq kontrast. To'g'ri chiziqlarni yoqtiradigan interyerlar uchun.</p><div class="spec-line" data-i18n="m3s">12 ft · qora lak · oq kvadrat oyoqlar</div><a class="btn btn-line" href="#contact" data-model="Modern Black & White"><span data-i18n="ask">Narx so'rash</span></a></div>
-      </article>
-      <article class="card tilt rv" data-c="wood" style="--d:0s">
-        <div class="card-img"><span class="pic" style="--bg:#ada9a2"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRtYAAABXRUJQVlA4IMoAAABQBQCdASoYABgAPu1irVAppSQisBgIATAdiUAZEwIdLBwy2w8Fgv+tl/YU+mxkI6nLX4AA/vN0gOBFquuDliyu7X638L3BhlP6p2yomSsbHzZ7F+sAYVA9yQRgQ/F5wfAuhYuxCSjlpwI5jLksKQBRue1n8iuQrl8eNEiTUW9+58dFegAjL/uxerdjAN+xtVEqnEWUOHEserL59P4cWVuxwz7DBo5QexFHFKTXfz0Gq8G78Asi72FObGOBQgtk4ZGBP2Yb9twEgAAA)"></i><img class="lz" src="img/opt/z14-960.webp" srcset="img/opt/z14-480.webp 480w, img/opt/z14-960.webp 960w" sizes="(min-width:1000px) 33vw,100vw" width="1161" height="1163" alt="Mahogany Classic snooker table" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip4">Klassika</span></div>
-        <div class="card-body"><h3>Mahogany Classic</h3><p data-i18n="m4p">Issiq yog'och rangi, ingichka naqshli oyoqlar va nafis yon panel. Vaqt sinovidan o'tgan ko'rinish.</p><div class="spec-line" data-i18n="m4s">12 ft · yog'och lak · naqshli oyoqlar</div><a class="btn btn-line" href="#contact" data-model="Mahogany Classic"><span data-i18n="ask">Narx so'rash</span></a></div>
-      </article>
-      <article class="card tilt rv" data-c="marble" style="--d:.08s">
-        <div class="card-img"><span class="pic" style="--bg:#757777"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAQBACdASoYABIAPu1mpU4ppaMiMBgMATAdiWcAxNgO/0R+303NMniYAADKo7lHeVByAo2v2VIFTh6NW9ypuPpRAsQ484J3FQsroBhpIsHu3Av5jo6ez3x4Ol8UPksTF31eEgIgiSCRyQ/5wwYgvujYoUT32Gj5IAA=)"></i><img class="lz" src="img/opt/z15-960.webp" srcset="img/opt/z15-480.webp 480w, img/opt/z15-960.webp 960w, img/opt/z15-1280.webp 1280w" sizes="(min-width:1000px) 33vw,100vw" width="1280" height="960" alt="Snooker table with marble legs" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip5">Mramir</span></div>
-        <div class="card-body"><h3>Marble Legs</h3><p data-i18n="m5p">Yog'och ramka va marmar naqshli oyoqlar. Premium va noyob ko'rinish beradi.</p><div class="spec-line" data-i18n="m5s">12 ft · yog'och ramka · marmar oyoqlar</div><a class="btn btn-line" href="#contact" data-model="Marble Legs"><span data-i18n="ask">Narx so'rash</span></a></div>
-      </article>
-      <article class="card tilt rv" data-c="black" style="--d:.16s">
-        <div class="card-img"><span class="pic" style="--bg:#6d686a"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAADQBACdASoYABIAPu1mq06ppaOiKA1RMB2JZQC7ABIsUwan924hdKX/Kkyq9QgPAAD+peLv7kKj6AsNFhHuFXxZWWPSu12A8XevPhg/+MCLr72/L7CWZzKMbZAlmIWZvZ6elwaAduq3hjKAJ8E0FyDQySHQgdx7fVrVN1vPf0FvaaDjo3V1A3VuiWdoAAAA)"></i><img class="lz" src="img/opt/z00-960.webp" srcset="img/opt/z00-480.webp 480w, img/opt/z00-960.webp 960w, img/opt/z00-1280.webp 1280w" sizes="(min-width:1000px) 33vw,100vw" width="1280" height="960" alt="Graphite Black snooker table" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip6">Grafit</span></div>
-        <div class="card-body"><h3>Graphite Black</h3><p data-i18n="m6p">To'q grafit tus va kvadrat ustun oyoqlar. Zamonaviy lounge va klublar uchun jiddiy ko'rinish.</p><div class="spec-line" data-i18n="m6s">12 ft · to'q lak · ustun oyoqlar</div><a class="btn btn-line" href="#contact" data-model="Graphite Black"><span data-i18n="ask">Narx so'rash</span></a></div>
-      </article>
+    <div class="why4">
+      <div class="glow rv"><svg viewBox="0 0 24 24"><path d="M3 21V9l6 3V9l6 3V4h6v17z"/></svg><h3 data-i18n="wy1">O'z ishlab chiqarishimiz</h3><p data-i18n="wy1p">Ramka, oyoq, bort va bezak bir joyda tayyorlanadi. Sifatni o'zimiz nazorat qilamiz.</p></div>
+      <div class="glow rv" style="--d:.08s"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5zM3 13l9 5 9-5"/></svg><h3 data-i18n="wy2">Marmar va grafit slanets</h3><p data-i18n="wy2p">Tekis va barqaror o'yin yuzasi uchun tosh taxta. Ikki xil tur mavjud.</p></div>
+      <div class="glow rv" style="--d:.16s"><svg viewBox="0 0 24 24"><path d="M2 7h12v9H2zM14 10h4l4 3v3h-8z"/><circle cx="6" cy="18.5" r="1.8"/><circle cx="18" cy="18.5" r="1.8"/></svg><h3 data-i18n="wy3">Dastavka va o'rnatish</h3><p data-i18n="wy3p">Butun O'zbekiston bo'ylab yetkazamiz, ustalarimiz joyida yig'ib beradi.</p></div>
+      <div class="glow rv" style="--d:.24s"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><h3 data-i18n="wy4">Eksport</h3><p data-i18n="wy4p">Xorijga jo'natish uchun qadoqlash va logistika bo'yicha yordam beramiz.</p></div>
     </div>
   </div>
 </section>
@@ -158,13 +152,13 @@
         <span class="tier-tag" data-i18n="t1_tag">Dizayn stollari</span>
         <div class="price"><b>1&nbsp;800</b><i>–</i><b>3&nbsp;000</b><span class="cur">$</span></div>
         <ul><li data-i18n="t1a">Klassik, oq, qora va yog'och dizaynlar</li><li data-i18n="t1b">Rang va oyoq shaklini o'zingiz tanlaysiz</li><li data-i18n="t1c">Dastavka va o'rnatish mavjud</li></ul>
-        <a class="btn btn-line" href="#contact"><span data-i18n="ask">Narx so'rash</span></a>
+        <a class="btn btn-line" href="#catalog"><span data-i18n="see_cat">Katalogga o'tish</span></a>
       </article>
       <article class="tier feat rv" style="--d:.12s">
         <span class="tier-tag" data-i18n="t2_tag">Slanetli stollar</span>
         <div class="price"><b>3&nbsp;400</b><i>–</i><b>5&nbsp;000</b><span class="cur">$</span></div>
         <ul><li data-i18n="t2a">Tosh taxta (slanets) bilan premium stollar</li><li data-i18n="t2b">Marmar va grafit slanets mavjud</li><li data-i18n="t2c">Eng tekis va barqaror o'yin yuzasi</li></ul>
-        <a class="btn btn-gold" href="#contact"><span data-i18n="ask">Narx so'rash</span></a>
+        <a class="btn btn-gold" href="#catalog"><span data-i18n="see_cat">Katalogga o'tish</span></a>
       </article>
     </div>
     <p class="note rv" data-i18n="pr_note">Narxlar taxminiy: model, o'lcham va slanets turiga qarab o'zgaradi. Aniq narxni telefon orqali aytamiz.</p>
@@ -256,67 +250,6 @@
   </div>
 </section>
 
-<!-- ACCESSORIES -->
-<section class="sec dark" id="acc">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow" data-i18n="ac_eb">Aksessuarlar</span>
-      <h2 data-i18n="ac_h">Stol bilan birga <em>to'liq to'plam</em></h2>
-      <p data-i18n="ac_p">Kiyu, sharlar, uchburchak va yoritish lampalarini ham yetkazib beramiz.</p>
-    </div>
-    <div class="rail-wrap rv">
-      <button class="rail-b rail-p" aria-label="Previous">‹</button>
-      <div class="rail" id="rail">
-        <div class="rail-i" style="--ar:1170/1207"><span class="pic" style="--bg:#797770"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRgwBAABXRUJQVlA4IAABAACwBQCdASoYABkAPu1ur1IppiQiqAgBMB2JZwDLpd0VgiMLv/x/Eal6ElFqf2S9DzetBMYx+vQA9x7agqRf2WQrSr0Mhaqvxoc4uhPWFttKW0069ayFVc81Lgu1i2cXqtleG8XUlwGUbEWihfWEtkiFyVN3Ddx/Jk9GZ7Bk3DN6rLFbf2nKP0ctuZ3jT2xpc5y/y33BzrGh/Me2OiXLNE0AzzxgV8ZBnV6fbfF3F3yRUKZQ0eaMqxx+7hgx8dXblShPTDPIPATvGsgS9BE7BIPPZWIPpsZOSs9+xlWtjNR2s4Z0sM7hUOL/9JmQqNEhrfEEA9mIJk24uSlgENAAAAAA)"></i><img class="lz" src="img/opt/z17-960.webp" srcset="img/opt/z17-480.webp 480w, img/opt/z17-960.webp 960w" sizes="(min-width:900px) 30vw,70vw" width="1170" height="1207" alt="Cues on a marble surface" decoding="async" loading="lazy" ></span></div>
-        <div class="rail-i" style="--ar:825/1280"><span class="pic" style="--bg:#7f7d73"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAABQBQCdASoYACUAPu1oqVCppaOiqrgMATAdiWcAABSeMcHnXKKUA5T9ym5saZSEgrlFNKAA+chIb+jgMMwLicqYieb0GqenGlPq1gdGjXrjrkDmvHuIxrfPpsg08WD9YTtfG9MOugA4+AGZWPSDhiRTGKrSwFRIXD8WFhFjvRr5qMtAWN7WZ45OsF4B93j48A/6ys5JmXxqceTUBF+DNwCzq/vCrQl72a726g3flkWjRfTNd+eZ9rsGmsJQaCDu2ZC2aoC2dglSVHE2kA32TsMeBC1V1Xo/C9e6QzqZOM5cK2IfgAAAAA==)"></i><img class="lz" src="img/opt/z33-960.webp" srcset="img/opt/z33-480.webp 480w, img/opt/z33-960.webp 825w" sizes="(min-width:900px) 30vw,70vw" width="825" height="1280" alt="Black and white cues" decoding="async" loading="lazy" ></span></div>
-        <div class="rail-i" style="--ar:1011/1280"><span class="pic" style="--bg:#616267"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAADQBQCdASoYAB4APu1mqk2ppaQiMAgBMB2JYwC7Ef/7oAskQXq+OeZUOb6NYbkUJh0T1S+78HXgAP7Z1M68ukqSSb7kTx1scabH6OFEJrcsG7IwS5LVknZAd+bFUoulcYuNYOIZL5urQefUaM5Hwu14n8ZUk3bZd9Jeny36TwDsoJHYYFnIZkrLcvZBIi6lJnKK0PTiLpgGn71gJxBOkhwfBVqAL9KwMeB5sXboCbwDbJnhIF7wy4/EUMbLfKWPTUWx0sasI+VW6cfAsEaHR1Iis0V5y2+k2SSPj/lASfsdiAODeEAAAA==)"></i><img class="lz" src="img/opt/z26-960.webp" srcset="img/opt/z26-480.webp 480w, img/opt/z26-960.webp 960w" sizes="(min-width:900px) 30vw,70vw" width="1011" height="1280" alt="Set of cues" decoding="async" loading="lazy" ></span></div>
-        <div class="rail-i" style="--ar:986/1280"><span class="pic" style="--bg:#5c5e5c"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRtAAAABXRUJQVlA4IMQAAABwBQCdASoYAB8APu1oqk8ppiOiMBgIATAdiWUAySH/54WAoNq7fQZ+i2QYKQF8zUvfmusAAP2TAcymYRdN5fOBZX12g5b2yecmywx1ubxI9GBsyFg7mOErN/qchJxyUuP0A+KFmHrwm03be7pfDJ3uiibLFbx0ScWIGX/Qj1OS/nBU4e3yemMP1Vvd9zaO7S74smYzIE8uHQdv39ohCkKdRon4kShlzo6KSa1rkyL3RQZVAnUgkM2m239iYLIDIgTZcAAA)"></i><img class="lz" src="img/opt/z30-960.webp" srcset="img/opt/z30-480.webp 480w, img/opt/z30-960.webp 960w" sizes="(min-width:900px) 30vw,70vw" width="986" height="1280" alt="Cues with inlays" decoding="async" loading="lazy" ></span></div>
-        <div class="rail-i" style="--ar:760/1280"><span class="pic" style="--bg:#60615e"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRigBAABXRUJQVlA4IBwBAAAwBgCdASoYACgAPu1srlCppiQiqqgBMB2JYgDLpYv0Y9mJKMeRr9vmtds9vhMr2x4QxGVk/DE7ObYAAP6okZp+K2vFZjb74yeULRzJYwdHi+lMaCKEE03W0ay42tCHsAbl4UGy0+uKni4AIKXZTB06JPaYd8mcv9e7dJ2lI7ZzovvZPrgFhbqJ+mWLEHh6PfkTnkz0Yll8PdIiailOC8HM8SYvvVDsKnKB2ITZaBTTsL6lDKljgZ9XsOGXYfIprryGzVmzBjGEdw8ipZICvfDpFpzQnTBV9v9xFtfTElz4yHsXAHpFTRBsXIIypmmpwcC38WyyPMJVleJSi1WWZTjRUa3hMn5UN3GEeAmvFZdD3IBoyoBYuaDibxsYAA==)"></i><img class="lz" src="img/opt/z12-960.webp" srcset="img/opt/z12-480.webp 480w, img/opt/z12-960.webp 760w" sizes="(min-width:900px) 30vw,70vw" width="760" height="1280" alt="Cue with a blue wrap" decoding="async" loading="lazy" ></span></div>
-        <div class="rail-i" style="--ar:1086/1280"><span class="pic" style="--bg:#6e6c6c"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRlIBAABXRUJQVlA4IEYBAAAQBwCdASoYABwAPu1orE+ppiQiMBgIATAdiWIAtujwCf6B7qIGkCmceShlxNWSychxmz7lpU3dbF+nt+mTi6XFYAD7pagFw6Kqs1LT9NhNQsLf4cz3zcN2dwJJASHfBFfexEEWKnOjNDVE910+l2eWLRwttM+PLEsBgQTMKTkbTUpWrDOVDrNRHwRukSUrqWhR6FWpZ/OHHy5P+ujK3UA5d+kTlfcmeHW29kn9gVyj5/O57dmMa8Pdjg+nhQdSyh21LykCB8BgOPIGfIe2kqBJhZHmq3Y9EKzpG4YGPAD8w39pQop523Xa0QQzwOWn6kTkKxdINDECwD1U+GZGx1rDgbodUjaCyQaclLpzgNKg3wBc/k5thO5/Z+pgKu/itl/YapDImgq6LbDXrvwJexYxv3sHbNPH4lDi4LY9U8w1t/bRx8AAAA==)"></i><img class="lz" src="img/opt/z21-960.webp" srcset="img/opt/z21-480.webp 480w, img/opt/z21-960.webp 960w" sizes="(min-width:900px) 30vw,70vw" width="1086" height="1280" alt="Cue tips and shafts" decoding="async" loading="lazy" ></span></div>
-      </div>
-      <button class="rail-b rail-n" aria-label="Next">›</button>
-    </div>
-    <div class="plist rv">
-      <h3 data-i18n="pl_h">Aksessuarlar narxlari</h3>
-      <ul>
-        <li><div class="pl-img"><span class="pic" style="--bg:#5e6a6c"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRgIBAABXRUJQVlA4IPYAAADwBQCdASoYACAAPu1qqk8ppiOiMBgIATAdiUAVJOZfQYOJTLZat67HWPP6m5ZrbV983QtuyUUgAAD+N/tN6RZUC9Fqf1Kv6uNB+CgpJi06z+d5bWvdHisFL++ZzqRTY6t8tsDvOo7mDPL559wffqkeI/m4J/ON5cUex0vG/dGasCPuSsUchozFV7B3CvBXprybgltG4yc0akP1H94M3iXzagLRzc7byw1gGxtceGmUOEtZozrnyxWKhlqi0qvyG4PPRaBIz0FiMYJbQz4FrnUorXdjg/aw+EYY2wQs8RhiI9jeDmnbfHD3LnzUIC9L+4LFt9OAAAA=)"></i><img class="lz" src="img/opt/z32-960.webp" srcset="img/opt/z32-480.webp 480w, img/opt/z32-960.webp 960w" sizes="96px" width="960" height="1280" alt="Leather pocket with Start emblem" decoding="async" loading="lazy" ></span></div><div class="pl-t"><b data-i18n="pl1">Start charm cho'ntaklari</b><span data-i18n="pl1p">Teri cho'ntak. Narx 1 dona uchun.</span></div><div class="pl-p"><b>150<i>$</i></b><small><span data-i18n="pl_opt">Optim</span> 135 $</small></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></div><div class="pl-t"><b>Super Aramith Pro</b><span data-i18n="pl13p">Belgiya turnir sharlari, qutida.</span></div><div class="pl-p"><b>300<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></div><div class="pl-t"><b>Dynaspheres</b><span data-i18n="pl2p">Rus piramidasi uchun sharlar to'plami.</span></div><div class="pl-p"><b>230<i>$</i></b><small><span data-i18n="pl_opt">Optim</span> 190 $</small></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></div><div class="pl-t"><b>Pyramid Tournament Set</b><span data-i18n="pl3p">Turnir sharlari to'plami, qutida.</span></div><div class="pl-p"><b>150<i>$</i></b></div></li>
-        <li><div class="pl-img"><span class="pic" style="--bg:#8a8473"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRhwBAABXRUJQVlA4IBABAACQBgCdASoYACAAPu1iq1AppSOisBgIATAdiWQAsQzmg4IQDwAcrodreQnaakhYUtdrZa/4O2O5ghNQBaugAP7vLM6rHdv+m2wIewAFTYo5mhIlOgGz51dqOkHyjgtSHf1W4L+u2UcHroI8wVp3Q+d+fyhd/zJdozC2LEkGCtCS9jbsT8t90hn/yROUbz/+T9+E9j62B8mWkRS6/X+t9Mn9kT25L6d3l9rNXwJPUYjgm1lSL74oxToekTWyLuHf6ShcHjl5omeS36fPMf4qwkPZiEjrkIaIO71Ms08U6ONuL0Y0mybDERIxkMDJOtyPbwol5DnElNlY6rZEAUewjvjeUe9pgvVi7ZRdz7875JAAAA==)"></i><img class="lz" src="img/opt/p01-960.webp" srcset="img/opt/p01-480.webp 480w, img/opt/p01-960.webp 960w" sizes="96px" width="960" height="1280" alt="Two-tier wooden shelf with billiard balls" decoding="async" loading="lazy" ></span></div><div class="pl-t"><b data-i18n="pl4">Sharlar polkasi</b><span data-i18n="pl4p">Ikki qavatli yog'och polka.</span></div><div class="pl-p"><b>30<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><path d="M5 3v18M19 3v18M5 7h14M5 12h14M5 17h14"/></svg></div><div class="pl-t"><b data-i18n="pl5">Start polkasi</b><span data-i18n="pl5p">Katta yog'och polka, 5 qavatli.</span></div><div class="pl-p"><b>120<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><path d="M4 18a9 9 0 0116 0M7 18a6 6 0 0110 0"/></svg></div><div class="pl-t"><b data-i18n="pl6">Start bort rezinasi</b><span data-i18n="pl6p">Stol borti uchun rezina.</span></div><div class="pl-p"><b>62<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><path d="M3 21L21 3M3 21l2-.5L20 5l-1-1L4 19z"/></svg></div><div class="pl-t"><b data-i18n="pl7">Kiyu «Klubniy»</b><span data-i18n="pl7p">To'g'ri kiyu, 161 sm, shumtol yog'ochi. Rus bilyardi uchun.</span></div><div class="pl-p"><b>95<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><path d="M3 21L21 3M3 21l2-.5L20 5l-1-1L4 19z"/></svg></div><div class="pl-t"><b data-i18n="pl8">Kiyu, ikki qismli</b><span data-i18n="pl8p">Ajraladigan kiyu, 160–163 sm, 700 g.</span></div><div class="pl-p"><b>40<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><path d="M6 4h12l2 14H4zM8 4l1 14M12 4v14M16 4l-1 14M5 9h14M4.5 13.5h15"/></svg></div><div class="pl-t"><b data-i18n="pl9">Cho'ntak to'ri (setka)</b><span data-i18n="pl9p">Zich to'qilgan to'r, sharlarni ushlab turadi.</span></div><div class="pl-p"><b>10<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></div><div class="pl-t"><b>Killer Shot</b><span data-i18n="pl10p">Turnir sifatidagi sharlar to'plami, qutida.</span></div><div class="pl-p"><b>45<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><path d="M12 4L21 19H3z"/></svg></div><div class="pl-t"><b data-i18n="pl11">Uchburchak</b><span data-i18n="pl11p">Plastmassa, har yoni 36 sm, qalinligi 4 sm.</span></div><div class="pl-p"><b>7<i>$</i></b></div></li>
-        <li><div class="pl-img pl-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/></svg></div><div class="pl-t"><b>Huoliebao</b><span data-i18n="pl12p">16 ta sharlik to'plam, qutida.</span></div><div class="pl-p"><b>60<i>$</i></b></div></li>
-      </ul>
-      <p class="small" data-i18n="pl_note">Optim bu tejamkor variant. Aniq narxni telefon orqali tasdiqlaymiz.</p>
-    </div>
-    <ul class="chips rv"><li data-i18n="ac1">Kiyular</li><li data-i18n="ac2">Sharlar</li><li data-i18n="ac3">Uchburchak</li><li data-i18n="ac4">Yoritish lampalari</li><li data-i18n="ac5">Mato</li></ul>
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section class="sec" id="services">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow" data-i18n="s_eb">Xizmatlar</span>
-      <h2 data-i18n="s_h">Buyurtmadan <em>birinchi o'yingacha</em></h2>
-    </div>
-    <div class="svc">
-      <div class="glow rv" style="--d:0s"><svg viewBox="0 0 24 24"><path d="M3 21V9l6 3V9l6 3V4h6v17z"/></svg><h3 data-i18n="s1">Ishlab chiqarish</h3><p data-i18n="s1p">Ramka, taxta, bort va bezakni o'z seximizda tayyorlaymiz.</p></div>
-      <div class="glow rv" style="--d:.08s"><svg viewBox="0 0 24 24"><path d="M2 7h12v9H2zM14 10h4l4 3v3h-8z"/><circle cx="6" cy="18.5" r="1.8"/><circle cx="18" cy="18.5" r="1.8"/></svg><h3 data-i18n="s2">Dastavka</h3><p data-i18n="s2p">Samarqand va butun O'zbekiston bo'ylab yetkazib beramiz.</p></div>
-      <div class="glow rv" style="--d:.16s"><svg viewBox="0 0 24 24"><path d="M14 6l4 4-9 9H5v-4zM13 7l4 4"/></svg><h3 data-i18n="s3">O'rnatish</h3><p data-i18n="s3p">Ustalarimiz joyida yig'adi, daraja bilan tekislaydi va matoni tortadi.</p></div>
-      <div class="glow rv" style="--d:.24s"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><h3 data-i18n="s4">Eksport</h3><p data-i18n="s4p">Xorijga jo'natish uchun qadoqlash va logistika bo'yicha yordam beramiz.</p></div>
-      <div class="glow rv" style="--d:.32s"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 10h16M10 5v14"/></svg><h3 data-i18n="s5">Mato almashtirish</h3><p data-i18n="s5p">Eskirgan matoni yangilaymiz, bort va cho'ntaklarni tiklaymiz.</p></div>
-      <div class="glow rv" style="--d:.4s"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg><h3 data-i18n="s6">Klub loyihasi</h3><p data-i18n="s6p">Zal rejasi, stollar joylashuvi va yoritish bo'yicha maslahat beramiz.</p></div>
-    </div>
-  </div>
-</section>
-
 <!-- EXPORT -->
 <section class="sec dark export" id="export">
   <div class="wrap two">
@@ -344,25 +277,8 @@
   </div>
 </section>
 
-<!-- CRAFT -->
-<section class="sec" id="craft">
-  <div class="wrap">
-    <div class="sec-head rv">
-      <span class="eyebrow" data-i18n="cr_eb">Ustaxona</span>
-      <h2 data-i18n="cr_h">Detallarda <em>sifat</em></h2>
-      <p data-i18n="cr_p">O'ymakor oyoqlar, lak qoplama va aniq yig'ish. Stolning kuchi shu detallarda.</p>
-    </div>
-    <div class="craft">
-      <figure class="rv"><span class="pic" style="--bg:#796359"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRuYAAABXRUJQVlA4INoAAADwBQCdASoYACAAPu1mqU2ppaQiMAgBMB2JYwC7M2QvWBNA4CJ+6OlqGx3Hdv7r/GinXm49ZLhppADifjYaZkRvGupEYm8ZO/oKFawmdFghtd7NYDOYBSwcxa5NRqj6PgTusgYxp2DS3cDEnVOOu4RquD8B6vRoBaOnA7K3x3ENQpXv3Mosihuh5F76fvy6fngX2PBMgyRk0rfWQB0V9637HddIVZd9lQ+H6QqNXfGkinWuGQ/7O/ZA4gcSlYHX5vvX0WlktGrXB+6wNI9zqVL0E9FLHhlWAAAAAA==)"></i><img class="lz" src="img/opt/z20-960.webp" srcset="img/opt/z20-480.webp 480w, img/opt/z20-960.webp 960w" sizes="(min-width:900px) 25vw,50vw" width="960" height="1280" alt="Carved lacquered table legs" decoding="async" loading="lazy" ></span><figcaption data-i18n="cr1">O'ymakor oyoqlar</figcaption></figure>
-      <figure class="rv" style="--d:.08s"><span class="pic" style="--bg:#835748"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRuYAAABXRUJQVlA4INoAAABwBQCdASoYACAAPu1kqlAppSOisBgIATAdiWQArAAM6KUbUNYjt13bAK10hR7fz4tJqUqYAP7az8r0FKI9yKznVHv2o96ZIJovAi9d2rHXkuGxKvND4vQTTW1MrB0WedzgURytzByeC99LYiNS/UrH+H2KWwOEAmzT9os3uWn1Oux/n4TAoos1v7YlQK/d1299EV1XhwktTNSZCvqJIAfHr3WLnz4XZ9/3dt39NlGILAaSrUGAG9y4occdvpe/w7pYK98HCVZUFlFfcwV2nDG2CxxUUQxeASQAAA==)"></i><img class="lz" src="img/opt/z16-960.webp" srcset="img/opt/z16-480.webp 480w, img/opt/z16-960.webp 960w" sizes="(min-width:900px) 25vw,50vw" width="960" height="1280" alt="Lacquered legs in the workshop" decoding="async" loading="lazy" ></span><figcaption data-i18n="cr2">Lak qoplama</figcaption></figure>
-      <figure class="rv" style="--d:.16s"><span class="pic" style="--bg:#5e6a6c"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRgIBAABXRUJQVlA4IPYAAADwBQCdASoYACAAPu1qqk8ppiOiMBgIATAdiUAVJOZfQYOJTLZat67HWPP6m5ZrbV983QtuyUUgAAD+N/tN6RZUC9Fqf1Kv6uNB+CgpJi06z+d5bWvdHisFL++ZzqRTY6t8tsDvOo7mDPL559wffqkeI/m4J/ON5cUex0vG/dGasCPuSsUchozFV7B3CvBXprybgltG4yc0akP1H94M3iXzagLRzc7byw1gGxtceGmUOEtZozrnyxWKhlqi0qvyG4PPRaBIz0FiMYJbQz4FrnUorXdjg/aw+EYY2wQs8RhiI9jeDmnbfHD3LnzUIC9L+4LFt9OAAAA=)"></i><img class="lz" src="img/opt/z32-960.webp" srcset="img/opt/z32-480.webp 480w, img/opt/z32-960.webp 960w" sizes="(min-width:900px) 25vw,50vw" width="960" height="1280" alt="Leather pocket with Start emblem" decoding="async" loading="lazy" ></span><figcaption data-i18n="cr3">Cho'ntaklar</figcaption></figure>
-      <figure class="rv" style="--d:.24s"><span class="pic" style="--bg:#5b6768"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRuoAAABXRUJQVlA4IN4AAAAQBQCdASoYACAAPulgo02pJaMiMAwBIB0JYgC2yBlxbdE++7XK7q+KGUyMk5MW+kzgAP6+fblmvQm3jISHwTC75+94A6tkumy6rPFqioUDNMb8NaRYmvglj27XyXf1a6I3JufXT7RDho3Sg/oIA69LXyJJ6b/rLy17+BCReKJTLSX3VRLAEW94/cOWFhjAx0kb/cT3USfOEBIk1L0ZGR9dZZdpCxz3p2263ICiwfd7oqj85RKy348uH7pej7iFfEBXTX7FhF5ZPrNfCkU3BkHkAY1MUbFFPpj+Kw8AAAA=)"></i><img class="lz" src="img/opt/z27-960.webp" srcset="img/opt/z27-480.webp 480w, img/opt/z27-960.webp 960w" sizes="(min-width:900px) 25vw,50vw" width="960" height="1280" alt="Corner detail of a mahogany table" decoding="async" loading="lazy" ></span><figcaption data-i18n="cr4">Burchak detali</figcaption></figure>
-    </div>
-  </div>
-</section>
-
 <!-- GALLERY -->
-<section class="sec dark" id="gallery">
+<section class="sec" id="gallery">
   <div class="wrap">
     <div class="sec-head rv">
       <span class="eyebrow" data-i18n="g_eb">Galereya</span>
@@ -421,7 +337,7 @@
 </section>
 
 <!-- FAQ -->
-<section class="sec" id="faq">
+<section class="sec dark" id="faq">
   <div class="wrap narrow">
     <div class="sec-head rv">
       <span class="eyebrow" data-i18n="q_eb">Savol-javob</span>
@@ -437,7 +353,7 @@
 </section>
 
 <!-- CONTACT -->
-<section class="sec dark contact" id="contact">
+<section class="sec contact" id="contact">
   <div class="wrap two">
     <div class="rv">
       <span class="eyebrow" data-i18n="k_eb">Aloqa</span>
@@ -462,6 +378,7 @@
     </form>
   </div>
 </section>
+
 </main>
 
 <footer>
@@ -478,10 +395,18 @@
   <a href="https://wa.me/998888885582" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M3 21l1.5-5A9 9 0 1112 21a9 9 0 01-4.5-1.2z"/></svg></a>
 </div>
 
-<div class="mbar" id="mbar">
-  <a class="btn btn-gold" href="tel:+998888885582"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg><span data-i18n="mb_call">Qo'ng'iroq</span></a>
-  <a class="btn btn-ghost" href="https://t.me/+998888885582" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/></svg><span>Telegram</span></a>
-</div>
+<nav class="tabbar" id="tabbar" aria-label="Menu">
+  <a href="#top" data-tab="top"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg><span data-i18n="tb_home">Bosh</span></a>
+  <a href="#catalog" data-tab="catalog"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg><span data-i18n="tb_catalog">Katalog</span></a>
+  <button type="button" data-tab="cart" id="tabCart"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.5 11h10L20 7H6"/><circle cx="9" cy="19" r="1.6"/><circle cx="17" cy="19" r="1.6"/></svg><span data-i18n="tb_cart">Savat</span><b class="badge" id="tabBadge" hidden>0</b></button>
+  <button type="button" data-tab="acc" id="tabAcc"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg><span data-i18n="tb_profile">Profil</span></button>
+</nav>
+
+<div class="scrim" id="scrim" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal" id="pmodal" role="dialog" aria-modal="true" hidden></div>
+<aside class="drawer" id="cart" role="dialog" aria-modal="true" aria-label="Cart" hidden></aside>
+<div class="modal" id="amodal" role="dialog" aria-modal="true" hidden></div>
 
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Gallery">
   <button class="lb-x" aria-label="Close">×</button>
@@ -493,5 +418,6 @@
 
 <script src="js/i18n.js" defer></script>
 <script src="js/main.js" defer></script>
+<script src="js/shop.js" defer></script>
 </body>
 </html>

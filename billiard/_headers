@@ -4,5 +4,7 @@
   Cache-Control: public, max-age=3600
 /js/*
   Cache-Control: public, max-age=3600
+/data/*
+  Cache-Control: no-cache
 /favicon.svg
   Cache-Control: public, max-age=86400
