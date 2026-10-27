@@ -106,6 +106,7 @@ em{font-style:italic;color:var(--gold)}
 .g:hover img{transform:scale(1.1);opacity:.85}
 .g-a{grid-column:span 2;grid-row:span 2}
 .g-b{grid-row:span 2}
+.g-w{grid-column:span 2}
 
 .steps{list-style:none;display:grid;grid-template-columns:repeat(5,1fr);gap:20px;counter-reset:s}
 .steps li{padding:28px 20px;border-top:3px solid var(--gold);background:#fff;border-radius:0 0 var(--r) var(--r);box-shadow:0 10px 30px rgba(0,0,0,.06)}
@@ -153,8 +154,8 @@ footer a:hover{color:var(--gold2)}
 .lb img{max-height:92vh;border-radius:10px}
 .lb button{position:absolute;top:18px;right:24px;background:none;border:0;color:#fff;font-size:2.6rem;cursor:pointer}
 
-.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
-.reveal.in{opacity:1;transform:none}
+.js .reveal{opacity:0;transform:translateY(30px);transition:opacity .8s,transform .8s}
+.js .reveal.in{opacity:1;transform:none}
 
 @media(max-width:980px){
   .cards,.svc{grid-template-columns:1fr 1fr}
@@ -174,10 +175,11 @@ footer a:hover{color:var(--gold2)}
   .gal{grid-auto-rows:170px}
   .g-a{grid-column:span 2;grid-row:span 1}
   .g-b{grid-row:span 1}
+  .g-w{grid-column:span 2}
   .about-img::before{display:none}
   .badge-float{right:10px}
   .fab{display:grid}
   .form{padding:24px}
   .hero-facts{gap:22px}
 }
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .reveal{opacity:1;transform:none}}
