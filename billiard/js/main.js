@@ -46,7 +46,7 @@ function setLang(l, save = true) {
   });
   $$('[data-i18n-ph]').forEach(el => { el.placeholder = lang === 'uz' ? el.dataset.uzPh : (D[lang][el.dataset.i18nPh] ?? el.dataset.uzPh); });
   document.title = t('title');
-  $('meta[name=description]').content = t('desc');
+  const md = $('meta[name=description]'); if (md) md.content = t('desc');
   const btns = $$('.lang button');
   btns.forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   const on = $('.lang button.on'), pill = $('.lang-pill');
