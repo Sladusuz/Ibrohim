@@ -64,7 +64,7 @@ $$('.pic img').forEach(img => {
 });
 
 /* ---------- nav, progress, dock ---------- */
-const nav = $('#nav'), bar = $('#progress'), dock = $('#dock'), hero = $('#top');
+const nav = $('#nav'), bar = $('#progress'), dock = $('#dock'), mbar = $('#mbar'), hero = $('#top');
 let ticking = false;
 const par = $$('[data-par]'), slidesEl = $('#slides');
 function frame() {
@@ -73,7 +73,7 @@ function frame() {
   nav.classList.toggle('scrolled', y > 40);
   const max = root.scrollHeight - h;
   bar.style.transform = `scaleX(${max > 0 ? Math.min(1, y / max) : 0})`;
-  dock.classList.toggle('show', y > h * .7);
+  dock.classList.toggle('show', y > h * .7); mbar.classList.toggle('show', y > h * .5);
   if (!reduce) {
     if (y < h * 1.1) slidesEl.style.transform = `translate3d(0,${(y * .28).toFixed(1)}px,0)`;
     par.forEach(el => {
@@ -164,7 +164,7 @@ const FRAME = [['black', '#151a17'], ['white', '#f1efe9'], ['wenge', '#3b2217'],
 const ACCENT = [['gold', '#d6aa42'], ['silver', '#bcc1c5'], ['match', null]];
 const LEGC = [['match', null], ['gold', '#d6aa42'], ['white', '#f1efe9'], ['black', '#151a17']];
 const CLOTH = [['green', '#17895a'], ['blue', '#1f5fa8'], ['burg', '#8c1f35'], ['grey', '#5e6a73']];
-const S = { size: '12', frame: 'black', accent: 'gold', legs: 'turned', legc: 'match', cloth: 'green' };
+const S = { size: '12', frame: 'black', accent: 'gold', legs: 'turned', legc: 'match', cloth: 'green', slate: 'marble' };
 const tbl = $('#tbl');
 
 function leg(g, cx, kind) {
@@ -198,7 +198,7 @@ function swatches(id, list, key, labelKey) {
 }
 swatches('#cFrame', FRAME, 'frame'); swatches('#cAccent', ACCENT, 'accent'); swatches('#cLegc', LEGC, 'legc'); swatches('#cCloth', CLOTH, 'cloth');
 const bindSeg = (id, key) => $$(id + ' button').forEach(b => b.addEventListener('click', () => { S[key] = b.dataset.v; renderCfg(); }));
-bindSeg('#cSize', 'size'); bindSeg('#cLegs', 'legs');
+bindSeg('#cSize', 'size'); bindSeg('#cLegs', 'legs'); bindSeg('#cSlate', 'slate');
 
 const colName = n => t('col_' + n);
 function renderCfgText() {
@@ -209,7 +209,7 @@ function renderCfgText() {
   $('#cfgSum').textContent = cfgSummary();
 }
 function cfgSummary() {
-  return t('cfg_sum', { s: S.size, f: colName(S.frame), a: colName(S.accent), l: t(S.legs), lc: colName(S.legc), c: colName(S.cloth) });
+  return t('cfg_sum', { s: S.size, f: colName(S.frame), a: colName(S.accent), l: t(S.legs), lc: colName(S.legc), c: colName(S.cloth), sl: t(S.slate === 'marble' ? 'sl_m_s' : 'sl_g_s') });
 }
 function renderCfg() {
   const fr = Object.fromEntries(FRAME)[S.frame];
@@ -222,7 +222,7 @@ function renderCfg() {
   const turned = S.legs === 'turned';
   const gt = $('#legsTurned'), gs = $('#legsSquare');
   gt.toggleAttribute('hidden', !turned); gs.toggleAttribute('hidden', turned);
-  [['#cSize', 'size'], ['#cLegs', 'legs']].forEach(([id, k]) => $$(id + ' button').forEach(b => b.classList.toggle('on', b.dataset.v === S[k])));
+  [['#cSize', 'size'], ['#cLegs', 'legs'], ['#cSlate', 'slate']].forEach(([id, k]) => $$(id + ' button').forEach(b => b.classList.toggle('on', b.dataset.v === S[k])));
   [['#cFrame', 'frame'], ['#cAccent', 'accent'], ['#cLegc', 'legc'], ['#cCloth', 'cloth']].forEach(([id, k]) => $$(id + ' button').forEach(b => b.classList.toggle('on', b.dataset.v === S[k])));
   $('#cfgSum').textContent = cfgSummary();
 }
@@ -263,21 +263,54 @@ $$('#sizes button').forEach(b => b.addEventListener('click', () => {
 }));
 ['rl', 'rw'].forEach(id => $('#' + id).addEventListener('input', calc));
 
-/* ---------- gallery lightbox ---------- */
-const PHOTOS = ['img/opt/2-960.webp', 'img/opt/4-1280.webp', 'img/opt/1-1280.webp', 'img/opt/3-960.webp', 'img/opt/5-1280.webp', 'img/opt/6-960.webp', 'img/opt/7-960.webp'];
+/* ---------- filters ---------- */
+function filterGroup(boxSel, itemSel, attr) {
+  const box = $(boxSel);
+  box.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $$('button', box).forEach(x => x.classList.toggle('on', x === b));
+    const f = b.dataset.f;
+    $$(itemSel).forEach(el => {
+      const show = f === 'all' || el.dataset[attr] === f;
+      el.hidden = !show;
+      if (show) { el.classList.add('in', 'done'); }
+    });
+  });
+}
+filterGroup('#mFilters', '#cards .card', 'c');
+filterGroup('#gFilters', '#gal .g', 'cat');
+
+/* ---------- horizontal rail ---------- */
+const rail = $('#rail');
+const step = () => Math.max(260, rail.clientWidth * .7);
+$('.rail-p').addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
+$('.rail-n').addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+if (fine) {
+  let down = false, sx0 = 0, sl0 = 0, moved = false;
+  rail.addEventListener('pointerdown', e => { down = true; moved = false; sx0 = e.clientX; sl0 = rail.scrollLeft; });
+  addEventListener('pointermove', e => { if (!down) return; const dx = e.clientX - sx0; if (Math.abs(dx) > 4) { moved = true; rail.classList.add('drag'); } rail.scrollLeft = sl0 - dx; });
+  addEventListener('pointerup', () => { down = false; rail.classList.remove('drag'); });
+}
+
+/* ---------- gallery lightbox (follows the current filter) ---------- */
 const lb = $('#lb'), lbImg = $('#lbImg'), lbC = $('#lbC');
-let li = 0;
+let list = [], li = 0;
+const biggest = img => { const c = img.getAttribute('srcset').split(',').map(x => x.trim().split(' ')[0]); return c[c.length - 1]; };
 function show(i) {
-  li = (i + PHOTOS.length) % PHOTOS.length;
+  li = (i + list.length) % list.length;
   lbImg.style.opacity = 0;
   lbImg.onload = () => { lbImg.style.opacity = 1; };
-  lbImg.src = PHOTOS[li];
-  lbC.textContent = `${li + 1} / ${PHOTOS.length}`;
+  lbImg.src = list[li].src; lbImg.alt = list[li].alt;
+  lbC.textContent = `${li + 1} / ${list.length}`;
   lb.classList.add('on'); document.body.style.overflow = 'hidden';
-  [1, -1].forEach(d => { new Image().src = PHOTOS[(li + d + PHOTOS.length) % PHOTOS.length]; });
+  [1, -1].forEach(d => { new Image().src = list[(li + d + list.length) % list.length].src; });
 }
 const close = () => { lb.classList.remove('on'); document.body.style.overflow = ''; };
-$$('.g').forEach(g => g.addEventListener('click', () => show(+g.dataset.i)));
+$$('#gal .g').forEach(g => g.addEventListener('click', () => {
+  const vis = $$('#gal .g').filter(x => !x.hidden);
+  list = vis.map(x => { const im = $('img', x); return { src: biggest(im), alt: im.alt }; });
+  show(vis.indexOf(g));
+}));
 $('.lb-x').addEventListener('click', close);
 $('.lb-p').addEventListener('click', e => { e.stopPropagation(); show(li - 1); });
 $('.lb-n').addEventListener('click', e => { e.stopPropagation(); show(li + 1); });
