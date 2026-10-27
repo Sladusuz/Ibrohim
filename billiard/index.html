@@ -2,159 +2,211 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bilyard Ishlab Chiqarish | Samarqand — snooker va bilyard stollari</title>
-<meta name="description" content="Samarqandda bilyard va snooker stollari ishlab chiqarish. Dastavka va o'rnatish xizmati. Tel: +998 88 888 55 82">
-<meta name="theme-color" content="#08130e">
+<meta name="description" content="Samarqandda snooker va bilyard stollarini ishlab chiqarish. Eksport, dastavka va o'rnatish. Tel: +998 88 888 55 82">
+<meta name="theme-color" content="#07110c">
+<meta property="og:type" content="website">
 <meta property="og:title" content="Bilyard Ishlab Chiqarish — Samarqand">
-<meta property="og:description" content="Premium snooker va bilyard stollari. Dastavka va o'rnatish xizmati mavjud.">
-<meta property="og:image" content="img/3.jpg">
+<meta property="og:description" content="Premium snooker va bilyard stollari. Eksport, dastavka va o'rnatish.">
+<meta property="og:image" content="img/opt/3-960.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="img/opt/2-960.webp" fetchpriority="high">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<script>document.documentElement.classList.add("js")</script>
+<link rel="stylesheet" href="css/style.css">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"LocalBusiness","name":"Bilyard ishlab chiqarish","telephone":"+998888885582","address":{"@type":"PostalAddress","addressLocality":"Samarqand","addressCountry":"UZ"},"description":"Bilyard va snooker stollari ishlab chiqarish, dastavka va o'rnatish.","sameAs":["https://www.instagram.com/bilyard_ishlab_chiqarish"]}
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"Bilyard ishlab chiqarish","telephone":"+998888885582","address":{"@type":"PostalAddress","addressLocality":"Samarqand","addressCountry":"UZ"},"description":"Snooker va bilyard stollari ishlab chiqarish, eksport, dastavka va o'rnatish.","sameAs":["https://www.instagram.com/bilyard_ishlab_chiqarish"]}
 </script>
 </head>
-<body>
+<body class="loading">
+
+<div class="loader" id="loader" aria-hidden="true"><div class="loader-ball">8</div><div class="loader-line"></div></div>
+<div class="progress" id="progress"></div>
 
 <header class="nav" id="nav">
   <div class="wrap nav-in">
-    <a href="#top" class="logo"><span class="ball">8</span><span class="logo-t"><small data-t="logo1">Bilyard</small><b data-t="logo2">Ishlab Chiqarish</b></span></a>
-    <nav id="menu">
-      <a href="#models" data-t="n_models">Stollar</a>
-      <a href="#calc" data-t="n_calc">Kalkulyator</a>
-      <a href="#services" data-t="n_services">Xizmatlar</a>
-      <a href="#gallery" data-t="n_gallery">Galereya</a>
-      <a href="#faq" data-t="n_faq">Savollar</a>
-      <a href="#contact" data-t="n_contact">Aloqa</a>
+    <a href="#top" class="logo" aria-label="Bilyard Ishlab Chiqarish"><span class="ball">8</span><span class="logo-t"><small data-i18n="logo1">Bilyard</small><b data-i18n="logo2">Ishlab Chiqarish</b></span></a>
+    <nav id="menu" aria-label="Menu">
+      <a href="#models" data-i18n="n_models">Stollar</a>
+      <a href="#config" data-i18n="n_config">Konfigurator</a>
+      <a href="#export" data-i18n="n_export">Eksport</a>
+      <a href="#services" data-i18n="n_services">Xizmatlar</a>
+      <a href="#gallery" data-i18n="n_gallery">Galereya</a>
+      <a href="#contact" data-i18n="n_contact">Aloqa</a>
     </nav>
     <div class="nav-r">
-      <div class="lang" role="group" aria-label="Til"><button data-lang="uz" class="on">UZ</button><button data-lang="ru">RU</button></div>
-      <a class="btn btn-gold nav-cta" href="tel:+998888885582">88 888 55 82</a>
-      <button class="burger" id="burger" aria-label="Menyu"><span></span><span></span><span></span></button>
+      <div class="lang" role="group" aria-label="Language"><button data-lang="uz" class="on">UZ</button><button data-lang="ru">RU</button><button data-lang="en">EN</button><i class="lang-pill"></i></div>
+      <a class="btn btn-gold nav-cta" href="#contact"><span data-i18n="n_cta">Buyurtma</span></a>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
     </div>
   </div>
 </header>
 
+<main>
+<!-- HERO -->
 <section class="hero" id="top">
   <div class="slides" id="slides">
-    <div class="slide on" style="background-image:url('img/2.jpg')"></div>
-    <div class="slide" style="background-image:url('img/3.jpg')"></div>
-    <div class="slide" style="background-image:url('img/4.jpg')"></div>
-    <div class="slide" style="background-image:url('img/1.jpg')"></div>
+    <div class="slide on"><span class="pic" style="--bg:#5b645b"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRgABAABXRUJQVlA4IPQAAACwBQCdASoYACAAPu1oqU+ppiOiKA1RMB2JZgCo+AtKIhRW4B9GYoze1muSL7bM/mxmvPAPzUAA/u7eqSzVesZhFvMDYc3tg/8+xTkOsaZ5ILDr6EtKQeIaieYYSEOwou/jKT0J5kLCfctSgdN4VN/VNQqc6iZQGJlybqnvx/BpLiclkelYPih/q83YHqmvBqSYONuMGZmORESEFEMwiKBPd3rLmUxscSOag8+7yr+BJ0cbYGi5WNQJq02/pdJby6pmTM3peccn0oJJTP7EEeLxmuNuKX2DeRosrgd+TLXT/UbXC/Jga9p41h5I16w62Ne2cAAA)"></i><img class="lz" src="img/opt/2-960.webp" srcset="img/opt/2-480.webp 480w, img/opt/2-960.webp 960w" sizes="100vw" width="960" height="1280" alt="Gold snooker tables in a billiard hall" decoding="async" fetchpriority="high" ></span></div>
+    <div class="slide"><span class="pic" style="--bg:#62706b"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAADwBACdASoYABIAPu1orlCppaQqqAqpUB2JQBndsZjNEedm6wr0nWBxtitn70FkDAAA8qR2WHaP1WOnEkEDWGWko0k5C72gGAtXxkP4IT8z5Q5ywtIRkqlYuUm8CAp7HbtlIgDc5I902hSne3HPD86x87PGIW2p0joqoLQCNG7QYjh3PtffrU+TWjr3DC+K0bUA5fy6A+ToOsfVE9PgZhIjxw3wAAAA)"></i><img class="lz" src="img/opt/4-960.webp" srcset="img/opt/4-480.webp 480w, img/opt/4-960.webp 960w, img/opt/4-1280.webp 1280w" sizes="100vw" width="1280" height="960" alt="White snooker tables in a hall" decoding="async" loading="lazy" ></span></div>
+    <div class="slide"><span class="pic" style="--bg:#83816f"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAACwBACdASoYACAAPuVepU2pJSOiMAwBIByJZgDGfBQVO+2vteQ6va0X0NUOBDcAAMtIGRA6xAqe4bCbBoPl8GZb2goSOoDvbPTxcD/uPDCrTpo3RLuJIBBVyJ6wxbU//7pqbMMg2W6pGLBSqjq0PTLvef9HTLsiGGHHy4ynfD9GfpRrBh0cVS3GFfJvz6sPyl3SurUBLxyGEbiB9xjhEXXJFjpM/Thrk/WGjr89MN1nMY/F7W/V7KOmUzSG8hzTJk8R6FlH9n9xQDkfM2AAAA==)"></i><img class="lz" src="img/opt/3-960.webp" srcset="img/opt/3-480.webp 480w, img/opt/3-960.webp 960w" sizes="100vw" width="960" height="1280" alt="Black and gold snooker table" decoding="async" loading="lazy" ></span></div>
+    <div class="slide"><span class="pic" style="--bg:#737672"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAADwBACdASoYABIAPu1qq1EppaOnKAqpMB2JZwDBzYxsQ/Kp64XlJE9XYYKtkkrgcwAA/OlFeiR+wn+hl/JSEREL8fXWXoM7M3w2h91f2t1Hp/4RXoyxHaNi3MRdYuUnb+gEY3f7NXE1xcaUUUEypmBZ+M/jpkbnKudHcrHNR51bjuieB2FEveE0//7mqII9+lv8mB6pRyiZc9Ybpa+CXghfzHFSgm23ApS6Ak09KFDE/kEwQAA=)"></i><img class="lz" src="img/opt/1-960.webp" srcset="img/opt/1-480.webp 480w, img/opt/1-960.webp 960w, img/opt/1-1280.webp 1280w" sizes="100vw" width="1280" height="960" alt="Black and white snooker table" decoding="async" loading="lazy" ></span></div>
   </div>
   <div class="hero-shade"></div>
+  <div class="hero-grain"></div>
   <div class="wrap hero-in">
-    <div class="hero-text">
-      <span class="tag" data-t="h_tag">Samarqand · butun O'zbekiston bo'ylab dastavka</span>
-      <h1 data-t="h_h1">Stol, <em>o'yin</em> boshlanadigan joy</h1>
-      <p data-t="h_p">Snooker va bilyard stollarini Samarqandda o'zimiz ishlab chiqaramiz. Dizaynni siz tanlaysiz, dastavka va o'rnatishni biz bajaramiz.</p>
-      <div class="hero-btns">
-        <a class="btn btn-gold" href="#contact" data-t="h_b1">Buyurtma berish</a>
-        <a class="btn btn-ghost" href="#calc" data-t="h_b2">Xonamga stol tanlash</a>
-      </div>
+    <span class="tag"><i></i><span data-i18n="h_tag">Samarqand · O'zbekiston</span></span>
+    <h1 id="h1" data-i18n="h_h1" data-split>Samarqanddan — butun dunyo <em>bilyard</em> xonalariga</h1>
+    <p class="hero-p" data-i18n="h_p">Snooker va bilyard stollarini o'zimiz ishlab chiqaramiz. Eksport, dastavka va o'rnatish xizmati bor.</p>
+    <div class="hero-btns">
+      <a class="btn btn-gold magnet" href="#config"><span data-i18n="h_b1">Stolni o'zingiz yig'ing</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn btn-ghost magnet" href="#contact"><span data-i18n="h_b2">Narx so'rash</span></a>
     </div>
   </div>
   <div class="wrap hero-bar">
-    <div><b>12 / 10 / 9</b><span data-t="f1">fut o'lchamlar</span></div>
-    <div><b data-t="f2b">O'zimizniki</b><span data-t="f2">ishlab chiqarish</span></div>
-    <div><b data-t="f3b">Dastavka</b><span data-t="f3">va o'rnatish</span></div>
-    <div><b data-t="f4b">Maxsus</b><span data-t="f4">rang va dizayn</span></div>
+    <div class="hb"><b>12 · 10 · 9</b><span data-i18n="f1">fut o'lchamlar</span></div>
+    <div class="hb"><b data-i18n="f2b">O'z seximiz</b><span data-i18n="f2">Samarqandda ishlab chiqarish</span></div>
+    <div class="hb"><b data-i18n="f3b">Eksport</b><span data-i18n="f3">qadoqlash va logistika</span></div>
+    <div class="hb"><b data-i18n="f4b">Maxsus</b><span data-i18n="f4">rang va dizayn</span></div>
+  </div>
+  <div class="slide-dots" id="dots"><i class="on"></i><i></i><i></i><i></i></div>
+  <a href="#about" class="scroll-hint" aria-label="Scroll"><span></span></a>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>SNOOKER</span><i>◆</i><span>BILLIARDS</span><i>◆</i><span>БИЛЬЯРД</span><i>◆</i><span>MADE IN SAMARKAND</span><i>◆</i><span>EXPORT</span><i>◆</i><span>СНУКЕР</span><i>◆</i>
+    <span>SNOOKER</span><i>◆</i><span>BILLIARDS</span><i>◆</i><span>БИЛЬЯРД</span><i>◆</i><span>MADE IN SAMARKAND</span><i>◆</i><span>EXPORT</span><i>◆</i><span>СНУКЕР</span><i>◆</i>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="sec" id="about">
+  <div class="wrap two about">
+    <div class="about-media rv">
+      <div class="about-img" data-par="0.08"><span class="pic" style="--bg:#727066"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAACQBQCdASoYACAAPu1cqU6ppKOiMBgMATAdiWgAqPQy4834F5RX7p8/pUCfx9CLxZ+m6lh/FAD+7yaZ5OjUuEQRWpIUYfshc/TgoV7OEWn+84pI9jiNgGReUt7Hcc6FPuOzAUNywHYCYI+qZ2HLlm78cwE6/jguboehDvJWLwEHMZPlgALbIWD8wnJhDuge+me1XTCu6FOQGVN9GeUHkVuJ1HoypXpdawDRDqNTq1z1l0aB/oFJScDlKMz1mAAA)"></i><img class="lz" src="img/opt/7-960.webp" srcset="img/opt/7-480.webp 480w, img/opt/7-960.webp 960w" sizes="(min-width:900px) 40vw,100vw" width="960" height="1280" alt="Gold snooker table, front view" decoding="async" loading="lazy" ></span></div>
+      <div class="about-img small" data-par="-0.06"><span class="pic" style="--bg:#75776b"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRuoAAABXRUJQVlA4IN4AAABwBQCdASoYACAAPu1oqU+ppiOiKA1RMB2JZACsM47GzjxYGQv2027wu6iLNeueV/3UZ6WQAP7kydqaZPzpc3pDqRWF8Z5re/6WBy+G8pVmXVUrjXAW9IPwx4Q+dnXKa0B25C+pQMy34i4o+jfT7meO2mJByUQIRfys1jmHPfMnofVFkRb/H0Drk4FUEMrXwWRL8OWirS8kofkZUBXFUZw/k+qKKb//uTvyZhfk4ITXRjpQidXDN/QXocEi62LfwXPRrh2d7ZrKkPk+egOuM2oaqVdXJUxpkYtpZm24AAA=)"></i><img class="lz" src="img/opt/6-960.webp" srcset="img/opt/6-480.webp 480w, img/opt/6-960.webp 960w" sizes="(min-width:900px) 20vw,50vw" width="960" height="1280" alt="Hall with gold snooker tables" decoding="async" loading="lazy" ></span></div>
+    </div>
+    <div class="rv">
+      <span class="eyebrow" data-i18n="a_eb">Biz haqimizda</span>
+      <h2 data-i18n="a_h">Ipak yo'li shahridan <em>stol ustalari</em></h2>
+      <p class="lead" data-i18n="a_p1">Biz Samarqandda snooker va bilyard stollarini o'zimiz ishlab chiqaramiz. Ramka, oyoq, bort va bezak bir joyda tayyorlanadi, shuning uchun sifatni har bosqichda nazorat qilamiz.</p>
+      <p class="lead" data-i18n="a_p2">Klub, restoran, mehmonxona yoki uy uchun buyurtma qabul qilamiz. Rang, oyoq shakli va naqsh sizning interyeringizga moslashtiriladi.</p>
+      <div class="spec">
+        <div class="spec-n"><span class="count" data-count="3569">3569</span> × <span class="count" data-count="1778">1778</span><small>mm</small></div>
+        <p data-i18n="a_spec">12 futlik snooker stolining o'yin maydoni. Biz shu standart o'lchamga amal qilamiz.</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="sec" id="models">
+<!-- MODELS -->
+<section class="sec dark" id="models">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow" data-t="m_eb">Katalog</span>
-      <h2 data-t="m_h">Uchta asosiy <em>uslub</em></h2>
-      <p data-t="m_p">Quyidagilar eng ko'p buyurtma qilinadigan variantlar. Boshqa rang, oyoq yoki bezak kerak bo'lsa, o'zingizga moslab tayyorlaymiz.</p>
+    <div class="sec-head rv">
+      <span class="eyebrow" data-i18n="m_eb">Katalog</span>
+      <h2 data-i18n="m_h">Uchta asosiy <em>uslub</em></h2>
+      <p data-i18n="m_p">Eng ko'p buyurtma qilinadigan variantlar. Boshqa rang, oyoq yoki bezak kerak bo'lsa, o'zingizga moslab tayyorlaymiz.</p>
     </div>
-
-    <article class="model">
-      <div class="model-img"><img src="img/3.jpg" alt="Qora ramkali oltin oyoqli snooker stoli" loading="lazy"><span class="chip" data-t="chip1">Eng ko'p tanlanadigan</span></div>
-      <div class="model-body">
-        <h3>Klassik Gold</h3>
-        <p data-t="m1p">Qora lak ramka, oltin naqshli yon panel va oltin rangli, o'ymakor oyoqlar. Klub, VIP zal va restoranlarda ajoyib ko'rinadi.</p>
-        <dl>
-          <div><dt data-t="d_type">Turi</dt><dd>Snooker</dd></div>
-          <div><dt data-t="d_size">O'lcham</dt><dd>12 fut</dd></div>
-          <div><dt data-t="d_frame">Ramka</dt><dd data-t="m1f">Qora lak</dd></div>
-          <div><dt data-t="d_legs">Oyoqlar</dt><dd data-t="m1l">Oltin, o'ymakor</dd></div>
-        </dl>
-        <a class="btn btn-line" href="#contact" data-model="Klassik Gold" data-t="ask">Narxini so'rash</a>
-      </div>
-    </article>
-
-    <article class="model rev">
-      <div class="model-img"><img src="img/4.jpg" alt="Oq lakli snooker stoli, kumush naqshli" loading="lazy"><span class="chip" data-t="chip2">Zamonaviy</span></div>
-      <div class="model-body">
-        <h3>Premium White</h3>
-        <p data-t="m2p">Oq lak va kumush rang naqsh. Yorug' interyerlar, kafe va uy bilyard xonalari uchun toza va yengil ko'rinish beradi.</p>
-        <dl>
-          <div><dt data-t="d_type">Turi</dt><dd>Snooker</dd></div>
-          <div><dt data-t="d_size">O'lcham</dt><dd>12 fut</dd></div>
-          <div><dt data-t="d_frame">Ramka</dt><dd data-t="m2f">Oq lak</dd></div>
-          <div><dt data-t="d_legs">Oyoqlar</dt><dd data-t="m2l">Oq, qirrali</dd></div>
-        </dl>
-        <a class="btn btn-line" href="#contact" data-model="Premium White" data-t="ask">Narxini so'rash</a>
-      </div>
-    </article>
-
-    <article class="model">
-      <div class="model-img"><img src="img/1.jpg" alt="Qora va oq, kvadrat oyoqli bilyard stoli" loading="lazy"><span class="chip" data-t="chip3">Minimalizm</span></div>
-      <div class="model-body">
-        <h3>Modern Black &amp; White</h3>
-        <p data-t="m3p">Kvadrat ustunsimon oyoqlar va qora-oq kontrast. To'g'ri chiziqlarni yoqtiradigan zamonaviy interyerlar uchun.</p>
-        <dl>
-          <div><dt data-t="d_type">Turi</dt><dd>Snooker</dd></div>
-          <div><dt data-t="d_size">O'lcham</dt><dd>12 fut</dd></div>
-          <div><dt data-t="d_frame">Ramka</dt><dd data-t="m3f">Qora lak</dd></div>
-          <div><dt data-t="d_legs">Oyoqlar</dt><dd data-t="m3l">Oq, kvadrat</dd></div>
-        </dl>
-        <a class="btn btn-line" href="#contact" data-model="Modern Black & White" data-t="ask">Narxini so'rash</a>
-      </div>
-    </article>
+    <div class="cards">
+      <article class="card tilt rv" style="--d:0s">
+        <div class="card-img"><span class="pic" style="--bg:#83816f"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAACwBACdASoYACAAPuVepU2pJSOiMAwBIByJZgDGfBQVO+2vteQ6va0X0NUOBDcAAMtIGRA6xAqe4bCbBoPl8GZb2goSOoDvbPTxcD/uPDCrTpo3RLuJIBBVyJ6wxbU//7pqbMMg2W6pGLBSqjq0PTLvef9HTLsiGGHHy4ynfD9GfpRrBh0cVS3GFfJvz6sPyl3SurUBLxyGEbiB9xjhEXXJFjpM/Thrk/WGjr89MN1nMY/F7W/V7KOmUzSG8hzTJk8R6FlH9n9xQDkfM2AAAA==)"></i><img class="lz" src="img/opt/3-960.webp" srcset="img/opt/3-480.webp 480w, img/opt/3-960.webp 960w" sizes="(min-width:1000px) 33vw,100vw" width="960" height="1280" alt="Klassik Gold snooker table" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip1">Eng ko'p tanlanadi</span></div>
+        <div class="card-body">
+          <h3>Klassik Gold</h3>
+          <p data-i18n="m1p">Qora lak ramka, oltin naqshli yon panel va o'ymakor oltin oyoqlar. Klub va VIP zallar uchun.</p>
+          <ul><li><span data-i18n="d_size">O'lcham</span><b>12 ft</b></li><li><span data-i18n="d_frame">Ramka</span><b data-i18n="m1f">Qora lak</b></li><li><span data-i18n="d_legs">Oyoqlar</span><b data-i18n="m1l">Oltin, o'ymakor</b></li></ul>
+          <a class="btn btn-line" href="#contact" data-model="Klassik Gold"><span data-i18n="ask">Narx so'rash</span></a>
+        </div>
+      </article>
+      <article class="card tilt rv" style="--d:.12s">
+        <div class="card-img"><span class="pic" style="--bg:#757d7d"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABwBACdASoYABIAPu1irVAppSQmsBgIATAdiWcAuwAQ9US4O+EtsYfD8IRaAAD32fxy/1GGoNocu7M4HrSp+NB4rLSM0JuvoaL4O+tpengNNEQlndOzIe+y9RdYYwVcOHFP26nQ+xxLiLx9eXEZXKExGxZQez0226i23as4mLVphQj695TW+ul2hVb9tS6DB1eJI7QAAAA=)"></i><img class="lz" src="img/opt/5-960.webp" srcset="img/opt/5-480.webp 480w, img/opt/5-960.webp 960w, img/opt/5-1280.webp 1280w" sizes="(min-width:1000px) 33vw,100vw" width="1280" height="960" alt="Premium White snooker table" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip2">Zamonaviy</span></div>
+        <div class="card-body">
+          <h3>Premium White</h3>
+          <p data-i18n="m2p">Oq lak va kumush rang naqsh. Yorug' interyer, kafe va uy bilyard xonasi uchun yengil ko'rinish.</p>
+          <ul><li><span data-i18n="d_size">O'lcham</span><b>12 ft</b></li><li><span data-i18n="d_frame">Ramka</span><b data-i18n="m2f">Oq lak</b></li><li><span data-i18n="d_legs">Oyoqlar</span><b data-i18n="m2l">Oq, qirrali</b></li></ul>
+          <a class="btn btn-line" href="#contact" data-model="Premium White"><span data-i18n="ask">Narx so'rash</span></a>
+        </div>
+      </article>
+      <article class="card tilt rv" style="--d:.24s">
+        <div class="card-img"><span class="pic" style="--bg:#737672"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAADwBACdASoYABIAPu1qq1EppaOnKAqpMB2JZwDBzYxsQ/Kp64XlJE9XYYKtkkrgcwAA/OlFeiR+wn+hl/JSEREL8fXWXoM7M3w2h91f2t1Hp/4RXoyxHaNi3MRdYuUnb+gEY3f7NXE1xcaUUUEypmBZ+M/jpkbnKudHcrHNR51bjuieB2FEveE0//7mqII9+lv8mB6pRyiZc9Ybpa+CXghfzHFSgm23ApS6Ak09KFDE/kEwQAA=)"></i><img class="lz" src="img/opt/1-960.webp" srcset="img/opt/1-480.webp 480w, img/opt/1-960.webp 960w, img/opt/1-1280.webp 1280w" sizes="(min-width:1000px) 33vw,100vw" width="1280" height="960" alt="Modern Black and White snooker table" decoding="async" loading="lazy" ></span><span class="chip" data-i18n="chip3">Minimalizm</span></div>
+        <div class="card-body">
+          <h3>Modern B&amp;W</h3>
+          <p data-i18n="m3p">Kvadrat ustun oyoqlar va qora-oq kontrast. To'g'ri chiziqlarni yoqtiradigan interyerlar uchun.</p>
+          <ul><li><span data-i18n="d_size">O'lcham</span><b>12 ft</b></li><li><span data-i18n="d_frame">Ramka</span><b data-i18n="m3f">Qora lak</b></li><li><span data-i18n="d_legs">Oyoqlar</span><b data-i18n="m3l">Oq, kvadrat</b></li></ul>
+          <a class="btn btn-line" href="#contact" data-model="Modern Black & White"><span data-i18n="ask">Narx so'rash</span></a>
+        </div>
+      </article>
+    </div>
   </div>
 </section>
 
-<section class="sec dark" id="anatomy">
+<!-- CONFIGURATOR -->
+<section class="sec" id="config">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow" data-i18n="cf_eb">Konfigurator</span>
+      <h2 data-i18n="cf_h">Stolni o'zingiz <em>yig'ing</em></h2>
+      <p data-i18n="cf_p">Rang va oyoq shaklini tanlang, natijani darhol ko'ring va buyurtmani bir tugma bilan yuboring.</p>
+    </div>
+    <div class="cfg rv">
+      <div class="cfg-stage">
+        <svg id="tbl" viewBox="60 110 680 350" role="img" aria-label="Table preview">
+          <defs>
+            <linearGradient id="gShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".3"/></linearGradient>
+            <linearGradient id="gLeg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".38"/><stop offset=".35" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+            <radialGradient id="gLight" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset="1" stop-color="#000" stop-opacity=".25"/></radialGradient>
+            <radialGradient id="gBall" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#bbb"/></radialGradient>
+          </defs>
+          <ellipse cx="400" cy="452" rx="330" ry="16" fill="#000" opacity=".28"/>
+          <g id="legsTurned">
+            <g class="leg" data-x="135"></g><g class="leg" data-x="310"></g><g class="leg" data-x="490"></g><g class="leg" data-x="665"></g>
+          </g>
+          <g id="legsSquare" hidden>
+            <g class="leg" data-x="135"></g><g class="leg" data-x="310"></g><g class="leg" data-x="490"></g><g class="leg" data-x="665"></g>
+          </g>
+          <polygon class="t-frame" points="190,150 610,150 700,250 100,250"/>
+          <polygon class="t-cloth" points="192,163 608,163 673,236 127,236"/>
+          <polygon fill="url(#gLight)" points="192,163 608,163 673,236 127,236"/>
+          <g class="t-pocket"><ellipse cx="193" cy="164" rx="9" ry="5"/><ellipse cx="607" cy="164" rx="9" ry="5"/><ellipse cx="128" cy="236" rx="11" ry="6"/><ellipse cx="672" cy="236" rx="11" ry="6"/><ellipse cx="400" cy="163" rx="8" ry="4"/><ellipse cx="400" cy="237" rx="10" ry="5"/></g>
+          <circle cx="470" cy="206" r="7" fill="url(#gBall)"/><circle cx="330" cy="196" r="7" fill="#d4a017"/><circle cx="352" cy="214" r="7" fill="#b02020"/><circle cx="318" cy="218" r="7" fill="#111"/>
+          <polygon fill="url(#gShade)" points="190,150 610,150 700,250 100,250" opacity=".5"/>
+          <rect class="t-frame-d" x="100" y="250" width="600" height="12"/>
+          <rect class="t-frame" x="100" y="262" width="600" height="52"/>
+          <rect class="t-accent" x="124" y="272" width="552" height="30" rx="3"/>
+          <path d="M124 290 Q 200 312 275 290 T 400 290 T 525 290 T 676 290" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="2"/>
+          <rect fill="url(#gShade)" x="100" y="250" width="600" height="64" opacity=".6"/>
+        </svg>
+        <div class="cfg-sum" id="cfgSum" aria-live="polite"></div>
+      </div>
+      <div class="cfg-ctrl">
+        <div class="grp"><h4 data-i18n="cf_size">O'lcham</h4><div class="seg" id="cSize"><button data-v="12" class="on">12 ft</button><button data-v="10">10 ft</button><button data-v="9">9 ft</button></div></div>
+        <div class="grp"><h4 data-i18n="cf_frame">Ramka rangi</h4><div class="sw" id="cFrame"></div></div>
+        <div class="grp"><h4 data-i18n="cf_accent">Panel bezagi</h4><div class="sw" id="cAccent"></div></div>
+        <div class="grp"><h4 data-i18n="cf_legs">Oyoq shakli</h4><div class="seg" id="cLegs"><button data-v="turned" class="on" data-i18n="cf_turned">Naqshli</button><button data-v="square" data-i18n="cf_square">Kvadrat</button></div></div>
+        <div class="grp"><h4 data-i18n="cf_legc">Oyoq rangi</h4><div class="sw" id="cLegc"></div></div>
+        <div class="grp"><h4 data-i18n="cf_cloth">Mato rangi</h4><div class="sw" id="cCloth"></div></div>
+        <button class="btn btn-gold wide" id="cfgSend"><span data-i18n="cf_send">Konfiguratsiyani yuborish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANATOMY + CALC -->
+<section class="sec dark" id="calc">
   <div class="wrap two">
-    <div>
-      <span class="eyebrow" data-t="a_eb">Sifat nimadan iborat</span>
-      <h2 data-t="a_h">Yaxshi stolni <em>ichi</em> belgilaydi</h2>
-      <p class="lead" data-t="a_p">O'yin sifati ko'rinmaydigan qismlarga bog'liq: ramka mustahkamligi, taxtaning tekisligi va matoning tortilishi.</p>
+    <div class="rv">
+      <span class="eyebrow" data-i18n="c_eb">Kalkulyator</span>
+      <h2 data-i18n="c_h">Xonangizga qaysi stol <em>sig'adi?</em></h2>
+      <p class="lead" data-i18n="c_p">Xona o'lchamini kiriting. Kiyu bilan o'ynash uchun stol atrofida joy kerak, shuni hisoblab beramiz.</p>
+      <p class="small" data-i18n="c_note">Natija taxminiy. Aniq o'lchamni telefon orqali tasdiqlaymiz.</p>
     </div>
-    <ul class="parts">
-      <li><b data-t="p1">Mustahkam ramka</b><span data-t="p1s">Yillar o'tsa ham shaklini yo'qotmasligi kerak, shuning uchun uni puxta yig'amiz.</span></li>
-      <li><b data-t="p2">Tekis taxta</b><span data-t="p2s">O'yin yuzasi tosh taxta ustida joylashadi va daraja bilan sozlanadi.</span></li>
-      <li><b data-t="p3">Professional mato</b><span data-t="p3s">Shar tekis va bir xil tezlikda yurishi uchun mato tekis tortiladi.</span></li>
-      <li><b data-t="p4">Sozlanadigan tayanchlar</b><span data-t="p4s">Pol notekis bo'lsa ham stolni gorizontal qilib qo'yish mumkin.</span></li>
-      <li><b data-t="p5">Cho'ntaklar va burchaklar</b><span data-t="p5s">Charm yoki to'rli cho'ntaklar, metall burchak qoplamalar interyerga mos tanlanadi.</span></li>
-    </ul>
-  </div>
-</section>
-
-<section class="sec" id="calc">
-  <div class="wrap two calc-wrap">
-    <div>
-      <span class="eyebrow" data-t="c_eb">Kalkulyator</span>
-      <h2 data-t="c_h">Xonangizga qaysi stol <em>sig'adi?</em></h2>
-      <p class="lead" data-t="c_p">Xona o'lchamini kiriting. Stol atrofida kiyu bilan o'ynash uchun joy qoldirilishi kerak, shuni hisoblab beramiz.</p>
-      <p class="small" data-t="c_note">Natija taxminiy. Aniq o'lchamni telefon orqali tasdiqlaymiz.</p>
-    </div>
-    <div class="calc" id="calcBox">
+    <div class="calc rv">
       <div class="row">
-        <label for="rl"><span data-t="c_len">Xona uzunligi, m</span><input id="rl" type="number" step="0.1" min="2" value="7"></label>
-        <label for="rw"><span data-t="c_wid">Xona eni, m</span><input id="rw" type="number" step="0.1" min="2" value="5"></label>
+        <label for="rl"><span data-i18n="c_len">Xona uzunligi, m</span><input id="rl" type="number" step="0.1" min="2" value="7" inputmode="decimal"></label>
+        <label for="rw"><span data-i18n="c_wid">Xona eni, m</span><input id="rw" type="number" step="0.1" min="2" value="5" inputmode="decimal"></label>
       </div>
-      <div class="sizes" id="sizes">
-        <button data-size="12" class="on"><b>12</b> fut</button>
-        <button data-size="10"><b>10</b> fut</button>
-        <button data-size="9"><b>9</b> fut</button>
-      </div>
+      <div class="seg" id="sizes"><button data-size="12" class="on">12 ft</button><button data-size="10">10 ft</button><button data-size="9">9 ft</button></div>
       <div class="room" aria-hidden="true"><div class="room-in" id="roomIn"><div class="room-table" id="roomTable"></div></div></div>
       <div class="verdict" id="verdict"></div>
       <div class="need" id="need"></div>
@@ -162,116 +214,141 @@
   </div>
 </section>
 
-<section class="sec dark" id="services">
+<!-- SERVICES -->
+<section class="sec" id="services">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow" data-t="s_eb">Xizmatlar</span>
-      <h2 data-t="s_h">Buyurtmadan <em>birinchi o'yingacha</em></h2>
+    <div class="sec-head rv">
+      <span class="eyebrow" data-i18n="s_eb">Xizmatlar</span>
+      <h2 data-i18n="s_h">Buyurtmadan <em>birinchi o'yingacha</em></h2>
     </div>
     <div class="svc">
-      <div><svg viewBox="0 0 24 24"><path d="M3 21V9l6 3V9l6 3V4h6v17z"/></svg><h3 data-t="s1">Ishlab chiqarish</h3><p data-t="s1p">Ramka, taxta, bort va bezakni o'z seximizda tayyorlaymiz.</p></div>
-      <div><svg viewBox="0 0 24 24"><path d="M2 7h12v9H2zM14 10h4l4 3v3h-8zM6 19a2 2 0 100-.01M18 19a2 2 0 100-.01"/></svg><h3 data-t="s2">Dastavka</h3><p data-t="s2p">Samarqand va O'zbekistonning barcha viloyatlariga olib boramiz.</p></div>
-      <div><svg viewBox="0 0 24 24"><path d="M14 6l4 4-9 9H5v-4zM13 7l4 4"/></svg><h3 data-t="s3">O'rnatish</h3><p data-t="s3p">Ustalarimiz joyida yig'adi, daraja bilan tekislaydi va matoni tortadi.</p></div>
-      <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg><h3 data-t="s4">Aksessuarlar</h3><p data-t="s4p">Kiyu, sharlar, uchburchak, bo'r va yoritish bir joyda.</p></div>
-      <div><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 10h16M10 5v14"/></svg><h3 data-t="s5">Mato almashtirish</h3><p data-t="s5p">Eskirgan matoni yangilaymiz, bort va cho'ntaklarni tiklaymiz.</p></div>
-      <div><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg><h3 data-t="s6">Klub loyihasi</h3><p data-t="s6p">Zal rejasi, stollar joylashuvi va yoritish bo'yicha maslahat beramiz.</p></div>
+      <div class="glow rv" style="--d:0s"><svg viewBox="0 0 24 24"><path d="M3 21V9l6 3V9l6 3V4h6v17z"/></svg><h3 data-i18n="s1">Ishlab chiqarish</h3><p data-i18n="s1p">Ramka, taxta, bort va bezakni o'z seximizda tayyorlaymiz.</p></div>
+      <div class="glow rv" style="--d:.08s"><svg viewBox="0 0 24 24"><path d="M2 7h12v9H2zM14 10h4l4 3v3h-8z"/><circle cx="6" cy="18.5" r="1.8"/><circle cx="18" cy="18.5" r="1.8"/></svg><h3 data-i18n="s2">Dastavka</h3><p data-i18n="s2p">Samarqand va butun O'zbekiston bo'ylab yetkazib beramiz.</p></div>
+      <div class="glow rv" style="--d:.16s"><svg viewBox="0 0 24 24"><path d="M14 6l4 4-9 9H5v-4zM13 7l4 4"/></svg><h3 data-i18n="s3">O'rnatish</h3><p data-i18n="s3p">Ustalarimiz joyida yig'adi, daraja bilan tekislaydi va matoni tortadi.</p></div>
+      <div class="glow rv" style="--d:.24s"><svg viewBox="0 0 24 24"><path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg><h3 data-i18n="s4">Eksport</h3><p data-i18n="s4p">Xorijga jo'natish uchun qadoqlash va logistika bo'yicha yordam beramiz.</p></div>
+      <div class="glow rv" style="--d:.32s"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM4 10h16M10 5v14"/></svg><h3 data-i18n="s5">Mato almashtirish</h3><p data-i18n="s5p">Eskirgan matoni yangilaymiz, bort va cho'ntaklarni tiklaymiz.</p></div>
+      <div class="glow rv" style="--d:.4s"><svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg><h3 data-i18n="s6">Klub loyihasi</h3><p data-i18n="s6p">Zal rejasi, stollar joylashuvi va yoritish bo'yicha maslahat beramiz.</p></div>
     </div>
   </div>
 </section>
 
+<!-- EXPORT -->
+<section class="sec dark export" id="export">
+  <div class="wrap two">
+    <div class="rv">
+      <span class="eyebrow" data-i18n="e_eb">Eksport</span>
+      <h2 data-i18n="e_h">Samarqanddan <em>dunyoga</em></h2>
+      <p class="lead" data-i18n="e_p">Chet eldagi klublar, mehmonxonalar va distribyutorlar bilan ishlashga tayyormiz. Stolni xavfsiz qadoqlab, manzilgacha jo'natishda yordam beramiz.</p>
+      <ol class="exsteps">
+        <li><b data-i18n="e1">So'rov va texnik shartlar</b><span data-i18n="e1p">Model, o'lcham, rang va miqdorni kelishamiz.</span></li>
+        <li><b data-i18n="e2">Ishlab chiqarish</b><span data-i18n="e2p">Buyurtma bo'yicha o'z seximizda tayyorlaymiz.</span></li>
+        <li><b data-i18n="e3">Himoyali qadoqlash</b><span data-i18n="e3p">Uzoq yo'lga chidaydigan qadoq tayyorlaymiz.</span></li>
+        <li><b data-i18n="e4">Jo'natish va o'rnatish</b><span data-i18n="e4p">Logistika bo'yicha yordam beramiz, kerak bo'lsa o'rnatish yo'riqnomasini yuboramiz.</span></li>
+      </ol>
+      <a class="btn btn-gold magnet" href="#contact"><span data-i18n="e_cta">Eksport bo'yicha so'rov</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </div>
+    <div class="route rv" aria-hidden="true">
+      <svg viewBox="0 0 520 520">
+        <g class="rings"><circle cx="260" cy="260" r="40"/><circle cx="260" cy="260" r="90"/><circle cx="260" cy="260" r="145"/><circle cx="260" cy="260" r="205"/></g>
+        <g class="arcs">
+          <path d="M260 260 Q 160 120 60 110"/><path d="M260 260 Q 360 90 470 100"/><path d="M260 260 Q 420 250 490 360"/>
+          <path d="M260 260 Q 300 400 380 480"/><path d="M260 260 Q 150 380 70 440"/><path d="M260 260 Q 120 250 30 280"/>
+        </g>
+        <g class="nodes"><circle cx="60" cy="110" r="5"/><circle cx="470" cy="100" r="5"/><circle cx="490" cy="360" r="5"/><circle cx="380" cy="480" r="5"/><circle cx="70" cy="440" r="5"/><circle cx="30" cy="280" r="5"/></g>
+        <circle class="pulse" cx="260" cy="260" r="10"/><circle class="home" cx="260" cy="260" r="7"/>
+        <text x="260" y="300" text-anchor="middle">SAMARKAND</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
 <section class="sec" id="gallery">
   <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow" data-t="g_eb">Galereya</span>
-      <h2 data-t="g_h">Mijozlarga <em>o'rnatilgan</em> stollar</h2>
-      <p data-t="g_p">Rasmni bosib kattalashtiring.</p>
+    <div class="sec-head rv">
+      <span class="eyebrow" data-i18n="g_eb">Galereya</span>
+      <h2 data-i18n="g_h">Mijozlarga <em>o'rnatilgan</em> stollar</h2>
+      <p data-i18n="g_p">Rasmni bosib kattalashtiring.</p>
     </div>
     <div class="gal" id="gal">
-      <button class="g g-a" data-i="0"><img src="img/2.jpg" alt="To'rtta oltin stolli bilyard zali" loading="lazy"></button>
-      <button class="g" data-i="1"><img src="img/4.jpg" alt="Oq stollar zali" loading="lazy"></button>
-      <button class="g" data-i="2"><img src="img/1.jpg" alt="Qora-oq stol" loading="lazy"></button>
-      <button class="g g-b" data-i="3"><img src="img/3.jpg" alt="Oltin snooker stoli" loading="lazy"></button>
-      <button class="g" data-i="4"><img src="img/5.jpg" alt="Oq snooker stoli" loading="lazy"></button>
-      <button class="g" data-i="5"><img src="img/6.jpg" alt="Zalda oltin stollar" loading="lazy"></button>
-      <button class="g g-w" data-i="6"><img src="img/7.jpg" alt="Oltin stol, old tomondan" loading="lazy"></button>
+      <button class="g g-a rv" data-i="0" aria-label="Open photo 1"><span class="pic" style="--bg:#5b645b"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRgABAABXRUJQVlA4IPQAAACwBQCdASoYACAAPu1oqU+ppiOiKA1RMB2JZgCo+AtKIhRW4B9GYoze1muSL7bM/mxmvPAPzUAA/u7eqSzVesZhFvMDYc3tg/8+xTkOsaZ5ILDr6EtKQeIaieYYSEOwou/jKT0J5kLCfctSgdN4VN/VNQqc6iZQGJlybqnvx/BpLiclkelYPih/q83YHqmvBqSYONuMGZmORESEFEMwiKBPd3rLmUxscSOag8+7yr+BJ0cbYGi5WNQJq02/pdJby6pmTM3peccn0oJJTP7EEeLxmuNuKX2DeRosrgd+TLXT/UbXC/Jga9p41h5I16w62Ne2cAAA)"></i><img class="lz" src="img/opt/2-960.webp" srcset="img/opt/2-480.webp 480w, img/opt/2-960.webp 960w" sizes="(min-width:900px) 50vw,100vw" width="960" height="1280" alt="Hall with four gold snooker tables" decoding="async" loading="lazy" ></span></button>
+      <button class="g rv" data-i="1" aria-label="Open photo 2" style="--d:.06s"><span class="pic" style="--bg:#62706b"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAADwBACdASoYABIAPu1orlCppaQqqAqpUB2JQBndsZjNEedm6wr0nWBxtitn70FkDAAA8qR2WHaP1WOnEkEDWGWko0k5C72gGAtXxkP4IT8z5Q5ywtIRkqlYuUm8CAp7HbtlIgDc5I902hSne3HPD86x87PGIW2p0joqoLQCNG7QYjh3PtffrU+TWjr3DC+K0bUA5fy6A+ToOsfVE9PgZhIjxw3wAAAA)"></i><img class="lz" src="img/opt/4-960.webp" srcset="img/opt/4-480.webp 480w, img/opt/4-960.webp 960w, img/opt/4-1280.webp 1280w" sizes="(min-width:900px) 25vw,50vw" width="1280" height="960" alt="White snooker tables" decoding="async" loading="lazy" ></span></button>
+      <button class="g rv" data-i="2" aria-label="Open photo 3" style="--d:.12s"><span class="pic" style="--bg:#737672"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAADwBACdASoYABIAPu1qq1EppaOnKAqpMB2JZwDBzYxsQ/Kp64XlJE9XYYKtkkrgcwAA/OlFeiR+wn+hl/JSEREL8fXWXoM7M3w2h91f2t1Hp/4RXoyxHaNi3MRdYuUnb+gEY3f7NXE1xcaUUUEypmBZ+M/jpkbnKudHcrHNR51bjuieB2FEveE0//7mqII9+lv8mB6pRyiZc9Ybpa+CXghfzHFSgm23ApS6Ak09KFDE/kEwQAA=)"></i><img class="lz" src="img/opt/1-960.webp" srcset="img/opt/1-480.webp 480w, img/opt/1-960.webp 960w, img/opt/1-1280.webp 1280w" sizes="(min-width:900px) 25vw,50vw" width="1280" height="960" alt="Black and white snooker table" decoding="async" loading="lazy" ></span></button>
+      <button class="g g-b rv" data-i="3" aria-label="Open photo 4" style="--d:.18s"><span class="pic" style="--bg:#83816f"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRtoAAABXRUJQVlA4IM4AAACwBACdASoYACAAPuVepU2pJSOiMAwBIByJZgDGfBQVO+2vteQ6va0X0NUOBDcAAMtIGRA6xAqe4bCbBoPl8GZb2goSOoDvbPTxcD/uPDCrTpo3RLuJIBBVyJ6wxbU//7pqbMMg2W6pGLBSqjq0PTLvef9HTLsiGGHHy4ynfD9GfpRrBh0cVS3GFfJvz6sPyl3SurUBLxyGEbiB9xjhEXXJFjpM/Thrk/WGjr89MN1nMY/F7W/V7KOmUzSG8hzTJk8R6FlH9n9xQDkfM2AAAA==)"></i><img class="lz" src="img/opt/3-960.webp" srcset="img/opt/3-480.webp 480w, img/opt/3-960.webp 960w" sizes="(min-width:900px) 25vw,50vw" width="960" height="1280" alt="Gold snooker table" decoding="async" loading="lazy" ></span></button>
+      <button class="g rv" data-i="4" aria-label="Open photo 5" style="--d:.24s"><span class="pic" style="--bg:#757d7d"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAABwBACdASoYABIAPu1irVAppSQmsBgIATAdiWcAuwAQ9US4O+EtsYfD8IRaAAD32fxy/1GGoNocu7M4HrSp+NB4rLSM0JuvoaL4O+tpengNNEQlndOzIe+y9RdYYwVcOHFP26nQ+xxLiLx9eXEZXKExGxZQez0226i23as4mLVphQj695TW+ul2hVb9tS6DB1eJI7QAAAA=)"></i><img class="lz" src="img/opt/5-960.webp" srcset="img/opt/5-480.webp 480w, img/opt/5-960.webp 960w, img/opt/5-1280.webp 1280w" sizes="(min-width:900px) 25vw,50vw" width="1280" height="960" alt="White snooker table" decoding="async" loading="lazy" ></span></button>
+      <button class="g rv" data-i="5" aria-label="Open photo 6" style="--d:.3s"><span class="pic" style="--bg:#75776b"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRuoAAABXRUJQVlA4IN4AAABwBQCdASoYACAAPu1oqU+ppiOiKA1RMB2JZACsM47GzjxYGQv2027wu6iLNeueV/3UZ6WQAP7kydqaZPzpc3pDqRWF8Z5re/6WBy+G8pVmXVUrjXAW9IPwx4Q+dnXKa0B25C+pQMy34i4o+jfT7meO2mJByUQIRfys1jmHPfMnofVFkRb/H0Drk4FUEMrXwWRL8OWirS8kofkZUBXFUZw/k+qKKb//uTvyZhfk4ITXRjpQidXDN/QXocEi62LfwXPRrh2d7ZrKkPk+egOuM2oaqVdXJUxpkYtpZm24AAA=)"></i><img class="lz" src="img/opt/6-960.webp" srcset="img/opt/6-480.webp 480w, img/opt/6-960.webp 960w" sizes="(min-width:900px) 25vw,50vw" width="960" height="1280" alt="Gold tables in a hall" decoding="async" loading="lazy" ></span></button>
+      <button class="g g-w rv" data-i="6" aria-label="Open photo 7" style="--d:.36s"><span class="pic" style="--bg:#727066"><i class="ph" style="background-image:url(data:image/webp;base64,UklGRsoAAABXRUJQVlA4IL4AAACQBQCdASoYACAAPu1cqU6ppKOiMBgMATAdiWgAqPQy4834F5RX7p8/pUCfx9CLxZ+m6lh/FAD+7yaZ5OjUuEQRWpIUYfshc/TgoV7OEWn+84pI9jiNgGReUt7Hcc6FPuOzAUNywHYCYI+qZ2HLlm78cwE6/jguboehDvJWLwEHMZPlgALbIWD8wnJhDuge+me1XTCu6FOQGVN9GeUHkVuJ1HoypXpdawDRDqNTq1z1l0aB/oFJScDlKMz1mAAA)"></i><img class="lz" src="img/opt/7-960.webp" srcset="img/opt/7-480.webp 480w, img/opt/7-960.webp 960w" sizes="(min-width:900px) 50vw,100vw" width="960" height="1280" alt="Gold snooker table front view" decoding="async" loading="lazy" ></span></button>
     </div>
-    <p class="center"><a class="btn btn-line" href="https://www.instagram.com/bilyard_ishlab_chiqarish" target="_blank" rel="noopener" data-t="g_ig">Instagramda ko'proq ishlar →</a></p>
+    <p class="center rv"><a class="btn btn-line" href="https://www.instagram.com/bilyard_ishlab_chiqarish" target="_blank" rel="noopener"><span data-i18n="g_ig">Instagramda ko'proq ishlar</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
   </div>
 </section>
 
-<section class="sec dark" id="process">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow" data-t="pr_eb">Jarayon</span>
-      <h2 data-t="pr_h">Qanday <em>ishlaymiz</em></h2>
-    </div>
-    <ol class="steps">
-      <li><h3 data-t="st1">Qo'ng'iroq</h3><p data-t="st1p">Xona va maqsadingizni aytasiz.</p></li>
-      <li><h3 data-t="st2">Tanlov</h3><p data-t="st2p">Model, rang va narxni kelishamiz.</p></li>
-      <li><h3 data-t="st3">Ishlab chiqarish</h3><p data-t="st3p">Stol buyurtmangiz bo'yicha tayyorlanadi.</p></li>
-      <li><h3 data-t="st4">Dastavka</h3><p data-t="st4p">Ehtiyotkorlik bilan manzilga olib boramiz.</p></li>
-      <li><h3 data-t="st5">O'rnatish</h3><p data-t="st5p">Yig'amiz va tekislaymiz. O'ynashga tayyor.</p></li>
-    </ol>
-  </div>
-</section>
-
-<section class="sec" id="faq">
+<!-- FAQ -->
+<section class="sec dark" id="faq">
   <div class="wrap narrow">
-    <div class="sec-head">
-      <span class="eyebrow" data-t="q_eb">Savol-javob</span>
-      <h2 data-t="q_h">Ko'p so'raladigan <em>savollar</em></h2>
+    <div class="sec-head rv">
+      <span class="eyebrow" data-i18n="q_eb">Savol-javob</span>
+      <h2 data-i18n="q_h">Ko'p so'raladigan <em>savollar</em></h2>
     </div>
-    <details><summary data-t="q1">Stol qancha joy talab qiladi?</summary><p data-t="q1a">12 futlik snooker stoli uchun taxminan 6,5 × 4,5 m dan kam bo'lmagan xona kerak. Qulay o'ynash uchun yana kattaroq bo'lgani yaxshi. Yuqoridagi kalkulyator buni hisoblab beradi.</p></details>
-    <details><summary data-t="q2">Dastavka va o'rnatish bormi?</summary><p data-t="q2a">Ha, ikkalasi ham mavjud. Narxi manzilga bog'liq, shuning uchun qo'ng'iroq qilib so'rang.</p></details>
-    <details><summary data-t="q3">Rang va dizaynni tanlash mumkinmi?</summary><p data-t="q3a">Ha. Ramka rangi, oyoq shakli, mato rangi va naqshni o'zingiz tanlaysiz.</p></details>
-    <details><summary data-t="q4">Eski stolni ta'mirlaysizmi?</summary><p data-t="q4a">Ha. Mato almashtirish, bort va cho'ntaklarni tiklash hamda stolni qayta sozlash xizmatlari bor.</p></details>
-    <details><summary data-t="q5">Boshqa viloyatlarga yetkazasizmi?</summary><p data-t="q5a">Ha, O'zbekistonning barcha hududlariga yetkazib beramiz.</p></details>
+    <details class="rv"><summary data-i18n="q1">Stol qancha joy talab qiladi?</summary><p data-i18n="q1a">12 futlik snooker stoli uchun taxminan 6,5 × 4,5 m dan kichik bo'lmagan xona kerak. Qulay o'ynash uchun kattaroq bo'lgani yaxshi. Kalkulyator buni hisoblab beradi.</p></details>
+    <details class="rv"><summary data-i18n="q2">Dastavka va o'rnatish bormi?</summary><p data-i18n="q2a">Ha, ikkalasi ham bor. Narxi manzilga bog'liq, shuning uchun qo'ng'iroq qilib so'rang.</p></details>
+    <details class="rv"><summary data-i18n="q3">Chet elga jo'natasizmi?</summary><p data-i18n="q3a">Eksport uchun so'rovlarni qabul qilamiz. Qadoqlash va logistika bo'yicha yordam beramiz. Shartlarni so'rov bo'yicha kelishamiz.</p></details>
+    <details class="rv"><summary data-i18n="q4">Rang va dizaynni tanlash mumkinmi?</summary><p data-i18n="q4a">Ha. Ramka rangi, oyoq shakli, mato rangi va naqshni o'zingiz tanlaysiz. Konfiguratordan foydalaning.</p></details>
+    <details class="rv"><summary data-i18n="q5">Eski stolni ta'mirlaysizmi?</summary><p data-i18n="q5a">Ha. Mato almashtirish, bort va cho'ntaklarni tiklash hamda stolni qayta sozlash xizmatlari bor.</p></details>
   </div>
 </section>
 
+<!-- CONTACT -->
 <section class="sec contact" id="contact">
   <div class="wrap two">
-    <div>
-      <span class="eyebrow" data-t="k_eb">Aloqa</span>
-      <h2 data-t="k_h">Buyurtma bering yoki <em>maslahat</em> oling</h2>
-      <p class="lead" data-t="k_p">Qo'ng'iroq qiling yoki formani to'ldiring. Telegram orqali tez javob beramiz.</p>
+    <div class="rv">
+      <span class="eyebrow" data-i18n="k_eb">Aloqa</span>
+      <h2 data-i18n="k_h">Buyurtma bering yoki <em>maslahat</em> oling</h2>
+      <p class="lead" data-i18n="k_p">Qo'ng'iroq qiling yoki formani to'ldiring. Telegram orqali tez javob beramiz.</p>
       <ul class="contacts">
-        <li><small data-t="k_tel">Telefon</small><div><a href="tel:+998888885582">+998 88 888 55 82</a><button class="copy" id="copy" data-t="k_copy">Nusxalash</button></div></li>
-        <li><small data-t="k_addr">Manzil</small><div><span data-t="k_addrv">Samarqand, O'zbekiston</span></div></li>
+        <li><small data-i18n="k_tel">Telefon</small><div><a href="tel:+998888885582">+998 88 888 55 82</a><button class="copy" id="copy" data-i18n="k_copy">Nusxalash</button></div></li>
+        <li><small data-i18n="k_addr">Manzil</small><div><span data-i18n="k_addrv">Samarqand, O'zbekiston</span></div></li>
         <li><small>Instagram</small><div><a href="https://www.instagram.com/bilyard_ishlab_chiqarish" target="_blank" rel="noopener">@bilyard_ishlab_chiqarish</a></div></li>
-        <li><small data-t="k_msg">Xabar yozish</small><div><a href="https://t.me/+998888885582" target="_blank" rel="noopener">Telegram</a> · <a href="https://wa.me/998888885582" target="_blank" rel="noopener">WhatsApp</a></div></li>
+        <li><small data-i18n="k_msg">Xabar yozish</small><div><a href="https://t.me/+998888885582" target="_blank" rel="noopener">Telegram</a><a href="https://wa.me/998888885582" target="_blank" rel="noopener">WhatsApp</a></div></li>
       </ul>
     </div>
-    <form class="form" id="form">
-      <label for="fn"><span data-t="k_name">Ismingiz</span><input id="fn" name="name" required autocomplete="name"></label>
-      <label for="fp"><span data-t="k_phone">Telefon</span><input id="fp" name="phone" type="tel" required autocomplete="tel" placeholder="+998 __ ___ __ __"></label>
-      <label for="model"><span data-t="k_model">Model</span>
-        <select id="model" name="model"><option>Klassik Gold</option><option>Premium White</option><option>Modern Black &amp; White</option><option data-t="k_other">Boshqa / maxsus dizayn</option></select>
+    <form class="form rv" id="form">
+      <label for="fn"><span data-i18n="k_name">Ismingiz</span><input id="fn" name="name" required autocomplete="name"></label>
+      <label for="fp"><span data-i18n="k_phone">Telefon yoki Telegram</span><input id="fp" name="phone" required autocomplete="tel" placeholder="+998 __ ___ __ __"></label>
+      <label for="model"><span data-i18n="k_model">Model</span>
+        <select id="model" name="model"><option>Klassik Gold</option><option>Premium White</option><option>Modern Black &amp; White</option><option value="Custom" data-i18n="k_other">Maxsus konfiguratsiya / boshqa</option></select>
       </label>
-      <label for="fm"><span data-t="k_text">Xabar</span><textarea id="fm" name="msg" rows="3" data-tp="k_ph" placeholder="O'lcham, shahar, qo'shimcha istaklar"></textarea></label>
-      <button class="btn btn-gold" type="submit" data-t="k_send">Telegram orqali yuborish</button>
-      <small data-t="k_hint">Tugma bosilganda Telegram ochiladi va xabar tayyor holda turadi.</small>
+      <label for="fm"><span data-i18n="k_text">Xabar</span><textarea id="fm" name="msg" rows="3" data-i18n-ph="k_ph" placeholder="O'lcham, davlat yoki shahar, qo'shimcha istaklar"></textarea></label>
+      <button class="btn btn-gold wide" type="submit"><span data-i18n="k_send">Telegram orqali yuborish</span><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <small data-i18n="k_hint">Tugma bosilganda Telegram ochiladi va xabar tayyor holda turadi.</small>
     </form>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="wrap foot">
-    <div class="logo"><span class="ball">8</span><span class="logo-t"><small>Bilyard</small><b>Ishlab Chiqarish</b></span></div>
-    <p>© <span id="yr"></span> Bilyard ishlab chiqarish · Samarqand</p>
+    <a href="#top" class="logo"><span class="ball">8</span><span class="logo-t"><small data-i18n="logo1">Bilyard</small><b data-i18n="logo2">Ishlab Chiqarish</b></span></a>
+    <p>© <span id="yr"></span> · Samarqand, O'zbekiston</p>
     <p><a href="tel:+998888885582">+998 88 888 55 82</a> · <a href="https://www.instagram.com/bilyard_ishlab_chiqarish" target="_blank" rel="noopener">Instagram</a></p>
   </div>
 </footer>
 
-<a class="fab" href="tel:+998888885582" aria-label="Qo'ng'iroq">88 888 55 82</a>
-
-<div class="lb" id="lb" role="dialog" aria-modal="true">
-  <button class="lb-x" aria-label="Yopish">×</button>
-  <button class="lb-p" aria-label="Oldingi">‹</button>
-  <img alt="">
-  <button class="lb-n" aria-label="Keyingi">›</button>
+<div class="dock" id="dock">
+  <a href="tel:+998888885582" aria-label="Call"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></a>
+  <a href="https://t.me/+998888885582" target="_blank" rel="noopener" aria-label="Telegram"><svg viewBox="0 0 24 24"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/></svg></a>
+  <a href="https://wa.me/998888885582" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M3 21l1.5-5A9 9 0 1112 21a9 9 0 01-4.5-1.2z"/></svg></a>
 </div>
 
-<script src="script.js"></script>
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Gallery">
+  <button class="lb-x" aria-label="Close">×</button>
+  <button class="lb-p" aria-label="Previous">‹</button>
+  <img alt="" id="lbImg">
+  <button class="lb-n" aria-label="Next">›</button>
+  <div class="lb-c" id="lbC"></div>
+</div>
+
+<script src="js/i18n.js" defer></script>
+<script src="js/main.js" defer></script>
 </body>
 </html>
