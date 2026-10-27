@@ -511,6 +511,30 @@ input[aria-invalid="true"]{border-color:var(--copper2)}
   .qa .ans{padding-right:0}
   .phone{font-size:clamp(1.9rem,9vw,2.6rem);margin-top:1.4rem}
 }
+
+.cb-head{display:none}.on-home .cb-head{display:block}
+.on-contact.contact{border-top:0}
+.contact{position:relative;overflow:hidden}
+.contact::before{content:"";position:absolute;inset:0;background:radial-gradient(50% 60% at 85% 0%,rgba(215,120,60,.12),transparent 70%),radial-gradient(40% 50% at 0% 100%,rgba(184,149,95,.1),transparent 70%);pointer-events:none}
+.contact .wrap{position:relative}
+.cta-cards{display:grid;gap:14px}
+.cc{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:1rem;align-items:center;padding:1.2rem 1.3rem;border:1px solid var(--line2);border-radius:22px;background:linear-gradient(160deg,var(--bg3),var(--bg2));transition:border-color .35s,transform .45s var(--ease)}
+.cc:hover{border-color:var(--copper);transform:translateY(-3px)}
+.cc .ic{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(215,120,60,.14);color:var(--copper2)}
+.cc small{display:block;font-family:var(--f-m);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:.2rem}
+.cc .v{display:block;font-family:var(--f-d);font-size:clamp(1.45rem,3.4vw,2.2rem);line-height:1.1;color:var(--sand);overflow-wrap:anywhere;transition:color .3s}
+.cc .v:hover{color:var(--copper2)}
+.cc.hot{background:var(--copper);border-color:var(--copper)}
+.cc.hot .ic{background:rgba(20,14,9,.14);color:#140E09}
+.cc.hot small{color:rgba(20,14,9,.65)}
+.cc.hot .v{color:#140E09}.cc.hot .v:hover{color:#140E09;opacity:.75}
+.cc.hot .copyp{border-color:rgba(20,14,9,.4);color:#140E09}.cc.hot .copyp:hover{background:#140E09;color:var(--sand)}
+.cinfo{margin-top:1.8rem}
+#mailTxt{font-size:clamp(1.15rem,2vw,1.5rem);white-space:nowrap;overflow-wrap:normal}
+@media(max-width:420px){#mailTxt{font-size:1.2rem}}
+.contact .panel{position:relative}
+.contact .panel::before{content:"";position:absolute;left:24px;right:24px;top:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--copper),transparent);border-radius:2px}
+@media(max-width:420px){.cc{grid-template-columns:44px minmax(0,1fr);padding:1rem}.cc .ic{width:44px;height:44px}.cc .copyp{grid-column:1 / -1;justify-self:start}}
 @media(max-width:380px){.top .wrap{gap:.7rem}.logo small{display:none}}
 @media(hover:none){.btn:hover::before{transform:translateY(101%)}.b-ln:hover{color:var(--ink)}.pc:hover .im img{transform:none;filter:saturate(.9) brightness(.92)}.tc:hover,.st:hover,.sf:hover{transform:none}.pc .im img{filter:saturate(.9) brightness(.92)}.tc .bgi{filter:grayscale(.3) brightness(.6)}.gal img{filter:none}}
 </style>
@@ -781,16 +805,20 @@ input[aria-invalid="true"]{border-color:var(--copper2)}
 <!-- ============ CONTACT ============ -->
 <div class="page" data-page="contact" hidden>
   <header class="ph" data-ph="quarry"><div class="wrap i18n-fade"><nav class="crumb"><a href="#home" data-i="home"></a><span>/</span><span data-i="n8"></span></nav><span class="eye" data-i="ct_eye"></span><h1 data-i="ct_t"></h1><p class="lead" data-i="ct_p"></p></div></header>
-  <section class="sec contact">
+</div>
+
+<!-- ============ CONTACT BLOCK (home + contact) ============ -->
+  <section class="sec contact" id="contactBlock" hidden>
+    <div class="wrap cb-head i18n-fade"><div class="head split"><div style="display:grid;gap:1.3rem"><span class="eye" data-i="ct_eye"></span><h2 class="rv" data-i="ct_t"></h2></div><p class="lead" data-i="ct_p"></p></div></div>
     <div class="wrap cgrid">
       <div class="i18n-fade">
-        <span class="eye" data-i="call"></span>
-        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:1rem"><a class="phone" href="tel:+998931009305" id="phone">+998 93 100 93 05</a><button class="copyp" id="copyPhone" type="button" data-i="copy"></button></div>
-        <a class="phone mail" href="mailto:zeyayevf@gmail.com">zeyayevf@gmail.com</a>
+        <div class="cta-cards">
+          <div class="cc hot"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z"/></svg></span><div><small data-i="call"></small><a class="v" href="tel:+998931009305" id="phone">+998 93 100 93 05</a></div><button class="copyp" id="copyPhone" type="button" data-i="copy"></button></div>
+          <div class="cc"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></span><div><small>E-mail</small><a class="v" href="mailto:zeyayevf@gmail.com" id="mailTxt">zeyayevf@gmail.com</a></div><button class="copyp" id="copyMail" type="button" data-i="copy"></button></div>
+        </div>
         <div class="cinfo">
           <div><span data-i="ci1"></span><b data-i="ci1v"></b></div>
           <div><span data-i="ci2"></span><b data-i="ci2v"></b></div>
-          <div><span>E-mail</span><b><a href="mailto:zeyayevf@gmail.com">zeyayevf@gmail.com</a></b></div>
           <div><span data-i="ci3"></span><b>UZ · RU · EN</b></div>
           <div><span data-i="ci4"></span><b>USD · EUR · RUB · UZS · CNY · KZT …</b></div>
         </div>
@@ -820,7 +848,6 @@ input[aria-invalid="true"]{border-color:var(--copper2)}
       </form>
     </div>
   </section>
-</div>
 
 <a class="nextp i18n-fade" id="nextp" href="#about"><span class="eye" data-i="next"></span><b id="nextT"></b><svg width="40" height="40" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></a>
 </main>
@@ -1073,6 +1100,7 @@ $('#form').addEventListener('submit',function(e){e.preventDefault();var t=L[lang
 function copyText(txt,btn,node){var t=L[lang];function sel(){if(node){var r=document.createRange();r.selectNodeContents(node);var s=getSelection();s.removeAllRanges();s.addRange(r)}}
   try{navigator.clipboard.writeText(txt).then(function(){btn.textContent=t.copied;setTimeout(function(){btn.innerHTML=t.copy},1600)},sel)}catch(e){sel()}}
 $('#copyOut').addEventListener('click',function(){copyText($('#outT').textContent,this,$('#outT'))});
+$('#copyMail').addEventListener('click',function(){copyText('zeyayevf@gmail.com',this,$('#mailTxt'))});
 $('#copyPhone').addEventListener('click',function(){copyText('+998931009305',this,$('#phone'))});
 
 /* header, progress, drawer */
@@ -1209,7 +1237,7 @@ var cur_='home',busy=false;
 function routeName(){var h=(location.hash||'').replace('#','');return ROUTES.indexOf(h)>=0?h:'home'}
 function show(name){
   $$('.page').forEach(function(p){p.hidden=p.dataset.page!==name});
-  cur_=name;window.scrollTo({top:0,behavior:'instant'});document.title=L[lang][NAVK[name]]+' · Navbahor Bentonite';renderExtra();upd();onScroll();
+  cur_=name;var cb=$('#contactBlock');cb.hidden=!(name==='home'||name==='contact');cb.classList.toggle('on-home',name==='home');cb.classList.toggle('on-contact',name==='contact');window.scrollTo({top:0,behavior:'instant'});document.title=L[lang][NAVK[name]]+' · Navbahor Bentonite';renderExtra();upd();onScroll();
   if(name==='quote')calc();
 }
 function go(){var name=routeName();if(name===cur_&&!busy){return}
