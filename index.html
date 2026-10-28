@@ -376,6 +376,19 @@ body.cc input,body.cc textarea,body.cc select{cursor:text!important}
 .cf button{width:46px;height:46px;flex:none;border-radius:50%;border:0;background:linear-gradient(135deg,#e3925f,#d17a4a);cursor:pointer;display:grid;place-items:center;transition:transform .2s}
 .cf button:hover{transform:scale(1.07)}
 .cf button svg{width:18px;height:18px;stroke:#1b0f08;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.lead{display:grid;gap:8px;margin-top:10px}
+.lead label{display:block;font:700 10.5px var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--clay);margin-bottom:4px}
+.lead input,.lead select,.lead textarea{width:100%;min-height:44px;border-radius:12px;border:1px solid rgba(241,231,217,.16);background:#1b1310;padding:0 14px;font:500 14.5px var(--sans);color:var(--bone)}
+.lead textarea{padding:10px 14px;min-height:66px;resize:none}
+.lead select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#e3925f 50%),linear-gradient(135deg,#e3925f 50%,transparent 50%);background-position:calc(100% - 18px) 19px,calc(100% - 13px) 19px;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+.lead input::placeholder,.lead textarea::placeholder{color:#8d7b68}
+.lead input:focus,.lead select:focus,.lead textarea:focus{outline:none;border-color:var(--clay);background:#221813}
+.lead button{min-height:46px;border:0;border-radius:999px;background:linear-gradient(135deg,#e3925f,#d17a4a);color:#1b0f08;font:800 14px var(--sans);cursor:pointer;transition:transform .2s}
+.lead button:hover{transform:translateY(-2px)}
+.lead button[disabled]{opacity:.6;cursor:default;transform:none}
+.lead .er{display:none;font-size:12.5px;color:#ff9c8a}.lead .er.show{display:block}
+.cmsg.lf{max-width:96%;width:100%}
+.cok{display:flex;gap:10px;align-items:flex-start}.cok i{flex:none;width:26px;height:26px;border-radius:50%;background:#35e08c;display:grid;place-items:center;color:#05200f;font-style:normal;font-weight:900;font-size:14px}
 .cn{padding:0 16px max(12px,env(safe-area-inset-bottom,0px));font-size:10.5px;color:#7d6d5b;text-align:center;flex:none}
 @media(max-width:520px){
   .cw{right:0;left:0;bottom:0}
@@ -594,7 +607,8 @@ const CONFIG={
   instagram:"https://www.instagram.com/zakhidaf/",
   telegram:"https://t.me/+998909885752",   // агар Телеграмда username бўлса: "https://t.me/username"
   phone:"+998909885752",
-  whatsapp:"998909885752"   // рақам + билан ва бўшлиқсиз: wa.me/<рақам>
+  whatsapp:"998909885752",  // рақам + билан ва бўшлиқсиз: wa.me/<рақам>
+  formKey:""                // Web3Forms калити (ихтиёрий): бўлса ариза шифокорга почтага ўзи боради
 };
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const G=window.gsap&&window.ScrollTrigger,RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
@@ -654,14 +668,29 @@ const dr=$("#drawer"),bg=$("#burger");
 function tog(o){dr.classList.toggle("open",o);bg.classList.toggle("on",o);bg.setAttribute("aria-expanded",o);document.body.style.overflow=o?"hidden":""}
 bg.onclick=()=>tog(!dr.classList.contains("open"));
 
-/* form */
-$("#form").addEventListener("submit",e=>{
-  e.preventDefault();const f=e.target,n=f.name.value.trim(),p=f.phone.value.trim(),ok=$("#ok");ok.className="ok show";
-  if(!n||!p){ok.classList.add("er");ok.textContent="Исм ва телефонни ёзинг.";return}
-  const text=`Салом! Исмим: ${n}\nАлоқа: ${p}\nХизмат: ${f.type.value}\n${f.msg.value.trim()}`;
+/* ариза юбориш: калит бўлса почтага, бўлмаса WhatsApp орқали */
+function leadText(d){return `Салом! Янги ариза (сайт)\nИсм: ${d.name}\nТелефон: ${d.phone}\nХизмат: ${d.service||"-"}${d.msg?"\nМуаммо: "+d.msg:""}`}
+function waLink(d){return "https://wa.me/"+CONFIG.whatsapp+"?text="+encodeURIComponent(leadText(d))}
+window.sendLead=async function(d){
+  const text=leadText(d);
+  if(CONFIG.formKey){
+    try{
+      const r=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({access_key:CONFIG.formKey,subject:"Янги ариза: dr-zohid.uz",from_name:"dr-zohid.uz",name:d.name,phone:d.phone,service:d.service,message:d.msg||"-"})});
+      const j=await r.json();if(j.success)return{ok:true,mode:"direct"}
+    }catch(e){}
+  }
   try{navigator.clipboard&&navigator.clipboard.writeText(text).catch(()=>{})}catch(_){}
-  ok.textContent="Раҳмат! Матн нусхаланди, очилган чатга қўйиб юборинг.";
-  window.open(CONFIG.telegram?CONFIG.telegram+"?text="+encodeURIComponent(text):CONFIG.instagram,"_blank","noopener");
+  const w=window.open(waLink(d),"_blank","noopener");
+  return{ok:true,mode:"wa",url:waLink(d),blocked:!w}
+};
+window.cleanPhone=v=>{let x=String(v).replace(/[^\d+]/g,"");const dg=x.replace(/\D/g,"");return dg.length>=9&&dg.length<=13?x:""};
+/* form */
+$("#form").addEventListener("submit",async e=>{
+  e.preventDefault();const f=e.target,n=f.name.value.trim(),p=cleanPhone(f.phone.value),ok=$("#ok");ok.className="ok show";
+  if(!n||!p){ok.classList.add("er");ok.textContent=!n?"Исмингизни ёзинг.":"Телефон рақамини тўғри ёзинг.";return}
+  const r=await sendLead({name:n,phone:p,service:f.type.value,msg:f.msg.value.trim()});
+  ok.textContent=r.mode==="direct"?"Раҳмат! Аризангиз қабул қилинди, тез орада боғланамиз.":"Раҳмат! WhatsApp очилди: тайёр хабарни «Юбориш» тугмаси билан юборинг.";
+  if(r.mode==="direct")f.reset()
 });
 
 /* sticky cta + header hide */
@@ -775,7 +804,7 @@ if(document.readyState==="complete")init();else addEventListener("load",init);
   const MAP="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("Юнусобод 17-квартал 22а, Тошкент");
   const PH="+998 90 988 57 52";
   const wa="https://wa.me/"+C.whatsapp+"?text="+encodeURIComponent("Салом! Консультацияга ёзилмоқчиман.");
-  const A={tel:["Қўнғироқ қилиш","tel:"+C.phone],wa:["WhatsApp",wa],tg:["Телеграм",C.telegram||C.instagram],ig:["Instagram",C.instagram],form:["Ариза қолдириш","#aloqa"],map:["Харитада очиш",MAP]};
+  const A={tel:["Қўнғироқ қилиш","tel:"+C.phone],wa:["WhatsApp",wa],tg:["Телеграм",C.telegram||C.instagram],ig:["Instagram",C.instagram],form:["Ариза қолдириш","#lead"],map:["Харитада очиш",MAP]};
   const I={
     narx:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/>',
     manzil:'<path d="M12 22s7-5.6 7-12a7 7 0 1 0-14 0c0 6.4 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',
@@ -819,18 +848,44 @@ if(document.readyState==="complete")init();else addEventListener("load",init);
   };
   const $=s=>document.querySelector(s),w=$("#cw"),btn=$("#cbtn"),box=$("#cmsgs"),inp=$("#cinput"),tip=$("#ctip");
   let started=false,busy=false;
-  function btns(keys){return keys&&keys.length?'<div class="cact">'+keys.map((k,i)=>{const [l,h]=A[k];const ext=/^https?:/.test(h);return '<a '+(i>0?'class="alt" ':'')+'href="'+h+'"'+(ext?' target="_blank" rel="noopener"':'')+(h==="#aloqa"?' data-go="1"':'')+'>'+l+'</a>'}).join("")+'</div>':""}
+  function btns(keys){return keys&&keys.length?'<div class="cact">'+keys.map((k,i)=>{const [l,h]=A[k];const ext=/^https?:/.test(h);return '<a '+(i>0?'class="alt" ':'')+'href="'+h+'"'+(ext?' target="_blank" rel="noopener"':'')+(h==="#lead"?' data-lead="1"':'')+'>'+l+'</a>'}).join("")+'</div>':""}
   function add(html,me){const d=document.createElement("div");d.className="cmsg "+(me?"me":"bot");d.innerHTML=html;box.appendChild(d);box.scrollTop=box.scrollHeight;return d}
   function esc(t){return t.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
   function reply(keys){
     if(busy)return;busy=true;keys=[].concat(keys||[]).filter(k=>R[k]);
     const ty=document.createElement("div");ty.className="cty";ty.innerHTML="<i></i><i></i><i></i>";box.appendChild(ty);box.scrollTop=box.scrollHeight;
     setTimeout(()=>{ty.remove();
-      if(keys.length)keys.forEach(k=>add(R[k].a+btns(R[k].b)));
+      if(keys.length){keys.forEach(k=>add(R[k].a+btns(R[k].b)));if(keys.includes("yozil"))leadForm()}
       else add('Бу савол бўйича аниқ жавобни шифокор ёки администратор беради. Қуйидаги йўллардан бири орқали ёзинг, тез жавоб берамиз.'+btns(["wa","tel","form"]));
       busy=false;},600);
   }
   function match(t){t=" "+t.toLowerCase()+" ";const r=[];let sc=0;for(const k in K){let n=0;K[k].forEach(x=>{if(t.includes(x))n++});if(n>0)r.push([k,n]);if(n>sc)sc=n}return r.filter(x=>x[1]===sc&&sc>0).slice(0,2).map(x=>x[0])}
+  function leadForm(){
+    if(box.querySelector(".lead:not(.done)")){box.querySelector(".lead input").focus();return}
+    const d=document.createElement("div");d.className="cmsg bot lf";
+    d.innerHTML='Аризани шу ерда қолдиринг, шифокор сиз билан боғланади:<form class="lead" novalidate>'+
+      '<div><label for="lf-n">Исмингиз</label><input id="lf-n" name="n" autocomplete="name" placeholder="Масалан: Алишер" maxlength="60"></div>'+
+      '<div><label for="lf-p">Телефон</label><input id="lf-p" name="p" type="tel" inputmode="tel" autocomplete="tel" placeholder="+998 __ ___ __ __" value="+998 " maxlength="20"></div>'+
+      '<div><label for="lf-s">Хизмат</label><select id="lf-s" name="s"><option>Онлайн консультация</option><option>Врач на вызов</option><option>Қабулда кўрик</option><option>Муолажа</option></select></div>'+
+      '<div><label for="lf-m">Муаммо (ихтиёрий)</label><textarea id="lf-m" name="m" placeholder="Нима безовта қилмоқда?" maxlength="400"></textarea></div>'+
+      '<div class="er" role="alert"></div><button type="submit">Аризани юбориш</button></form>';
+    box.appendChild(d);box.scrollTop=box.scrollHeight;
+    const f=d.querySelector("form"),er=f.querySelector(".er");
+    f.addEventListener("submit",async e=>{
+      e.preventDefault();er.classList.remove("show");
+      const name=f.n.value.trim(),phone=window.cleanPhone?cleanPhone(f.p.value):f.p.value.trim();
+      if(!name){er.textContent="Исмингизни ёзинг.";er.classList.add("show");f.n.focus();return}
+      if(!phone){er.textContent="Телефон рақамини тўғри ёзинг.";er.classList.add("show");f.p.focus();return}
+      const b=f.querySelector("button");b.disabled=true;b.textContent="Юборилмоқда...";
+      const r=await sendLead({name,phone,service:f.s.value,msg:f.m.value.trim()});
+      f.classList.add("done");
+      d.innerHTML=r.mode==="direct"
+        ?'<div class="cok"><i>✓</i><div><b>Раҳмат, '+esc(name)+'!</b><br>Аризангиз қабул қилинди. Шифокор тез орада '+esc(phone)+' рақами орқали боғланади.</div></div>'
+        :'<div class="cok"><i>✓</i><div><b>Деярли тайёр, '+esc(name)+'!</b><br>WhatsApp очилди ва аризангиз тайёр хабар сифатида ёзилди. <b>«Юбориш»</b> тугмасини босинг, шунда шифокорга етиб боради.</div></div><div class="cact"><a href="'+r.url+'" target="_blank" rel="noopener">WhatsApp\'ни қайта очиш</a><a class="alt" href="tel:'+C.phone+'">Қўнғироқ</a></div>';
+      box.scrollTop=box.scrollHeight;
+    });
+    setTimeout(()=>{if(innerWidth>520)f.n.focus({preventScroll:true})},150);
+  }
   function ask(text,key){w.classList.add("started");add(esc(text),true);reply(key||match(text))}
   function open(){w.classList.add("open");btn.setAttribute("aria-expanded","true");tip.classList.remove("show");
     if(!started){started=true;
@@ -848,7 +903,7 @@ if(document.readyState==="complete")init();else addEventListener("load",init);
   btn.addEventListener("click",open);$("#cclose").addEventListener("click",close);$("#cback").addEventListener("click",close);
   tip.addEventListener("click",open);
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&w.classList.contains("open"))close()});
-  box.addEventListener("click",e=>{const a=e.target.closest("a[data-go]");if(a){e.preventDefault();close();const t=document.querySelector("#aloqa");t&&t.scrollIntoView({behavior:"smooth"})}});
+  box.addEventListener("click",e=>{const a=e.target.closest("a[data-lead]");if(a){e.preventDefault();leadForm()}});
   let seen=false;try{seen=sessionStorage.getItem("chatSeen")==="1"}catch(e){}
   if(!seen)setTimeout(()=>{if(!w.classList.contains("open")){tip.classList.add("show");setTimeout(()=>tip.classList.remove("show"),9000)}},7000);
 })();
