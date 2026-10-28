@@ -535,6 +535,61 @@ input[aria-invalid="true"]{border-color:var(--copper2)}
 .contact .panel{position:relative}
 .contact .panel::before{content:"";position:absolute;left:24px;right:24px;top:-1px;height:2px;background:linear-gradient(90deg,transparent,var(--copper),transparent);border-radius:2px}
 @media(max-width:420px){.cc{grid-template-columns:44px minmax(0,1fr);padding:1rem}.cc .ic{width:44px;height:44px}.cc .copyp{grid-column:1 / -1;justify-self:start}}
+
+/* ---- premium layer ---- */
+html{scrollbar-color:rgba(226,207,166,.3) var(--bg);scrollbar-width:thin}
+body::after{content:"";position:fixed;inset:0;z-index:70;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .95 0 0 0 0 .85 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:160px}
+.top.scrolled{background:rgba(14,19,18,.78);box-shadow:0 12px 40px -20px rgba(0,0,0,.7)}
+.top .wrap{height:72px}
+.b-cu{box-shadow:0 14px 34px -14px rgba(215,120,60,.7),inset 0 1px 0 rgba(255,255,255,.28)}
+.b-ln{background:rgba(255,255,255,.02);backdrop-filter:blur(6px)}
+h2{letter-spacing:-.02em}
+.eye{font-weight:500}
+.hero::after{background:radial-gradient(60% 70% at 78% 40%,rgba(184,149,95,.2),transparent 70%),radial-gradient(50% 60% at 10% 90%,rgba(215,120,60,.1),transparent 70%),radial-gradient(90% 40% at 50% 100%,rgba(14,19,18,1),transparent)}
+.arch .frame{box-shadow:0 50px 120px -30px rgba(0,0,0,.8),0 0 0 1px rgba(226,207,166,.18)}
+.arch .ring{border-color:rgba(226,207,166,.3)}
+.arch::before{content:"";position:absolute;inset:-40px;border-radius:50%;background:radial-gradient(closest-side,rgba(215,120,60,.18),transparent);filter:blur(30px);z-index:-1}
+.hmeta b{background:linear-gradient(180deg,#fff7e6,var(--sand));-webkit-background-clip:text;background-clip:text;color:transparent}
+.kp b,.ct b{background:linear-gradient(180deg,#fff3da,var(--clay));-webkit-background-clip:text;background-clip:text;color:transparent}
+.pc,.sf,.st,.panel,.cc{box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.pc{background:linear-gradient(180deg,var(--bg3),var(--bg2))}
+.pc:hover{box-shadow:0 30px 70px -30px rgba(0,0,0,.8),0 0 0 1px rgba(215,120,60,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.pc h3{font-size:2rem}
+.tc{box-shadow:0 30px 60px -40px rgba(0,0,0,.8)}
+.tc:hover{box-shadow:0 40px 80px -30px rgba(215,120,60,.25)}
+.ph::after{background:linear-gradient(180deg,rgba(14,19,18,.35),rgba(14,19,18,.7) 55%,var(--bg) 98%)}
+.ph h1{text-shadow:0 10px 50px rgba(0,0,0,.45)}
+.sec + .sec:not(.paper):not(.contact){border-top:0}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.bn{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:26px;padding:clamp(22px,2.6vw,36px);display:grid;align-content:space-between;gap:2.2rem;min-height:250px;background:linear-gradient(160deg,var(--bg3),var(--bg2));box-shadow:inset 0 1px 0 rgba(255,255,255,.05);transition:border-color .4s,transform .6s var(--ease)}
+.bn::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(closest-side,rgba(215,120,60,.16),transparent);transition:transform .8s var(--ease)}
+.bn:hover{border-color:rgba(215,120,60,.5);transform:translateY(-5px)}
+.bn:hover::after{transform:scale(1.5)}
+.bn .nm{font-family:var(--f-m);font-size:.68rem;letter-spacing:.16em;color:var(--clay)}
+.bn b{display:block;font-family:var(--f-d);font-weight:500;font-size:clamp(3rem,6vw,5.4rem);line-height:.9;letter-spacing:-.02em;background:linear-gradient(180deg,#fff3da,var(--sand) 55%,var(--clay));-webkit-background-clip:text;background-clip:text;color:transparent}
+.bn h3{font-family:var(--f-d);font-size:1.7rem;line-height:1.05;margin-top:.9rem}
+.bn p{font-size:.92rem;color:var(--ink2);margin-top:.5rem;max-width:40ch}
+.bn:nth-child(1){grid-column:span 7;background:radial-gradient(70% 90% at 100% 0%,rgba(215,120,60,.2),transparent 70%),linear-gradient(160deg,var(--bg3),var(--bg2));min-height:340px}
+.bn:nth-child(2){grid-column:span 5}
+.bn:nth-child(3){grid-column:span 5}
+.bn:nth-child(4){grid-column:span 7}
+@media(max-width:900px){.bn:nth-child(n){grid-column:span 6}.bn:nth-child(1){grid-column:1 / -1;min-height:280px}}
+@media(max-width:600px){.bn:nth-child(n){grid-column:1 / -1;min-height:0}.bn{gap:1.4rem}}
+/* footer */
+footer{background:linear-gradient(180deg,var(--bg),#0A0E0D);position:relative;overflow:hidden}
+.fgrid{display:grid;grid-template-columns:1.3fr .8fr 1fr;gap:clamp(28px,5vw,80px);padding-top:clamp(56px,8vw,100px)}
+.fgrid > *{min-width:0}
+.fb{display:grid;gap:1.4rem;align-content:start;justify-items:start}
+.fb p{font-family:var(--f-d);font-style:italic;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.15;color:var(--ink2);max-width:18ch}
+.fnav.col{display:grid;gap:.7rem;align-content:start;font-size:.95rem}
+.fc{display:grid;gap:.7rem;align-content:start;font-size:.95rem;color:var(--ink2)}
+.fc a{color:var(--ink);transition:color .3s}.fc a:hover{color:var(--copper2)}
+.fc .big{font-family:var(--f-d);font-size:clamp(1.5rem,2.4vw,2rem);color:var(--sand)}
+.fbig{padding-block:clamp(36px,5vw,70px) 0}
+@media(max-width:860px){.fgrid{grid-template-columns:1fr 1fr}.fb{grid-column:1 / -1}}
+@media(max-width:480px){.fgrid{grid-template-columns:1fr}}
+@media(hover:none){.bn:hover{transform:none}}
 @media(max-width:380px){.top .wrap{gap:.7rem}.logo small{display:none}}
 @media(hover:none){.btn:hover::before{transform:translateY(101%)}.b-ln:hover{color:var(--ink)}.pc:hover .im img{transform:none;filter:saturate(.9) brightness(.92)}.tc:hover,.st:hover,.sf:hover{transform:none}.pc .im img{filter:saturate(.9) brightness(.92)}.tc .bgi{filter:grayscale(.3) brightness(.6)}.gal img{filter:none}}
 </style>
@@ -610,6 +665,13 @@ input[aria-invalid="true"]{border-color:var(--copper2)}
       <p class="lead" data-i="t_p"></p>
     </div>
     <div class="tz i18n-fade" id="teasers"></div>
+  </div>
+</section>
+
+<section class="sec" style="padding-top:0">
+  <div class="wrap i18n-fade">
+    <div class="head split"><div style="display:grid;gap:1.3rem"><span class="eye" data-i="adv_eye"></span><h2 class="rv" data-i="adv_t"></h2></div><p class="lead" data-i="adv_p"></p></div>
+    <div class="bento" id="adv"></div>
   </div>
 </section>
 
@@ -856,8 +918,13 @@ input[aria-invalid="true"]{border-color:var(--copper2)}
 
 <footer>
   <div class="wrap">
+    <div class="fgrid i18n-fade">
+      <div class="fb"><a class="logo" href="#home" aria-label="Navbahor Bentonite"><svg width="38" height="38" viewBox="0 0 38 38" aria-hidden="true"><circle cx="19" cy="19" r="18" fill="none" stroke="#E2CFA6" stroke-opacity=".5"/><path d="M8 22c4-2 7-2 11 0s7 2 11 0M8 27c4-2 7-2 11 0s7 2 11 0" fill="none" stroke="#D7783C" stroke-width="1.6"/><path d="M11 17l8-8 8 8" fill="none" stroke="#E2CFA6" stroke-width="1.6"/></svg><span><b>Navbahor</b><small>BENTONITE · UZ</small></span></a><p data-i="h3"></p><a class="btn b-cu mag" href="#contact"><span data-i="cta"></span></a></div>
+      <nav class="fnav col" aria-label="Footer"><a href="#home" data-i="home"></a><a href="#about" data-i="n1"></a><a href="#products" data-i="n2"></a><a href="#process" data-i="n4"></a><a href="#export" data-i="n5"></a><a href="#quote" data-i="n6"></a><a href="#contact" data-i="n8"></a></nav>
+      <div class="fc"><span class="eye" data-i="call"></span><a class="big" href="tel:+998931009305">+998 93 100 93 05</a><a href="mailto:zeyayevf@gmail.com">zeyayevf@gmail.com</a><span data-i="ci1v"></span></div>
+    </div>
     <div class="fbig" aria-hidden="true">Navbahor Bentonite</div>
-    <div class="fnav i18n-fade"><a href="#home" data-i="home"></a><a href="#about" data-i="n1"></a><a href="#products" data-i="n2"></a><a href="#process" data-i="n4"></a><a href="#export" data-i="n5"></a><a href="#quote" data-i="n6"></a><a href="#contact" data-i="n8"></a></div><div class="fbot"><span data-i="foot"></span><span class="mono"><a href="tel:+998931009305">+998 93 100 93 05</a> · <a href="mailto:zeyayevf@gmail.com">zeyayevf@gmail.com</a> · Navoiy, Uzbekistan</span></div>
+    <div class="fbot"><span data-i="foot"></span><span class="mono">UZ · RU · EN</span></div>
   </div>
 </footer>
 
@@ -1204,6 +1271,11 @@ qc_t:"Quality control <em>at three points</em>",fl_eye:"Material flow",fl_t:"Lin
 fln:["Quarry","Hopper","Dryer","Mill","Classifier","Silo","Packing","Dispatch","Dust filter"]});
 ['uz','ru','en'].forEach(function(k){L[k].n6=k==='uz'?'Narx':(k==='ru'?'Цены':'Pricing')});
 
+/* advantages */
+Object.assign(L.uz,{adv_eye:"Nega Navbahor",adv_t:"Barqaror sifat, <em>aniq shartlar</em>",adv_p:"Xaridor uchun muhim to‘rt narsa: hajm, sifat nazorati, qadoq va hujjatlar.",adv:[["30 000 t", "Yillik quvvat", "Kuniga 100 tonna — uzluksiz liniyada."], ["4", "Mahsulot markasi", "Burg‘ulash, qurilish, quyma va sanoat bentoniti — sizning TDS bo‘yicha."], ["CoA", "Har partiyaga sertifikat", "Namlik, fraksiya va xaridor parametrlari laboratoriyada o‘lchanadi."], ["25 kg → 1 t", "Qadoq va hujjatlar", "Qop, big-bag, palet; invoys, qadoq ro‘yxati, SDS."]]});
+Object.assign(L.ru,{adv_eye:"Почему Navbahor",adv_t:"Стабильное качество, <em>понятные условия</em>",adv_p:"Четыре вещи, важные покупателю: объём, контроль качества, упаковка и документы.",adv:[["30 000 т", "Годовая мощность", "100 тонн в сутки на непрерывной линии."], ["4", "Марки продукции", "Буровой, строительный, литейный и промышленный бентонит — по вашему ТЗ."], ["CoA", "Сертификат на каждую партию", "Влажность, фракция и параметры покупателя измеряются в лаборатории."], ["25 кг → 1 т", "Упаковка и документы", "Мешки, биг-бэги, паллеты; инвойс, упаковочный лист, SDS."]]});
+Object.assign(L.en,{adv_eye:"Why Navbahor",adv_t:"Consistent quality, <em>clear terms</em>",adv_p:"Four things a buyer cares about: volume, quality control, packing and documents.",adv:[["30,000 t", "Annual capacity", "100 tonnes a day on a continuous line."], ["4", "Product grades", "Drilling, civil, foundry and industrial bentonite, made to your TDS."], ["CoA", "Certificate with every batch", "Moisture, fraction and buyer parameters measured in the lab."], ["25 kg → 1 t", "Packing & documents", "Bags, big-bags, pallets; invoice, packing list, SDS."]]});
+
 var ROUTES=['home','about','products','process','export','quote','contact'];
 var TIMG=['plant','powder','plant','quarry','bowl','quarry'];
 var TPOS=['center 40%','center','85% 30%','center 70%','center','15% 55%'],TSZ=['cover','cover','190%','cover','cover','200%'];
@@ -1211,6 +1283,7 @@ var NAVK={home:'home',about:'n1',products:'n2',process:'n4',export:'n5',quote:'n
 
 function renderExtra(){var t=L[lang];
   $('#teasers').innerHTML=t.teas.map(function(x,i){return '<a class="tc rv" href="#'+ROUTES[i+1]+'"><span class="bgi" style="background-image:url('+IMG[TIMG[i]]+');background-position:'+TPOS[i]+';background-size:'+TSZ[i]+'"></span><span class="num">0'+(i+1)+'</span><span class="ar2">'+ARR+'</span><h3>'+x[0]+'</h3><p>'+x[1]+'</p></a>'}).join('');
+  $('#adv').innerHTML=t.adv.map(function(a,i){return '<div class="bn rv"><span class="nm">0'+(i+1)+'</span><div><b>'+a[0]+'</b><h3>'+a[1]+'</h3><p>'+a[2]+'</p></div></div>'}).join('');
   $('#eqg').innerHTML=t.eq.map(function(x,i){return '<div class="eqi rv"><span>'+String(i+1).padStart(2,'0')+'</span><div><b>'+x[0]+'</b><p>'+x[1]+'</p></div></div>'}).join('');
   $('#roles').innerHTML=t.tm.map(function(r){return '<div class="role"><b>'+r[0]+'</b><span class="dots">'+new Array(r[1]+1).join('<i></i>')+'</span></div>'}).join('')+'<div class="role tot"><b>'+t.tm_tot+'</b><em>23</em></div>';
   var SI=['<path d="M4 12h16M4 7h10M4 17h12"/>','<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/>','<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/>','<path d="M12 3c3 4 6 6 6 11a6 6 0 01-12 0c0-3 2-5 3-7 1 2 2 3 3 3 0-3-1-5 0-7z"/>','<path d="M4 7h16l-1 13H5zM9 7V4h6v3"/>','<path d="M6 3h9l4 4v14H6zM9 12h7M9 16h7"/>'];
