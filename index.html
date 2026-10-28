@@ -306,51 +306,86 @@ footer details p{color:#6b5a4c;padding:6px 0 0;font-size:12px}
 body.cc input,body.cc textarea,body.cc select{cursor:text!important}
 .cw{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:160;font-family:var(--sans)}
 @media(min-width:1000px){.cw{bottom:24px}}
-.cb{position:relative;width:64px;height:64px;border-radius:50%;padding:0;border:2px solid rgba(241,231,217,.85);background:var(--bg3);box-shadow:0 14px 40px rgba(0,0,0,.5);cursor:pointer;transition:transform .3s}
+.cb{position:relative;width:62px;height:62px;border-radius:50%;padding:0;border:2px solid rgba(241,231,217,.9);background:var(--bg3);box-shadow:0 14px 40px rgba(0,0,0,.55);cursor:pointer;transition:transform .3s}
 .cb:hover{transform:scale(1.07)}
 .cb img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 12%}
-.cb i{position:absolute;right:-4px;bottom:-4px;width:26px;height:26px;border-radius:50%;background:var(--clay);border:2px solid var(--bg);display:grid;place-items:center}
+.cb i{position:absolute;right:-5px;bottom:-5px;width:26px;height:26px;border-radius:50%;background:var(--clay);border:2px solid var(--bg);display:grid;place-items:center}
 .cb i svg{width:14px;height:14px;stroke:#1b0f08;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .cb::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--clay);opacity:0;animation:cring 3s 2s infinite}
 @keyframes cring{0%{transform:scale(.9);opacity:.7}100%{transform:scale(1.35);opacity:0}}
 .cw.open .cb{display:none}
-.ct-tip{position:absolute;right:76px;bottom:10px;background:var(--bone);color:var(--bg);padding:10px 14px;border-radius:14px 14px 4px 14px;font:600 13px/1.35 var(--sans);box-shadow:0 12px 30px rgba(0,0,0,.4);max-width:200px;display:none;cursor:pointer}
+.ct-tip{position:absolute;right:74px;bottom:8px;background:var(--bone);color:var(--bg);padding:10px 14px;border-radius:14px 14px 4px 14px;font:600 13px/1.35 var(--sans);box-shadow:0 12px 30px rgba(0,0,0,.4);width:max-content;max-width:190px;display:none;cursor:pointer}
 .ct-tip.show{display:block;animation:tipin .5s both}
 @keyframes tipin{from{opacity:0;transform:translateY(8px)}}
-.cp{position:absolute;right:0;bottom:0;width:min(400px,calc(100vw - 32px));height:min(640px,calc(100svh - 120px));background:#f3ece1;border-radius:22px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.6);border:1px solid rgba(241,231,217,.18);color:var(--bg)}
-.cw.open .cp{display:flex;animation:cpin .35s cubic-bezier(.2,.7,.2,1) both}
-@keyframes cpin{from{opacity:0;transform:translateY(16px) scale(.97)}}
-.ch{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg);color:var(--bone)}
-.ch img{width:44px;height:44px;border-radius:50%;object-fit:cover;object-position:50% 12%;border:1.5px solid rgba(241,231,217,.5)}
-.ch b{display:block;font:600 15px var(--sans);line-height:1.2}
-.ch small{display:flex;align-items:center;gap:6px;font-size:12px;color:#c9baa8}
-.ch small::before{content:"";width:7px;height:7px;border-radius:50%;background:#35e08c}
-.cx{margin-left:auto;width:36px;height:36px;border-radius:50%;border:0;background:rgba(241,231,217,.1);color:var(--bone);font-size:20px;cursor:pointer;line-height:1}
-.cx:hover{background:rgba(241,231,217,.2)}
-.cm{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;overscroll-behavior:contain}
-.cmsg{max-width:86%;padding:12px 14px;border-radius:16px;font-size:14.5px;line-height:1.5;animation:cmin .3s both;word-wrap:break-word}
-@keyframes cmin{from{opacity:0;transform:translateY(8px)}}
-.cmsg.bot{background:#fff;border:1px solid #e4d9c9;border-bottom-left-radius:4px;align-self:flex-start}
-.cmsg.me{background:var(--bg);color:var(--bone);border-bottom-right-radius:4px;align-self:flex-end}
-.cmsg a.lk{color:#b2552a;font-weight:700;text-decoration:underline;text-underline-offset:2px}
-.cmsg ul{margin:6px 0 0 18px}.cmsg li{margin:2px 0}
-.cact{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.cact a{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border-radius:999px;background:var(--clay);color:#1b0f08;font:700 13px var(--sans)}
-.cact a.alt{background:#efe5d6;color:var(--bg);border:1px solid #dccfbc}
-.cty{display:flex;gap:4px;padding:14px 16px;align-self:flex-start;background:#fff;border:1px solid #e4d9c9;border-radius:16px;border-bottom-left-radius:4px}
-.cty i{width:7px;height:7px;border-radius:50%;background:#b8a894;animation:dot 1s infinite}
+#cback{display:none}
+.cp{position:absolute;right:0;bottom:0;width:392px;height:min(660px,calc(100svh - 110px));background:#120d0b;color:var(--bone);border-radius:24px;overflow:hidden;display:none;flex-direction:column;box-shadow:0 34px 90px rgba(0,0,0,.7);border:1px solid rgba(241,231,217,.14)}
+.cw.open .cp{display:flex;animation:cpin .38s cubic-bezier(.2,.7,.2,1) both}
+@keyframes cpin{from{opacity:0;transform:translateY(18px) scale(.97)}}
+.ch{position:relative;display:flex;align-items:center;gap:12px;padding:16px 14px 16px 16px;background:linear-gradient(135deg,#2a1b14,#17100d);border-bottom:1px solid rgba(241,231,217,.1)}
+.ch::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(227,146,95,.6),transparent)}
+.cav{position:relative;flex:none}
+.cav img{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:50% 12%;border:2px solid rgba(241,231,217,.55);display:block}
+.cav::after{content:"";position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:#35e08c;border:2px solid #17100d}
+.ch b{display:block;font:500 20px/1.1 var(--serif);letter-spacing:.01em}
+.ch small{display:block;margin-top:3px;font-size:11.5px;color:#b9a994;letter-spacing:.02em}
+.cha{margin-left:auto;display:flex;gap:8px}
+.cha a,.cha button{width:38px;height:38px;border-radius:50%;border:1px solid rgba(241,231,217,.16);background:rgba(241,231,217,.06);color:var(--bone);display:grid;place-items:center;cursor:pointer;transition:.2s;font-size:20px;line-height:1}
+.cha a:hover,.cha button:hover{background:var(--clay);color:#1b0f08;border-color:var(--clay)}
+.cha svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cm{flex:1;overflow-y:auto;padding:18px 14px 8px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#3a2a21 transparent}
+.cmsg{max-width:88%;padding:12px 14px;border-radius:18px;font-size:14.5px;line-height:1.55;animation:cmin .35s cubic-bezier(.2,.7,.2,1) both;overflow-wrap:anywhere}
+@keyframes cmin{from{opacity:0;transform:translateY(10px)}}
+.cmsg.bot{background:#1f1612;border:1px solid rgba(241,231,217,.1);border-bottom-left-radius:5px;align-self:flex-start;color:#eadfce}
+.cmsg.me{background:linear-gradient(135deg,#e3925f,#d17a4a);color:#1b0f08;font-weight:600;border-bottom-right-radius:5px;align-self:flex-end}
+.cmsg b{color:#fff;font-weight:700}
+.cmsg a.lk{color:var(--clay);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.cmsg small.dis{display:block;margin-top:8px;font-size:11.5px;color:#9d8d7a;line-height:1.4}
+.rc{margin-top:10px;padding:12px 14px;border-radius:14px;background:#2a1d17;border:1px solid rgba(227,146,95,.28)}
+.rc .l{font:700 10.5px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--clay)}
+.rc .v{margin-top:4px;font:500 30px/1.05 var(--serif);color:#fff}
+.rc .v.s{font-size:20px;line-height:1.2}
+.rc .n{margin-top:6px;font-size:12.5px;color:#b9a994;line-height:1.45}
+.rc.row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.stp{list-style:none;margin:8px 0 0;counter-reset:s;display:grid;gap:7px}
+.stp li{counter-increment:s;display:flex;gap:10px;align-items:flex-start;font-size:13.5px}
+.stp li::before{content:counter(s);flex:none;width:22px;height:22px;border-radius:50%;background:var(--clay);color:#1b0f08;font:800 11px/22px var(--sans);text-align:center}
+.tg{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tg span{padding:5px 11px;border-radius:999px;background:#2a1d17;border:1px solid rgba(241,231,217,.12);font-size:12.5px;color:#eadfce}
+.cact{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.cact a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:0 15px;border-radius:999px;background:var(--clay);color:#1b0f08;font:700 13px var(--sans);transition:.2s}
+.cact a:hover{background:var(--bone)}
+.cact a.alt{background:transparent;color:var(--bone);border:1px solid rgba(241,231,217,.28)}
+.cact a.alt:hover{border-color:var(--clay);color:var(--clay)}
+.cty{display:flex;gap:5px;padding:14px 16px;align-self:flex-start;background:#1f1612;border:1px solid rgba(241,231,217,.1);border-radius:18px;border-bottom-left-radius:5px}
+.cty i{width:7px;height:7px;border-radius:50%;background:#8d7b68;animation:dot 1s infinite}
 .cty i:nth-child(2){animation-delay:.15s}.cty i:nth-child(3){animation-delay:.3s}
 @keyframes dot{0%,60%,100%{transform:none;opacity:.5}30%{transform:translateY(-4px);opacity:1}}
-.cq{display:flex;flex-wrap:wrap;gap:7px;padding:10px 12px;border-top:1px solid #e4d9c9;background:#f3ece1;max-height:150px;overflow-y:auto;flex:none}
-.cq button{padding:7px 13px;border-radius:999px;border:1.5px solid #b2552a;background:transparent;color:#8f3f1c;font:700 13px var(--sans);cursor:pointer;transition:.2s}
-.cq button:hover{background:#b2552a;color:#fff}
-.cf{display:flex;gap:8px;padding:10px 12px 12px;background:#fff;border-top:1px solid #e4d9c9}
-.cf input{flex:1;min-width:0;min-height:46px;border-radius:999px;border:1.5px solid #dccfbc;background:#faf6ef;padding:0 16px;font:500 15px var(--sans);color:var(--bg)}
-.cf input:focus{outline:none;border-color:#b2552a}
-.cf button{width:46px;height:46px;flex:none;border-radius:50%;border:0;background:var(--clay);cursor:pointer;display:grid;place-items:center}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;align-self:stretch;animation:cmin .45s .1s both}
+.cgrid button{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:14px;border:1px solid rgba(241,231,217,.12);background:#1b1310;color:var(--bone);font:600 13.5px/1.2 var(--sans);text-align:left;cursor:pointer;transition:.2s}
+.cgrid button:hover{border-color:var(--clay);background:#26190f;transform:translateY(-2px)}
+.cgrid svg{flex:none;width:20px;height:20px;stroke:var(--clay);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cq{display:none;gap:8px;padding:10px 14px 4px;overflow-x:auto;flex:none;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 22px),transparent)}
+.cq::-webkit-scrollbar{display:none}
+.cw.started .cq{display:flex}
+.cq button{flex:none;padding:8px 14px;border-radius:999px;border:1px solid rgba(227,146,95,.5);background:rgba(227,146,95,.08);color:#f0c9ad;font:600 12.5px var(--sans);cursor:pointer;transition:.2s;white-space:nowrap}
+.cq button:hover{background:var(--clay);color:#1b0f08}
+.cf{display:flex;gap:8px;padding:10px 12px 8px;flex:none}
+.cf input{flex:1;min-width:0;min-height:46px;border-radius:999px;border:1px solid rgba(241,231,217,.16);background:#1b1310;padding:0 18px;font:500 15px var(--sans);color:var(--bone)}
+.cf input::placeholder{color:#8d7b68}
+.cf input:focus{outline:none;border-color:var(--clay);background:#221813}
+.cf button{width:46px;height:46px;flex:none;border-radius:50%;border:0;background:linear-gradient(135deg,#e3925f,#d17a4a);cursor:pointer;display:grid;place-items:center;transition:transform .2s}
+.cf button:hover{transform:scale(1.07)}
 .cf button svg{width:18px;height:18px;stroke:#1b0f08;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.cn{padding:0 14px 10px;background:#fff;font-size:11px;color:#8a7a6a;text-align:center}
-@media(max-width:520px){.cp{width:calc(100vw - 24px);height:calc(100svh - 96px);right:-4px}}
+.cn{padding:0 16px max(12px,env(safe-area-inset-bottom,0px));font-size:10.5px;color:#7d6d5b;text-align:center;flex:none}
+@media(max-width:520px){
+  .cw{right:0;left:0;bottom:0}
+  #cback{display:block;position:fixed;inset:0;background:rgba(5,3,2,.55);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .3s;z-index:-1}
+  .cw.open #cback{opacity:1;pointer-events:auto}
+  .cb{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+  .ct-tip{position:fixed;right:90px;bottom:calc(98px + env(safe-area-inset-bottom,0px))}
+  .cp{position:fixed;left:8px;right:8px;bottom:8px;width:auto;height:min(76svh,640px);border-radius:24px}
+  .cgrid button{padding:10px;font-size:13px}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}#pre{display:none}}
 </style>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Physician", "name": "Аширов Зохид Фаязжонович", "medicalSpecialty": "Dermatology", "url": "https://dr-zohid.uz/", "telephone": "+998909885752", "address": {"@type": "PostalAddress", "streetAddress": "Юнусобод тумани, 17-квартал, 22а", "addressLocality": "Тошкент", "addressCountry": "UZ"}, "sameAs": ["https://instagram.com/zakhidaf"], "alternateName": ["Зохид Аширов", "Zohid Ashirov", "Ashirov Zohid Fayazjonovich", "Дерматолог Зохид"], "description": "Олий тоифали дерматовенеролог ва трихолог: тери, соч ва тирноқ касалликлари, жинсий йўл билан юқадиган касалликлар. 17 йиллик тажриба.", "areaServed": {"@type": "City", "name": "Тошкент"}, "availableService": [{"@type": "MedicalProcedure", "name": "Онлайн консультация"}, {"@type": "MedicalProcedure", "name": "Дерматоскопия"}, {"@type": "MedicalProcedure", "name": "Сўгал ва папиломаларни олиб ташлаш"}], "jobTitle": "Дерматовенеролог, трихолог, олий тоифали шифокор", "knowsAbout": ["Дерматология", "Венерология", "Трихология", "Тери касалликлари", "Соч касалликлари", "Тирноқ касалликлари"], "priceRange": "300 000 UZS"}</script>
@@ -533,14 +568,19 @@ body.cc input,body.cc textarea,body.cc select{cursor:text!important}
 </div></footer>
 
 <div class="cw" id="cw">
-  <button class="cb" id="cbtn" aria-label="Ёрдамчи чатини очиш" aria-expanded="false" aria-controls="cpanel"><img src="doctor.jpg" alt="" width="64" height="64" onerror="this.onerror=null;this.style.display='none'"><i><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></i></button>
+  <div id="cback"></div>
+  <button class="cb" id="cbtn" aria-label="Ёрдамчи чатини очиш" aria-expanded="false" aria-controls="cpanel"><img src="doctor.jpg" alt="" width="62" height="62" onerror="this.onerror=null;this.style.display='none'"><i><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg></i></button>
   <div class="ct-tip" id="ctip">Савол борми? Ёзинг, дарров жавоб бераман</div>
-  <section class="cp" id="cpanel" role="dialog" aria-label="Ёрдамчи чат" aria-modal="false">
-    <div class="ch"><img src="doctor.jpg" alt="" width="44" height="44" onerror="this.onerror=null;this.style.display='none'"><div><b>Ёрдамчи</b><small>Автоматик жавоблар</small></div><button class="cx" id="cclose" aria-label="Ёпиш">×</button></div>
+  <section class="cp" id="cpanel" role="dialog" aria-label="Ёрдамчи чат">
+    <div class="ch">
+      <div class="cav"><img src="doctor.jpg" alt="" width="46" height="46" onerror="this.onerror=null;this.style.display='none'"></div>
+      <div><b>Ёрдамчи</b><small>Автоматик · ҳар доим онлайн</small></div>
+      <div class="cha"><a id="ccall" href="tel:+998909885752" aria-label="Қўнғироқ қилиш"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a><button id="cclose" aria-label="Ёпиш">×</button></div>
+    </div>
     <div class="cm" id="cmsgs" aria-live="polite"></div>
     <div class="cq" id="cquick"></div>
     <form class="cf" id="cform" autocomplete="off"><input id="cinput" type="text" placeholder="Саволингизни ёзинг..." aria-label="Савол" maxlength="200"><button type="submit" aria-label="Юбориш"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></button></form>
-    <div class="cn">Бу автоматик ёрдамчи. Ташхис фақат шифокор кўригида қўйилади.</div>
+    <div class="cn">Автоматик ёрдамчи. Ташхис фақат шифокор кўригида қўйилади.</div>
   </section>
 </div>
 <div class="stk" id="stk"><a class="btn clay" href="#aloqa"><span>Консультацияга ёзилиш</span></a></div>
@@ -735,23 +775,31 @@ if(document.readyState==="complete")init();else addEventListener("load",init);
   const MAP="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent("Юнусобод 17-квартал 22а, Тошкент");
   const PH="+998 90 988 57 52";
   const wa="https://wa.me/"+C.whatsapp+"?text="+encodeURIComponent("Салом! Консультацияга ёзилмоқчиман.");
-  const A={
-    tel:["📞 Қўнғироқ","tel:"+C.phone],wa:["WhatsApp",wa],tg:["Телеграм",C.telegram||C.instagram],
-    ig:["Instagram",C.instagram],form:["Ариза қолдириш","#aloqa"],map:["Харитада очиш",MAP]
+  const A={tel:["Қўнғироқ қилиш","tel:"+C.phone],wa:["WhatsApp",wa],tg:["Телеграм",C.telegram||C.instagram],ig:["Instagram",C.instagram],form:["Ариза қолдириш","#aloqa"],map:["Харитада очиш",MAP]};
+  const I={
+    narx:'<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.2"/>',
+    manzil:'<path d="M12 22s7-5.6 7-12a7 7 0 1 0-14 0c0 6.4 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/>',
+    kasal:'<path d="M9 3h6l1 2h3v16H5V5h3l1-2z"/><path d="M9 12h6M9 16h4"/>',
+    online:'<rect x="2" y="5" width="14" height="14" rx="2"/><path d="M16 10l6-3v10l-6-3z"/>',
+    uyga:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+    shifokor:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>',
+    yozil:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+    aloqa:'<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'
   };
+  const ic=k=>'<svg viewBox="0 0 24 24" aria-hidden="true">'+I[k]+'</svg>';
   const R={
-    narx:{q:"Нарх",a:'Консультация нархи — <b>300 000 сўм</b>.<br>Қабулда кўрик ва муолажалар нархи ташхисга қараб аниқланади, аниқ нарх учун ёзинг.',b:["wa","form"]},
-    manzil:{q:"Манзил",a:'<b>Тошкент, Юнусобод тумани, 17-квартал, 22а уй.</b><br>Телефон: <a class="lk" href="tel:'+C.phone+'">'+PH+'</a>',b:["map","tel"]},
-    kasal:{q:"Қандай касалликлар",a:'Тери, соч ва тирноқ касалликлари:<ul><li>акне, псориаз, экзема, витилиго, атопик дерматит</li><li>герпес, папилома, сўгал, кондилома</li><li>соч тўкилиши (очаговая ва андрогенная алопеция)</li><li>замбуруғли ва тирноқ касалликлари</li><li>жинсий йўл билан юқадиган касалликлар</li></ul>Тўлиқ рўйхат сайтнинг «Рўйхат» бўлимида.',b:["form","wa"]},
-    online:{q:"Онлайн консультация",a:'Онлайн консультацияда шикоят ва суратлар асосида ташхис, даволаш режаси ва аниқ тавсиялар берилади. Видео ёки чат орқали, уйдан чиқмасдан. Нархи — <b>300 000 сўм</b>.',b:["wa","tg"]},
-    uyga:{q:"Уйга чақириш",a:'«Врач на вызов»: шифокор манзилингизга келади. Болалар, кексалар ва вақти тиғиз инсонлар учун қулай. Нарх ва вақт келишув асосида.',b:["wa","tel"]},
-    shifokor:{q:"Шифокор ҳақида",a:'<b>Аширов Зохид Фаязжонович</b>: олий тоифали дерматовенеролог ва трихолог, 17 йиллик тажриба. 2017–2023 йилларда бош шифокор лавозимида фаолият юритган.',b:["form"]},
-    yozil:{q:"Ёзилиш",a:'Ёзилиш осон: ариза қолдиринг, WhatsApp ёки Телеграмга ёзинг ёки қўнғироқ қилинг. Қулай вақтни ўзингиз танлайсиз.',b:["form","wa","tel"]},
-    aloqa:{q:"Алоқа",a:'Телефон: <a class="lk" href="tel:'+C.phone+'">'+PH+'</a><br>Манзил: Тошкент, Юнусобод, 17-квартал, 22а.<br>Instagram: @zakhidaf',b:["tel","wa","tg","ig"]},
+    narx:{q:"Нарх",a:'Консультация нархи:<div class="rc"><div class="l">Консультация</div><div class="v">300 000 сўм</div><div class="n">Қабулда кўрик ва муолажалар нархи ташхисга қараб аниқланади. Аниқ нарх учун ёзинг.</div></div>',b:["wa","form"]},
+    manzil:{q:"Манзил",a:'Қабул манзили:<div class="rc"><div class="l">Манзил</div><div class="v s">Тошкент, Юнусобод тумани, 17-квартал, 22а уй</div><div class="n">Телефон: <a class="lk" href="tel:'+C.phone+'">'+PH+'</a></div></div>',b:["map","tel"]},
+    kasal:{q:"Касалликлар",a:'Тери, соч ва тирноқ касалликлари билан ишлайман:<div class="tg"><span>Акне</span><span>Псориаз</span><span>Экзема</span><span>Витилиго</span><span>Атопик дерматит</span><span>Герпес</span><span>Папилома, сўгал</span><span>Соч тўкилиши</span><span>Замбуруғ</span><span>Тирноқ касалликлари</span><span>Венерик касалликлар</span></div><small class="dis">Тўлиқ рўйхат сайтнинг «Рўйхат» бўлимида.</small>',b:["form","wa"]},
+    online:{q:"Онлайн консультация",a:'<b>Онлайн консультация</b> — уйдан чиқмасдан, видео ёки чат орқали:<ol class="stp"><li>Ёзилинг ва қулай вақтни танланг</li><li>Шикоят ва суратларни юборинг</li><li>Ташхис ва даволаш режасини олинг</li></ol><div class="rc row"><div><div class="l">Нархи</div><div class="v">300 000 сўм</div></div></div>',b:["wa","tg"]},
+    uyga:{q:"Уйга чақириш",a:'<b>Врач на вызов:</b> шифокор манзилингизга келади. Болалар, кексалар ва вақти тиғиз инсонлар учун қулай.<small class="dis">Нарх ва вақт келишув асосида.</small>',b:["wa","tel"]},
+    shifokor:{q:"Шифокор ҳақида",a:'Шифокор:<div class="rc"><div class="l">Дерматовенеролог · Трихолог</div><div class="v s">Аширов Зохид Фаязжонович</div><div class="n">Олий тоифали шифокор · 17 йиллик тажриба<br>2017–2023 йилларда бош шифокор лавозимида фаолият юритган</div></div>',b:["form"]},
+    yozil:{q:"Ёзилиш",a:'<b>Ёзилиш осон:</b><ol class="stp"><li>Ариза қолдиринг ёки WhatsApp/Телеграмга ёзинг</li><li>Қулай вақтни ўзингиз танлайсиз</li><li>Шифокор сизга жавоб беради</li></ol>',b:["form","wa","tel"]},
+    aloqa:{q:"Алоқа",a:'Биз билан боғланинг:<div class="rc"><div class="l">Телефон</div><div class="v s"><a href="tel:'+C.phone+'" style="color:#fff">'+PH+'</a></div><div class="n">Тошкент, Юнусобод, 17-квартал, 22а<br>Instagram: @zakhidaf</div></div>',b:["wa","tg","tel"]},
     tolov:{a:'Тўлов усули ва вақтини ёзилганингизда келишиб оламиз. Аниқ маълумот учун ёзинг ёки қўнғироқ қилинг.',b:["wa","tel"]},
     vaqt:{a:'Қабул вақти бўйича аниқ жавобни шифокор билан келишиб оласиз. Қулай вақтни ёзинг, ариза асосида жавоб берамиз.',b:["wa","tel"]},
     maxfiy:{a:'Ҳа, барча мурожаатлар ва суратлар тиббий махфийлик остида. Венерик касалликлар бўйича ҳам қатъий махфий қабул қилинади.',b:["form"]},
-    salom:{a:'Салом! Қуйидаги тугмалардан танланг ёки саволингизни ёзинг.',b:[]},
+    salom:{a:'Салом! Қуйидаги бўлимлардан танланг ёки саволингизни ёзинг.',b:[]},
     sabab:{a:'Тошма, доғ ва қичишиш ортида сабаб бор. Аниқ ташхис фақат шифокор кўригида қўйилади. Муаммо суратини юборсангиз ёки консультацияга ёзилсангиз, шифокор кўради.',b:["wa","form"]}
   };
   const K={
@@ -769,9 +817,9 @@ if(document.readyState==="complete")init();else addEventListener("load",init);
     sabab:["қичиш","доғ","тошма","ёрилиш","қизар","qichish","dog'","toshma","сыпь","пятн","зуд","покрасн"],
     salom:["салом","ассалом","assalom","salom","привет","здравствуй","hello","hi "]
   };
-  const $=s=>document.querySelector(s),w=$("#cw"),btn=$("#cbtn"),pan=$("#cpanel"),box=$("#cmsgs"),inp=$("#cinput"),tip=$("#ctip");
+  const $=s=>document.querySelector(s),w=$("#cw"),btn=$("#cbtn"),box=$("#cmsgs"),inp=$("#cinput"),tip=$("#ctip");
   let started=false,busy=false;
-  function btns(keys){return keys&&keys.length?'<div class="cact">'+keys.map((k,i)=>{const [l,h]=A[k];const ext=/^https?:/.test(h)&&!h.includes(location.host);return '<a '+(i>0?'class="alt" ':'')+'href="'+h+'"'+(ext?' target="_blank" rel="noopener"':'')+(h==="#aloqa"?' data-go="1"':'')+'>'+l+'</a>'}).join("")+'</div>':""}
+  function btns(keys){return keys&&keys.length?'<div class="cact">'+keys.map((k,i)=>{const [l,h]=A[k];const ext=/^https?:/.test(h);return '<a '+(i>0?'class="alt" ':'')+'href="'+h+'"'+(ext?' target="_blank" rel="noopener"':'')+(h==="#aloqa"?' data-go="1"':'')+'>'+l+'</a>'}).join("")+'</div>':""}
   function add(html,me){const d=document.createElement("div");d.className="cmsg "+(me?"me":"bot");d.innerHTML=html;box.appendChild(d);box.scrollTop=box.scrollHeight;return d}
   function esc(t){return t.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
   function reply(keys){
@@ -780,19 +828,24 @@ if(document.readyState==="complete")init();else addEventListener("load",init);
     setTimeout(()=>{ty.remove();
       if(keys.length)keys.forEach(k=>add(R[k].a+btns(R[k].b)));
       else add('Бу савол бўйича аниқ жавобни шифокор ёки администратор беради. Қуйидаги йўллардан бири орқали ёзинг, тез жавоб берамиз.'+btns(["wa","tel","form"]));
-      busy=false;},550);
+      busy=false;},600);
   }
   function match(t){t=" "+t.toLowerCase()+" ";const r=[];let sc=0;for(const k in K){let n=0;K[k].forEach(x=>{if(t.includes(x))n++});if(n>0)r.push([k,n]);if(n>sc)sc=n}return r.filter(x=>x[1]===sc&&sc>0).slice(0,2).map(x=>x[0])}
-  function ask(text,key){add(esc(text),true);reply(key||match(text))}
+  function ask(text,key){w.classList.add("started");add(esc(text),true);reply(key||match(text))}
   function open(){w.classList.add("open");btn.setAttribute("aria-expanded","true");tip.classList.remove("show");
-    if(!started){started=true;add('Салом! 👋 Мен Дерматолог Зохид сайтининг ёрдамчисиман. Саволингизни ёзинг ёки пастдаги тугмалардан танланг.<br><small style="color:#8a7a6a">Бу тиббий маслаҳат эмас. Ташхис фақат шифокор кўригида қўйилади.</small>')}
-    setTimeout(()=>inp.focus({preventScroll:true}),80);try{sessionStorage.setItem("chatSeen","1")}catch(e){}}
+    if(!started){started=true;
+      add('Салом! 👋 Мен <b>Дерматолог Зохид</b> сайтининг ёрдамчисиман. Саволингизни ёзинг ёки қуйидан танланг.<small class="dis">Бу тиббий маслаҳат эмас. Ташхис фақат шифокор кўригида қўйилади.</small>');
+      const g=document.createElement("div");g.className="cgrid";
+      g.innerHTML=quick.map(k=>'<button type="button" data-k="'+k+'">'+ic(k)+'<span>'+R[k].q+'</span></button>').join("");
+      g.addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!busy)ask(R[b.dataset.k].q,b.dataset.k)});
+      box.appendChild(g)}
+    setTimeout(()=>{if(innerWidth>520)inp.focus({preventScroll:true})},120);try{sessionStorage.setItem("chatSeen","1")}catch(e){}}
   function close(){w.classList.remove("open");btn.setAttribute("aria-expanded","false");btn.focus({preventScroll:true})}
   const quick=["narx","manzil","kasal","online","uyga","shifokor","yozil","aloqa"];
   $("#cquick").innerHTML=quick.map(k=>'<button type="button" data-k="'+k+'">'+R[k].q+'</button>').join("");
   $("#cquick").addEventListener("click",e=>{const b=e.target.closest("button");if(b&&!busy)ask(R[b.dataset.k].q,b.dataset.k)});
   $("#cform").addEventListener("submit",e=>{e.preventDefault();const t=inp.value.trim();if(!t||busy)return;inp.value="";ask(t)});
-  btn.addEventListener("click",open);$("#cclose").addEventListener("click",close);
+  btn.addEventListener("click",open);$("#cclose").addEventListener("click",close);$("#cback").addEventListener("click",close);
   tip.addEventListener("click",open);
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&w.classList.contains("open"))close()});
   box.addEventListener("click",e=>{const a=e.target.closest("a[data-go]");if(a){e.preventDefault();close();const t=document.querySelector("#aloqa");t&&t.scrollIntoView({behavior:"smooth"})}});
