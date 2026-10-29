@@ -497,3 +497,26 @@ html{overflow-x:hidden}
 body.chat-open .fab,body.chat-open .chat-hint{opacity:0;pointer-events:none}
 @media (min-width:641px){body.chat-open .fab{opacity:1;pointer-events:auto}}
 .msg--menu{background:none;border:0;padding:0;max-width:100%;align-self:stretch;animation:msgIn .35s}
+
+/* ===== Photo framing fixes ===== */
+.about__img{max-width:420px}
+.about__img img{aspect-ratio:900/1545;object-position:50% 0%}
+.b--img img{object-position:50% 16%}
+.arch img{object-position:55% 12%}
+@media (max-width:1024px){
+  .arch{border-radius:200px 200px 32px 32px}
+  .about__img{max-width:380px}
+}
+@media (max-width:640px){
+  .arch{aspect-ratio:1/1.12;border-width:6px;border-radius:170px 170px 28px 28px}
+  .arch img{object-position:58% 4%}
+  .chip{font-size:.78rem;padding:9px 14px}
+  .chip--a{left:-4px;right:auto;top:auto;bottom:34%}
+  .chip--b{right:2px;bottom:-14px}
+  .spin{left:auto;right:-6px;bottom:auto;top:-18px;width:84px;height:84px}
+  .spin__c{width:26px;height:26px}
+  .b--img{min-height:300px}
+  .about__img{max-width:100%}
+  .about__img img{transform:rotate(-1.5deg)}
+  .about__badge{bottom:28px;right:2px}
+}
