@@ -157,7 +157,8 @@
   }
 
   /* ---------- Header: hide on scroll down, progress bar ---------- */
-  var header = $('#header'), prog = $('#progress'), lastY = 0, ticking = false, bootT = Date.now();
+  var header = $('#header'), prog = $('#progress'), lastY = 0, ticking = false, userScrolled = false;
+  ['wheel', 'touchmove', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { userScrolled = true; }, { passive: true, once: true }); });
   var parallax = $$('[data-speed]');
   var blobs = $$('.blob');
   function onScroll() {
@@ -165,7 +166,7 @@
     prog.style.transform = 'scaleX(' + (h > 0 ? y / h : 0) + ')';
     header.classList.toggle('stuck', y > 20);
     var menuOpen = $('#nav').classList.contains('open');
-    var settled = Date.now() - bootT > 1200;
+    var settled = userScrolled;
     var dy = y - lastY;
     header.classList.toggle('hide', settled && y > 500 && dy > 4 && dy < 400 && !menuOpen);
     if (y < lastY - 4 || y < 500 || !settled) header.classList.remove('hide');
