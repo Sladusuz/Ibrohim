@@ -49,6 +49,7 @@
     <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M3.5 10h17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4 18-7z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 13.5L7 21l5-2.5 5 2.5-1.5-7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2 7 7 3-7 3-2 7-2-7-7-3 7-3 2-7z" fill="currentColor"/></symbol>
   </defs>
@@ -64,6 +65,7 @@
     <nav class="nav" id="nav" aria-label="Asosiy menyu">
       <a href="#about">Men haqimda</a>
       <a href="#services">Xizmatlar</a>
+      <a href="#steps">Bosqichlar</a>
       <a href="#prices">Narxlar</a>
       <a href="#schedule">Qabul vaqti</a>
       <a href="#location">Manzil</a>
@@ -90,7 +92,7 @@
   <svg class="hero__ecg" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 70h380l30-50 40 100 34-76 22 26h694" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   <div class="wrap hero__in">
     <div class="hero__copy reveal">
-      <span class="tag"><i></i> Qabul ochiq · Yunusobod, Toshkent</span>
+      <span class="tag" id="openTag"><i></i><span id="openTxt">Yunusobod, Toshkent</span></span>
       <h1 class="split">Ayollar salomatligi — <span class="hl">ishonchli</span> <em>qo'llarda</em></h1>
       <p class="lead">Dr. Oyimxon Mirsadikova — 6 yillik tajribaga ega shifokor. Tinch muhit, e'tiborli suhbat va aniq tushuntirilgan davolash rejasi.</p>
       <div class="hero__cta">
@@ -105,12 +107,13 @@
     </div>
 
     <div class="hero__visual reveal">
-      <div class="arch" data-tilt="6"><img src="assets/hero.jpg" alt="Dr. Oyimxon Mirsadikova" fetchpriority="high"></div>
+      <div class="arch" data-tilt="6"><img src="assets/hero.jpg" alt="Dr. Oyimxon Mirsadikova" width="900" height="1125" fetchpriority="high" decoding="async"></div>
+      <div class="orb"><img src="assets/office.jpg" alt="Dr. Oyimxon Mirsadikova kabinetda" width="800" height="888" loading="eager" decoding="async"></div>
       <div class="spin" aria-hidden="true">
         <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ">• ISHONCH • G'AMXO'RLIK • PROFESSIONALLIK </textPath></text></svg>
         <svg class="spin__c"><use href="#i-heart"/></svg>
       </div>
-      <div class="chip chip--a"><svg class="ic"><use href="#i-pin"/></svg> Yunusobod 17-kv</div>
+      <div class="chip chip--a"><svg class="ic"><use href="#i-award"/></svg> 6 yillik tajriba</div>
       <div class="chip chip--b"><svg class="ic"><use href="#i-video"/></svg> Onlayn qabul</div>
     </div>
   </div>
@@ -129,7 +132,7 @@
 <section class="section" id="about">
   <div class="wrap about">
     <div class="about__img reveal">
-      <img src="assets/about.jpg" alt="Dr. Oyimxon Mirsadikova" loading="lazy">
+      <img src="assets/about.jpg" alt="Dr. Oyimxon Mirsadikova" width="900" height="1545" loading="lazy" decoding="async">
       <div class="about__badge"><b><span data-count="6">0</span>+</b><span>yillik<br>tajriba</span></div>
     </div>
     <div class="about__txt reveal">
@@ -174,11 +177,32 @@
         <h3>Qayta ko'rik</h3>
         <p>Davolanish natijasini nazorat qilish uchun 15 kun ichida qayta ko'rik imkoniyati.</p>
       </article>
-      <article data-tilt="7" data-glow class="b b--img reveal">
-        <img src="assets/office.jpg" alt="Shifokor kabineti" loading="lazy">
-        <span class="b__cap"><svg class="ic"><use href="#i-shield"/></svg> Qulay va toza kabinet</span>
+      <article data-tilt="7" data-glow class="b b--loc reveal">
+        <div class="b__map" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="b__pin"><svg class="ic"><use href="#i-pin"/></svg></span></div>
+        <div class="b__txt">
+          <h3>Qabul manzili</h3>
+          <p>Toshkent sh., Yunusobod tumani, 17-kvartal</p>
+          <a class="more" href="#location">Xaritada ko'rish <svg class="ic"><use href="#i-arrow"/></svg></a>
+        </div>
       </article>
     </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="section" id="steps">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="kicker">Qabul bosqichlari</span>
+      <h2>Qabul <em>qanday</em> o'tadi</h2>
+      <p>To'rt oddiy qadam — yozilishdan qayta ko'rikkacha.</p>
+    </div>
+    <ol class="steps">
+      <li class="step reveal"><span class="step__n">01</span><span class="step__ic"><svg class="ic"><use href="#i-cal"/></svg></span><h3>Yoziling</h3><p>Sayt formasi, Telegram yoki qo'ng'iroq orqali qulay vaqtni tanlang.</p></li>
+      <li class="step reveal"><span class="step__n">02</span><span class="step__ic"><svg class="ic"><use href="#i-clock"/></svg></span><h3>Vaqtni aniqlaymiz</h3><p>Siz bilan bog'lanib, qabul vaqtini kelishib olamiz.</p></li>
+      <li class="step reveal"><span class="step__n">03</span><span class="step__ic"><svg class="ic"><use href="#i-chat"/></svg></span><h3>Qabul</h3><p>Kabinetda yoki onlayn: shoshilmasdan suhbat va davolash rejasi.</p></li>
+      <li class="step reveal"><span class="step__n">04</span><span class="step__ic"><svg class="ic"><use href="#i-refresh"/></svg></span><h3>Qayta ko'rik</h3><p>15 kun ichida natijani birga nazorat qilamiz.</p></li>
+    </ol>
   </div>
 </section>
 

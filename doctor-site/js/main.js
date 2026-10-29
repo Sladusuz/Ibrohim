@@ -8,6 +8,36 @@
   var fine = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   var hasIO = 'IntersectionObserver' in window;
 
+
+  /* ---------- Tashkent time helpers ---------- */
+  var DAYN = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
+  var SLOT = { 1: [8, 14], 2: [13, 18], 3: [8, 14], 4: [13, 18], 5: [8, 14] };
+  function nowTashkent() {
+    try {
+      var parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Tashkent', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date());
+      var o = {}; parts.forEach(function (p) { o[p.type] = p.value; });
+      var map = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+      return { day: map[o.weekday], min: (+o.hour % 24) * 60 + (+o.minute) };
+    } catch (e) { var n = new Date(); return { day: n.getDay(), min: n.getHours() * 60 + n.getMinutes() }; }
+  }
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function openStatus() {
+    var n = nowTashkent(), s = SLOT[n.day];
+    if (s && n.min >= s[0] * 60 && n.min < s[1] * 60) return { open: true, text: 'Hozir qabul ochiq · ' + pad(s[1]) + ':00 gacha' };
+    for (var i = 0; i < 8; i++) {
+      var dd = (n.day + i) % 7, sl = SLOT[dd];
+      if (!sl) continue;
+      if (i === 0 && n.min >= sl[0] * 60) continue;
+      return { open: false, text: 'Hozir yopiq · ' + (i === 0 ? 'bugun' : i === 1 ? 'ertaga' : DAYN[dd].toLowerCase()) + ' ' + pad(sl[0]) + ':00 dan' };
+    }
+    return { open: false, text: 'Yunusobod, Toshkent' };
+  }
+  (function () {
+    var tag = $('#openTag'), txt = $('#openTxt'); if (!tag) return;
+    function upd() { var st = openStatus(); txt.textContent = st.text; tag.classList.toggle('closed', !st.open); }
+    upd(); setInterval(upd, 60000);
+  })();
+
   /* ---------- Split headings into words ---------- */
   function splitNode(node, state) {
     Array.prototype.slice.call(node.childNodes).forEach(function (n) {
@@ -192,7 +222,7 @@
   });
 
   /* ---------- Schedule: highlight today ---------- */
-  var today = String(new Date().getDay());
+  var today = String(nowTashkent().day);
   $$('.day').forEach(function (el) { if (el.dataset.d === today && !el.classList.contains('day--off')) el.classList.add('today'); });
 
   /* ---------- Booking form -> Telegram ---------- */
@@ -258,7 +288,7 @@
       address: { icon: 'pin', label: 'Manzil', q: 'Manzil qayerda?',
         a: "<b>Toshkent sh., Yunusobod tumani, 17-kvartal.</b><br>Quyidagi tugma orqali xaritada yo'nalishni oching.", acts: ['map', 'call'] },
       hours: { icon: 'clock', label: 'Qabul vaqti', q: 'Qabul vaqti qanday?', a: function () {
-          var n = new Date().getDay(), today = HOURS[n] ? 'Bugun (' + DAYS[n].toLowerCase() + ') qabul: <b>' + HOURS[n] + '</b>.' : 'Bugun (' + DAYS[n].toLowerCase() + ') dam olish kuni.';
+          var n = nowTashkent().day, today = HOURS[n] ? 'Bugun (' + DAYS[n].toLowerCase() + ') qabul: <b>' + HOURS[n] + '</b>.' : 'Bugun (' + DAYS[n].toLowerCase() + ') dam olish kuni.';
           return '<b>Dushanba, chorshanba, juma:</b> 08:00 – 14:00<br><b>Seshanba, payshanba:</b> 13:00 – 18:00<br><b>Shanba, yakshanba:</b> dam olish<br><br>' + today; },
         acts: ['book', 'call'] },
       online: { icon: 'video', label: 'Onlayn konsultatsiya', q: 'Onlayn konsultatsiya haqida',
