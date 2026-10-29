@@ -14,7 +14,6 @@ window.I18N.ru={
   "Savollar": "Вопросы",
   "Qabulga yozilish": "Записаться на приём",
   "Yunusobod, Toshkent": "Юнусабад, Ташкент",
-  "Ayollar salomatligi —": "Здоровье женщин —",
   "ishonchli": "в надёжных",
   "qo'llarda": "руках",
   "Dr. Oyimxon Mirsadikova — 6 yillik tajribaga ega shifokor. Tinch muhit, e'tiborli suhbat va aniq tushuntirilgan davolash rejasi.": "Д-р Ойимхон Мирсадыкова — врач с 6-летним опытом. Спокойная обстановка, внимательная беседа и чётко объяснённый план лечения.",
@@ -139,7 +138,6 @@ window.I18N.ru={
   "Yozilgach, kelishilgan vaqtda Telegram orqali video yoki chat aloqasi o'rnatiladi.": "После записи в согласованное время устанавливается видео- или чат-связь через Telegram.",
   "Qabulga nimalarni olib kelish kerak?": "Что взять с собой на приём?",
   "Avvalgi tahlil va tekshiruv natijalari (bo'lsa), doimiy ichadigan dorilar ro'yxati.": "Предыдущие анализы и результаты обследований (если есть), список постоянно принимаемых лекарств.",
-  "Ayollar shifokori. Ishonchli maslahat, e'tiborli munosabat.": "Врач для женщин. Надёжная консультация, внимательное отношение.",
   "Yunusobod, 17-kvartal": "Юнусабад, 17-й квартал",
   "Sayt ma'lumot uchun. O'z-o'zini davolamang — shifokorga murojaat qiling.": "Сайт носит информационный характер. Не занимайтесь самолечением — обратитесь к врачу.",
   "Savolingiz bormi?": "Есть вопрос?",
@@ -163,9 +161,6 @@ window.I18N.ru={
   "Savolingiz": "Ваш вопрос",
   "Savolingizni yozing...": "Напишите вопрос...",
   "Yuborish": "Отправить",
-  "Dr. Oyimxon Mirsadikova — Ayollar shifokori | Yunusobod, Toshkent": "Д-р Ойимхон Мирсадыкова — Врач для женщин | Юнусабад, Ташкент",
-  "Dr. Oyimxon Mirsadikova — ayollar shifokori, 6 yillik tajriba. Yunusobod 17-kvartal. Konsultatsiya 200 000 so'm, onlayn 300 000 so'm. Qabulga yoziling: +998 90 045 84 84.": "Д-р Ойимхон Мирсадыкова — врач для женщин, опыт 6 лет. Юнусабад, 17-й квартал. Консультация 200 000 сум, онлайн 300 000 сум. Запись: +998 90 045 84 84.",
-  "Dr. Oyimxon Mirsadikova — Ayollar shifokori": "Д-р Ойимхон Мирсадыкова — Врач для женщин",
   "Ishonchli maslahat, e'tiborli munosabat. Offlayn va onlayn qabul.": "Надёжная консультация, внимательное отношение. Очный и онлайн-приём.",
   "• ISHONCH • G'AMXO'RLIK • PROFESSIONALLIK": "• ДОВЕРИЕ • ЗАБОТА • ПРОФЕССИОНАЛИЗМ •",
   "Ismingizni kiriting": "Введите ваше имя",
@@ -179,7 +174,12 @@ window.I18N.ru={
   "Izoh:": "Комментарий:",
   "Telegram ochilmadimi?": "Telegram не открылся?",
   "Bu yerni bosing": "Нажмите здесь",
-  "yoki +998 90 045 84 84 raqamiga qo'ng'iroq qiling.": "или позвоните по номеру +998 90 045 84 84."
+  "yoki +998 90 045 84 84 raqamiga qo'ng'iroq qiling.": "или позвоните по номеру +998 90 045 84 84.",
+  "Teringiz salomatligi —": "Здоровье вашей кожи —",
+  "Dermatolog. Ishonchli maslahat, e'tiborli munosabat.": "Дерматолог. Надёжная консультация, внимательное отношение.",
+  "Dr. Oyimxon Mirsadikova — Dermatolog | Yunusobod, Toshkent": "Д-р Ойимхон Мирсадыкова — Дерматолог | Юнусабад, Ташкент",
+  "Dr. Oyimxon Mirsadikova — dermatolog, 6 yillik tajriba. Dermatoskop yordamida ko'rik. Yunusobod 17-kvartal. Konsultatsiya 200 000 so'm, onlayn 300 000 so'm. Qabulga yoziling: +998 90 045 84 84.": "Д-р Ойимхон Мирсадыкова — дерматолог, опыт 6 лет. Осмотр с помощью дерматоскопа. Юнусабад, 17-й квартал. Консультация 200 000 сум, онлайн 300 000 сум. Запись: +998 90 045 84 84.",
+  "Dr. Oyimxon Mirsadikova — Dermatolog": "Д-р Ойимхон Мирсадыкова — Дерматолог"
  },
  "chat": {
   "A": {
@@ -227,7 +227,7 @@ window.I18N.ru={
    "about": {
     "label": "О враче",
     "q": "О враче",
-    "a": "<b>Д-р Ойимхон Мирсадыкова</b> — врач для женщин с <b>6-летним</b> клиническим опытом. Приём начинается с подробной беседы без спешки, а план лечения объясняется понятным языком."
+    "a": "<b>Д-р Ойимхон Мирсадыкова</b> — врач-дерматолог с <b>6-летним</b> клиническим опытом. Приём начинается с подробной беседы без спешки, а план лечения объясняется понятным языком."
    },
    "booking": {
     "label": "Запись",
