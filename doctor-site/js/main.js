@@ -299,6 +299,7 @@
         a: "Qabulga yozilishning 3 usuli: sayt formasi (Telegram orqali yuboriladi), qo'ng'iroq yoki Telegram. Offlayn — 200 000 so'm, onlayn — 300 000 so'm.", acts: ['book', 'call', 'tg'] },
       contact: { icon: 'phone', label: 'Aloqa', q: "Aloqa ma'lumotlari",
         a: "<b>Telefon:</b> " + PHONE_TXT + "<br><b>Telegram:</b> @doctor_oyy<br><b>Instagram:</b> @doctor.oyy", acts: ['call', 'tg', 'ig'] },
+      derma: { a: "Ko'rik paytida <b>dermatoskop</b> yordam beradi — bu teri va undagi o'zgarishlarni kattalashtirib, aniq ko'rish imkonini beradigan asbob. Kabinetda yuzma-yuz qabulda qo'llaniladi.", acts: ['book', 'call'] },
       medical: { a: "Tashxis va davolashni faqat shifokor ko'rikdan so'ng belgilaydi, shuning uchun bu savolga bu yerda javob bera olmayman. Shifokor bilan batafsil gaplashish uchun qabulga yoziling.", acts: ['book', 'call'] },
       urgent: { a: "<b>Shoshilinch holatda</b> kutmang — darhol <b>103</b> tez yordamga qo'ng'iroq qiling yoki eng yaqin shifoxonaga murojaat qiling.", acts: [] },
       hello: { a: "Assalomu alaykum! Qanday yordam bera olaman? Mavzuni tanlang yoki savolingizni yozing.", acts: [] },
@@ -306,6 +307,7 @@
       fallback: { a: "Savolingizni to'liq tushunmadim. Quyidagi mavzulardan birini tanlang yoki shifokor/administrator bilan bevosita bog'laning.", acts: ['call', 'tg'], menu: true }
     };
     var KEYS = [
+      ['derma', /dermatoskop|dermatoscop|dermoskop|dermatoskopiya|lupa|kattalashtir|дерматоскоп|дерматоскоп|лупа/],
       ['urgent', /shoshilinch|tez yordam|zudlik|qon ket|hushidan|nafas ol.*qiyin|быстр|срочн|скора[яй]|экстренн|шошилинч/],
       ['price', /narx|necha pul|qancha|\bso'?m\b|tolov|to'?lov|pul|puli|arzon|qimmat|стоимост|цена|сколько|нарх|канча|қанча|сўм/],
       ['address', /manzil|qayerda|qaerda|joylash|lokatsiya|location|xarita|map|yo'?l|mo'?ljal|kvartal|yunusobod|qanday borish|адрес|где|карта|манзил|қаерда|хариста/],
