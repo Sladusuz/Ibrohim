@@ -264,7 +264,7 @@
       online: { icon: 'video', label: 'Onlayn konsultatsiya', q: 'Onlayn konsultatsiya haqida',
         a: "Onlayn konsultatsiya narxi — <b>300 000 so'm</b>. Yozilgach, kelishilgan vaqtda Telegram orqali video yoki chat aloqasi o'rnatiladi. 15 kun ichida qayta ko'rik imkoniyati bor.", acts: ['book', 'tg'] },
       about: { icon: 'user', label: 'Shifokor haqida', q: 'Shifokor haqida',
-        a: "<b>Dr. Oyimxon Morsadikova</b> — ayollar shifokori, <b>4 yillik</b> klinik tajribaga ega. Qabul shoshilmasdan, batafsil suhbatdan boshlanadi va davolash rejasi tushunarli tilda tushuntiriladi.", acts: ['book', 'ig'] },
+        a: "<b>Dr. Oyimxon Mirsadikova</b> — ayollar shifokori, <b>6 yillik</b> klinik tajribaga ega. Qabul shoshilmasdan, batafsil suhbatdan boshlanadi va davolash rejasi tushunarli tilda tushuntiriladi.", acts: ['book', 'ig'] },
       booking: { icon: 'cal', label: 'Yozilish', q: 'Qabulga yozilmoqchiman',
         a: "Qabulga yozilishning 3 usuli: sayt formasi (Telegram orqali yuboriladi), qo'ng'iroq yoki Telegram. Offlayn — 200 000 so'm, onlayn — 300 000 so'm.", acts: ['book', 'call', 'tg'] },
       contact: { icon: 'phone', label: 'Aloqa', q: "Aloqa ma'lumotlari",
@@ -329,7 +329,7 @@
     }
     function welcome() {
       started = true;
-      add('msg--bot', 'Salom! 👋 Men <b>Dr. Oyimxon Morsadikova</b> saytining yordamchisiman. Savolingizni yozing yoki quyidagi mavzulardan tanlang.<small>Bu tibbiy maslahat emas. Tashxis faqat shifokor ko\'rigida qo\'yiladi.</small>');
+      add('msg--bot', 'Salom! 👋 Men <b>Dr. Oyimxon Mirsadikova</b> saytining yordamchisiman. Savolingizni yozing yoki quyidagi mavzulardan tanlang.<small>Bu tibbiy maslahat emas. Tashxis faqat shifokor ko\'rigida qo\'yiladi.</small>');
       add('msg--menu', menuHtml());
     }
     function openChat(o) {
