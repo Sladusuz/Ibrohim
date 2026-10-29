@@ -268,7 +268,7 @@ button{font:inherit;cursor:pointer}
   .b--big .b__ic{margin-bottom:40px}
   .b--img{grid-column:1 / 3}
 }
-@media (max-width:860px){
+@media (max-width:1100px){
   .burger{display:block}
   .nav{position:absolute;top:calc(100% + 10px);left:16px;right:16px;flex-direction:column;align-items:stretch;gap:2px;padding:14px;border-radius:26px;background:#fff;box-shadow:var(--shadow);transform:translateY(-10px) scale(.98);opacity:0;visibility:hidden;transition:.25s}
   .pill{position:relative}
@@ -618,3 +618,52 @@ body.chat-open .fab,body.chat-open .chat-hint{opacity:0;pointer-events:none}
 #steps{background:radial-gradient(600px 300px at 100% 20%,rgba(255,225,235,.9),transparent 70%)}
 .more{color:var(--rose)}
 .about__badge{z-index:3}
+
+/* ===== Language toggle ===== */
+.pill__tools{display:flex;align-items:center;gap:8px}
+.lang{position:relative;display:flex;align-items:center;height:44px;padding:4px;border-radius:99px;border:0;background:var(--blush);font-weight:800;font-size:.78rem;letter-spacing:.04em;color:var(--plum)}
+.lang span{position:relative;z-index:1;display:grid;place-items:center;width:38px;height:36px;border-radius:99px;transition:color .3s}
+.lang i{position:absolute;left:4px;top:4px;width:38px;height:36px;border-radius:99px;background:var(--rose);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.lang span[data-l="uz"]{color:#fff}
+html[lang="ru"] .lang i{transform:translateX(38px)}
+html[lang="ru"] .lang span[data-l="uz"]{color:var(--plum)}
+html[lang="ru"] .lang span[data-l="ru"]{color:#fff}
+
+/* ===== Dermatoscope section ===== */
+.derma{background:linear-gradient(180deg,var(--cream),#fff0f5 60%,var(--cream))}
+.derma__in{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,6vw,80px);align-items:center}
+.derma__vis{position:relative;max-width:440px;margin-inline:auto;width:100%}
+.lens{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(74,29,79,.3))}
+.lens__ring{transform-origin:200px 200px;animation:rot 24s linear infinite}
+.lens__scan{animation:scan 3.4s ease-in-out infinite;opacity:.55}
+@keyframes scan{0%,100%{transform:translateY(0)}50%{transform:translateY(300px)}}
+.lens__mole{transform-origin:215px 195px;animation:molep 4s ease-in-out infinite}
+@keyframes molep{50%{transform:scale(1.05)}}
+.derma__tag{position:absolute;padding:10px 16px;border-radius:99px;background:#fff;font-weight:800;font-size:.85rem;color:var(--plum);box-shadow:var(--shadow);animation:bob 5s ease-in-out infinite}
+.derma__tag .ic{color:var(--rose)}
+.derma__tag--a{left:2%;top:8%;background:var(--plum);color:#fff;font-size:1.1rem}
+.derma__tag--b{right:-2%;bottom:14%;animation-delay:-2.5s}
+.derma__txt p{color:var(--muted)}
+.derma__txt p b{color:var(--plum)}
+.derma__note{font-size:.85rem;padding:12px 16px;border-radius:14px;background:#fff;border:1px dashed var(--rose-2);color:var(--plum)!important;margin:4px 0 26px}
+@media (max-width:1024px){.derma__in{grid-template-columns:1fr}.derma__vis{max-width:340px}}
+@media (max-width:640px){.derma__vis{max-width:300px}.derma__tag--b{right:-6%;font-size:.78rem}}
+
+/* ===== Russian layout tweaks ===== */
+.nav a,.logo__txt{white-space:nowrap}
+html[lang="ru"] .nav{gap:2px;font-size:.86rem}
+html[lang="ru"] .nav a:not(.btn){padding:9px 11px}
+
+/* compact language switch on phones: show only the other language */
+@media (max-width:640px){
+  .lang{padding:0;height:44px;min-width:44px;background:var(--rose);color:#fff}
+  .lang i{display:none}
+  .lang span{width:44px;height:44px;color:#fff!important}
+  html[lang="uz"] .lang span[data-l="uz"],html[lang="ru"] .lang span[data-l="ru"]{display:none}
+  .pill{gap:8px;padding:6px 8px 6px 10px}
+  .logo{gap:8px;min-width:0}
+  .logo__txt{font-size:.9rem;overflow:hidden;text-overflow:ellipsis}
+  .logo__mark{width:34px;height:34px;flex:none}
+  .pill__tools{gap:6px;flex:none}
+}
+@media (max-width:360px){.logo__txt{font-size:.8rem}}

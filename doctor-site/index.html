@@ -67,12 +67,15 @@
       <a href="#services">Xizmatlar</a>
       <a href="#steps">Bosqichlar</a>
       <a href="#prices">Narxlar</a>
-      <a href="#schedule">Qabul vaqti</a>
+      <a href="#schedule" data-ru="Приём">Qabul vaqti</a>
       <a href="#location">Manzil</a>
       <a href="#faq">Savollar</a>
-      <a href="#booking" class="btn btn--rose nav__cta" data-magnetic>Qabulga yozilish</a>
+      <a href="#booking" class="btn btn--rose nav__cta" data-magnetic data-ru="Записаться">Qabulga yozilish</a>
     </nav>
+    <div class="pill__tools">
+    <button class="lang" id="langBtn" type="button" aria-label="Til / Язык" aria-pressed="false"><span data-l="uz">UZ</span><span data-l="ru">RU</span><i></i></button>
     <button class="burger" id="burger" aria-label="Menyuni ochish" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
+    </div>
   </div>
 </header>
 
@@ -152,6 +155,48 @@
   </div>
 </section>
 
+<!-- DERMATOSCOPE -->
+<section class="section derma" id="derma">
+  <div class="wrap derma__in">
+    <div class="derma__vis reveal" aria-hidden="true">
+      <svg viewBox="0 0 400 400" class="lens">
+        <defs>
+          <radialGradient id="skin" cx="45%" cy="40%" r="70%"><stop offset="0" stop-color="#f6d3bd"/><stop offset="1" stop-color="#e2a98a"/></radialGradient>
+          <radialGradient id="mole" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5a3a2c"/><stop offset="1" stop-color="#8a5a45"/></radialGradient>
+          <clipPath id="lensClip"><circle cx="200" cy="200" r="150"/></clipPath>
+        </defs>
+        <circle cx="200" cy="200" r="168" fill="#fff" opacity=".9"/>
+        <circle cx="200" cy="200" r="150" fill="url(#skin)"/>
+        <g clip-path="url(#lensClip)">
+          <g class="lens__pores" fill="#c98f72" opacity=".35"><circle cx="110" cy="130" r="3"/><circle cx="150" cy="95" r="2.5"/><circle cx="260" cy="110" r="3"/><circle cx="300" cy="170" r="2.5"/><circle cx="120" cy="260" r="3"/><circle cx="170" cy="310" r="2.5"/><circle cx="280" cy="280" r="3"/><circle cx="240" cy="330" r="2.5"/><circle cx="95" cy="200" r="2.5"/><circle cx="320" cy="230" r="3"/></g>
+          <path class="lens__mole" d="M178 172c18-22 52-18 62 6 10 22-2 52-28 58-26 6-52-12-50-38 0-10 6-20 16-26z" fill="url(#mole)"/>
+          <g class="lens__net" stroke="#fff" stroke-opacity=".28" stroke-width="1"><path d="M50 150h300M50 200h300M50 250h300M150 50v300M200 50v300M250 50v300"/></g>
+          <rect class="lens__scan" x="50" y="48" width="300" height="4" rx="2" fill="#fff"/>
+        </g>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="#bf3763" stroke-width="6"/>
+        <circle class="lens__ring" cx="200" cy="200" r="168" fill="none" stroke="#bf3763" stroke-width="2" stroke-dasharray="4 10" opacity=".7"/>
+        <path d="M312 312l62 62" stroke="#4a1d4f" stroke-width="26" stroke-linecap="round"/>
+        <path d="M312 312l62 62" stroke="#bf3763" stroke-width="8" stroke-linecap="round" opacity=".6"/>
+      </svg>
+      <span class="derma__tag derma__tag--a">×10</span>
+      <span class="derma__tag derma__tag--b"><svg class="ic"><use href="#i-check"/></svg> Xavfsiz / xavfli?</span>
+    </div>
+    <div class="derma__txt reveal">
+      <span class="kicker">Dermatoskop</span>
+      <h2>Teri o'simtalarini <em>aniq ko'rish</em></h2>
+      <p>Ko'rik paytida dermatoskop yordam beradi: u teri va undagi o'simtalarni (xol va boshqalar) kattalashtirib, mayda tafsilotlarigacha ko'rsatadi.</p>
+      <p>Dermatoskop orqali o'simtalarning <b>xavfli yoki xavfsiz</b> ekanini dastlabki baholash mumkin.</p>
+      <ul class="ticks">
+        <li><svg class="ic"><use href="#i-check"/></svg> Teri va o'simtalarni kattalashtirib ko'rish</li>
+        <li><svg class="ic"><use href="#i-check"/></svg> Xavfli yoki xavfsizligini dastlabki baholash</li>
+        <li><svg class="ic"><use href="#i-check"/></svg> Kabinetda yuzma-yuz qabulda</li>
+      </ul>
+      <p class="derma__note">Yakuniy tashxisni shifokor ko'rikdan so'ng qo'yadi.</p>
+      <a href="#booking" class="btn btn--rose">Ko'rikka yozilish <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </div>
+  </div>
+</section>
+
 <!-- SERVICES (bento) -->
 <section class="section section--blush" id="services">
   <div class="wrap">
@@ -201,7 +246,7 @@
     <ol class="steps">
       <li class="step reveal"><span class="step__n">01</span><span class="step__ic"><svg class="ic"><use href="#i-cal"/></svg></span><h3>Yoziling</h3><p>Sayt formasi, Telegram yoki qo'ng'iroq orqali qulay vaqtni tanlang.</p></li>
       <li class="step reveal"><span class="step__n">02</span><span class="step__ic"><svg class="ic"><use href="#i-clock"/></svg></span><h3>Vaqtni aniqlaymiz</h3><p>Siz bilan bog'lanib, qabul vaqtini kelishib olamiz.</p></li>
-      <li class="step reveal"><span class="step__n">03</span><span class="step__ic"><svg class="ic"><use href="#i-chat"/></svg></span><h3>Qabul</h3><p>Kabinetda ko'rik dermatoskop yordamida, shoshilmasdan suhbat va davolash rejasi.</p></li>
+      <li class="step reveal"><span class="step__n">03</span><span class="step__ic"><svg class="ic"><use href="#i-chat"/></svg></span><h3>Ko'rik va suhbat</h3><p>Kabinetda ko'rik dermatoskop yordamida, shoshilmasdan suhbat va davolash rejasi.</p></li>
       <li class="step reveal"><span class="step__n">04</span><span class="step__ic"><svg class="ic"><use href="#i-refresh"/></svg></span><h3>Qayta ko'rik</h3><p>15 kun ichida natijani birga nazorat qilamiz.</p></li>
     </ol>
   </div>
@@ -387,6 +432,7 @@
   </div>
 </section>
 
+<script src="js/i18n.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

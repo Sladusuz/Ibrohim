@@ -9,6 +9,51 @@
   var hasIO = 'IntersectionObserver' in window;
 
 
+
+  /* ---------- Language (uz / ru) ---------- */
+  var RU = (window.I18N && window.I18N.ru) || { map: {}, chat: null };
+  var LANG = 'uz';
+  try {
+    var qm = /[?&]lang=(uz|ru)/.exec(location.search);
+    LANG = qm ? qm[1] : (localStorage.getItem('lang') || 'uz');
+    if (qm) localStorage.setItem('lang', LANG);
+  } catch (e) { var qm2 = /[?&]lang=(uz|ru)/.exec(location.search); if (qm2) LANG = qm2[1]; }
+  if (LANG !== 'ru') LANG = 'uz';
+  root.setAttribute('lang', LANG);
+  function tr(s) { return LANG === 'ru' && RU.map[s] !== undefined ? RU.map[s] : s; }
+  function translateDOM() {
+    $$('[data-ru]').forEach(function (el) {
+      for (var i = 0; i < el.childNodes.length; i++) if (el.childNodes[i].nodeType === 3 && el.childNodes[i].nodeValue.trim()) { el.childNodes[i].nodeValue = el.getAttribute('data-ru'); break; }
+    });
+    var w = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT, null), n, list = [];
+    while ((n = w.nextNode())) { var pe = n.parentElement; if (pe && !/^(SCRIPT|STYLE)$/.test(pe.tagName)) list.push(n); }
+    list.forEach(function (n) {
+      var raw = n.nodeValue, key = raw.replace(/\s+/g, ' ').trim();
+      if (key && RU.map[key] !== undefined) { var v = RU.map[key]; n.nodeValue = (/^[.,;:!?]/.test(v) ? '' : raw.match(/^\s*/)[0]) + v + raw.match(/\s*$/)[0]; }
+    });
+    $$('[aria-label],[placeholder],[title],[alt]').forEach(function (el) {
+      ['aria-label', 'placeholder', 'title', 'alt'].forEach(function (a) {
+        var v = el.getAttribute(a); if (v && RU.map[v] !== undefined) el.setAttribute(a, RU.map[v]);
+      });
+    });
+    d.title = tr(d.title);
+    [['meta[name="description"]'], ['meta[property="og:title"]'], ['meta[property="og:description"]']].forEach(function (x) {
+      var m = $(x[0]); if (m && RU.map[m.content] !== undefined) m.content = RU.map[m.content];
+    });
+  }
+  if (LANG === 'ru') translateDOM();
+  var quick = false;
+  try { quick = sessionStorage.getItem('quick') === '1'; sessionStorage.removeItem('quick'); } catch (e) {}
+  (function () {
+    var b = $('#langBtn'); if (!b) return;
+    b.setAttribute('aria-pressed', LANG === 'ru');
+    b.addEventListener('click', function () {
+      try { localStorage.setItem('lang', LANG === 'ru' ? 'uz' : 'ru'); sessionStorage.setItem('quick', '1'); } catch (e) {}
+      if (/[?&]lang=/.test(location.search)) location.replace(location.pathname + (location.hash || ''));
+      else location.reload();
+    });
+  })();
+
   /* ---------- Tashkent time helpers ---------- */
   var DAYN = ['Yakshanba', 'Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba'];
   var SLOT = { 1: [8, 14], 2: [13, 18], 3: [8, 14], 4: [13, 18], 5: [8, 14] };
@@ -23,14 +68,15 @@
   function pad(n) { return (n < 10 ? '0' : '') + n; }
   function openStatus() {
     var n = nowTashkent(), s = SLOT[n.day];
-    if (s && n.min >= s[0] * 60 && n.min < s[1] * 60) return { open: true, text: 'Hozir qabul ochiq · ' + pad(s[1]) + ':00 gacha' };
+    if (s && n.min >= s[0] * 60 && n.min < s[1] * 60) return { open: true, text: LANG === 'ru' ? 'Сейчас приём открыт · до ' + pad(s[1]) + ':00' : 'Hozir qabul ochiq · ' + pad(s[1]) + ':00 gacha' };
     for (var i = 0; i < 8; i++) {
       var dd = (n.day + i) % 7, sl = SLOT[dd];
       if (!sl) continue;
       if (i === 0 && n.min >= sl[0] * 60) continue;
+      if (LANG === 'ru') return { open: false, text: 'Сейчас закрыто · ' + (i === 0 ? 'сегодня' : i === 1 ? 'завтра' : ['в воскресенье', 'в понедельник', 'во вторник', 'в среду', 'в четверг', 'в пятницу', 'в субботу'][dd]) + ' с ' + pad(sl[0]) + ':00' };
       return { open: false, text: 'Hozir yopiq · ' + (i === 0 ? 'bugun' : i === 1 ? 'ertaga' : DAYN[dd].toLowerCase()) + ' ' + pad(sl[0]) + ':00 dan' };
     }
-    return { open: false, text: 'Yunusobod, Toshkent' };
+    return { open: false, text: tr('Yunusobod, Toshkent') };
   }
   (function () {
     var tag = $('#openTag'), txt = $('#openTxt'); if (!tag) return;
@@ -68,11 +114,12 @@
       $$('.hero .split').forEach(function (h) { h.classList.add('in'); });
       $$('.hero .reveal').forEach(function (el) { el.classList.add('in'); });
       initReveal();
-    }, 450);
-    setTimeout(function () { loader.style.display = 'none'; }, 1300);
+    }, quick ? 60 : 450);
+    setTimeout(function () { loader.style.display = 'none'; }, quick ? 0 : 1300);
   }
   var t0 = Date.now();
-  function ready() { setTimeout(start, Math.max(0, (reduce ? 0 : 1300) - (Date.now() - t0))); }
+  if (quick) loader.style.display = 'none';
+  function ready() { setTimeout(start, Math.max(0, (reduce || quick ? 0 : 1300) - (Date.now() - t0))); }
   if (d.readyState === 'complete') ready(); else window.addEventListener('load', ready);
   setTimeout(start, 4000);
 
@@ -110,7 +157,7 @@
   }
 
   /* ---------- Header: hide on scroll down, progress bar ---------- */
-  var header = $('#header'), prog = $('#progress'), lastY = 0, ticking = false;
+  var header = $('#header'), prog = $('#progress'), lastY = 0, ticking = false, bootT = Date.now();
   var parallax = $$('[data-speed]');
   var blobs = $$('.blob');
   function onScroll() {
@@ -118,8 +165,10 @@
     prog.style.transform = 'scaleX(' + (h > 0 ? y / h : 0) + ')';
     header.classList.toggle('stuck', y > 20);
     var menuOpen = $('#nav').classList.contains('open');
-    header.classList.toggle('hide', y > 500 && y > lastY + 4 && !menuOpen);
-    if (y < lastY - 4 || y < 500) header.classList.remove('hide');
+    var settled = Date.now() - bootT > 1200;
+    var dy = y - lastY;
+    header.classList.toggle('hide', settled && y > 500 && dy > 4 && dy < 400 && !menuOpen);
+    if (y < lastY - 4 || y < 500 || !settled) header.classList.remove('hide');
     lastY = y;
     if (!reduce) {
       parallax.forEach(function (el) { el.style.translate = '0 ' + (y * parseFloat(el.dataset.speed)) + 'px'; });
@@ -139,7 +188,7 @@
   function setNav(open) {
     nav.classList.toggle('open', open);
     burger.setAttribute('aria-expanded', open);
-    burger.setAttribute('aria-label', open ? 'Menyuni yopish' : 'Menyuni ochish');
+    burger.setAttribute('aria-label', tr(open ? 'Menyuni yopish' : 'Menyuni ochish'));
   }
   burger.addEventListener('click', function () { setNav(!nav.classList.contains('open')); });
   $$('a', nav).forEach(function (a) { a.addEventListener('click', function () { setNav(false); }); });
@@ -250,16 +299,16 @@
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var name = $('#name'), ok = true;
-    ok = setErr(name, name.value.trim().length < 2 ? 'Ismingizni kiriting' : '') && ok;
-    ok = setErr(phone, phone.value.replace(/\D/g, '').length < 12 ? "Telefon raqamni to'liq kiriting" : '') && ok;
-    ok = setErr(dateEl, !dateEl.value ? 'Sanani tanlang' : '') && ok;
+    ok = setErr(name, name.value.trim().length < 2 ? tr('Ismingizni kiriting') : '') && ok;
+    ok = setErr(phone, phone.value.replace(/\D/g, '').length < 12 ? tr("Telefon raqamni to'liq kiriting") : '') && ok;
+    ok = setErr(dateEl, !dateEl.value ? tr('Sanani tanlang') : '') && ok;
     if (!ok) { var bad = $('.bad input', form); if (bad) bad.focus(); return; }
-    var text = "Assalomu alaykum! Qabulga yozilmoqchiman.\n" +
-      "Ism: " + name.value.trim() + "\nTelefon: " + phone.value + "\nQabul turi: " + $('#type').value + "\nSana: " + dateEl.value +
-      ($('#msg').value.trim() ? "\nIzoh: " + $('#msg').value.trim() : '');
+    var text = tr("Assalomu alaykum! Qabulga yozilmoqchiman.") + "\n" +
+      tr("Ism:") + " " + name.value.trim() + "\n" + tr("Telefon:") + " " + phone.value + "\n" + tr("Qabul turi:") + " " + $('#type').value + "\n" + tr("Sana:") + " " + dateEl.value +
+      ($('#msg').value.trim() ? "\n" + tr("Izoh:") + " " + $('#msg').value.trim() : '');
     var url = 'https://t.me/' + TG + '?text=' + encodeURIComponent(text);
     window.open(url, '_blank', 'noopener');
-    note.innerHTML = 'Telegram ochilmadimi? <a href="' + url + '" target="_blank" rel="noopener" style="color:var(--rose);font-weight:700">Bu yerni bosing</a> yoki +998 90 045 84 84 raqamiga qo\'ng\'iroq qiling.';
+    note.innerHTML = tr('Telegram ochilmadimi?') + ' <a href="' + url + '" target="_blank" rel="noopener" style="color:var(--rose);font-weight:700">' + tr('Bu yerni bosing') + '</a> ' + tr("yoki +998 90 045 84 84 raqamiga qo'ng'iroq qiling.");
   });
 
 
@@ -299,7 +348,7 @@
         a: "Qabulga yozilishning 3 usuli: sayt formasi (Telegram orqali yuboriladi), qo'ng'iroq yoki Telegram. Offlayn — 200 000 so'm, onlayn — 300 000 so'm.", acts: ['book', 'call', 'tg'] },
       contact: { icon: 'phone', label: 'Aloqa', q: "Aloqa ma'lumotlari",
         a: "<b>Telefon:</b> " + PHONE_TXT + "<br><b>Telegram:</b> @doctor_oyy<br><b>Instagram:</b> @doctor.oyy", acts: ['call', 'tg', 'ig'] },
-      derma: { a: "Ko'rik paytida <b>dermatoskop</b> yordam beradi — bu teri va undagi o'zgarishlarni kattalashtirib, aniq ko'rish imkonini beradigan asbob. Kabinetda yuzma-yuz qabulda qo'llaniladi.", acts: ['book', 'call'] },
+      derma: { a: "Ko'rik paytida <b>dermatoskop</b> yordam beradi — u teri va undagi o'simtalarni (xol va boshqalar) kattalashtirib ko'rsatadi. Uning yordamida o'simtalarning <b>xavfli yoki xavfsiz</b> ekanini dastlabki baholash mumkin. Yakuniy tashxisni shifokor ko'rikdan so'ng qo'yadi. Kabinetda yuzma-yuz qabulda qo'llaniladi.", acts: ['book', 'call'] },
       medical: { a: "Tashxis va davolashni faqat shifokor ko'rikdan so'ng belgilaydi, shuning uchun bu savolga bu yerda javob bera olmayman. Shifokor bilan batafsil gaplashish uchun qabulga yoziling.", acts: ['book', 'call'] },
       urgent: { a: "<b>Shoshilinch holatda</b> kutmang — darhol <b>103</b> tez yordamga qo'ng'iroq qiling yoki eng yaqin shifoxonaga murojaat qiling.", acts: [] },
       hello: { a: "Assalomu alaykum! Qanday yordam bera olaman? Mavzuni tanlang yoki savolingizni yozing.", acts: [] },
@@ -311,7 +360,7 @@
       ['urgent', /shoshilinch|tez yordam|zudlik|qon ket|hushidan|nafas ol.*qiyin|быстр|срочн|скора[яй]|экстренн|шошилинч/],
       ['price', /narx|necha pul|qancha|\bso'?m\b|tolov|to'?lov|pul|puli|arzon|qimmat|стоимост|цена|сколько|нарх|канча|қанча|сўм/],
       ['address', /manzil|qayerda|qaerda|joylash|lokatsiya|location|xarita|map|yo'?l|mo'?ljal|kvartal|yunusobod|qanday borish|адрес|где|карта|манзил|қаерда|хариста/],
-      ['hours', /vaqt|soat|ish tartib|qachon|kun(i|lari)?\b|dushanba|seshanba|chorshanba|payshanba|juma|shanba|yakshanba|dam olish|ochiq|график|время|когда|режим|вақт|соат|қачон/],
+      ['hours', /понедельник|вторник|сред[аы]|четверг|пятниц|суббот|воскресень|выходн|часы|график|расписани|vaqt|soat|ish tartib|qachon|kun(i|lari)?\b|dushanba|seshanba|chorshanba|payshanba|juma|shanba|yakshanba|dam olish|ochiq|график|время|когда|режим|вақт|соат|қачон/],
       ['online', /onlayn|online|video|zoom|masofa|uydan|интернет|онлайн|видео|дистанц/],
       ['about', /shifokor|doktor|doctor|oyimxon|tajriba|\bkim\b|mutaxassis|ixtisos|врач|доктор|опыт|шифокор|тажриба/],
       ['booking', /yoz(il|ish|moq|aman)|qabul(ga)?|navbat|bron|bron qil|записа|запись|прием|приём|ёзил|қабул|навбат/],
@@ -320,6 +369,17 @@
       ['thanks', /rahmat|raxmat|rahm|tashakkur|spasibo|спасибо|рахмат|thanks|thank/],
       ['hello', /^(salom|assalom|hello|hi|hey|привет|здравствуй|салом|ассалом|aleykum|alaykum|алейкум|қалайсиз|qalaysiz|yaxshimisiz)/]
     ];
+    var WELCOME = 'Salom! 👋 Men <b>Dr. Oyimxon Mirsadikova</b> saytining yordamchisiman. Savolingizni yozing yoki quyidagi mavzulardan tanlang.<small>Bu tibbiy maslahat emas. Tashxis faqat shifokor ko\'rigida qo\'yiladi.</small>';
+    if (LANG === 'ru' && RU.chat) {
+      var RC = RU.chat;
+      Object.keys(RC.A).forEach(function (k) { A[k].t = RC.A[k]; });
+      Object.keys(RC.T).forEach(function (k) { var o = RC.T[k]; Object.keys(o).forEach(function (f) { T[k][f] = o[f]; }); });
+      T.hours.a = function () {
+        var n = nowTashkent().day;
+        return RC.hoursA + (HOURS[n] ? RC.todayOpen.replace('{d}', RC.DAYS[n]).replace('{h}', HOURS[n]) : RC.todayOff.replace('{d}', RC.DAYS[n]));
+      };
+      WELCOME = RC.welcome;
+    }
     function norm(s) { return s.toLowerCase().replace(/[’‘`ʻʼ]/g, "'").replace(/\s+/g, ' ').trim(); }
     function detect(s) {
       s = norm(s);
@@ -361,14 +421,14 @@
     }
     function welcome() {
       started = true;
-      add('msg--bot', 'Salom! 👋 Men <b>Dr. Oyimxon Mirsadikova</b> saytining yordamchisiman. Savolingizni yozing yoki quyidagi mavzulardan tanlang.<small>Bu tibbiy maslahat emas. Tashxis faqat shifokor ko\'rigida qo\'yiladi.</small>');
+      add('msg--bot', WELCOME);
       add('msg--menu', menuHtml());
     }
     function openChat(o) {
       var open = o === undefined ? box.hidden : o;
       box.hidden = !open;
       fab.classList.toggle('open', open); body.classList.toggle('chat-open', open);
-      fab.setAttribute('aria-expanded', open); fab.setAttribute('aria-label', open ? 'Yordamchini yopish' : 'Yordamchini ochish');
+      fab.setAttribute('aria-expanded', open); fab.setAttribute('aria-label', tr(open ? 'Yordamchini yopish' : 'Yordamchini ochish'));
       hint.classList.remove('show'); hintDone = true;
       if (open) { if (!started) welcome(); if (fine) setTimeout(function () { input.focus(); }, 300); }
     }
