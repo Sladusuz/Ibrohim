@@ -19,6 +19,15 @@
   </script>
 </head>
 <body>
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__in">
+    <span class="loader__mark"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"/></svg></span>
+    <svg class="loader__ecg" viewBox="0 0 200 40"><path d="M0 22h60l8-14 10 30 9-22 6 6h107" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <b>Oyimxon <span>Morsadikova</span></b>
+  </div>
+</div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><i></i></div>
 <a class="skip" href="#main">Asosiy qismga o'tish</a>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -35,6 +44,12 @@
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6l8-3zM8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-telegram" viewBox="0 0 24 24"><path d="M21 4L3 11l5.5 2L10 19l3-3.5 4.5 3.3L21 4zM8.5 13L17 7.5 10.3 14.6" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></symbol>
     <symbol id="i-insta" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="7" r="1.1" fill="currentColor"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8L3 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7.5" cy="8.5" r="1.4" fill="currentColor"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 21c.6-4.2 3.6-6.5 8-6.5s7.4 2.3 8 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 3v4M16 3v4M3.5 10h17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4 18-7z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2 7 7 3-7 3-2 7-2-7-7-3 7-3 2-7z" fill="currentColor"/></symbol>
   </defs>
 </svg>
@@ -53,7 +68,7 @@
       <a href="#schedule">Qabul vaqti</a>
       <a href="#location">Manzil</a>
       <a href="#faq">Savollar</a>
-      <a href="#booking" class="btn btn--rose nav__cta">Qabulga yozilish</a>
+      <a href="#booking" class="btn btn--rose nav__cta" data-magnetic>Qabulga yozilish</a>
     </nav>
     <button class="burger" id="burger" aria-label="Menyuni ochish" aria-expanded="false" aria-controls="nav"><span></span><span></span></button>
   </div>
@@ -65,24 +80,32 @@
 <section class="hero" id="top">
   <span class="blob blob--1" aria-hidden="true"></span>
   <span class="blob blob--2" aria-hidden="true"></span>
+  <div class="deco" aria-hidden="true">
+    <svg class="deco__s d1" data-speed="-.08"><use href="#i-plus"/></svg>
+    <svg class="deco__s d2" data-speed=".06"><use href="#i-heart"/></svg>
+    <svg class="deco__s d3" data-speed="-.12"><use href="#i-plus"/></svg>
+    <svg class="deco__s d4" data-speed=".1"><use href="#i-spark"/></svg>
+    <svg class="deco__s d5" data-speed="-.05"><use href="#i-heart"/></svg>
+  </div>
+  <svg class="hero__ecg" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0 70h380l30-50 40 100 34-76 22 26h694" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
   <div class="wrap hero__in">
     <div class="hero__copy reveal">
       <span class="tag"><i></i> Qabul ochiq · Yunusobod, Toshkent</span>
-      <h1>Ayollar salomatligi — <span class="hl">ishonchli</span> <em>qo'llarda</em></h1>
+      <h1 class="split">Ayollar salomatligi — <span class="hl">ishonchli</span> <em>qo'llarda</em></h1>
       <p class="lead">Dr. Oyimxon Morsadikova — 4 yillik tajribaga ega shifokor. Tinch muhit, e'tiborli suhbat va aniq tushuntirilgan davolash rejasi.</p>
       <div class="hero__cta">
-        <a href="#booking" class="btn btn--plum btn--lg">Qabulga yozilish <svg class="ic"><use href="#i-arrow"/></svg></a>
-        <a href="tel:+998900458484" class="btn btn--soft btn--lg"><svg class="ic"><use href="#i-phone"/></svg> +998 90 045 84 84</a>
+        <a href="#booking" class="btn btn--plum btn--lg" data-magnetic>Qabulga yozilish <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a href="tel:+998900458484" class="btn btn--soft btn--lg" data-magnetic><svg class="ic"><use href="#i-phone"/></svg> +998 90 045 84 84</a>
       </div>
       <div class="hero__facts">
-        <div><b>4 yil</b><span>klinik tajriba</span></div>
-        <div><b>200 000</b><span>so'm — konsultatsiya</span></div>
+        <div><b><span data-count="4">0</span> yil</b><span>klinik tajriba</span></div>
+        <div><b><span data-count="200000">0</span></b><span>so'm — konsultatsiya</span></div>
         <div><b>Onlayn</b><span>qabul ham bor</span></div>
       </div>
     </div>
 
     <div class="hero__visual reveal">
-      <div class="arch"><img src="assets/hero.jpg" alt="Dr. Oyimxon Morsadikova o'z kabinetida" fetchpriority="high"></div>
+      <div class="arch" data-tilt="6"><img src="assets/hero.jpg" alt="Dr. Oyimxon Morsadikova o'z kabinetida" fetchpriority="high"></div>
       <div class="spin" aria-hidden="true">
         <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ">• ISHONCH • G'AMXO'RLIK • PROFESSIONALLIK </textPath></text></svg>
         <svg class="spin__c"><use href="#i-heart"/></svg>
@@ -91,6 +114,7 @@
       <div class="chip chip--b"><svg class="ic"><use href="#i-video"/></svg> Onlayn qabul</div>
     </div>
   </div>
+  <span class="scroll-cue" aria-hidden="true"></span>
 </section>
 
 <!-- Marquee -->
@@ -106,11 +130,11 @@
   <div class="wrap about">
     <div class="about__img reveal">
       <img src="assets/about.jpg" alt="Shifokor ish stolida" loading="lazy">
-      <div class="about__badge"><b>4+</b><span>yillik<br>tajriba</span></div>
+      <div class="about__badge"><b><span data-count="4">0</span>+</b><span>yillik<br>tajriba</span></div>
     </div>
     <div class="about__txt reveal">
       <span class="kicker">Men haqimda</span>
-      <h2>Salom, men <em>Oyimxon</em></h2>
+      <h2 class="split">Salom, men <em>Oyimxon</em></h2>
       <p>Har bir bemor — alohida hikoya. Shuning uchun qabulni shoshilmasdan, batafsil suhbatdan boshlayman: shikoyatlaringizni diqqat bilan tinglayman, tushunarli tilda tushuntiraman va sizga mos reja tuzaman.</p>
       <p>Siz bilan ochiq va hurmat bilan muloqot qilish, savollaringizga to'liq javob berish — mening ishimning asosi.</p>
       <ul class="ticks">
@@ -129,28 +153,28 @@
   <div class="wrap">
     <div class="head reveal">
       <span class="kicker">Xizmatlar</span>
-      <h2>Sizga qulay <em>formatda</em></h2>
+      <h2 class="split">Sizga qulay <em>formatda</em></h2>
       <p>Kabinetga kelib yoki uyingizdan chiqmasdan — o'zingizga mos usulni tanlang.</p>
     </div>
     <div class="bento">
-      <article class="b b--big reveal">
+      <article data-tilt="7" data-glow class="b b--big reveal">
         <span class="b__ic"><svg class="ic"><use href="#i-chat"/></svg></span>
         <h3>Shifokor konsultatsiyasi</h3>
         <p>Kabinetda yuzma-yuz qabul: ko'rik, suhbat va davolash rejasi. Yunusobod 17-kvartal.</p>
         <div class="b__price"><b>200 000</b> so'm</div>
       </article>
-      <article class="b b--plum reveal">
+      <article data-tilt="7" data-glow class="b b--plum reveal">
         <span class="b__ic"><svg class="ic"><use href="#i-video"/></svg></span>
         <h3>Onlayn konsultatsiya</h3>
         <p>Video yoki chat orqali, istalgan joydan.</p>
         <div class="b__price"><b>300 000</b> so'm</div>
       </article>
-      <article class="b b--rose reveal">
+      <article data-tilt="7" data-glow class="b b--rose reveal">
         <span class="b__ic"><svg class="ic"><use href="#i-refresh"/></svg></span>
         <h3>Qayta ko'rik</h3>
         <p>Davolanish natijasini nazorat qilish uchun 15 kun ichida qayta ko'rik imkoniyati.</p>
       </article>
-      <article class="b b--img reveal">
+      <article data-tilt="7" data-glow class="b b--img reveal">
         <img src="assets/office.jpg" alt="Shifokor kabineti" loading="lazy">
         <span class="b__cap"><svg class="ic"><use href="#i-shield"/></svg> Qulay va toza kabinet</span>
       </article>
@@ -163,10 +187,10 @@
   <div class="wrap">
     <div class="head reveal">
       <span class="kicker">Narxlar</span>
-      <h2>Aniq va <em>shaffof</em> narxlar</h2>
+      <h2 class="split">Aniq va <em>shaffof</em> narxlar</h2>
     </div>
     <div class="prices">
-      <div class="price reveal">
+      <div class="price reveal" data-tilt="6" data-glow>
         <h3>Offlayn qabul</h3>
         <div class="price__v"><b>200 000</b><span>so'm</span></div>
         <ul>
@@ -176,7 +200,7 @@
         </ul>
         <a href="#booking" class="btn btn--soft btn--block">Yozilish</a>
       </div>
-      <div class="price price--hot reveal">
+      <div class="price price--hot reveal" data-tilt="6" data-glow>
         <span class="price__flag">Qulay</span>
         <h3>Onlayn qabul</h3>
         <div class="price__v"><b>300 000</b><span>so'm</span></div>
@@ -196,7 +220,7 @@
   <div class="wrap sched">
     <div class="sched__txt reveal">
       <span class="kicker kicker--light">Qabul vaqti</span>
-      <h2>Sizga <em>qulay vaqtni</em> tanlang</h2>
+      <h2 class="split">Sizga <em>qulay vaqtni</em> tanlang</h2>
       <p>Haftada 5 kun qabul. Oldindan yozilish tavsiya etiladi — kutmasdan, aniq vaqtga keling.</p>
       <ul class="contact-mini">
         <li><svg class="ic"><use href="#i-pin"/></svg> Toshkent sh., Yunusobod tumani, 17-kvartal</li>
@@ -220,7 +244,7 @@
   <div class="wrap">
     <div class="head reveal">
       <span class="kicker">Manzil</span>
-      <h2>Bizni <em>oson</em> topasiz</h2>
+      <h2 class="split">Bizni <em>oson</em> topasiz</h2>
       <p>Toshkent shahri, Yunusobod tumani, 17-kvartal.</p>
     </div>
     <div class="loc reveal">
@@ -250,7 +274,7 @@
   <div class="wrap booking">
     <div class="booking__txt reveal">
       <span class="kicker">Onlayn yozilish</span>
-      <h2>Qabulga <em>hoziroq</em> yoziling</h2>
+      <h2 class="split">Qabulga <em>hoziroq</em> yoziling</h2>
       <p>Formani to'ldiring — ma'lumotlaringiz Telegram orqali shifokorga yuboriladi. Yoki to'g'ridan-to'g'ri bog'laning:</p>
       <div class="socials">
         <a href="tel:+998900458484" class="soc"><svg class="ic"><use href="#i-phone"/></svg><span><small>Qo'ng'iroq</small>+998 90 045 84 84</span></a>
@@ -278,7 +302,7 @@
   <div class="wrap faq">
     <div class="head head--left reveal">
       <span class="kicker">Savol-javob</span>
-      <h2>Ko'p beriladigan <em>savollar</em></h2>
+      <h2 class="split">Ko'p beriladigan <em>savollar</em></h2>
       <p>Boshqa savolingiz bormi? Telegram yoki telefon orqali yozing.</p>
     </div>
     <div class="acc reveal">
@@ -311,7 +335,32 @@
   <div class="wrap footer__b"><span>© <span id="year"></span> Dr. Oyimxon Morsadikova</span><span>Sayt ma'lumot uchun. O'z-o'zini davolamang — shifokorga murojaat qiling.</span></div>
 </footer>
 
-<a href="tel:+998900458484" class="fab" aria-label="Qo'ng'iroq qilish"><svg class="ic"><use href="#i-phone"/></svg></a>
+<a href="tel:+998900458484" data-magnetic class="fab" aria-label="Qo'ng'iroq qilish"><svg class="ic"><use href="#i-phone"/></svg></a>
+
+
+<!-- Support assistant -->
+<button class="chat-fab" id="chatFab" aria-label="Yordamchini ochish" aria-expanded="false" aria-controls="chat" data-magnetic>
+  <svg class="ic chat-fab__i"><use href="#i-chat"/></svg>
+  <svg class="ic chat-fab__x"><use href="#i-close"/></svg>
+  <span class="chat-fab__dot"></span>
+</button>
+<div class="chat-hint" id="chatHint">Savolingiz bormi? <b>Yozing</b> 👋</div>
+<section class="chat" id="chat" role="dialog" aria-modal="false" aria-label="Yordamchi" hidden>
+  <header class="chat__h">
+    <span class="chat__av"><img src="assets/hero.jpg" alt=""><i></i></span>
+    <div class="chat__t"><b>Yordamchi</b><small>Avtomatik · har doim onlayn</small></div>
+    <a class="chat__b" href="tel:+998900458484" aria-label="Qo'ng'iroq qilish"><svg class="ic"><use href="#i-phone"/></svg></a>
+    <button class="chat__b" id="chatClose" aria-label="Yopish"><svg class="ic"><use href="#i-close"/></svg></button>
+  </header>
+  <div class="chat__log" id="chatLog" role="log" aria-live="polite"></div>
+  <div class="chat__f">
+    <form class="chat__form" id="chatForm" autocomplete="off">
+      <input id="chatInput" type="text" placeholder="Savolingizni yozing..." aria-label="Savolingiz" maxlength="200">
+      <button type="submit" aria-label="Yuborish"><svg class="ic"><use href="#i-send"/></svg></button>
+    </form>
+    <small>Avtomatik yordamchi. Tashxis faqat shifokor ko'rigida qo'yiladi.</small>
+  </div>
+</section>
 
 <script src="js/main.js"></script>
 </body>
