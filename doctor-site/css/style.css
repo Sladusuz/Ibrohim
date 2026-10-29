@@ -174,6 +174,33 @@ button{font:inherit;cursor:pointer}
 .day.today span{color:#fff}
 .day.today b::after{content:"Bugun";margin-left:10px;font-size:.68rem;background:#fff;color:var(--rose);padding:3px 9px;border-radius:99px;vertical-align:2px}
 
+
+/* Location */
+.loc{position:relative;display:grid;grid-template-columns:1fr 380px;gap:0;align-items:stretch}
+.loc__map{border-radius:var(--r);overflow:hidden;min-height:520px;box-shadow:var(--shadow);border:8px solid #fff;background:var(--blush)}
+.loc__map iframe{width:100%;height:100%;min-height:504px;border:0;display:block}
+.loc__card{position:relative;z-index:1;align-self:center;margin-left:-70px;background:#fff;border-radius:var(--r);padding:clamp(24px,3vw,34px);box-shadow:0 30px 70px -24px rgba(74,29,79,.45);display:grid;gap:20px}
+.loc__pin{width:52px;height:52px;border-radius:50%;background:var(--rose);color:#fff;display:grid;place-items:center;box-shadow:0 12px 24px -10px rgba(217,79,122,.9)}
+.loc__pin .ic{width:24px;height:24px}
+.loc__card h3{margin:0;font-size:1.35rem}
+.loc__list{display:grid;gap:16px}
+.loc__list li{display:flex;gap:14px;align-items:flex-start;font-weight:600;line-height:1.45}
+.loc__list .ic{width:38px;height:38px;padding:9px;border-radius:50%;background:var(--blush);color:var(--rose);margin-top:2px}
+.loc__list small{display:block;font-weight:500;font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.loc__list a:hover{color:var(--rose)}
+.loc__btns{display:grid;gap:10px}
+@media (max-width:1024px){
+  .loc{grid-template-columns:1fr}
+  .loc__map{min-height:380px}
+  .loc__map iframe{min-height:364px}
+  .loc__card{margin:-48px 20px 0}
+}
+@media (max-width:640px){
+  .loc__map{min-height:320px;border-width:5px}
+  .loc__map iframe{min-height:310px}
+  .loc__card{margin:-36px 8px 0}
+}
+
 /* Booking */
 .booking{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,80px);align-items:center}
 .booking__txt p{color:var(--muted);font-size:1.05rem}
