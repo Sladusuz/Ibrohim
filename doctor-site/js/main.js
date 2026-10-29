@@ -45,13 +45,41 @@
   var quick = false;
   try { quick = sessionStorage.getItem('quick') === '1'; sessionStorage.removeItem('quick'); } catch (e) {}
   (function () {
-    var b = $('#langBtn'); if (!b) return;
-    b.setAttribute('aria-pressed', LANG === 'ru');
-    b.addEventListener('click', function () {
-      try { localStorage.setItem('lang', LANG === 'ru' ? 'uz' : 'ru'); sessionStorage.setItem('quick', '1'); } catch (e) {}
+    var btn = $('#langBtn'), menu = $('#langMenu'); if (!btn || !menu) return;
+    var opts = $$('li', menu);
+    function setLang(l) {
+      if (l === LANG) { close(); return; }
+      try { localStorage.setItem('lang', l); localStorage.setItem('lang-asked', '1'); sessionStorage.setItem('quick', '1'); } catch (e) {}
       if (/[?&]lang=/.test(location.search)) location.replace(location.pathname + (location.hash || ''));
       else location.reload();
+    }
+    function open() { menu.hidden = false; btn.setAttribute('aria-expanded', 'true'); var cur = menu.querySelector('[aria-selected="true"]'); if (cur && fineInput) cur.focus(); }
+    function close() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    var fineInput = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    btn.querySelector('use').setAttribute('href', '#flag-' + LANG);
+    btn.querySelector('.lang__code').textContent = LANG.toUpperCase();
+    opts.forEach(function (li) {
+      li.setAttribute('aria-selected', li.getAttribute('data-lang') === LANG);
+      li.addEventListener('click', function () { setLang(li.getAttribute('data-lang')); });
+      li.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLang(li.getAttribute('data-lang')); }
+        else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); var i = opts.indexOf(li) + (e.key === 'ArrowDown' ? 1 : -1); opts[(i + opts.length) % opts.length].focus(); }
+      });
     });
+    btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? open() : close(); });
+    d.addEventListener('click', function (e) { if (!menu.hidden && !e.target.closest('#langSw')) close(); });
+    d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) { close(); btn.focus(); } });
+    /* one-time suggestion for Russian-speaking visitors */
+    var tip = $('#langTip');
+    try {
+      var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']).join(',').toLowerCase();
+      var asked = localStorage.getItem('lang-asked') || localStorage.getItem('lang');
+      if (tip && LANG === 'uz' && !asked && /(^|,)ru/.test(langs)) {
+        setTimeout(function () { tip.hidden = false; }, 2600);
+        $('#langTipGo').addEventListener('click', function () { setLang('ru'); });
+        $('#langTipX').addEventListener('click', function () { tip.hidden = true; try { localStorage.setItem('lang-asked', '1'); } catch (e) {} });
+      }
+    } catch (e) {}
   })();
 
   /* ---------- Tashkent time helpers ---------- */
@@ -408,18 +436,20 @@
     function bot(html, delay, cb) {
       busy = true;
       var tp = add('msg--bot', '<span class="typing"><i></i><i></i><i></i></span>');
-      setTimeout(function () { tp.className = 'msg msg--bot'; tp.innerHTML = html; scroll(); busy = false; if (cb) cb(); }, reduce ? 0 : delay);
+      setTimeout(function () { tp.className = 'msg msg--bot'; tp.innerHTML = html; scroll(); busy = false; if (cb) cb(); next(); }, reduce ? 0 : delay);
     }
     function answer(key) {
       var t = T[key]; if (!t) return;
       var txt = typeof t.a === 'function' ? t.a() : t.a;
       bot(txt + actsHtml(t.acts) + (t.menu ? '<div style="margin-top:12px">' + menuHtml() + '</div>' : ''), 650 + Math.min(txt.length * 3, 700));
     }
+    var queue = [];
     function ask(text, key) {
-      if (busy) return;
+      if (busy) { queue.push([text, key]); return; }
       add('msg--me', ''); log.lastChild.textContent = text;
       answer(key || detect(text));
     }
+    function next() { if (queue.length) { var q = queue.shift(); ask(q[0], q[1]); } }
     function welcome() {
       started = true;
       add('msg--bot', WELCOME);
@@ -451,7 +481,7 @@
     });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      var v = input.value.trim(); if (!v || busy) return;
+      var v = input.value.trim(); if (!v) return;
       input.value = ''; ask(v);
     });
     setTimeout(function () { if (!hintDone && box.hidden) { hint.classList.add('show'); setTimeout(function () { hint.classList.remove('show'); }, 6000); } }, 9000);
