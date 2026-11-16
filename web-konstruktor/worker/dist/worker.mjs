@@ -991,7 +991,7 @@ async function tick(env, now = Date.now()) {
   if (JSON.stringify(left) !== JSON.stringify(fl)) await st.put('fl', left);
   if (st.gc && !(await st.get('gc:' + dkey(now)))) { await st.put('gc:' + dkey(now), 1, 2 * 86400); await st.gc().catch(() => {}); } // eskirgan yozuvlarni tozalash (kuniga bir marta)
   if (h === 9 && mi < 5 && tz(now).getUTCDay() === 1 && !(await st.get('repw:' + dkey(now)))) { await st.put('repw:' + dkey(now), 1, 2 * 86400); const wt = await weekly(env, st, now); for (const a of admins) await say(env, a, wt); }
-  if (mi % 30 === 0 && !(await st.get('hlc:' + Math.floor(now / 1800e3)))) { await st.put('hlc:' + Math.floor(now / 1800e3), 1, 3600); await health(env, st, admins, now); await healthOrder(env, st, admins, now); }
+  if (mi % 10 === 0 && !(await st.get('hlc:' + Math.floor(now / 600e3)))) { await st.put('hlc:' + Math.floor(now / 600e3), 1, 1200); await doctor(env, st, admins, now, false); }
   if (h === 8 && mi < 5 && !(await st.get('bak:' + dkey(now)))) { await st.put('bak:' + dkey(now), 1, 2 * 86400); await backup(env, st, admins); }
   if (h === 11 && mi < 5 && tz(now).getUTCDay() === 3 && env.CHANNEL_ID && !(await st.get('chw:' + dkey(now)))) { await st.put('chw:' + dkey(now), 1, 2 * 86400); await channelPost(env, st); }
   if (h === 10 && mi < 5 && !(await st.get('dig:' + dkey(now)))) { // ertalabki xulosa: kechagi javobsiz savollar
@@ -1392,6 +1392,7 @@ async function handleUpdate(env, upd) {
   const admins = await adminsOf(env, st);
   if (!admins.includes(chat)) { if (cmd === '/tolov') return ORDER_ON(env) ? orderRedirect(env, chat, 'pay') : startPay(env, st, chat, (await st.get('c:' + chat)) || { hist: [], name: who(m) }); return supportIn(env, st, m); }
   if (cmd === '/logout') { await st.put('admins', ((await st.get('admins')) || []).filter((x) => x !== chat)); return say(env, chat, 'Chiqdingiz. Qayta kirish uchun /login.'); }
+  if (cmd === '/tuzat') { await say(env, chat, '🔎 Tekshiryapman…'); const r = await doctor(env, st, admins, Date.now(), true); return say(env, chat, r.problems.length ? "Tuzata olmagan muammolar yuqorida ko'rsatildi." : (r.fixed.length ? '✅ Topilgan nosozliklar tuzatildi.' : '✅ Hammasi joyida: bot, webhook va xotira ishlayapti.')); }
   if (cmd === '/auto') {
     if (/^(on|yoq|yoqish|1)$/i.test(arg)) await st.put('auto', 'on'); else if (/^(off|o'?chir|ochir|0)$/i.test(arg)) await st.put('auto', 'off');
     else return say(env, chat, `Avtomatik javob: <b>${(await st.get('auto')) === 'off' ? "o'chiq" : 'yoqilgan'}</b>\n/auto on yoki /auto off`);
@@ -1670,31 +1671,62 @@ async function calcCallback(env, st, q, arg) {
   rec.calc = sel.includes(i) ? sel.filter((x) => x !== i) : [...sel, i]; await saveRec(st, chat, rec);
   return tg(env, 'editMessageReplyMarkup', { chat_id: chat, message_id: q.message.message_id, reply_markup: calcKb(rec.calc) });
 }
-// Sog'liq nazorati: webhook yo'qolsa yoki Telegram xato bersa adminga xabar (6 soatda bir marta), imkon bo'lsa o'zi tuzatadi
-async function healthOrder(env, st, admins, now) { // buyurtma boti webhook'i: yo'qolsa o'zi tiklaydi, bo'lmasa egasiga xabar
-  if (!ORDER_ON(env)) return;
+// Avto-shifokor: bot, webhook va xotirani tekshiradi, topilgan nosozlikni o'zi tuzatadi va tuzatgach "tuzatildi" deb xabar beradi.
+// Tuzata olmasa (masalan, token bekor qilingan) aniq sababini aytadi (6 soatda bir marta). /tuzat: qo'lda tekshirish.
+const sleepMs = (ms) => new Promise((r) => setTimeout(r, ms));
+async function tgx(env, method, params) { // tg() kabi, lekin xato kodini ham qaytaradi va tarmoq uzilishida yiqilmaydi
   try {
-    const e2 = orderEnv(env); let wi = await tg(e2, 'getWebhookInfo', {}); if (!wi) { await new Promise((r) => setTimeout(r, 1500)); wi = await tg(e2, 'getWebhookInfo', {}); } let problem = '';
-    if (!wi) problem = "Buyurtma boti bilan aloqa yo'q (token bekor qilingan bo'lishi mumkin)";
-    else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(e2, 'setWebhook', { url: o + '/hook2/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'] }); problem = r ? '' : "Buyurtma boti webhook'ini o'rnatib bo'lmadi"; } else problem = "Buyurtma boti webhook'i o'rnatilmagan"; }
-    else if (wi.last_error_date && now / 1000 - wi.last_error_date < 600) problem = 'Buyurtma botida yetkazish xatosi: ' + String(wi.last_error_message || '').slice(0, 120);
-    if (!problem) { await st.put('hlo:ok', now, 3600); return; }
-    if (await st.get('hlo:alert')) return; await st.put('hlo:alert', 1, 6 * 3600);
-    for (const a of admins) await say(env, a, '🩺 <b>Buyurtma boti: muammo</b>\n' + esc(problem) + "\nMijozlar buyurtma bera olmasligi mumkin!");
-    await pushPhone(env, 'Buyurtma boti muammosi', problem, 5, 'warning');
-  } catch { /* nazorat o'zi ishni to'xtatmasin */ }
+    const r = await fetch(`https://api.telegram.org/bot${env.TG_TOKEN}/${method}`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(params || {}) });
+    const j = await r.json().catch(() => ({})); return { ok: !!j.ok, result: j.result, code: j.error_code || r.status, desc: j.description || '' };
+  } catch (e) { return { ok: false, net: true, code: 0, desc: String(e && e.message || e).slice(0, 80) }; }
 }
-async function health(env, st, admins, now) {
+async function doctorBot(env, st, name, path) {
+  const fixed = []; let problem = '', hard = false, net = false;
+  let me = await tgx(env, 'getMe'); for (const d of [1500, 3000]) { if (me.ok || !me.net) break; await sleepMs(d); me = await tgx(env, 'getMe'); }
+  if (!me.ok) {
+    if (me.net || me.code >= 500 || me.code === 429) return { fixed, problem: '', net: true }; // vaqtincha uzilish: yolg'on signal bermaymiz
+    return { fixed, hard: true, problem: `${name}: token ishlamayapti (${me.desc || me.code}). Tokenni BotFather'dan yangilab, Cloudflare'da ${name === 'Asosiy bot' ? 'TG_TOKEN' : 'ORDER_BOT_TOKEN'} ni almashtiring` };
+  }
+  const o = await st.get('origin'); if (!o || !env.WEBHOOK_SECRET) return { fixed, problem: `${name}: sayt manzili saqlanmagan, /setup ni bir marta oching`, hard: true };
+  const want = o + path + env.WEBHOOK_SECRET, set = () => tgx(env, 'setWebhook', { url: want, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'], drop_pending_updates: false });
+  let wi = await tgx(env, 'getWebhookInfo'); if (!wi.ok) { await sleepMs(1500); wi = await tgx(env, 'getWebhookInfo'); }
+  if (!wi.ok) return { fixed, problem: '', net: true };
+  const w = wi.result || {}, now = Date.now(), recentErr = w.last_error_date && now / 1000 - w.last_error_date < 600;
+  let why = '';
+  if (!w.url) why = "webhook o'chib qolgan edi";
+  else if (w.url !== want) why = "webhook noto'g'ri manzilga qarab turgan edi";
+  else if (recentErr) why = 'Telegram xabar yetkazishda xato berayotgan edi (' + String(w.last_error_message || '').slice(0, 80) + ')';
+  else if ((w.pending_update_count || 0) > 50) why = `${w.pending_update_count} ta xabar navbatda qotib qolgan edi`;
+  if (why) {
+    const r = await set(); await sleepMs(1500); const v = await tgx(env, 'getWebhookInfo'), vw = (v.result || {});
+    if (r.ok && vw.url === want) fixed.push(`${name}: ${why}: qayta ulandi`); else { problem = `${name}: ${why}, qayta ulab bo'lmadi (${r.desc || 'noma\'lum'})`; hard = true; }
+  }
+  return { fixed, problem, hard, net };
+}
+async function doctor(env, st, admins, now, manual) {
+  const out = { fixed: [], problems: [] };
   try {
-    let wi = await tg(env, 'getWebhookInfo', {}); if (!wi) { await new Promise((r) => setTimeout(r, 1500)); wi = await tg(env, 'getWebhookInfo', {}); } let problem = ''; if (wi && typeof wi !== 'object') return; // bir martalik uzilishda yolg'on signal bermaslik uchun qayta urinib ko'ramiz
-    if (!wi) problem = 'Telegram bilan aloqa yo\'q (token noto\'g\'ri bo\'lishi mumkin)';
-    else if (!wi.url) { const o = await st.get('origin'); if (o && env.WEBHOOK_SECRET) { const r = await tg(env, 'setWebhook', { url: o + '/hook/' + env.WEBHOOK_SECRET, secret_token: env.WEBHOOK_SECRET, allowed_updates: ['message', 'callback_query', 'pre_checkout_query'] }); problem = r ? '' : 'Webhook yo\'q edi, tiklashga urinildi: bo\'lmadi'; if (r) await st.put('hl:healed', now, 86400); } else problem = 'Webhook o\'rnatilmagan: /setup ni oching'; }
-    else if (wi.last_error_date && now / 1000 - wi.last_error_date < 600) problem = 'Telegram yetkazishda xato: ' + String(wi.last_error_message || '').slice(0, 120);
-    if (!problem) { await st.put('hl:ok', now, 3600); return; }
-    if (await st.get('hl:alert')) return; await st.put('hl:alert', 1, 6 * 3600);
-    for (const a of admins) await say(env, a, '🩺 <b>Bot sog\'ligi: muammo</b>\n' + esc(problem));
-    await pushPhone(env, 'Bot muammosi', problem, 4, 'warning');
+    const jobs = [['Asosiy bot', '/hook/', env]]; if (ORDER_ON(env)) jobs.push(['Buyurtma boti', '/hook2/', orderEnv(env)]);
+    for (const [name, path, e] of jobs) { const r = await doctorBot(e, st, name, path); out.fixed.push(...r.fixed); if (r.problem) out.problems.push(r.problem); if (r.net) out.net = true; }
+    try { const k = 'doc:probe', v = String(now); await st.put(k, v, 600); const back = await st.get(k); if (String(back) !== v) { out.problems.push("Xotira: yozilgan ma'lumot qaytib o'qilmadi"); } } catch (e) { out.problems.push('Xotira ishlamayapti: ' + String(e && e.message || e).slice(0, 80)); }
+    const open = await st.get('doc:open');
+    if (out.fixed.length && !(await st.get('doc:fx:' + out.fixed.join('|').slice(0, 60)))) {
+      await st.put('doc:fx:' + out.fixed.join('|').slice(0, 60), 1, 1800);
+      for (const a of admins) await say(env, a, '🛠 <b>Avtomatik tuzatildi</b>\n' + out.fixed.map((x) => '✅ ' + esc(x)).join('\n') + '\nBot ishlashda davom etmoqda.');
+    }
+    if (out.problems.length) {
+      await st.put('doc:open', 1, 7 * 86400);
+      if (manual || !(await st.get('doc:alert'))) {
+        await st.put('doc:alert', 1, 6 * 3600);
+        for (const a of admins) await say(env, a, "🩺 <b>Avto-shifokor: o'zi tuzata olmadi</b>\n" + out.problems.map((x) => '❗ ' + esc(x)).join('\n'));
+        await pushPhone(env, 'Bot muammosi', out.problems[0], 5, 'warning');
+      }
+    } else if (!out.net) {
+      await st.put('hl:ok', now, 3600);
+      if (open) { await st.put('doc:open', 0, 1); await st.put('doc:alert', 0, 1); for (const a of admins) await say(env, a, '✅ <b>Muammo bartaraf bo\'ldi</b>\nBot va webhook tekshirildi: hammasi joyida.'); }
+    }
   } catch { /* nazorat o'zi bot ishini to'xtatmasin */ }
+  return out;
 }
 
 // Sayt xatolari: brauzerdan keladi, takrorlari sanaladi, yangisi adminga xabar bo'ladi
@@ -1709,6 +1741,8 @@ async function errApi(req, env) {
   const raw = await req.text(); if (raw.length > 400000) return new Response('big', { status: 413, headers: cors });
   let p; try { p = JSON.parse(raw); } catch { return new Response('bad', { status: 400, headers: cors }); }
   const m = String(p.m || '').slice(0, 300); if (!m) return new Response('bad', { status: 400, headers: cors });
+  // Foydalanuvchiga ta'sir qilmaydigan "shovqin": brauzer kengaytmalari, qidiruv botlari, begona skriptlar. Adminni bezovta qilmaymiz.
+  if (/^(script error\.?|resizeobserver loop|non-error promise rejection|loading chunk|the operation was aborted|load failed|failed to fetch|networkerror)/i.test(m) || /googlebot|bingbot|yandex|crawler|spider|headlesschrome|lighthouse|facebookexternalhit/i.test(String(p.ua || '')) || /^(chrome|moz|safari)-extension:|^https?:\/\/(?!([a-z0-9-]+\.)?improuzbekiston\.uz)/i.test(String(p.s || ''))) return new Response('ok', { status: 200, headers: cors });
   const key = 'err:' + hash36(m + '|' + (p.s || '') + '|' + (p.l || 0)), cur = await st.get(key), now = Date.now(), page = String(p.u || '').slice(0, 200);
   const rec = cur || { m, s: String(p.s || '').slice(0, 200), l: Number(p.l) || 0, st: String(p.st || '').slice(0, 500), u: page, ua: String(p.ua || '').slice(0, 120), w: Number(p.w) || 0, h: Number(p.h) || 0, c: Number(p.c) || 0, sec: String(p.sec || '').slice(0, 120), el: String(p.el || '').slice(0, 160), lang: String(p.lang || '').slice(0, 5), f: now, n: 0 };
   rec.n++; rec.t = now; rec.u = page || rec.u;

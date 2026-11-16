@@ -105,6 +105,15 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   globalThis.fetch = async (u, o) => { if (String(u).endsWith('/getWebhookInfo')) return new Response(JSON.stringify({ ok: true, result: { url: '' } })); return f1(u, o); };
   const h0 = calls.length; await W.tick(env, Math.ceil(Date.now() / 1800e3) * 1800e3 + 60e3 - 60e3); ok(calls.slice(h0).some((c) => c.method === 'setWebhook'), 'sog\'liq: webhook o\'zi tiklandi');
   globalThis.fetch = f1;
+  { // avto-shifokor: webhook o'chgan -> o'zi ulaydi va "tuzatildi" xabari boradi; keyin hammasi joyida bo'lsa jim
+    let wurl = ''; const f2 = globalThis.fetch;
+    globalThis.fetch = async (u, o) => { const m = /bot([^/]+)\/(\w+)$/.exec(String(u)); if (m && m[2] === 'getWebhookInfo') return new Response(JSON.stringify({ ok: true, result: { url: wurl } })); if (m && m[2] === 'setWebhook') { wurl = JSON.parse(o.body).url; } return f2(u, o); };
+    const d0 = calls.length; const t0 = Math.ceil(Date.now() / 1800e3) * 1800e3 + 3600e3;
+    await W.tick(env, t0); ok(calls.slice(d0).some((c) => c.method === 'sendMessage' && c.body.chat_id === 8001 && /Avtomatik tuzatildi/.test(c.body.text)), 'avto-shifokor: tuzatgach xabar berdi');
+    const d1 = calls.length; await W.tick(env, t0 + 600e3); ok(!calls.slice(d1).some((c) => c.method === 'sendMessage' && c.body.chat_id === 8001 && /tuzat|muammo/i.test(c.body.text || '')), 'avto-shifokor: sog\'lom bo\'lsa jim');
+    await msg(8001, '/tuzat', 61); ok(/Hammasi joyida/.test(lastTo(8001).body.text), '/tuzat: hammasi joyida', lastTo(8001).body.text);
+    globalThis.fetch = f2;
+  }
   await msg(9012, '/start eslatma', 44); ok(((await S.get('fl')) || []).some((x) => x.c === 9012 && x.k === 'bld'), 'konstruktor eslatmasi rejalandi');
 
   console.log('Sayt xatolari');
@@ -114,6 +123,7 @@ const ok = (c, m, x) => { if (c) { pass++; console.log('  PASS', m); } else { fa
   ok((await er(e1)).status === 200, 'xato qabul qilindi'); const ph = calls.filter((c) => c.method === 'sendPhoto' && c.body.chat_id === 8001); ok(ph.length === 1, 'rasm bilan yuborildi', calls.slice(-3).map((c) => c.method));
   await er(e1); ok(calls.filter((c) => c.method === 'sendPhoto' && c.body.chat_id === 8001).length === 1, 'takror xabar bermaydi');
   await er({ m: 'rasmsiz xato', s: 'a.js', l: 3, sec: 'nav', u: 'https://improuzbekiston.uz/' }); ok(sent(8001, /rasmsiz xato[\s\S]*Ekran joyi: nav/).length === 1, 'rasmsiz ham aniq joy bilan yuboriladi');
+  const nz0 = calls.length; await er({ m: 'Script error.', s: '', l: 0, u: 'https://improuzbekiston.uz/' }); await er({ m: 'real xato 2', s: 'a.js', l: 1, u: 'https://improuzbekiston.uz/', ua: 'Mozilla Googlebot/2.1' }); ok(!calls.slice(nz0).some((c) => c.method === 'sendMessage' || c.method === 'sendPhoto'), 'shovqinli xatolar adminni bezovta qilmaydi');
   ok((await er(e1, 'https://evil.com')).status === 403, 'begona sayt rad etiladi');
   await msg(8001, '/xatolar', 60); ok(/×2 x is not defined/.test(lastTo(8001).body.text), '/xatolar ro\'yxat', lastTo(8001).body.text);
   const ej = await (await W.fetch(new Request('https://w.example/errors?key=setupkey123'), env, ctx)).json(); ok(ej.length === 2 && ej.some((x) => x.n === 2), '/errors JSON');
