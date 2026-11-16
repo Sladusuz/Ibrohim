@@ -994,12 +994,7 @@ async function tick(env, now = Date.now()) {
   if (mi % 10 === 0 && !(await st.get('hlc:' + Math.floor(now / 600e3)))) { await st.put('hlc:' + Math.floor(now / 600e3), 1, 1200); await doctor(env, st, admins, now, false); }
   if (h === 8 && mi < 5 && !(await st.get('bak:' + dkey(now)))) { await st.put('bak:' + dkey(now), 1, 2 * 86400); await backup(env, st, admins); }
   if (h === 11 && mi < 5 && tz(now).getUTCDay() === 3 && env.CHANNEL_ID && !(await st.get('chw:' + dkey(now)))) { await st.put('chw:' + dkey(now), 1, 2 * 86400); await channelPost(env, st); }
-  if (h === 10 && mi < 5 && !(await st.get('dig:' + dkey(now)))) { // ertalabki xulosa: kechagi javobsiz savollar
-    await st.put('dig:' + dkey(now), 1, 2 * 86400);
-    const ys = (await st.list(`ev:${dkey(now - 864e5)}:`)).map((k) => k.metadata).filter((e) => e && e.k === 'handoff' && e.x && !/^telefon:/.test(e.x)).slice(-8);
-    if (ys.length) { const t = `📋 <b>Kechagi javobsiz savollar</b> (${ys.length})\n` + ys.map((e) => `• ${esc(e.n || 'Mijoz')}: «${esc(String(e.x).slice(0, 90))}»`).join('\n') + '\n\nBotni o\'rgatish: <code>/oqit 1 javob</code>'; for (const a of admins) await say(env, a, t); }
-  }
-  if (h === 20 && mi < 5 && !(await st.get('rep:' + dkey(now)))) { await st.put('rep:' + dkey(now), 1, 2 * 86400); const txt = await report(env, st, dkey(now)); for (const a of admins) await say(env, a, txt); const S = await stats(st, dkey(now)); await pushPhone(env, 'Kunlik hisobot', `Suhbatlar: ${S.chats}, saytdan so'rovlar: ${S.leads.length}, shoshilinch: ${S.urg.length}, operator kerak: ${S.hand.length}. Batafsil Telegramda.`, 3, 'bar_chart'); await callOwner(env, st, `Дневной отчёт. Диалогов ${S.chats}. Заявок с сайта ${S.leads.length}. Срочных ${S.urg.length}. Нужен оператор ${S.hand.length}. Подробности в Телеграме.`, now); }
+  // Kunlik hisobotlar o'chirilgan: faqat haftalik hisobot (dushanba 09:00) yuboriladi. Qo'lda: /hisobot
 }
 
 /* ---------- Telegram ---------- */
