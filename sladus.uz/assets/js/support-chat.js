@@ -58,6 +58,30 @@ window.SladusChat = (function () {
       return d;
     }
 
+    function matchProducts(text) {
+      var seed = window.SLADUS_SEED;
+      if (!seed || !seed.products || !text) return [];
+      var up = text.toUpperCase(), found = [], seen = {};
+      seed.products.forEach(function (p) {
+        if (seen[p.id] || !p.name) return;
+        if (up.indexOf(p.name.toUpperCase()) > -1) { seen[p.id] = 1; found.push(p); }
+      });
+      return found.slice(0, 3);
+    }
+
+    function addProductCards(products) {
+      if (!products.length) return;
+      var wrap = document.createElement('div');
+      wrap.className = 'chatw__prods';
+      wrap.innerHTML = products.map(function (p) {
+        return '<a class="chatw__prod" href="product.html?id=' + encodeURIComponent(p.id) + '&lang=' + encodeURIComponent(lang) + '">' +
+          '<img src="' + e(p.img) + '" alt="' + e(p.name) + '" loading="lazy" width="64" height="64">' +
+          '<span>' + e(p.name) + '</span></a>';
+      }).join('');
+      body.appendChild(wrap);
+      body.scrollTop = body.scrollHeight;
+    }
+
     addBubble('bot', t('support.chat.greeting'));
 
     form.addEventListener('submit', function (ev) {
@@ -85,6 +109,7 @@ window.SladusChat = (function () {
           return;
         }
         addBubble('bot', res.data.reply);
+        addProductCards(matchProducts(res.data.reply));
         history.push({ role: 'assistant', content: res.data.reply });
       }).catch(function () {
         typing.remove();

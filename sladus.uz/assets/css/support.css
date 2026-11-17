@@ -100,6 +100,14 @@
 }
 .chatw__f button:disabled { opacity: .5; }
 .chatw__disc { padding: 0 1.2rem .9rem; color: var(--mute); font-size: .72rem; line-height: 1.5; }
+.chatw__prods { display: flex; flex-wrap: wrap; gap: .5rem; align-self: flex-start; max-width: 92%; }
+.chatw__prod {
+  display: flex; align-items: center; gap: .55rem; background: var(--shell-2);
+  border-radius: var(--r-m); padding: .4rem .8rem .4rem .4rem; font-size: .78rem; font-weight: 700;
+  color: var(--ink); transition: background .2s;
+}
+.chatw__prod:hover { background: var(--hair); }
+.chatw__prod img { width: 38px; height: 38px; border-radius: var(--r-s); object-fit: cover; flex-shrink: 0; background: #fff; }
 
 @media (max-width: 900px) {
   .chatw { position: static; height: 560px; }
