@@ -160,7 +160,7 @@ const I18N = {
     'footer.rights': 'Barcha huquqlar himoyalangan.',
     'footer.admin': 'Admin panel',
 
-    'a11y.menu': 'Menyuni ochish',
+    'a11y.menu': 'Asosiy menyu',
     'a11y.lang': 'Tilni tanlash',
     'top': 'Yuqoriga'
   },
@@ -324,7 +324,7 @@ const I18N = {
     'footer.rights': 'Все права защищены.',
     'footer.admin': 'Админ-панель',
 
-    'a11y.menu': 'Открыть меню',
+    'a11y.menu': 'Основное меню',
     'a11y.lang': 'Выбрать язык',
     'top': 'Наверх'
   },
@@ -488,7 +488,7 @@ const I18N = {
     'footer.rights': 'All rights reserved.',
     'footer.admin': 'Admin panel',
 
-    'a11y.menu': 'Open menu',
+    'a11y.menu': 'Main menu',
     'a11y.lang': 'Choose language',
     'top': 'Back to top'
   }

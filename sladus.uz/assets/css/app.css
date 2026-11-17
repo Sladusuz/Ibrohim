@@ -200,28 +200,29 @@ p { text-wrap: pretty; }
 .lang__pop button:hover { background: var(--shell-2); }
 .lang__pop button[aria-selected="true"] { color: var(--brand); }
 
-.burger { display: none; width: 44px; height: 44px; place-items: center; border-radius: var(--r-s); }
-.burger i { display: block; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; position: relative; transition: background .2s; }
-.burger i::before, .burger i::after { content: ''; position: absolute; left: 0; width: 20px; height: 2px; background: var(--ink); border-radius: 2px; transition: transform .3s var(--ez); }
-.burger i::before { top: -6px; }
-.burger i::after { top: 6px; }
-.burger[aria-expanded="true"] i { background: transparent; }
-.burger[aria-expanded="true"] i::before { transform: translateY(6px) rotate(45deg); }
-.burger[aria-expanded="true"] i::after { transform: translateY(-6px) rotate(-45deg); }
-
 @media (max-width: 940px) {
-  .burger { display: grid; }
   .hide-sm { display: none; }
-  .nav {
-    position: fixed; inset: 78px 0 auto 0; background: var(--shell);
-    padding: .5rem var(--gut) 1.8rem; border-bottom: 1px solid var(--hair);
-    transform: translateY(-140%); transition: transform .36s var(--ez); box-shadow: var(--lift);
+  .nav { display: none; }
+}
+
+/* ---------- Mobil pastki navigatsiya ---------- */
+.mnav { display: none; }
+@media (max-width: 940px) {
+  .mnav {
+    display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
+    background: rgba(251, 245, 236, .96); backdrop-filter: saturate(150%) blur(16px);
+    border-top: 1px solid var(--hair); padding-bottom: env(safe-area-inset-bottom);
   }
-  .nav.open { transform: translateY(0); }
-  .nav ul { flex-direction: column; align-items: stretch; gap: 0; }
-  .nav a { display: block; padding: 1rem 0; border-bottom: 1px solid var(--hair); font-size: var(--t-xl); font-family: var(--display); letter-spacing: -.03em; }
-  .nav a[aria-current="page"]::after { display: none; }
-  .nav a[aria-current="page"] { color: var(--brand); }
+  .mnav ul { display: flex; list-style: none; margin: 0; padding: 0; }
+  .mnav li { flex: 1; min-width: 0; }
+  .mnav a {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    padding: .5rem 2px .45rem; color: var(--mute); transition: color .2s;
+  }
+  .mnav a span { font-size: .62rem; font-weight: 700; letter-spacing: .01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .mnav a[aria-current="page"] { color: var(--brand); }
+  .mnav svg { flex-shrink: 0; }
+  body[data-page] { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
 }
 
 /* ---------- Hero ---------- */
@@ -527,6 +528,7 @@ p { text-wrap: pretty; }
   transition: opacity .3s var(--ez), transform .3s var(--ez);
 }
 .up.on { opacity: 1; pointer-events: auto; transform: none; }
+@media (max-width: 940px) { .up { bottom: calc(60px + env(safe-area-inset-bottom) + 1rem); } }
 
 /* ---------- Ochilish ---------- */
 .rv { opacity: 0; transform: translateY(20px); }
@@ -535,7 +537,3 @@ p { text-wrap: pretty; }
 
 .vh { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .mt { margin-top: 2rem; }
-
-/* ---------- mobil menyu elementlari ---------- */
-.only-sm { display: none; }
-@media (max-width: 940px) { .only-sm { display: block; } }

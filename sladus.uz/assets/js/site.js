@@ -66,6 +66,14 @@
   };
 
   /* ---------- header / footer ---------- */
+  var MNAV_ICONS = {
+    'index.html':   '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9v-6h6v6h2.5a1 1 0 0 0 1-1v-9"/>',
+    'about.html':   '<rect x="4.5" y="3" width="15" height="18" rx="1.2"/><path d="M9 21v-5h6v5M9 8h.01M15 8h.01M9 12h.01M15 12h.01"/>',
+    'catalog.html': '<rect x="3" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.2"/>',
+    'support.html': '<path d="M12 21c-4.97 0-9-3.8-9-8.5S7.03 4 12 4s9 3.8 9 8.5c0 1.57-.45 3.04-1.23 4.31L21 21l-4.3-1.19A9.4 9.4 0 0 1 12 21Z"/>',
+    'contact.html': '<path d="M21 16.1v3a2 2 0 0 1-2.2 2 19.4 19.4 0 0 1-8.4-3 19.1 19.1 0 0 1-5.9-5.9 19.4 19.4 0 0 1-3-8.4A2 2 0 0 1 3.5 1.8h3a2 2 0 0 1 2 1.7c.13.95.36 1.87.7 2.75a2 2 0 0 1-.45 2.1L7.5 9.6a15.6 15.6 0 0 0 5.9 5.9l1.25-1.25a2 2 0 0 1 2.1-.45c.88.34 1.8.57 2.75.7a2 2 0 0 1 1.7 2.1Z"/>'
+  };
+
   function header(active) {
     var items = [['index.html', t('nav.home')], ['about.html', t('nav.about')],
                  ['catalog.html', t('nav.catalog')], ['support.html', t('nav.support')], ['contact.html', t('nav.contact')]];
@@ -75,21 +83,25 @@
     var langs = LANGS.map(function (l) {
       return '<button type="button" data-l="' + l + '" role="option" aria-selected="' + (l === L) + '">' + e(I[l]['lang.name']) + '</button>';
     }).join('');
+    var mnav = items.map(function (n) {
+      return '<li><a href="' + href(n[0]) + '"' + (n[0] === active ? ' aria-current="page"' : '') + '>' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + (MNAV_ICONS[n[0]] || '') + '</svg>' +
+        '<span>' + e(n[1]) + '</span></a></li>';
+    }).join('');
 
     return '<a class="skip" href="#main">' + e(t('nav.home')) + '</a>' +
       '<header class="hdr" id="hdr"><div class="wrap hdr__in">' +
         '<a class="logo" href="' + href('index.html') + '">' +
           '<img src="' + B.company.logo + '" alt="Sladus" width="110" height="36">' +
           '<span><b>Sladus</b><span>LEADING</span></span></a>' +
-        '<nav class="nav" id="nav"><ul>' + nav +
-          '<li class="only-sm"><a href="' + href('contact.html') + '">' + e(t('nav.quote')) + '</a></li></ul></nav>' +
+        '<nav class="nav" id="nav"><ul>' + nav + '</ul></nav>' +
         '<div class="hdr__tools">' +
           '<div class="lang" id="lang"><button class="lang__btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="' + e(t('a11y.lang')) + '">' + L +
             '<svg width="10" height="7" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M1 1l5 5 5-5" stroke-linecap="round"/></svg></button>' +
             '<div class="lang__pop" role="listbox">' + langs + '</div></div>' +
           '<a class="btn btn--fill btn--sm hide-sm" href="' + href('contact.html') + '">' + e(t('nav.quote')) + '</a>' +
-          '<button class="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="' + e(t('a11y.menu')) + '"><i></i></button>' +
-        '</div></div></header>';
+        '</div></div></header>' +
+      '<nav class="mnav" aria-label="' + e(t('a11y.menu')) + '"><ul>' + mnav + '</ul></nav>';
   }
 
   function footer() {
@@ -125,12 +137,7 @@
   }
 
   function chrome() {
-    var burger = $('.burger'), nav = $('#nav'), hdr = $('#hdr');
-    if (burger) burger.addEventListener('click', function () {
-      var o = burger.getAttribute('aria-expanded') === 'true';
-      burger.setAttribute('aria-expanded', String(!o));
-      nav.classList.toggle('open', !o);
-    });
+    var hdr = $('#hdr');
 
     var lang = $('#lang');
     if (lang) {
