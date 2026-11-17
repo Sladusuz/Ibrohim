@@ -2,12 +2,13 @@
    Sladus — Support AI (Netlify Function)
    POST /api/support-chat  (netlify.toml redirect’i orqali)
    { messages: [{role,content}], lang }
+   Cloudflare Workers AI orqali ishlaydi.
    ============================================================ */
 'use strict';
 
 var buildSystemPrompt = require('../../data/build-system-prompt').buildSystemPrompt;
 
-var MODEL = 'claude-haiku-4-5-20251001';
+var MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 var MAX_TURNS = 10;
 var MAX_CHARS_PER_MSG = 1500;
 
@@ -18,11 +19,12 @@ exports.handler = async function (event) {
     return { statusCode: 405, headers: headers, body: JSON.stringify({ error: 'Faqat POST so‘rovlar qabul qilinadi.' }) };
   }
 
-  var key = process.env.ANTHROPIC_API_KEY;
-  if (!key) {
+  var accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  var token = process.env.CLOUDFLARE_API_TOKEN;
+  if (!accountId || !token) {
     return {
       statusCode: 500, headers: headers,
-      body: JSON.stringify({ error: 'Server tomonda ANTHROPIC_API_KEY sozlanmagan. Netlify loyihasining Site settings → Environment variables bo‘limiga qo‘shing.' })
+      body: JSON.stringify({ error: 'Server tomonda CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_API_TOKEN sozlanmagan. Netlify loyihasining Site settings → Environment variables bo‘limiga qo‘shing.' })
     };
   }
 
@@ -44,28 +46,29 @@ exports.handler = async function (event) {
   }
 
   try {
-    var upstream = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 500,
-        system: buildSystemPrompt(lang),
-        messages: msgs
-      })
-    });
+    var upstream = await fetch(
+      'https://api.cloudflare.com/client/v4/accounts/' + accountId + '/ai/run/' + MODEL,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          max_tokens: 500,
+          messages: [{ role: 'system', content: buildSystemPrompt(lang) }].concat(msgs)
+        })
+      }
+    );
 
     var data = await upstream.json();
 
-    if (!upstream.ok) {
-      return { statusCode: upstream.status, headers: headers, body: JSON.stringify({ error: (data && data.error && data.error.message) || 'AI xizmatidan xatolik qaytdi.' }) };
+    if (!upstream.ok || !data.success) {
+      var errMsg = (data && data.errors && data.errors[0] && data.errors[0].message) || 'AI xizmatidan xatolik qaytdi.';
+      return { statusCode: upstream.ok ? 502 : upstream.status, headers: headers, body: JSON.stringify({ error: errMsg }) };
     }
 
-    var text = (data.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('\n').trim();
+    var text = (data.result && String(data.result.response || '').trim()) || '';
     return { statusCode: 200, headers: headers, body: JSON.stringify({ reply: text || '...' }) };
   } catch (err) {
     return { statusCode: 502, headers: headers, body: JSON.stringify({ error: 'AI xizmatiga ulanib bo‘lmadi. Birozdan keyin qayta urinib ko‘ring.' }) };

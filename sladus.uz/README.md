@@ -90,7 +90,7 @@ Saytda `/support.html` sahifasi bor: tez-tez so‘raladigan savollar, to‘liq P
 katalogni yuklab olish tugmasi (`assets/catalog/Sladus-Katalog-2026.pdf`) va
 mahsulotlar bo‘yicha savollarga javob beradigan AI chat vidjeti.
 
-AI yordamchi Anthropic (Claude) API orqali ishlaydi, lekin API kaliti **faqat
+AI yordamchi Cloudflare Workers AI orqali ishlaydi, lekin kalit **faqat
 serverda** turadi — brauzer kodida hech qachon ko‘rinmaydi. Buning uchun serverless
 funksiya ishlatiladi:
 
@@ -101,17 +101,30 @@ funksiya ishlatiladi:
 
 ### Sozlash
 
-1. [console.anthropic.com](https://console.anthropic.com) da API kalit oling.
-2. Hosting sozlamalarida muhit o‘zgaruvchisi (environment variable) qo‘shing:
-   - Vercel: Project → Settings → Environment Variables → `ANTHROPIC_API_KEY`
-   - Netlify: Site settings → Environment variables → `ANTHROPIC_API_KEY`
-3. Qayta deploy qiling. Kalit qo‘yilmagan bo‘lsa, chat vidjeti buni aniq
+1. [dash.cloudflare.com](https://dash.cloudflare.com) da hisob oching (bepul
+   tarifi yetarli). Hisob ID’ni (Account ID) bosh sahifa o‘ng tomonidan
+   nusxalab oling.
+2. **My Profile → API Tokens → Create Token** dan **Workers AI** uchun yozish
+   huquqi (`Workers AI: Edit`) berilgan token yarating.
+3. Hosting sozlamalarida ikkita muhit o‘zgaruvchisi (environment variable)
+   qo‘shing:
+   - Vercel: Project → Settings → Environment Variables →
+     `CLOUDFLARE_ACCOUNT_ID` va `CLOUDFLARE_API_TOKEN`
+   - Netlify: Site settings → Environment variables → xuddi shu ikkitasi
+4. Qayta deploy qiling. Kalit qo‘yilmagan bo‘lsa, chat vidjeti buni aniq
    xabar bilan ko‘rsatadi (foydalanuvchiga API xatoligi emas, tushunarli xabar
    chiqadi).
 
-Yordamchi faqat Sladus mahsulotlari, katalogi va aloqa ma’lumotlari haqida javob
-beradi (`data/build-system-prompt.js` da belgilangan) — narx yoki aniq buyurtma
-so‘ralganda «Aloqa» formasiga yo‘naltiradi. Mahsulotlar ro‘yxati
+Modelni almashtirish kerak bo‘lsa, `api/support-chat.js` va
+`netlify/functions/support-chat.js` dagi `MODEL` qatorini
+[Cloudflare Workers AI katalogidagi](https://developers.cloudflare.com/workers-ai/models/)
+boshqa modelga o‘zgartiring (ikkala faylda bir xil bo‘lishi kerak).
+
+Yordamchi avvalo Sladus mahsulotlari, katalogi va aloqa ma’lumotlaridan foydalanib
+javob beradi (`data/build-system-prompt.js` da belgilangan); mavzuga aloqasi
+yo‘q savollarni ham rad etmaydi, lekin ma’lumotlarda yo‘q aniq narx yoki
+buyurtma tafsilotini o‘zi o‘ylab topmaydi — bunday holda «Aloqa» formasiga
+yo‘naltiradi. Mahsulotlar ro‘yxati
 `data/catalog-context.json` faylida saqlanadi; yangi mahsulot turkumi qo‘shilganda
 shu faylni ham qo‘lda yangilang.
 
@@ -164,8 +177,8 @@ Tezkor tugmalar: **Esc** — oynani yopish, **Ctrl+S** — saqlash.
    bloklanadi va 15 daqiqa harakatsizlikdan so‘ng avtomatik chiqadi. Standart
    parol o‘zgartirilmagan bo‘lsa, panel buni doim ko‘rinadigan qizil ogohlantirish
    bilan eslatadi.
-9. **AI yordamchi kaliti** — `ANTHROPIC_API_KEY` faqat serverless funksiyada
-   (hosting muhit o‘zgaruvchisi sifatida) turadi, brauzer kodiga hech qachon
+9. **AI yordamchi kaliti** — `CLOUDFLARE_ACCOUNT_ID` va `CLOUDFLARE_API_TOKEN`
+   faqat serverless funksiyada (hosting muhit o‘zgaruvchisi sifatida) turadi, brauzer kodiga hech qachon
    qo‘shilmaydi.
 
 ---

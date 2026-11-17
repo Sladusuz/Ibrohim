@@ -1,14 +1,14 @@
 /* ============================================================
    Sladus — Support AI (Vercel Serverless Function)
    POST /api/support-chat  { messages: [{role,content}], lang }
-   Anthropic kaliti FAQAT shu yerda, serverda ishlatiladi —
-   brauzerga hech qachon chiqmaydi.
+   Cloudflare Workers AI orqali ishlaydi — kalit FAQAT shu yerda,
+   serverda ishlatiladi, brauzerga hech qachon chiqmaydi.
    ============================================================ */
 'use strict';
 
 var buildSystemPrompt = require('../data/build-system-prompt').buildSystemPrompt;
 
-var MODEL = 'claude-haiku-4-5-20251001';
+var MODEL = '@cf/meta/llama-3.3-70b-instruct-fp8-fast';
 var MAX_TURNS = 10;
 var MAX_CHARS_PER_MSG = 1500;
 
@@ -24,11 +24,12 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ error: 'Faqat POST so‘rovlar qabul qilinadi.' }));
   }
 
-  var key = process.env.ANTHROPIC_API_KEY;
-  if (!key) {
+  var accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  var token = process.env.CLOUDFLARE_API_TOKEN;
+  if (!accountId || !token) {
     res.statusCode = 500;
     return res.end(JSON.stringify({
-      error: 'Server tomonda ANTHROPIC_API_KEY sozlanmagan. Vercel loyihasining Settings → Environment Variables bo‘limiga qo‘shing.'
+      error: 'Server tomonda CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_API_TOKEN sozlanmagan. Vercel loyihasining Settings → Environment Variables bo‘limiga qo‘shing.'
     }));
   }
 
@@ -54,29 +55,30 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    var upstream = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 500,
-        system: buildSystemPrompt(lang),
-        messages: msgs
-      })
-    });
+    var upstream = await fetch(
+      'https://api.cloudflare.com/client/v4/accounts/' + accountId + '/ai/run/' + MODEL,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token
+        },
+        body: JSON.stringify({
+          max_tokens: 500,
+          messages: [{ role: 'system', content: buildSystemPrompt(lang) }].concat(msgs)
+        })
+      }
+    );
 
     var data = await upstream.json();
 
-    if (!upstream.ok) {
-      res.statusCode = upstream.status;
-      return res.end(JSON.stringify({ error: (data && data.error && data.error.message) || 'AI xizmatidan xatolik qaytdi.' }));
+    if (!upstream.ok || !data.success) {
+      res.statusCode = upstream.ok ? 502 : upstream.status;
+      var errMsg = (data && data.errors && data.errors[0] && data.errors[0].message) || 'AI xizmatidan xatolik qaytdi.';
+      return res.end(JSON.stringify({ error: errMsg }));
     }
 
-    var text = (data.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('\n').trim();
+    var text = (data.result && String(data.result.response || '').trim()) || '';
     res.statusCode = 200;
     return res.end(JSON.stringify({ reply: text || '...' }));
   } catch (err) {
