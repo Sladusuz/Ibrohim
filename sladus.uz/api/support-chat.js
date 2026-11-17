@@ -21,14 +21,14 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== 'POST') {
     res.statusCode = 405;
-    return res.end(JSON.stringify({ error: 'Faqat POST so\'rovlar qabul qilinadi.' }));
+    return res.end(JSON.stringify({ error: 'Faqat POST so‘rovlar qabul qilinadi.' }));
   }
 
   var key = process.env.ANTHROPIC_API_KEY;
   if (!key) {
     res.statusCode = 500;
     return res.end(JSON.stringify({
-      error: 'Server tomonda ANTHROPIC_API_KEY sozlanmagan. Vercel loyihasining Settings → Environment Variables bo\'limiga qo\'shing.'
+      error: 'Server tomonda ANTHROPIC_API_KEY sozlanmagan. Vercel loyihasining Settings → Environment Variables bo‘limiga qo‘shing.'
     }));
   }
 
@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
   }
   if (!body || !Array.isArray(body.messages) || !body.messages.length) {
     res.statusCode = 400;
-    return res.end(JSON.stringify({ error: 'Xabarlar ro\'yxati bo\'sh.' }));
+    return res.end(JSON.stringify({ error: 'Xabarlar ro‘yxati bo‘sh.' }));
   }
 
   var lang = ['uz', 'ru', 'en'].indexOf(body.lang) > -1 ? body.lang : 'ru';
@@ -50,7 +50,7 @@ module.exports = async function handler(req, res) {
 
   if (!msgs.length) {
     res.statusCode = 400;
-    return res.end(JSON.stringify({ error: 'Xabar matni bo\'sh.' }));
+    return res.end(JSON.stringify({ error: 'Xabar matni bo‘sh.' }));
   }
 
   try {
@@ -81,6 +81,6 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ reply: text || '...' }));
   } catch (err) {
     res.statusCode = 502;
-    return res.end(JSON.stringify({ error: 'AI xizmatiga ulanib bo\'lmadi. Birozdan keyin qayta urinib ko\'ring.' }));
+    return res.end(JSON.stringify({ error: 'AI xizmatiga ulanib bo‘lmadi. Birozdan keyin qayta urinib ko‘ring.' }));
   }
 };
