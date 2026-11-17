@@ -365,17 +365,10 @@ p { text-wrap: pretty; }
 .card:active::before { transform: scaleX(1); }
 .card__ph {
   position: relative; aspect-ratio: 5/4; overflow: hidden;
-  padding: 1rem; box-sizing: border-box; display: flex; align-items: center; justify-content: center;
-  background:
-    radial-gradient(circle at 25% 20%, color-mix(in srgb, var(--c) 36%, transparent), transparent 58%),
-    radial-gradient(circle at 85% 90%, color-mix(in srgb, var(--c) 26%, transparent), transparent 55%),
-    var(--shell-2);
+  background: var(--shell-2);
 }
-.card__ph img {
-  width: 100%; height: 100%; object-fit: contain; transition: transform .4s var(--ez);
-  filter: drop-shadow(0 16px 24px rgba(22, 16, 14, .22));
-}
-.card:hover .card__ph img, .card:active .card__ph img { transform: scale(1.05) translateY(-3px); }
+.card__ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ez); }
+.card:hover .card__ph img, .card:active .card__ph img { transform: scale(1.06); }
 .card__cat {
   position: absolute; left: .75rem; bottom: .75rem;
   background: var(--c); color: #fff; font-size: .68rem; font-weight: 800;
