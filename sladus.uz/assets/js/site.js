@@ -295,7 +295,7 @@
     for (var i = 0; i < P.length && picks.length < 8; i++) {
       if (!seen[P[i].id]) { seen[P[i].id] = 1; picks.push(P[i]); }
     }
-    $('#feat').innerHTML = picks.slice(0, 3).map(card).join('');
+    $('#feat').innerHTML = picks.slice(0, 4).map(card).join('');
 
     $('#pillars').innerHTML =
       pill('c-brand', '01', t('why.q.t'), t('why.q.d')) +
