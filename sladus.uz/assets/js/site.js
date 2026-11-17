@@ -6,6 +6,7 @@
 
   var B = window.BRAND, I = window.I18N;
   var LANGS = ['uz', 'ru', 'en'];
+  var LANG_FLAGS = { uz: '🇺🇿', ru: '🇷🇺', en: '🇬🇧' };
   var DATA = { products: [], categories: [] };
 
   /* ---------- til ---------- */
@@ -81,7 +82,7 @@
       return '<li><a href="' + href(n[0]) + '"' + (n[0] === active ? ' aria-current="page"' : '') + '>' + e(n[1]) + '</a></li>';
     }).join('');
     var langs = LANGS.map(function (l) {
-      return '<button type="button" data-l="' + l + '" role="option" aria-selected="' + (l === L) + '">' + e(I[l]['lang.name']) + '</button>';
+      return '<button type="button" data-l="' + l + '" role="option" aria-selected="' + (l === L) + '"><span class="lang__flag">' + LANG_FLAGS[l] + '</span>' + e(I[l]['lang.name']) + '</button>';
     }).join('');
     var mnav = items.map(function (n) {
       return '<li><a href="' + href(n[0]) + '"' + (n[0] === active ? ' aria-current="page"' : '') + '>' +
@@ -96,7 +97,7 @@
           '<span><b>Sladus</b><span>LEADING</span></span></a>' +
         '<nav class="nav" id="nav"><ul>' + nav + '</ul></nav>' +
         '<div class="hdr__tools">' +
-          '<div class="lang" id="lang"><button class="lang__btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="' + e(t('a11y.lang')) + '">' + L +
+          '<div class="lang" id="lang"><button class="lang__btn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="' + e(t('a11y.lang')) + '"><span class="lang__flag">' + LANG_FLAGS[L] + '</span>' + L.toUpperCase() +
             '<svg width="10" height="7" viewBox="0 0 12 8" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M1 1l5 5 5-5" stroke-linecap="round"/></svg></button>' +
             '<div class="lang__pop" role="listbox">' + langs + '</div></div>' +
           '<a class="btn btn--fill btn--sm hide-sm" href="' + href('contact.html') + '">' + e(t('nav.quote')) + '</a>' +
