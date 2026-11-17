@@ -330,7 +330,7 @@ p { text-wrap: pretty; }
 .range:hover .range__go i { transform: translateX(4px); }
 
 /* ---------- Mahsulot kartasi ---------- */
-.grid { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); }
+.grid { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(248px, 1fr)); }
 .card {
   position: relative; display: flex; flex-direction: column; background: #fff;
   border-radius: var(--r-m); overflow: hidden; border: 1px solid var(--hair);
