@@ -319,6 +319,9 @@
     txt('#formTitle', t('form.title'));
     $('#formBox').innerHTML = formHtml();
     wireForm('');
+
+    txt('#aiEyebrow', t('ai.eyebrow')); txt('#aiTitle', t('ai.title')); txt('#aiLead', t('ai.lead'));
+    if (window.SladusChat) window.SladusChat.mount($('#homeChat'), L, t);
   }
   function txt(s, v) { var n = $(s); if (n) n.textContent = v; }
 

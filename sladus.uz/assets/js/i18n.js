@@ -61,6 +61,9 @@ const I18N = {
     'cta.lead': 'Assortiment, qadoq va yetkazib berish shartlari bo‘yicha to‘liq taklifni bir ish kunida yuboramiz.',
     'cta.btn': 'Taklif olish',
 
+    'ai.eyebrow': 'Onlayn yordamchi',
+    'ai.title': 'Savolingiz bormi? AI yordamchidan so‘rang',
+    'ai.lead': 'Mahsulotlar, tarkib, yetkazib berish yoki hamkorlik haqida savolingizni yozing — yordamchimiz saytdagi ma’lumotlar asosida tezkor javob beradi.',
     'form.title': 'Narx taklifini so‘rash',
     'form.lead': 'Oddiy formani to‘ldiring — menejerlarimiz yaqin orada bog‘lanib, barcha savollaringizga javob berishadi.',
     'form.name': 'Ism va familiya',
@@ -222,6 +225,9 @@ const I18N = {
     'cta.lead': 'Полное предложение по ассортименту, упаковке и условиям поставки отправим в течение одного рабочего дня.',
     'cta.btn': 'Получить предложение',
 
+    'ai.eyebrow': 'Онлайн-помощник',
+    'ai.title': 'Есть вопросы? Спросите AI-помощника',
+    'ai.lead': 'Напишите вопрос о продукции, составе, доставке или сотрудничестве — помощник ответит быстро на основе данных сайта.',
     'form.title': 'Запрос коммерческого предложения',
     'form.lead': 'Заполните простую форму — наши менеджеры свяжутся с вами в ближайшее время и ответят на все ваши вопросы.',
     'form.name': 'Имя и фамилия',
@@ -383,6 +389,9 @@ const I18N = {
     'cta.lead': 'We send a full offer on range, packaging and delivery terms within one working day.',
     'cta.btn': 'Get an offer',
 
+    'ai.eyebrow': 'Online assistant',
+    'ai.title': 'Have a question? Ask our AI assistant',
+    'ai.lead': 'Ask about products, ingredients, delivery or partnership — our assistant answers quickly using the information on this site.',
     'form.title': 'Request a quotation',
     'form.lead': 'Fill in the simple form — our managers will contact you shortly and answer all your questions.',
     'form.name': 'Full name',

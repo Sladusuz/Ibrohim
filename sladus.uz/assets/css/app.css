@@ -138,7 +138,7 @@ p { text-wrap: pretty; }
   transition: transform .28s var(--ez), background-color .25s, color .25s, border-color .25s, box-shadow .28s var(--ez);
 }
 .btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(0); }
+.btn:active { transform: scale(.96); }
 .btn--fill { background: var(--brand); color: #fff; box-shadow: 0 12px 30px -14px rgba(226, 58, 94, .8); }
 .btn--fill:hover { background: #C82A4C; box-shadow: 0 20px 40px -16px rgba(226, 58, 94, .9); }
 .btn--dark { background: var(--void); color: var(--shell); }
@@ -309,9 +309,9 @@ p { text-wrap: pretty; }
   min-height: 420px; padding: 1.7rem; border-radius: var(--r-l); overflow: hidden; color: var(--shell);
   transition: transform .4s var(--ez);
 }
-.range:hover { transform: translateY(-6px); }
+.range:hover, .range:active { transform: translateY(-6px); }
 .range img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ez); }
-.range:hover img { transform: scale(1.07); }
+.range:hover img, .range:active img { transform: scale(1.07); }
 .range::after {
   content: ''; position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(to top, rgba(22,16,14,.95) 10%, color-mix(in srgb, var(--c) 30%, transparent) 58%, rgba(22,16,14,.1));
@@ -333,16 +333,31 @@ p { text-wrap: pretty; }
   position: relative; display: flex; flex-direction: column; background: #fff;
   border-radius: var(--r-m); overflow: hidden; border: 1px solid var(--hair);
   transition: transform .32s var(--ez), box-shadow .32s var(--ez), border-color .3s;
+  animation: cardIn .55s var(--ez) backwards;
 }
+@keyframes cardIn { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .card { animation: none; } }
+.grid .card:nth-child(1) { animation-delay: .02s; } .grid .card:nth-child(2) { animation-delay: .06s; }
+.grid .card:nth-child(3) { animation-delay: .1s; }  .grid .card:nth-child(4) { animation-delay: .14s; }
+.grid .card:nth-child(5) { animation-delay: .18s; } .grid .card:nth-child(6) { animation-delay: .22s; }
+.grid .card:nth-child(7) { animation-delay: .26s; } .grid .card:nth-child(8) { animation-delay: .3s; }
 .card::before {
   content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--c);
   z-index: 3; transform: scaleX(0); transform-origin: left; transition: transform .4s var(--ez);
 }
 .card:hover { transform: translateY(-5px); box-shadow: var(--lift); border-color: transparent; }
 .card:hover::before { transform: scaleX(1); }
-.card__ph { position: relative; aspect-ratio: 5/4; background: var(--shell-2); overflow: hidden; }
-.card__ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ez); }
-.card:hover .card__ph img { transform: scale(1.06); }
+.card:active { transform: translateY(-2px) scale(.985); box-shadow: var(--lift); border-color: transparent; }
+.card:active::before { transform: scaleX(1); }
+.card__ph {
+  position: relative; aspect-ratio: 5/4; overflow: hidden;
+  background:
+    radial-gradient(circle at 25% 20%, color-mix(in srgb, var(--c) 32%, transparent), transparent 58%),
+    radial-gradient(circle at 85% 90%, color-mix(in srgb, var(--c) 22%, transparent), transparent 55%),
+    var(--shell-2);
+}
+.card__ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--ez); filter: drop-shadow(0 10px 18px rgba(0,0,0,.1)); }
+.card:hover .card__ph img, .card:active .card__ph img { transform: scale(1.06); }
 .card__cat {
   position: absolute; left: .75rem; bottom: .75rem;
   background: var(--c); color: #fff; font-size: .68rem; font-weight: 800;
@@ -368,7 +383,7 @@ p { text-wrap: pretty; }
   background: #fff; font-size: var(--t-sm); font-weight: 600; transition: all .22s var(--ez);
 }
 .chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); display: block; }
-.chip:hover { border-color: var(--c); }
+.chip:hover, .chip:active { border-color: var(--c); }
 .chip[aria-pressed="true"] { background: var(--c); border-color: var(--c); color: #fff; }
 .chip[aria-pressed="true"] i { background: rgba(255,255,255,.85); }
 .sel {
