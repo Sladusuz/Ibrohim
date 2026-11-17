@@ -490,6 +490,32 @@
    },
    "net": "700 g",
    "kcal": 378
+  },
+  {
+   "id": "ronda-rings",
+   "code": "4.08",
+   "name": "RONDA HRUST",
+   "cat": "zavtrak",
+   "descr": {
+    "uz": "Salyami ta’mli sho‘r halqachalar",
+    "ru": "Солёные колечки со вкусом салями",
+    "en": "Salami-flavoured salted rings"
+   },
+   "net": "1,5 kg",
+   "kcal": 430
+  },
+  {
+   "id": "ronda-sticks",
+   "code": "4.09",
+   "name": "RONDA HRUST",
+   "cat": "zavtrak",
+   "descr": {
+    "uz": "Salyami ta’mli sho‘r tayoqchalar",
+    "ru": "Солёные палочки со вкусом салями",
+    "en": "Salami-flavoured salted sticks"
+   },
+   "net": "2 kg",
+   "kcal": 430
   }
  ]
 }
