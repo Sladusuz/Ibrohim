@@ -401,6 +401,19 @@
    "kcal": 415
   },
   {
+   "id": "top-drops-dark",
+   "code": "5.01",
+   "name": "SLADUS TOP DROPS",
+   "cat": "dekor",
+   "descr": {
+    "uz": "Dekorativ qandolat sepmasi, shokolad ta’mli sharchalar",
+    "ru": "Декоративная кондитерская посыпка, шоколадные шарики",
+    "en": "Decorative topping, chocolate-flavoured beads"
+   },
+   "net": "1/4 kg",
+   "kcal": 508
+  },
+  {
    "id": "top-drops",
    "code": "5.02",
    "name": "SLADUS TOP DROPS LIGHT",
