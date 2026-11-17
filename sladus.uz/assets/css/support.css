@@ -4,21 +4,32 @@
 
 /* ---------- katalog yuklab olish kartasi ---------- */
 .dlcard {
+  position: relative; overflow: hidden;
   display: flex; align-items: center; gap: 1.1rem;
-  padding: 1.4rem 1.5rem; margin-bottom: 2rem;
+  padding: 1.5rem 1.7rem; margin-bottom: 2rem;
   background: var(--void); color: var(--on-dark);
   border-radius: var(--r-l); box-shadow: var(--lift);
 }
+.dlcard::after {
+  content: ''; position: absolute; right: -20%; top: -70%; width: 60%; height: 220%; border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--gold) 30%, transparent), transparent 70%);
+  pointer-events: none;
+}
 .dlcard__ic {
-  flex-shrink: 0; width: 52px; height: 52px; border-radius: var(--r-m);
+  position: relative; flex-shrink: 0; width: 54px; height: 54px; border-radius: var(--r-m);
   background: linear-gradient(135deg, var(--brand), var(--gold));
   display: flex; align-items: center; justify-content: center; color: #fff;
+  box-shadow: 0 10px 22px -8px rgba(217, 160, 56, .55);
 }
 .dlcard__ic svg { width: 26px; height: 26px; }
-.dlcard__t { flex: 1; min-width: 0; }
-.dlcard__t h3 { font-family: var(--display); font-size: var(--t-lg); margin-bottom: .2rem; }
+.dlcard__t { position: relative; flex: 1; min-width: 0; }
+.dlcard__t h3 { font-family: var(--display); font-size: var(--t-lg); margin-bottom: .3rem; }
 .dlcard__t p { color: var(--on-dark-mu); font-size: var(--t-sm); }
-.dlcard .btn { flex-shrink: 0; }
+.dlcard .btn { position: relative; flex-shrink: 0; }
+@media (max-width: 560px) {
+  .dlcard { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.4rem; }
+  .dlcard .btn { width: 100%; justify-content: center; }
+}
 
 /* ---------- FAQ ---------- */
 .faq h2 { font-family: var(--display); font-size: var(--t-xl); margin-bottom: 1.1rem; }
