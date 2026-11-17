@@ -177,6 +177,19 @@
       }, { rootMargin: '0px 0px -6% 0px' });
       $$('.rv').forEach(function (n) { io.observe(n); });
     } else $$('.rv').forEach(function (n) { n.classList.add('in'); });
+
+    /* Klaviatura ochilganda pastki navigatsiyani vaqtincha yashirish
+       (iOS Safari'da fixed elementlar klaviatura ustida noto'g'ri joylashib,
+       sahifani bosib, foydalanuvchini boshqa sahifaga olib ketishi mumkin) */
+    var mnav = $('.mnav');
+    if (mnav) {
+      document.addEventListener('focusin', function (ev) {
+        if (ev.target.matches && ev.target.matches('input, textarea')) mnav.classList.add('mnav--kb');
+      });
+      document.addEventListener('focusout', function (ev) {
+        if (ev.target.matches && ev.target.matches('input, textarea')) mnav.classList.remove('mnav--kb');
+      });
+    }
   }
 
   /* ---------- kartochka ---------- */
