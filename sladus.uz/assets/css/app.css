@@ -116,7 +116,7 @@ p { text-wrap: pretty; }
 .head__eyebrow {
   display: flex; align-items: center; gap: .7rem;
   font-size: var(--t-xs); font-weight: 700; color: var(--mute);
-  margin-bottom: 1rem;
+  margin-bottom: 1rem; letter-spacing: .14em; text-transform: uppercase;
 }
 .head__eyebrow::before {
   content: ''; width: 44px; height: 6px; border-radius: var(--pill);
@@ -250,7 +250,8 @@ p { text-wrap: pretty; }
   letter-spacing: -.05em; max-width: 15ch;
 }
 .hero h1 em {
-  font-style: normal; position: relative; white-space: nowrap;
+  font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+  position: relative; white-space: nowrap;
 }
 .hero h1 em::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: .06em; height: .09em;
@@ -278,10 +279,10 @@ p { text-wrap: pretty; }
 .hero:hover .ticker__row { animation-play-state: paused; }
 
 /* Ko‘rsatkichlar tasmasi */
-.figures { position: relative; z-index: 2; border-top: 1px solid var(--hair-dark); display: grid; grid-template-columns: repeat(4, 1fr); }
+.figures { position: relative; z-index: 2; border-top: 1px solid color-mix(in srgb, var(--gold) 35%, var(--hair-dark)); display: grid; grid-template-columns: repeat(4, 1fr); }
 .figures > div { padding: 1.8rem 1.4rem 2rem; border-right: 1px solid var(--hair-dark); }
 .figures > div:last-child { border-right: 0; }
-.figures b { display: block; font-family: var(--display); font-size: clamp(1.7rem, 3.4vw, 2.8rem); letter-spacing: -.05em; color: var(--shell); font-weight: 600; }
+.figures b { display: block; font-family: 'Fraunces', serif; font-size: clamp(1.8rem, 3.6vw, 3rem); letter-spacing: -.02em; color: var(--shell); font-weight: 500; }
 .figures span { display: block; margin-top: .35rem; font-size: var(--t-xs); color: var(--on-dark-mu); line-height: 1.45; }
 @media (max-width: 820px) {
   .figures { grid-template-columns: 1fr 1fr; }
