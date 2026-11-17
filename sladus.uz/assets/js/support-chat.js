@@ -64,7 +64,10 @@ window.SladusChat = (function () {
       var up = text.toUpperCase(), found = [], seen = {};
       seed.products.forEach(function (p) {
         if (seen[p.id] || !p.name) return;
-        if (up.indexOf(p.name.toUpperCase()) > -1) { seen[p.id] = 1; found.push(p); }
+        var key = p.name.toUpperCase().replace(/^SLADUS\s+/, '').trim();
+        if (key.length < 3) return;
+        var esc = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        if (new RegExp('\\b' + esc + '\\b').test(up)) { seen[p.id] = 1; found.push(p); }
       });
       return found.slice(0, 3);
     }
