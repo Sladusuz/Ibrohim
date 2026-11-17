@@ -259,6 +259,10 @@ p { text-wrap: pretty; }
 }
 .hero__lead { max-width: 52ch; font-size: var(--t-lg); color: var(--on-dark-mu); margin-top: 1.6rem; }
 .hero__act { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2.2rem; }
+@media (max-width: 560px) {
+  .hero h1 { max-width: 100%; }
+  .hero h1 em { white-space: normal; }
+}
 
 /* Eksport yo‘nalishlari yuguruvchi satri */
 .ticker {

@@ -180,19 +180,6 @@
    "kcal": 491
   },
   {
-   "id": "milk-grash",
-   "code": "2.48",
-   "name": "SLADUS MILK GRASH",
-   "cat": "draje",
-   "descr": {
-    "uz": "Grashok bo‘lakchalari qo‘shilgan sutli draje",
-    "ru": "Молочное драже с крошкой грашок",
-    "en": "Milk dragee with grashok crumb"
-   },
-   "net": "2 kg",
-   "kcal": 497
-  },
-  {
    "id": "anosh",
    "code": "2.33",
    "name": "SLADUS ANOSH",
@@ -334,19 +321,6 @@
    },
    "net": "1 kg",
    "kcal": 540
-  },
-  {
-   "id": "lactic",
-   "code": "1.14",
-   "name": "SLADUS LACTIC",
-   "cat": "nachinka",
-   "descr": {
-    "uz": "Sut ta’mli ichlikli konfetlar",
-    "ru": "Конфеты с начинкой молочного вкуса",
-    "en": "Filled sweets with a milk centre"
-   },
-   "net": "2 kg",
-   "kcal": 638
   },
   {
    "id": "solfa",
