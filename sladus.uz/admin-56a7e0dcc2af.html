@@ -12,8 +12,8 @@
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700&display=swap"></noscript>
 <script>
 /* Diagnostika: agar fayllardan biri yuklanmasa yoki asosiy skript ishga
-   to'liq tushmasa, sababini ekranda ko'rsatib beradi ("hech narsa
-   bo'lmaydi" holatining o'rniga). Boshqa hech nimaga ta'sir qilmaydi. */
+   to‘liq tushmasa, sababini ekranda ko‘rsatib beradi ("hech narsa
+   bo‘lmaydi" holatining o‘rniga). Boshqa hech nimaga ta’sir qilmaydi. */
 (function () {
   function showBanner(msg) {
     var d = document.createElement('div');
@@ -36,7 +36,7 @@
   window.addEventListener('load', function () {
     setTimeout(function () {
       if (window.__SLADUS_ADMIN_BOOTED__) return;
-      showBanner('Sahifa to‘liq ishga tusholmadi. Zip arxivni TO‘LIQ (assets papkasi bilan birga) qayta oching va shu HTML faylni o‘sha papkaning ICHIDAN oching.');
+      showBanner('Sahifa to‘liq ishga tushmadi. Zip arxivni TO‘LIQ (assets papkasi bilan birga) qayta oching va shu HTML faylni o‘sha papkaning ICHIDAN oching.');
     }, 2500);
   });
 })();
@@ -332,8 +332,8 @@ legend{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spaci
   <form class="login-card" id="loginForm" autocomplete="off">
     <div class="login-mark">S</div>
     <h1>Sladus admin panel</h1>
-    <p>Mahsulotlarni qo'shish, tahrirlash va o'chirish uchun tizimga kiring.</p>
-    <div class="login-error" id="loginError">Login yoki parol noto'g'ri.</div>
+    <p>Mahsulotlarni qo‘shish, tahrirlash va o‘chirish uchun tizimga kiring.</p>
+    <div class="login-error" id="loginError">Login yoki parol noto‘g‘ri.</div>
     <div class="field">
       <label for="loginUser">Login</label>
       <input id="loginUser" type="text" placeholder="Login" autocomplete="username" required>
@@ -364,7 +364,7 @@ legend{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spaci
       </button>
       <button data-tab="cats">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-        Yo'nalishlar
+        Yo‘nalishlar
       </button>
       <button data-tab="texts">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h13"/></svg>
@@ -372,7 +372,7 @@ legend{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spaci
       </button>
       <button data-tab="msgs" style="position:relative">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-        So'rovlar
+        So‘rovlar
         <span id="msgBadge" class="nav-badge" hidden></span>
       </button>
       <button data-tab="settings">
@@ -395,7 +395,7 @@ legend{font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spaci
       </div>
       <div style="display:flex; gap:.6rem">
         <button class="btn btn-ghost menu-btn" id="menuBtn">☰</button>
-        <button class="btn btn-primary" id="addProductTop" style="display:none">+ Mahsulot qo'shish</button>
+        <button class="btn btn-primary" id="addProductTop" style="display:none">+ Mahsulot qo‘shish</button>
       </div>
     </div>
     <div class="content" id="content"></div>
@@ -438,7 +438,7 @@ function lockUntil(){ return parseInt(localStorage.getItem(LS_LOCK_UNTIL) || '0'
 function isLocked(){ return Date.now() < lockUntil(); }
 function lockRemainingSec(){ return Math.max(0, Math.ceil((lockUntil() - Date.now()) / 1000)); }
 
-/* Har xato urinishdan keyin kutish vaqti tobora oshib boradi (brute-force'ga qarshi) */
+/* Har xato urinishdan keyin kutish vaqti tobora oshib boradi (brute-force’ga qarshi) */
 function registerFail(){
   var n = getFails() + 1;
   setFails(n);
@@ -494,7 +494,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
   var submitBtn = e.target.querySelector('button[type=submit]');
 
   if (isLocked()){
-    err.textContent = "Juda ko'p xato urinish. " + lockRemainingSec() + " soniyadan keyin qayta urinib ko'ring.";
+    err.textContent = "Juda ko‘p xato urinish. " + lockRemainingSec() + " soniyadan keyin qayta urinib ko‘ring.";
     err.classList.add('show');
     return;
   }
@@ -504,8 +504,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e){
   } else {
     var n = getFails();
     err.textContent = isLocked()
-      ? "Juda ko'p xato urinish. " + lockRemainingSec() + " soniyadan keyin qayta urinib ko'ring."
-      : (n >= 3 ? "Login yoki parol noto'g'ri. Diqqat: xato urinishlar qayd etilmoqda (" + n + "/5)." : "Login yoki parol noto'g'ri.");
+      ? "Juda ko‘p xato urinish. " + lockRemainingSec() + " soniyadan keyin qayta urinib ko‘ring."
+      : (n >= 3 ? "Login yoki parol noto‘g‘ri. Diqqat: xato urinishlar qayd etilmoqda (" + n + "/5)." : "Login yoki parol noto‘g‘ri.");
     err.classList.add('show');
     document.getElementById('loginPass').value = '';
     submitBtn.disabled = true;
@@ -522,12 +522,12 @@ document.getElementById('logoutBtn').addEventListener('click', function(){
 if (isLoggedIn()) { showApp(); }
 if (isLocked()){
   var le = document.getElementById('loginError');
-  le.textContent = "Juda ko'p xato urinish. " + lockRemainingSec() + " soniyadan keyin qayta urinib ko'ring.";
+  le.textContent = "Juda ko‘p xato urinish. " + lockRemainingSec() + " soniyadan keyin qayta urinib ko‘ring.";
   le.classList.add('show');
 }
 
 /* ============================================================
-   1. Ma'lumotlar qatlami (localStorage'da saqlanadi)
+   1. Ma’lumotlar qatlami (localStorage’da saqlanadi)
    ============================================================ */
 var DATA = null;
 
@@ -591,14 +591,14 @@ function openOverlay(){ document.getElementById('overlay').classList.add('show')
 function closeOverlayEl(){ document.getElementById('overlay').classList.remove('show'); }
 
 /* ============================================================
-   3. Yo'naltirish (tabs)
+   3. Yo‘naltirish (tabs)
    ============================================================ */
 var TAB_META = {
   dash:     { title: 'Boshqaruv', sub: 'Umumiy holat' },
-  products: { title: 'Mahsulotlar', sub: "Qo'shish, tahrirlash, o'chirish" },
-  cats:     { title: "Yo'nalishlar", sub: 'Katalog bo\'limlari' },
-  texts:    { title: 'Matnlar', sub: "Sayt matnlari, kompaniya ma'lumotlari" },
-  msgs:     { title: "So'rovlar", sub: "Contact formadan kelgan arizalar" },
+  products: { title: 'Mahsulotlar', sub: "Qo‘shish, tahrirlash, o‘chirish" },
+  cats:     { title: "Yo‘nalishlar", sub: 'Katalog bo‘limlari' },
+  texts:    { title: 'Matnlar', sub: "Sayt matnlari, kompaniya ma’lumotlari" },
+  msgs:     { title: "So‘rovlar", sub: "Contact formadan kelgan arizalar" },
   settings: { title: 'Sozlamalar', sub: 'Parol, zaxira nusxa' }
 };
 var currentTab = 'dash';
@@ -646,13 +646,13 @@ function renderDash(){
   return (
     '<div class="cards-row">'+
       '<div class="stat"><b>'+total+'</b><span>Jami mahsulotlar</span></div>'+
-      '<div class="stat"><b style="color:#1f7a5c">'+active+'</b><span>Faol (saytda ko\'rinadi)</span></div>'+
+      '<div class="stat"><b style="color:#1f7a5c">'+active+'</b><span>Faol (saytda ko‘rinadi)</span></div>'+
       '<div class="stat"><b style="color:var(--mute)">'+hidden+'</b><span>Yashirilgan</span></div>'+
-      '<div class="stat"><b>'+cats+'</b><span>Yo\'nalishlar soni</span></div>'+
+      '<div class="stat"><b>'+cats+'</b><span>Yo‘nalishlar soni</span></div>'+
     '</div>'+
     '<div style="display:grid; grid-template-columns:1.1fr 1fr; gap:1.2rem" class="dash-grid">'+
       '<div class="panel-box">'+
-        '<h3>Yo\'nalishlar bo\'yicha</h3><p class="d">Har bir bo\'limdagi mahsulotlar soni</p>'+
+        '<h3>Yo‘nalishlar bo‘yicha</h3><p class="d">Har bir bo‘limdagi mahsulotlar soni</p>'+
         perCat.map(function(x){
           var pct = Math.round((x.n / maxN) * 100);
           return '<div style="margin-bottom:.85rem">'+
@@ -662,14 +662,14 @@ function renderDash(){
         }).join('') +
       '</div>'+
       '<div class="panel-box">'+
-        '<h3>Oxirgi qo\'shilgan / o\'zgargan</h3><p class="d">Ro\'yxatdagi so\'nggi mahsulotlar</p>'+
+        '<h3>Oxirgi qo‘shilgan / o‘zgargan</h3><p class="d">Ro‘yxatdagi so‘nggi mahsulotlar</p>'+
         (recent.length ? recent.map(function(p){
           return '<div style="display:flex; align-items:center; gap:.7rem; padding:.5rem 0; border-top:1px solid var(--hair)">'+
             '<img class="pimg" src="'+esc(p.img||'')+'" onerror="this.style.visibility=\'hidden\'">'+
             '<div style="min-width:0; flex:1"><b style="display:block; font-size:.85rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">'+esc(p.name)+'</b><small style="color:var(--mute); font-size:.72rem">'+esc(catName(p.cat))+'</small></div>'+
             '<span class="badge '+(p.active?'badge-on':'badge-off')+'">'+(p.active?'Faol':'Yashirin')+'</span>'+
           '</div>';
-        }).join('') : '<p class="d">Hali mahsulot yo\'q.</p>')+
+        }).join('') : '<p class="d">Hali mahsulot yo‘q.</p>')+
       '</div>'+
     '</div>'
   );
@@ -706,7 +706,7 @@ function filteredProducts(){
 
 function renderProducts(){
   var list = filteredProducts();
-  var catOpts = '<option value="">Barcha yo\'nalishlar</option>' + DATA.categories.map(function(c){
+  var catOpts = '<option value="">Barcha yo‘nalishlar</option>' + DATA.categories.map(function(c){
     return '<option value="'+esc(c.id)+'" '+(pFilter.cat===c.id?'selected':'')+'>'+esc(c.name.uz)+'</option>';
   }).join('');
 
@@ -723,7 +723,7 @@ function renderProducts(){
       '<td><div class="row-actions">'+
         '<button class="icon-btn" data-act="edit" title="Tahrirlash"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>'+
         '<button class="icon-btn" data-act="dup" title="Nusxa olish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>'+
-        '<button class="icon-btn danger" data-act="del" title="O\'chirish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>'+
+        '<button class="icon-btn danger" data-act="del" title="O‘chirish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>'+
       '</div></td>'+
     '</tr>';
   }).join('') : '';
@@ -731,14 +731,14 @@ function renderProducts(){
   var empty = !list.length ? (
     '<div class="empty-state">'+
       '<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7 12 3 4 7v10l8 4 8-4V7Z"/><path d="M4 7l8 4 8-4M12 11v10"/></svg>'+
-      '<p>Hech narsa topilmadi. Filtrlarni tozalab ko\'ring yoki yangi mahsulot qo\'shing.</p>'+
+      '<p>Hech narsa topilmadi. Filtrlarni tozalab ko‘ring yoki yangi mahsulot qo‘shing.</p>'+
     '</div>'
   ) : '';
 
   return (
     '<div class="toolbar">'+
       '<div class="search-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>'+
-        '<input id="pSearch" type="text" placeholder="Nomi, ID yoki kod bo\'yicha qidirish..." value="'+esc(pFilter.q)+'"></div>'+
+        '<input id="pSearch" type="text" placeholder="Nomi, ID yoki kod bo‘yicha qidirish…" value="'+esc(pFilter.q)+'"></div>'+
       '<select id="pCat" class="select">'+catOpts+'</select>'+
       '<select id="pStatus" class="select">'+
         '<option value="">Barcha holatlar</option>'+
@@ -750,7 +750,7 @@ function renderProducts(){
     '<div class="table-wrap">'+
       (list.length ? (
       '<table><thead><tr>'+
-        '<th data-k="name">Mahsulot</th><th data-k="cat">Yo\'nalish</th><th data-k="code">Kod</th>'+
+        '<th data-k="name">Mahsulot</th><th data-k="cat">Yo‘nalish</th><th data-k="code">Kod</th>'+
         '<th data-k="sort">Tartib</th><th data-k="active">Holat</th><th style="text-align:right">Amallar</th>'+
       '</tr></thead><tbody>'+rowsHtml+'</tbody></table>'
       ) : empty) +
@@ -795,8 +795,8 @@ function wireRowActions(){
     tr.querySelector('[data-act=edit]').addEventListener('click', function(){ openProductForm(id); });
     tr.querySelector('[data-act=dup]').addEventListener('click', function(){ duplicateProduct(id); });
     tr.querySelector('[data-act=del]').addEventListener('click', function(){ confirmDialog(
-      "Mahsulotni o'chirish",
-      '"' + (DATA.products.find(function(p){return p.id===id;})||{}).name + '" mahsuloti butunlay o\'chiriladi. Bu amalni orqaga qaytarib bo\'lmaydi.',
+      "Mahsulotni o‘chirish",
+      '"' + (DATA.products.find(function(p){return p.id===id;})||{}).name + '" mahsuloti butunlay o‘chiriladi. Bu amalni orqaga qaytarib bo‘lmaydi.',
       function(){ deleteProduct(id); }
     ); });
   });
@@ -818,7 +818,7 @@ function duplicateProduct(id){
 function deleteProduct(id){
   DATA.products = DATA.products.filter(function(p){ return p.id !== id; });
   persist();
-  toast("Mahsulot o'chirildi.");
+  toast("Mahsulot o‘chirildi.");
   renderTableOnly();
 }
 
@@ -903,7 +903,7 @@ function productFormHtml(p){
         '<div class="f"><label>ID (manzil uchun)</label><input type="text" id="f_id" value="'+esc(p.id)+'" placeholder="avtomatik"></div>'+
       '</div>'+
       '<div class="frow">'+
-        '<div class="f"><label>Yo\'nalish</label><select id="f_cat">'+catOptionsHtml(p.cat)+'</select></div>'+
+        '<div class="f"><label>Yo‘nalish</label><select id="f_cat">'+catOptionsHtml(p.cat)+'</select></div>'+
         '<div class="f"><label>Kod</label><input type="text" id="f_code" value="'+esc(p.code)+'" placeholder="2.32"></div>'+
       '</div>'+
 
@@ -914,7 +914,7 @@ function productFormHtml(p){
           '<p>Rasmni shu yerga tashlang yoki bosib tanlang (JPG/PNG, tavsiya: 5 MB gacha)</p>'+
           '<input type="file" id="f_file" accept="image/*" style="display:none">'+
         '</div>'+
-        '<div class="f"><label>...yoki rasm manzili (URL)</label><input type="text" id="f_img" value="'+esc(p.img)+'" placeholder="https://..."></div>'+
+        '<div class="f"><label>…yoki rasm manzili (URL)</label><input type="text" id="f_img" value="'+esc(p.img)+'" placeholder="https://..."></div>'+
       '</fieldset>'+
 
       '<fieldset>'+
@@ -929,7 +929,7 @@ function productFormHtml(p){
         '<legend>Tarkib (uz / ru / en)</legend>'+
         langTabsHtml('comp')+
         ['uz','ru','en'].map(function(l){
-          return '<div class="lang-pane '+(l==='uz'?'active':'')+'" data-lang-pane="comp" data-lang="'+l+'"><textarea id="f_comp_'+l+'" placeholder="To\'liq tarkib ('+l+')">'+esc(p.composition[l])+'</textarea></div>';
+          return '<div class="lang-pane '+(l==='uz'?'active':'')+'" data-lang-pane="comp" data-lang="'+l+'"><textarea id="f_comp_'+l+'" placeholder="To‘liq tarkib ('+l+')">'+esc(p.composition[l])+'</textarea></div>';
         }).join('')+
       '</fieldset>'+
 
@@ -956,24 +956,24 @@ function productFormHtml(p){
       '<fieldset>'+
         '<legend>Qadoqlash / TN VED</legend>'+
         '<div class="frow">'+
-          '<div class="f"><label>Quti o\'lchami (sm)</label><input type="text" id="f_p_size" value="'+esc(p.pack.size)+'" placeholder="31×22×12"></div>'+
+          '<div class="f"><label>Quti o‘lchami (sm)</label><input type="text" id="f_p_size" value="'+esc(p.pack.size)+'" placeholder="31×22×12"></div>'+
           '<div class="f"><label>Hajm, m³</label><input type="text" id="f_p_volume" value="'+esc(p.pack.volume)+'" placeholder="0.0082"></div>'+
         '</div>'+
         '<div class="frow">'+
-          '<div class="f"><label>Sof og\'irlik</label><input type="text" id="f_p_net" value="'+esc(p.pack.net)+'" placeholder="2 kg"></div>'+
+          '<div class="f"><label>Netto vazni</label><input type="text" id="f_p_net" value="'+esc(p.pack.net)+'" placeholder="2 kg"></div>'+
           '<div class="f"><label>Dona soni</label><input type="text" id="f_p_pcs" value="'+esc(p.pack.pcs)+'" placeholder="40 ± 1%"></div>'+
         '</div>'+
         '<div class="f"><label>TN VED kodi</label><input type="text" id="f_p_tnved" value="'+esc(p.pack.tnved)+'" placeholder="1806903100"></div>'+
       '</fieldset>'+
 
       '<div class="frow">'+
-        '<div class="switch-row"><div><b>Faol</b><span>Saytda ko\'rinadi</span></div><label class="switch"><input type="checkbox" id="f_active" '+(p.active?'checked':'')+'><span class="track"></span><span class="thumb"></span></label></div>'+
+        '<div class="switch-row"><div><b>Faol</b><span>Saytda ko‘rinadi</span></div><label class="switch"><input type="checkbox" id="f_active" '+(p.active?'checked':'')+'><span class="track"></span><span class="thumb"></span></label></div>'+
         '<div class="f"><label>Tartib raqami</label><input type="number" id="f_sort" value="'+esc(p.sort)+'"></div>'+
       '</div>'+
     '</div>'+
 
     '<div class="preview-col">'+
-      '<div class="hint">Jonli ko\'rinish — saytdagi kartaga taxminan shunday ko\'rinadi</div>'+
+      '<div class="hint">Jonli ko‘rinish — saytdagi kartaga taxminan shunday ko‘rinadi</div>'+
       '<div class="preview-card">'+
         '<img class="preview-img" id="prev_img" src="'+esc(p.img)+'" onerror="this.style.opacity=0.15">'+
         '<div class="preview-body">'+
@@ -988,7 +988,7 @@ function productFormHtml(p){
         '</div>'+
       '</div>'+
       '<div class="preview-mini">'+
-        '<b>Eslatma:</b> Rasm URL yoki yuklangan fayldan olinadi. Ma\'lumotlar shu brauzerning xotirasida saqlanadi (Supabase ulanmagan).'+
+        '<b>Eslatma:</b> Rasm URL yoki yuklangan fayldan olinadi. Ma’lumotlar shu brauzerning xotirasida saqlanadi (Supabase ulanmagan).'+
       '</div>'+
     '</div>'+
   '</div>'+
@@ -1119,14 +1119,14 @@ function saveProductForm(root){
   else DATA.products.push(rec);
 
   persist();
-  toast(isNewRecord ? "Mahsulot qo'shildi." : 'Saqlandi.');
+  toast(isNewRecord ? "Mahsulot qo‘shildi." : 'Saqlandi.');
   closeDrawer();
   if (currentTab === 'products') renderTableOnly();
   else render();
 }
 
 /* ============================================================
-   6. Yo'nalishlar (kategoriyalar)
+   6. Yo‘nalishlar (kategoriyalar)
    ============================================================ */
 var editingCategory = null;
 var COLOR_CHOICES = ['brand','gold','mint','amber'];
@@ -1142,16 +1142,16 @@ function renderCats(){
       '<td>'+(c.sort==null?0:c.sort)+'</td>'+
       '<td><div class="row-actions">'+
         '<button class="icon-btn" data-act="edit" title="Tahrirlash"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>'+
-        '<button class="icon-btn danger" data-act="del" title="O\'chirish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>'+
+        '<button class="icon-btn danger" data-act="del" title="O‘chirish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>'+
       '</div></td>'+
     '</tr>';
   }).join('') : '';
 
   return (
-    '<div class="toolbar"><div style="flex:1"></div><button class="btn btn-primary" id="cAddBtn">+ Yo\'nalish</button></div>'+
+    '<div class="toolbar"><div style="flex:1"></div><button class="btn btn-primary" id="cAddBtn">+ Yo‘nalish</button></div>'+
     '<div class="table-wrap">'+
       (list.length ? '<table><thead><tr><th>Nomi</th><th>Rang</th><th>Mahsulotlar</th><th>Tartib</th><th style="text-align:right">Amallar</th></tr></thead><tbody>'+rows+'</tbody></table>'
-      : '<div class="empty-state"><p>Hali yo\'nalish yo\'q.</p></div>')+
+      : '<div class="empty-state"><p>Hali yo‘nalish yo‘q.</p></div>')+
     '</div>'
   );
 }
@@ -1164,13 +1164,13 @@ function wireCats(){
     tr.querySelector('[data-act=del]').addEventListener('click', function(){
       var count = DATA.products.filter(function(p){ return p.cat === id; }).length;
       if (count > 0){
-        toast("Bu yo'nalishda "+count+" ta mahsulot bor. Avval ularni boshqa yo'nalishga o'tkazing.", 'err');
+        toast("Bu yo‘nalishda "+count+" ta mahsulot bor. Avval ularni boshqa yo‘nalishga o‘tkazing.", 'err');
         return;
       }
-      confirmDialog("Yo'nalishni o'chirish", "Bu yo'nalish katalogdan butunlay o'chiriladi.", function(){
+      confirmDialog("Yo‘nalishni o‘chirish", "Bu yo‘nalish katalogdan butunlay o‘chiriladi.", function(){
         DATA.categories = DATA.categories.filter(function(c){ return c.id !== id; });
         persist();
-        toast("Yo'nalish o'chirildi.");
+        toast("Yo‘nalish o‘chirildi.");
         render();
       });
     });
@@ -1193,7 +1193,7 @@ function openCategoryForm(id){
 function categoryFormHtml(c){
   var isNew = !DATA.categories.some(function(x){ return x.id === c.id; });
   return (
-  '<div class="drawer-head"><h3>'+(isNew ? "Yangi yo'nalish" : "Yo'nalishni tahrirlash")+'</h3><button class="icon-btn" data-close>&times;</button></div>'+
+  '<div class="drawer-head"><h3>'+(isNew ? "Yangi yo‘nalish" : "Yo‘nalishni tahrirlash")+'</h3><button class="icon-btn" data-close>&times;</button></div>'+
   '<div class="drawer-body" style="grid-template-columns:1fr">'+
     '<div class="form-col">'+
       '<div class="frow">'+
@@ -1264,7 +1264,7 @@ function wireCategoryForm(root){
   root.querySelector('[data-save]').addEventListener('click', function(){
     var id = root.querySelector('#c_id').value.trim() || slugify(nameUz.value);
     var name = nameUz.value.trim();
-    if (!name){ toast("Yo'nalish nomini kiriting.", 'err'); return; }
+    if (!name){ toast("Yo‘nalish nomini kiriting.", 'err'); return; }
     var isNewRecord = !DATA.categories.some(function(x){ return x.id === editingCategory.id; });
     var clash = DATA.categories.some(function(x){ return x.id === id && x.id !== editingCategory.id; });
     if (clash) id = uniqueId(id, DATA.categories);
@@ -1282,29 +1282,29 @@ function wireCategoryForm(root){
     var idx = DATA.categories.findIndex(function(x){ return x.id === editingCategory.id && !isNewRecord; });
     if (idx > -1) DATA.categories[idx] = rec; else DATA.categories.push(rec);
     persist();
-    toast(isNewRecord ? "Yo'nalish qo'shildi." : 'Saqlandi.');
+    toast(isNewRecord ? "Yo‘nalish qo‘shildi." : 'Saqlandi.');
     closeDrawer();
     render();
   });
 }
 
 /* ============================================================
-   6b. Matnlar (sayt matnlari, kompaniya ma'lumotlari, eksport
+   6b. Matnlar (sayt matnlari, kompaniya ma’lumotlari, eksport
    davlatlari, mukofotlar) — i18n.js / brand.js standart matnlari
-   ustiga localStorage'dagi 'sladus_texts_v1' orqali qo'llanadi
-   (shu override'ni assets/js/i18n.js va assets/js/brand.js
-   o'zlari ham sahifa ochilganda o'qib qo'llaydi).
+   ustiga localStorage’dagi 'sladus_texts_v1' orqali qo‘llanadi
+   (shu override’ni assets/js/i18n.js va assets/js/brand.js
+   o‘zlari ham sahifa ochilganda o‘qib qo‘llaydi).
    ============================================================ */
 var TEXT_GROUPS = [
   { title: 'Bosh sahifa — sarlavha (Hero)', keys: ['hero.badge', 'hero.badgetxt', 'hero.kicker', 'hero.title', 'hero.t1', 'hero.t2', 'hero.lead', 'hero.lead2', 'hero.cta1', 'hero.cta2', 'hero.scroll'] },
   { title: 'Statistika raqamlari', keys: ['stat.years', 'stat.sku', 'stat.countries', 'stat.regions'] },
-  { title: 'Mahsulot yo\'nalishlari (bosh sahifa)', keys: ['range.title', 'range.lead', 'cat.title', 'cat.lead', 'cat.count', 'cat.view'] },
-  { title: 'Ko\'p so\'raladigan mahsulotlar', keys: ['feat.title', 'feat.lead', 'feat.all'] },
+  { title: 'Mahsulot yo‘nalishlari (bosh sahifa)', keys: ['range.title', 'range.lead', 'cat.title', 'cat.lead', 'cat.count', 'cat.view'] },
+  { title: 'Ko‘p so‘raladigan mahsulotlar', keys: ['feat.title', 'feat.lead', 'feat.all'] },
   { title: 'Nega Sladus', keys: ['why.title', 'why.q.t', 'why.q.d', 'why.i.t', 'why.i.d', 'why.p.t', 'why.p.d', 'why.pr.t', 'why.pr.d'] },
   { title: 'Eksport xaritasi', keys: ['export.title', 'export.lead', 'export.cta'] },
   { title: 'Yutuqlar (sarlavha)', keys: ['awards.title', 'awards.lead'] },
   { title: 'Hamkorlik taklifi', keys: ['cta.title', 'cta.lead', 'cta.btn'] },
-  { title: 'Narx so\'rash formasi', keys: ['form.title', 'form.lead', 'form.name', 'form.company', 'form.phone', 'form.email', 'form.country', 'form.interest', 'form.message', 'form.send', 'form.sending', 'form.ok', 'form.err', 'form.required', 'form.emailbad', 'form.phonebad'] },
+  { title: 'Narx so‘rash formasi', keys: ['form.title', 'form.lead', 'form.name', 'form.company', 'form.phone', 'form.email', 'form.country', 'form.interest', 'form.message', 'form.send', 'form.sending', 'form.ok', 'form.err', 'form.required', 'form.emailbad', 'form.phonebad'] },
   { title: 'Katalog sahifasi', keys: ['cat.h1', 'cat.search', 'cat.all', 'cat.sort', 'cat.sort.az', 'cat.sort.za', 'cat.sort.kcal', 'cat.sort.kcald', 'cat.found', 'cat.empty.t', 'cat.empty.d', 'cat.reset', 'cat.details'] },
   { title: 'Mahsulot kartasi', keys: ['p.back', 'p.composition', 'p.nutrition', 'p.protein', 'p.fat', 'p.carbs', 'p.kcal', 'p.supply', 'p.packtype', 'p.size', 'p.volume', 'p.net', 'p.pcs', 'p.tnved', 'p.code', 'p.storage', 'p.storagev', 'p.order', 'p.related'] },
   { title: 'Kompaniya haqida (matn)', keys: ['about.h1', 'about.story', 'about.p1', 'about.p2', 'about.valtitle', 'about.tl'] },
@@ -1369,23 +1369,23 @@ function companyFieldsHtml(){
 function renderTexts(){
   var isLive = window.Store && window.Store.isLive && window.Store.isLive();
   return (
-    '<div class="notice"><b>Qanday ishlaydi</b>"Saqlash" tugmasi bosilgach o\'zgarish shu brauzerda darhol ko\'rinadi. '+
-      (isLive ? 'Supabase ulangani uchun bu ma\'lumot barcha qurilmalarda ko\'rinadi.'
-              : 'Supabase ulanmagani uchun bu faqat shu brauzerda saqlanadi — barcha tashrif buyuruvchilarga ko\'rsatish uchun pastdagi "Fayllarni yuklab olish" orqali i18n.js va brand.js fayllarini yuklab, hosting\'dagi eski fayllar ustiga joylashtiring.')+
+    '<div class="notice"><b>Qanday ishlaydi</b>"Saqlash" tugmasi bosilgach o‘zgarish shu brauzerda darhol ko‘rinadi. '+
+      (isLive ? 'Supabase ulangani uchun bu ma’lumot barcha qurilmalarda ko‘rinadi.'
+              : 'Supabase ulanmagani uchun bu faqat shu brauzerda saqlanadi — barcha tashrif buyuruvchilarga ko‘rsatish uchun pastdagi "Fayllarni yuklab olish" orqali i18n.js va brand.js fayllarini yuklab, hosting’dagi eski fayllar ustiga joylashtiring.')+
     '</div>'+
-    '<div class="panel-box"><h3>Kompaniya ma\'lumotlari</h3>'+companyFieldsHtml()+'</div>'+
+    '<div class="panel-box"><h3>Kompaniya ma’lumotlari</h3>'+companyFieldsHtml()+'</div>'+
     renderTextGroupsHtml()+
     '<div class="panel-box"><h3>Eksport davlatlari</h3><div id="txtCountries"></div>'+
-      '<button class="btn btn-ghost" id="ctryAdd" type="button" style="margin-top:.6rem">+ Davlat qo\'shish</button></div>'+
+      '<button class="btn btn-ghost" id="ctryAdd" type="button" style="margin-top:.6rem">+ Davlat qo‘shish</button></div>'+
     '<div class="panel-box"><h3>Yutuqlar va mukofotlar</h3><div id="txtAwards"></div>'+
-      '<button class="btn btn-ghost" id="awardAdd" type="button" style="margin-top:.6rem">+ Mukofot qo\'shish</button></div>'+
+      '<button class="btn btn-ghost" id="awardAdd" type="button" style="margin-top:.6rem">+ Mukofot qo‘shish</button></div>'+
     '<div class="panel-box">'+
-      '<h3>Saqlash</h3><p class="d">O\'zgarishlarni tasdiqlang.</p>'+
+      '<h3>Saqlash</h3><p class="d">O‘zgarishlarni tasdiqlang.</p>'+
       '<button class="btn btn-primary" id="txtSave">Saqlash</button> '+
       '<button class="btn btn-ghost" id="txtReset">Standartga qaytarish</button>'+
     '</div>'+
     '<div class="panel-box">'+
-      '<h3>Fayllarni yuklab olish</h3><p class="d">Bu ikki faylni hosting\'dagi (Netlify/Vercel) <code>assets/js/i18n.js</code> va <code>assets/js/brand.js</code> ustiga joylashtirsangiz, o\'zgarish barcha tashrif buyuruvchilarga ko\'rinadi.</p>'+
+      '<h3>Fayllarni yuklab olish</h3><p class="d">Bu ikki faylni hosting’dagi (Netlify/Vercel) <code>assets/js/i18n.js</code> va <code>assets/js/brand.js</code> ustiga joylashtirsangiz, o‘zgarish barcha tashrif buyuruvchilarga ko‘rinadi.</p>'+
       '<button class="btn btn-ghost" id="dlI18n">i18n.js yuklab olish</button> '+
       '<button class="btn btn-ghost" id="dlBrand">brand.js yuklab olish</button>'+
     '</div>'
@@ -1503,11 +1503,11 @@ function wireTexts(){
       }
       if (window.I18N) ['uz','ru','en'].forEach(function(l){ Object.assign(window.I18N[l], payload.i18n[l]); });
       toast('Saqlandi — saytni shu brauzerda ochib tekshiring.');
-    } catch (e) { toast('Saqlab bo\'lmadi: ' + e.message, 'err'); }
+    } catch (e) { toast('Saqlab bo‘lmadi: ' + e.message, 'err'); }
   });
 
   document.getElementById('txtReset').addEventListener('click', function(){
-    confirmDialog('Standartga qaytarish', 'Barcha saqlangan matn o\'zgarishlari o\'chirilib, standart holatga qaytariladi.', function(){
+    confirmDialog('Standartga qaytarish', 'Barcha saqlangan matn o‘zgarishlari o‘chirilib, standart holatga qaytariladi.', function(){
       try { localStorage.removeItem('sladus_texts_v1'); } catch (e) {}
       location.reload();
     });
@@ -1545,27 +1545,27 @@ function renderSettings(){
   var isLive = window.Store && window.Store.isLive && window.Store.isLive();
   return (
     (usingDefaultPass() ? (
-      '<div class="notice" style="border-color:var(--danger); background:rgba(199,54,46,.08)"><b>⚠ Diqqat: standart parol o\'zgartirilmagan</b>Panel hali ham zavodda o\'rnatilgan standart login/parol bilan himoyalangan. Buni albatta hoziroq pastdagi "Kirish ma\'lumotlari" bo\'limidan o\'zgartiring — aks holda panelga har kim standart parol bilan kira oladi.</div>'
+      '<div class="notice" style="border-color:var(--danger); background:rgba(199,54,46,.08)"><b>⚠ Diqqat: standart parol o‘zgartirilmagan</b>Panel hali ham zavodda o‘rnatilgan standart login/parol bilan himoyalangan. Buni albatta hoziroq pastdagi "Kirish ma’lumotlari" bo‘limidan o‘zgartiring — aks holda panelga har kim standart parol bilan kira oladi.</div>'
     ) : '')+
     (!isLive ? (
-      '<div class="notice"><b>Diqqat: mahalliy rejim</b>Supabase ulanmagan (config.js bo\'sh), shuning uchun barcha o\'zgarishlar faqat shu brauzer xotirasida saqlanadi. Boshqa qurilmada yoki brauzerni tozalasangiz ma\'lumotlar ko\'rinmaydi. Doimiy va barcha qurilmalarda ishlaydigan qilish uchun README.md dagi Supabase sozlamalarini bajaring.</div>'
+      '<div class="notice"><b>Diqqat: mahalliy rejim</b>Supabase ulanmagan (config.js bo‘sh), shuning uchun barcha o‘zgarishlar faqat shu brauzer xotirasida saqlanadi. Boshqa qurilmada yoki brauzerni tozalasangiz ma’lumotlar ko‘rinmaydi. Doimiy va barcha qurilmalarda ishlaydigan qilish uchun README.md dagi Supabase sozlamalarini bajaring.</div>'
     ) : '')+
     '<div class="settings-grid">'+
       '<div class="panel-box">'+
-        '<h3>Kirish ma\'lumotlari</h3><p class="d">Admin panelga kirish uchun login va parolni shu brauzerda o\'zgartiring.</p>'+
+        '<h3>Kirish ma’lumotlari</h3><p class="d">Admin panelga kirish uchun login va parolni shu brauzerda o‘zgartiring.</p>'+
         '<div class="f" style="margin-bottom:.8rem"><label>Login</label><input type="text" id="s_user" value="'+esc(currentUser())+'"></div>'+
-        '<div class="f" style="margin-bottom:.8rem"><label>Yangi parol</label><input type="password" id="s_pass" placeholder="Bo\'sh qoldirsangiz o\'zgarmaydi"></div>'+
+        '<div class="f" style="margin-bottom:.8rem"><label>Yangi parol</label><input type="password" id="s_pass" placeholder="Bo‘sh qoldirsangiz o‘zgarmaydi"></div>'+
         '<button class="btn btn-dark" id="s_saveAuth">Saqlash</button>'+
       '</div>'+
       '<div class="panel-box">'+
-        '<h3>Zaxira nusxa</h3><p class="d">Barcha mahsulot va yo\'nalishlarni JSON fayl qilib yuklab oling yoki avval saqlangan faylni tiklang.</p>'+
+        '<h3>Zaxira nusxa</h3><p class="d">Barcha mahsulot va yo‘nalishlarni JSON fayl qilib yuklab oling yoki avval saqlangan faylni tiklang.</p>'+
         '<button class="btn btn-ghost" id="s_export">⬇ Eksport (JSON)</button>'+
         '<button class="btn btn-ghost" id="s_importBtn">⬆ Import (JSON)</button>'+
         '<input type="file" id="s_importFile" accept="application/json" style="display:none">'+
       '</div>'+
       '<div class="panel-box">'+
-        '<h3>Boshlang\'ich holatga qaytarish</h3><p class="d">Barcha o\'zgarishlar bekor qilinib, saytning original 30 ta mahsuloti tiklanadi. Ehtiyot bo\'ling — bu amalni qaytarib bo\'lmaydi.</p>'+
-        '<button class="btn btn-danger" id="s_reset">Boshlang\'ich holatga qaytarish</button>'+
+        '<h3>Boshlang‘ich holatga qaytarish</h3><p class="d">Barcha o‘zgarishlar bekor qilinib, saytning original 30 ta mahsuloti tiklanadi. Ehtiyot bo‘ling — bu amalni qaytarib bo‘lmaydi.</p>'+
+        '<button class="btn btn-danger" id="s_reset">Boshlang‘ich holatga qaytarish</button>'+
       '</div>'+
     '</div>'
   );
@@ -1575,10 +1575,10 @@ function wireSettings(){
   document.getElementById('s_saveAuth').addEventListener('click', function(){
     var u = document.getElementById('s_user').value.trim();
     var p = document.getElementById('s_pass').value;
-    if (!u){ toast('Login bo\'sh bo\'lmasin.', 'err'); return; }
+    if (!u){ toast('Login bo‘sh bo‘lmasin.', 'err'); return; }
     if (p){
       if (p.length < 10 || !/[0-9]/.test(p) || !/[A-Za-zА-Яа-я]/.test(p)){
-        toast("Parol kamida 10 belgi bo'lsin va harf bilan raqamni birga o'z ichiga olsin.", 'err');
+        toast("Parol kamida 10 belgi bo‘lsin va harf bilan raqamni birga o‘z ichiga olsin.", 'err');
         return;
       }
     }
@@ -1586,7 +1586,7 @@ function wireSettings(){
     if (p) localStorage.setItem(LS_PASS, p);
     document.getElementById('sideUserName').textContent = u;
     document.getElementById('s_pass').value = '';
-    toast('Kirish ma\'lumotlari yangilandi.');
+    toast('Kirish ma’lumotlari yangilandi.');
     render();
   });
 
@@ -1609,14 +1609,14 @@ function wireSettings(){
       try {
         var d = JSON.parse(reader.result);
         if (!Array.isArray(d.products) || !Array.isArray(d.categories)) throw new Error('shape');
-        confirmDialog('Faylni yuklash', "Joriy ma'lumotlar shu fayldagi ma'lumotlar bilan almashtiriladi.", function(){
+        confirmDialog('Faylni yuklash', "Joriy ma’lumotlar shu fayldagi ma’lumotlar bilan almashtiriladi.", function(){
           DATA = d;
           persist();
-          toast('Ma\'lumotlar yuklandi.');
+          toast('Ma’lumotlar yuklandi.');
           render();
         });
       } catch (err){
-        toast("Fayl noto'g'ri formatda.", 'err');
+        toast("Fayl noto‘g‘ri formatda.", 'err');
       }
     };
     reader.readAsText(file);
@@ -1624,10 +1624,10 @@ function wireSettings(){
   });
 
   document.getElementById('s_reset').addEventListener('click', function(){
-    confirmDialog("Boshlang'ich holatga qaytarish", "Barcha o'zgarishlar butunlay o'chadi va saytning original ma'lumotlari tiklanadi.", function(){
+    confirmDialog("Boshlang‘ich holatga qaytarish", "Barcha o‘zgarishlar butunlay o‘chadi va saytning original ma’lumotlari tiklanadi.", function(){
       DATA = seedData();
       persist();
-      toast('Boshlang\'ich holat tiklandi.');
+      toast('Boshlang‘ich holat tiklandi.');
       render();
     });
   });
@@ -1659,7 +1659,7 @@ function closeConfirm(){
 }
 
 /* ============================================================
-   8b. So'rovlar (contact formadan kelgan arizalar)
+   8b. So‘rovlar (contact formadan kelgan arizalar)
    ============================================================ */
 function getMessages(){ return (window.Store && window.Store.getMessages) ? window.Store.getMessages() : []; }
 
@@ -1668,18 +1668,18 @@ function renderMsgs(){
   var unread = list.filter(function(m){ return !m.is_read; }).length;
   return (
     '<div class="bar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; flex-wrap:wrap; gap:.6rem">'+
-      '<p class="d" style="margin:0; color:var(--mute); font-size:.85rem">'+list.length+' ta so\'rov, '+unread+' tasi o\'qilmagan</p>'+
+      '<p class="d" style="margin:0; color:var(--mute); font-size:.85rem">'+list.length+' ta so‘rov, '+unread+' tasi o‘qilmagan</p>'+
       '<div style="display:flex; gap:.5rem">'+
         '<button class="btn btn-ghost" id="m_csv">⬇ CSV yuklab olish</button>'+
-        '<button class="btn btn-ghost" id="m_allread"'+(unread?'':' disabled')+'>Hammasini o\'qilgan qilish</button>'+
+        '<button class="btn btn-ghost" id="m_allread"'+(unread?'':' disabled')+'>Hammasini o‘qilgan qilish</button>'+
       '</div>'+
     '</div>'+
     (list.length ? list.map(function(m){
       return '<div class="msg-card'+(m.is_read?'':' unread')+'" data-id="'+esc(m.id)+'">'+
         '<div class="msg-card__h"><b>'+esc(m.name)+(m.company?' · '+esc(m.company):'')+'</b>'+
           '<div class="msg-card__acts">'+
-            (m.is_read?'':'<button type="button" data-read="'+esc(m.id)+'" title="O\'qilgan qilish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>')+
-            '<button type="button" class="danger" data-del="'+esc(m.id)+'" title="O\'chirish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'+
+            (m.is_read?'':'<button type="button" data-read="'+esc(m.id)+'" title="O‘qilgan qilish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>')+
+            '<button type="button" class="danger" data-del="'+esc(m.id)+'" title="O‘chirish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'+
           '</div>'+
         '</div>'+
         '<div class="msg-card__meta">'+
@@ -1690,7 +1690,7 @@ function renderMsgs(){
         '</div>'+
         (m.message?'<p>'+esc(m.message)+'</p>':'')+
       '</div>';
-    }).join('') : '<div class="panel-box"><h3>So\'rov yo\'q</h3><p class="d" style="margin-bottom:0">Saytdagi contact formadan kelgan arizalar shu yerga tushadi.</p></div>')
+    }).join('') : '<div class="panel-box"><h3>So‘rov yo‘q</h3><p class="d" style="margin-bottom:0">Saytdagi contact formadan kelgan arizalar shu yerga tushadi.</p></div>')
   );
 }
 
@@ -1712,10 +1712,10 @@ function wireMsgs(){
   });
   document.querySelectorAll('[data-del]').forEach(function(btn){
     btn.addEventListener('click', function(){
-      confirmDialog("So'rovni o'chirish", "Bu ariza butunlay o'chiriladi.", function(){
+      confirmDialog("So‘rovni o‘chirish", "Bu ariza butunlay o‘chiriladi.", function(){
         window.Store.deleteMessage(btn.getAttribute('data-del'));
         updateMsgBadge();
-        toast("So'rov o'chirildi.");
+        toast("So‘rov o‘chirildi.");
         render();
       });
     });
@@ -1729,7 +1729,7 @@ function wireMsgs(){
   var csvBtn = document.getElementById('m_csv');
   if (csvBtn) csvBtn.addEventListener('click', function(){
     var list = getMessages();
-    if (!list.length){ toast("So'rov yo'q", 'err'); return; }
+    if (!list.length){ toast("So‘rov yo‘q", 'err'); return; }
     var cols = ['created_at','name','company','phone','email','country','message'];
     var csv = '\uFEFF' + cols.join(';') + '\n' + list.map(function(m){
       return cols.map(function(c){ return '"' + String(m[c]==null?'':m[c]).replace(/"/g,'""') + '"'; }).join(';');

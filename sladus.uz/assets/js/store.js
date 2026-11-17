@@ -1,6 +1,6 @@
 /* ============================================================
-   Sladus — ma'lumot qatlami
-   Supabase sozlangan bo'lsa — undan, bo'lmasa seed.js dan oladi.
+   Sladus — ma’lumot qatlami
+   Supabase sozlangan bo‘lsa — undan, bo‘lmasa seed.js dan oladi.
    Shu sababli sayt har qanday holatda ishlaydi.
    ============================================================ */
 window.Store = (function () {
@@ -23,14 +23,14 @@ window.Store = (function () {
   }
 
   /* Supabase ulanmagan holatda mahalliy admin panel shu manzilga yozadi,
-     sayt sahifalari birinchi navbatda shu yerdan o'qiydi. */
+     sayt sahifalari birinchi navbatda shu yerdan o‘qiydi. */
   function localData() {
     try {
       var raw = window.localStorage.getItem(LOCAL_KEY);
       if (!raw) return null;
       var d = JSON.parse(raw);
       if (d && Array.isArray(d.products) && d.products.length) return d;
-    } catch (e) { /* localStorage yo'q yoki buzilgan — seed'ga qaytamiz */ }
+    } catch (e) { /* localStorage yo‘q yoki buzilgan — seed’ga qaytamiz */ }
     return null;
   }
 
@@ -67,7 +67,7 @@ window.Store = (function () {
   }
 
   /* Supabase ulanmagan holatda ariza (contact forma) yuborilganda
-     xabar shu brauzer xotirasiga tushadi — mahalliy admin panel shu yerdan o'qiydi. */
+     xabar shu brauzer xotirasiga tushadi — mahalliy admin panel shu yerdan o‘qiydi. */
   function readLocalMessages() {
     try {
       var raw = window.localStorage.getItem(MSG_KEY);
@@ -77,7 +77,7 @@ window.Store = (function () {
   }
 
   function writeLocalMessages(arr) {
-    try { window.localStorage.setItem(MSG_KEY, JSON.stringify(arr)); } catch (e) { /* xotira yo'q */ }
+    try { window.localStorage.setItem(MSG_KEY, JSON.stringify(arr)); } catch (e) { /* xotira yo‘q */ }
   }
 
   function makeId() {

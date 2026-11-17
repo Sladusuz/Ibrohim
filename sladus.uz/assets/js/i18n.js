@@ -487,8 +487,8 @@ const I18N = {
 
 if (typeof window !== 'undefined') window.I18N = I18N;
 
-/* Boshqaruv panelidagi «Matnlar» bo'limida saqlangan tahrirlar bo'lsa,
-   ularni standart matnlar ustiga qo'llaymiz (shu brauzerda ko'rinishi uchun). */
+/* Boshqaruv panelidagi «Matnlar» bo‘limida saqlangan tahrirlar bo‘lsa,
+   ularni standart matnlar ustiga qo‘llaymiz (shu brauzerda ko‘rinishi uchun). */
 (function () {
   try {
     if (typeof window === 'undefined' || !window.localStorage) return;

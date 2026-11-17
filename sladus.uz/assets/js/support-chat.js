@@ -2,7 +2,7 @@
    Sladus — Support AI chat vidjeti
    Faqat support.html sahifasida ishlaydi. Backend: /api/support-chat
    (Vercel yoki Netlify serverless funksiyasi — Anthropic kaliti
-   faqat serverda, brauzerda hech qachon ko'rinmaydi).
+   faqat serverda, brauzerda hech qachon ko‘rinmaydi).
    ============================================================ */
 window.SladusChat = (function () {
   'use strict';

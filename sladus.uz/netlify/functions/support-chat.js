@@ -1,6 +1,6 @@
 /* ============================================================
    Sladus — Support AI (Netlify Function)
-   POST /api/support-chat  (netlify.toml redirect'i orqali)
+   POST /api/support-chat  (netlify.toml redirect’i orqali)
    { messages: [{role,content}], lang }
    ============================================================ */
 'use strict';
@@ -15,21 +15,21 @@ exports.handler = async function (event) {
   var headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: headers, body: JSON.stringify({ error: 'Faqat POST so\'rovlar qabul qilinadi.' }) };
+    return { statusCode: 405, headers: headers, body: JSON.stringify({ error: 'Faqat POST so‘rovlar qabul qilinadi.' }) };
   }
 
   var key = process.env.ANTHROPIC_API_KEY;
   if (!key) {
     return {
       statusCode: 500, headers: headers,
-      body: JSON.stringify({ error: 'Server tomonda ANTHROPIC_API_KEY sozlanmagan. Netlify loyihasining Site settings → Environment variables bo\'limiga qo\'shing.' })
+      body: JSON.stringify({ error: 'Server tomonda ANTHROPIC_API_KEY sozlanmagan. Netlify loyihasining Site settings → Environment variables bo‘limiga qo‘shing.' })
     };
   }
 
   var body;
   try { body = JSON.parse(event.body || '{}'); } catch (e) { body = null; }
   if (!body || !Array.isArray(body.messages) || !body.messages.length) {
-    return { statusCode: 400, headers: headers, body: JSON.stringify({ error: 'Xabarlar ro\'yxati bo\'sh.' }) };
+    return { statusCode: 400, headers: headers, body: JSON.stringify({ error: 'Xabarlar ro‘yxati bo‘sh.' }) };
   }
 
   var lang = ['uz', 'ru', 'en'].indexOf(body.lang) > -1 ? body.lang : 'ru';
@@ -40,7 +40,7 @@ exports.handler = async function (event) {
     .map(function (m) { return { role: m.role, content: String(m.content).slice(0, MAX_CHARS_PER_MSG) }; });
 
   if (!msgs.length) {
-    return { statusCode: 400, headers: headers, body: JSON.stringify({ error: 'Xabar matni bo\'sh.' }) };
+    return { statusCode: 400, headers: headers, body: JSON.stringify({ error: 'Xabar matni bo‘sh.' }) };
   }
 
   try {
@@ -68,6 +68,6 @@ exports.handler = async function (event) {
     var text = (data.content || []).filter(function (b) { return b.type === 'text'; }).map(function (b) { return b.text; }).join('\n').trim();
     return { statusCode: 200, headers: headers, body: JSON.stringify({ reply: text || '...' }) };
   } catch (err) {
-    return { statusCode: 502, headers: headers, body: JSON.stringify({ error: 'AI xizmatiga ulanib bo\'lmadi. Birozdan keyin qayta urinib ko\'ring.' }) };
+    return { statusCode: 502, headers: headers, body: JSON.stringify({ error: 'AI xizmatiga ulanib bo‘lmadi. Birozdan keyin qayta urinib ko‘ring.' }) };
   }
 };

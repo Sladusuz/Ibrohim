@@ -1,11 +1,11 @@
 -- ============================================================
---  SLADUS — ma'lumotlar bazasi sxemasi
---  Supabase → SQL Editor → shu faylni to'liq qo'ying → Run
+--  SLADUS — ma’lumotlar bazasi sxemasi
+--  Supabase → SQL Editor → shu faylni to‘liq qo‘ying → Run
 -- ============================================================
 
--- ---------- 1. Administratorlar ro'yxati ----------
--- Faqat shu jadvaldagi email yoza oladi. Ro'yxatdan o'tgan
--- boshqa foydalanuvchi hech narsani o'zgartira olmaydi.
+-- ---------- 1. Administratorlar ro‘yxati ----------
+-- Faqat shu jadvaldagi email yoza oladi. Ro‘yxatdan o‘tgan
+-- boshqa foydalanuvchi hech narsani o‘zgartira olmaydi.
 
 create table if not exists admins (
   email text primary key,
@@ -82,11 +82,11 @@ alter table categories enable row level security;
 alter table products   enable row level security;
 alter table messages   enable row level security;
 
--- admins jadvalini faqat adminning o'zi ko'radi, tahrirlash — dashboard orqali
+-- admins jadvalini faqat adminning o‘zi ko‘radi, tahrirlash — dashboard orqali
 drop policy if exists admins_read on admins;
 create policy admins_read on admins for select using (is_admin());
 
--- Katalog: hamma o'qiydi, faqat admin yozadi
+-- Katalog: hamma o‘qiydi, faqat admin yozadi
 drop policy if exists cat_read  on categories;
 drop policy if exists cat_write on categories;
 create policy cat_read  on categories for select using (true);
@@ -97,7 +97,7 @@ drop policy if exists prod_write on products;
 create policy prod_read  on products for select using (true);
 create policy prod_write on products for all using (is_admin()) with check (is_admin());
 
--- So'rovlar: har kim yubora oladi, faqat admin o'qiydi
+-- So‘rovlar: har kim yubora oladi, faqat admin o‘qiydi
 drop policy if exists msg_add    on messages;
 drop policy if exists msg_read   on messages;
 drop policy if exists msg_edit   on messages;
@@ -124,7 +124,7 @@ create policy img_add    on storage.objects for insert with check (bucket_id = '
 create policy img_remove on storage.objects for delete using (bucket_id = 'products' and is_admin());
 
 -- ============================================================
---  MUHIM: pastdagi qatorda o'z emailingizni yozing va bajaring.
+--  MUHIM: pastdagi qatorda o‘z emailingizni yozing va bajaring.
 --  Aks holda hech kim (siz ham) tahrirlay olmaysiz.
 -- ============================================================
 -- insert into admins (email, note) values ('sizning@email.uz', 'Bosh admin');

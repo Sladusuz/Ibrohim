@@ -179,8 +179,8 @@ window.BRAND={
  }
 };
 
-/* Boshqaruv panelidagi «Matnlar» bo'limida saqlangan tahrirlar bo'lsa,
-   ularni standart ma'lumotlar ustiga qo'llaymiz (shu brauzerda ko'rinishi uchun). */
+/* Boshqaruv panelidagi «Matnlar» bo‘limida saqlangan tahrirlar bo‘lsa,
+   ularni standart ma’lumotlar ustiga qo‘llaymiz (shu brauzerda ko‘rinishi uchun). */
 (function () {
   try {
     if (typeof window === 'undefined' || !window.localStorage) return;
@@ -190,5 +190,5 @@ window.BRAND={
     if (ov.company) for (var k in ov.company) if (ov.company[k]) window.BRAND.company[k] = ov.company[k];
     if (Array.isArray(ov.countries) && ov.countries.length) window.BRAND.countries = ov.countries;
     if (Array.isArray(ov.awards) && ov.awards.length) window.BRAND.awards = ov.awards;
-  } catch (e) { /* saqlangan ma'lumotlar buzilgan — standart holat ishlatiladi */ }
+  } catch (e) { /* saqlangan ma’lumotlar buzilgan — standart holat ishlatiladi */ }
 })();

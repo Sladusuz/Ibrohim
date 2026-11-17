@@ -2,8 +2,8 @@
   functions = "netlify/functions"
 
 # Sayt kodi /api/support-chat manziliga murojaat qiladi — bu qoida
-# uni Netlify Functions'ning haqiqiy manziliga yo'naltiradi, shunda
-# bir xil frontend kodi ham Vercel'da, ham Netlify'da ishlaydi.
+# uni Netlify Functions’ning haqiqiy manziliga yo‘naltiradi, shunda
+# bir xil frontend kodi ham Vercel’da, ham Netlify’da ishlaydi.
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"

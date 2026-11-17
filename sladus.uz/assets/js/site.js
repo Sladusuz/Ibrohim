@@ -277,7 +277,7 @@
         '<span class="range__go">' + e(t('cat.view')) + '<i>→</i></span></a>';
     }).join('');
 
-    // Har yo'nalishdan 2 tadan, keyin bo'sh joyni qolganlari bilan to'ldiramiz
+    // Har yo‘nalishdan 2 tadan, keyin bo‘sh joyni qolganlari bilan to‘ldiramiz
     var picks = [], seen = {};
     DATA.categories.forEach(function (c) {
       P.filter(function (p) { return p.cat === c.id; }).slice(0, 2).forEach(function (p) {

@@ -118,7 +118,7 @@ table.tbl tbody tr:hover { background: #FDFAF4; }
 .mdl__b { padding: 1.4rem; }
 .mdl__f { display: flex; flex-wrap: wrap; gap: .6rem; justify-content: flex-end; padding: 1rem 1.4rem; border-top: 1px solid var(--hair); position: sticky; bottom: 0; background: var(--shell); border-radius: 0 0 var(--r-l) var(--r-l); }
 
-/* ---------- Forma bo'limlari ---------- */
+/* ---------- Forma bo‘limlari ---------- */
 .grp { margin-bottom: 1.8rem; }
 .grp > h3 { font-size: var(--t-sm); margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 2px solid var(--shell-2); display: flex; align-items: center; gap: .55rem; }
 .grp > h3::before { content: ''; width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
@@ -144,7 +144,7 @@ table.tbl tbody tr:hover { background: #FDFAF4; }
 .drop:hover, .drop.over { border-color: var(--brand); background: #FFF9F5; }
 .drop b { display: block; font-size: var(--t-sm); color: var(--ink); margin-bottom: .2rem; }
 
-/* Jonli ko'rinish */
+/* Jonli ko‘rinish */
 .preview { position: sticky; top: 84px; }
 .preview__lab { font-size: var(--t-xs); color: var(--mute); font-weight: 700; margin-bottom: .6rem; }
 

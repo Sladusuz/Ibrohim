@@ -6,8 +6,8 @@
 
 /* panel.js muvaffaqiyatli yuklanganini bildiradigan belgi — buni
    pastdagi diagnostika skripti (panel-fa0717685948.html ichida)
-   tekshirib, agar bu fayl umuman yuklanmagan bo'lsa ham sababini
-   ko'rsatadi. */
+   tekshirib, agar bu fayl umuman yuklanmagan bo‘lsa ham sababini
+   ko‘rsatadi. */
 window.__SLADUS_PANEL_JS_LOADED__ = true;
 
 (function () {
@@ -23,9 +23,9 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  /* Supabase kutubxonasi CDN'dan olinadi — faqat Supabase haqiqatan ham
-     sozlangan bo'lsa (ready=true), va ishga tushirishni internetga bog'lab
-     qo'ymaslik uchun sahifa yuklangandan KEYIN, mahalliy kirish (login)
+  /* Supabase kutubxonasi CDN’dan olinadi — faqat Supabase haqiqatan ham
+     sozlangan bo‘lsa (ready=true), va ishga tushirishni internetga bog‘lab
+     qo‘ymaslik uchun sahifa yuklangandan KEYIN, mahalliy kirish (login)
      ishlashini kutmasdan alohida yuklanadi. */
   var sb = null, sdkPromise = null;
   function loadSupabaseSdk() {
@@ -68,12 +68,12 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
 
   /* ---------- mahalliy kirish (Supabase ulanmagan holat uchun) ----------
      admin-56a7e0dcc2af.html bilan bir xil standart login/parol.
-     localStorage/sessionStorage ba'zi brauzerlarda (masalan, faylni
-     to'g'ridan-to'g'ri ochganda ba'zi sozlamalarda) bloklangan bo'lishi
+     localStorage/sessionStorage ba’zi brauzerlarda (masalan, faylni
+     to‘g‘ridan-to‘g‘ri ochganda ba’zi sozlamalarda) bloklangan bo‘lishi
      mumkin — shu sababli har bir chaqiruv try/catch bilan himoyalangan,
      bloklangan taqdirda ham standart login/parol bilan kirish ishlayveradi. */
   function lsGet(k, def) { try { var v = localStorage.getItem(k); return v == null ? def : v; } catch (e) { return def; } }
-  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* xotira yo'q yoki bloklangan */ } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* xotira yo‘q yoki bloklangan */ } }
   var DEFAULT_USER = 'Ibrohim', DEFAULT_PASS = 'ibrohim123';
   var LS_USER = 'sladus_panel_user', LS_PASS = 'sladus_panel_pass';
   var LS_FAILS = 'sladus_panel_fails', LS_LOCK_UNTIL = 'sladus_panel_lock_until';
@@ -97,8 +97,8 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
     return false;
   }
   function isLocalLoggedIn() { try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch (e) { return false; } }
-  function localLogin() { try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) { /* xotira yo'q */ } }
-  function localLogout() { try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* xotira yo'q */ } }
+  function localLogin() { try { sessionStorage.setItem(SESSION_KEY, '1'); } catch (e) { /* xotira yo‘q */ } }
+  function localLogout() { try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* xotira yo‘q */ } }
 
   /* ---------- kirish ---------- */
   $('#authForm').addEventListener('submit', function (ev) {
@@ -164,9 +164,9 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
     try { initTexts(); } catch (e) { toast('Matnlar bo‘limi yuklanmadi: ' + e.message, true); }
   }
 
-  /* Supabase sozlanmagan bo'lsa — login admin-56a7e0dcc2af.html bilan bir xil
+  /* Supabase sozlanmagan bo‘lsa — login admin-56a7e0dcc2af.html bilan bir xil
      (mahalliy, shu brauzerda). Faqat «Matnlar» va «Sozlamalar» ishlaydi,
-     boshqa bo'limlar (Mahsulotlar, Yo'nalishlar, So'rovlar) Supabase talab qiladi. */
+     boshqa bo‘limlar (Mahsulotlar, Yo‘nalishlar, So‘rovlar) Supabase talab qiladi. */
   function enterLocalMode() {
     $('#shell').hidden = false;
     $('#who').textContent = currentUser() + ' (mahalliy)';
@@ -178,7 +178,7 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
     });
     $$('.pane-view').forEach(function (v) { v.classList.toggle('on', v.id === 'v-texts'); });
     try { initTexts(); } catch (e) { toast('Matnlar bo‘limi yuklanmadi: ' + e.message, true); }
-    try { renderLocalSecurityNotice(); } catch (e) { /* Sozlamalar ko'rinishiga ta'sir qilmaydi */ }
+    try { renderLocalSecurityNotice(); } catch (e) { /* Sozlamalar ko‘rinishiga ta’sir qilmaydi */ }
   }
 
   function renderLocalSecurityNotice() {
@@ -500,7 +500,7 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
       .catch(function (e2) { btn.disabled = false; toast(e2.message, true); });
   });
 
-  /* ---------- yo'nalishlar ---------- */
+  /* ---------- yo‘nalishlar ---------- */
   function drawCats() {
     $('#crows').innerHTML = K.length ? K.map(function (c) {
       return '<tr class="c-' + esc(c.color || 'brand') + '">' +
@@ -568,7 +568,7 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
       });
   });
 
-  /* ---------- so'rovlar ---------- */
+  /* ---------- so‘rovlar ---------- */
   function drawMsgs() {
     var unread = M.filter(function (m) { return !m.is_read; }).length;
     $('#mcount').textContent = M.length + ' ta so‘rov, ' + unread + ' tasi o‘qilmagan';
@@ -867,7 +867,7 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
 
   $('#txtReset').addEventListener('click', function () {
     if (!confirm('Barcha saqlangan matn o‘zgarishlari o‘chirilib, standart holatga qaytariladimi?')) return;
-    try { localStorage.removeItem('sladus_texts_v1'); } catch (e) { /* xotira yo'q */ }
+    try { localStorage.removeItem('sladus_texts_v1'); } catch (e) { /* xotira yo‘q */ }
     location.reload();
   });
 
@@ -906,9 +906,9 @@ window.__SLADUS_PANEL_JS_LOADED__ = true;
   });
 
   /* ---------- ishga tushirish ----------
-     Mahalliy kirish (login formasi, «Matnlar» bo'limi) hech qachon
+     Mahalliy kirish (login formasi, «Matnlar» bo‘limi) hech qachon
      tashqi Supabase kutubxonasi yuklanishini kutib turmaydi — internet
-     sekin yoki yo'q bo'lsa ham darhol ishlaydi. */
+     sekin yoki yo‘q bo‘lsa ham darhol ishlaydi. */
   if (ready) {
     loadSupabaseSdk().then(function () {
       return sb.auth.getSession();

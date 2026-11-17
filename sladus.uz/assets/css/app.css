@@ -1,7 +1,7 @@
 /* ============================================================
    SLADUS — dizayn tizimi
-   G'oya: qandolat qobig'ining yaltiroq ranglari + eksport
-   hujjatining aniqligi. Har yo'nalishning o'z rangi bor.
+   G‘oya: qandolat qobig‘ining yaltiroq ranglari + eksport
+   hujjatining aniqligi. Har yo‘nalishning o‘z rangi bor.
    ============================================================ */
 
 :root {
@@ -17,12 +17,12 @@
   --on-dark:    #F6ECDD;
   --on-dark-mu: rgba(246, 236, 221, .64);
 
-  /* Yo'nalish ranglari — draje qobig'idan olingan */
+  /* Yo‘nalish ranglari — draje qobig‘idan olingan */
   --brand:  #E23A5E;
   --gold:   #D9A038;
   --mint:   #3E9E82;
   --amber:  #DE6A2E;
-  --c:      var(--brand);          /* joriy yo'nalish rangi */
+  --c:      var(--brand);          /* joriy yo‘nalish rangi */
 
   /* Tipografika */
   --display: 'Unbounded', system-ui, sans-serif;
@@ -111,7 +111,7 @@ p { text-wrap: pretty; }
 .sec--dark h1, .sec--dark h2, .sec--dark h3 { color: var(--shell); }
 .sec--tint { background: var(--shell-2); }
 
-/* Sarlavha bloki — ostida yo'nalish ranglaridan iborat chiziq */
+/* Sarlavha bloki — ostida yo‘nalish ranglaridan iborat chiziq */
 .head { max-width: 58ch; margin-bottom: clamp(2.2rem, 4vw, 3.6rem); }
 .head__eyebrow {
   display: flex; align-items: center; gap: .7rem;
@@ -260,7 +260,7 @@ p { text-wrap: pretty; }
 .hero__lead { max-width: 52ch; font-size: var(--t-lg); color: var(--on-dark-mu); margin-top: 1.6rem; }
 .hero__act { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2.2rem; }
 
-/* Eksport yo'nalishlari yuguruvchi satri */
+/* Eksport yo‘nalishlari yuguruvchi satri */
 .ticker {
   position: relative; z-index: 2; border-top: 1px solid var(--hair-dark);
   overflow: hidden; padding: .9rem 0; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -273,7 +273,7 @@ p { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) { .ticker__row { animation: none; } }
 .hero:hover .ticker__row { animation-play-state: paused; }
 
-/* Ko'rsatkichlar tasmasi */
+/* Ko‘rsatkichlar tasmasi */
 .figures { position: relative; z-index: 2; border-top: 1px solid var(--hair-dark); display: grid; grid-template-columns: repeat(4, 1fr); }
 .figures > div { padding: 1.8rem 1.4rem 2rem; border-right: 1px solid var(--hair-dark); }
 .figures > div:last-child { border-right: 0; }
@@ -298,7 +298,7 @@ p { text-wrap: pretty; }
 .phead h1 { font-size: var(--t-3xl); color: var(--shell); }
 .phead p { color: var(--on-dark-mu); max-width: 60ch; margin-top: 1rem; font-size: var(--t-lg); }
 
-/* ---------- Yo'nalish panellari ---------- */
+/* ---------- Yo‘nalish panellari ---------- */
 .ranges { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); }
 .range {
   position: relative; display: grid; align-content: end; isolation: isolate;
