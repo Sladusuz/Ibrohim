@@ -125,6 +125,15 @@ p { text-wrap: pretty; }
 .sec--dark .head__eyebrow { color: var(--on-dark-mu); }
 .head h2 { font-size: var(--t-3xl); }
 .head p { color: var(--mute); font-size: var(--t-lg); margin-top: 1rem; }
+
+/* ---------- Kompaniya tarixi bloki ---------- */
+.story { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(1.8rem, 5vw, 4rem); align-items: center; }
+.story__ph { border-radius: var(--r-l); overflow: hidden; background: var(--shell-2); padding: .6rem; }
+.story__ph img { display: block; width: 100%; height: auto; border-radius: calc(var(--r-l) - .4rem); }
+@media (max-width: 760px) {
+  .story { grid-template-columns: 1fr; }
+  .story__ph { order: -1; max-width: 320px; margin-inline: auto; }
+}
 .sec--dark .head p { color: var(--on-dark-mu); }
 .head--row { max-width: none; display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; align-items: flex-end; justify-content: space-between; }
 .head--row > div { max-width: 54ch; }

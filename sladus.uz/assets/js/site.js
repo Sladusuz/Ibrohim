@@ -344,7 +344,7 @@
       '<p style="color:var(--mute);margin-top:1rem">' + e(t('about.p2')) + '</p>' +
       '<div class="tags mt"><span class="tag tag--c c-brand">' + C.founded + '</span>' +
       '<span class="tag">' + e(C.legal) + '</span><span class="tag">' + P.length + '+ ' + e(t('cat.count')) + '</span></div></div>' +
-      '<img src="' + C.photo2 + '" alt="Sladus Produce" loading="lazy" width="620" height="465" style="border-radius:var(--r-l);width:100%;aspect-ratio:4/3;object-fit:cover">';
+      '<div class="story__ph"><img src="' + C.photo2 + '" alt="Sladus Produce" loading="lazy" width="620" height="880"></div>';
 
     $('#figs').innerHTML = '<div class="figures num" style="border-top:0">' +
       '<div><b>' + years + '+</b><span>' + e(t('stat.years')) + '</span></div>' +
