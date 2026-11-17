@@ -451,6 +451,45 @@
    },
    "net": "2,5 kg",
    "kcal": 378
+  },
+  {
+   "id": "hrust-275",
+   "code": "4.16",
+   "name": "SLADUS HRUST",
+   "cat": "zavtrak",
+   "descr": {
+    "uz": "Kakaoli glazursiz makkajo‘xori mahsuloti, 275 g qadoqda",
+    "ru": "Неглазированные кукурузные изделия с какао, упаковка 275 г",
+    "en": "Unglazed corn pieces with cocoa, 275 g pack"
+   },
+   "net": "275 g",
+   "kcal": 378
+  },
+  {
+   "id": "hrust-500",
+   "code": "4.14",
+   "name": "SLADUS HRUST",
+   "cat": "zavtrak",
+   "descr": {
+    "uz": "Kakaoli glazursiz makkajo‘xori mahsuloti, aralash shakldagi (sharcha va halqa), 500 g qadoqda",
+    "ru": "Неглазированные кукурузные изделия с какао, смешанной формы (шарики и колечки), упаковка 500 г",
+    "en": "Unglazed corn pieces with cocoa, mixed shapes (balls and rings), 500 g pack"
+   },
+   "net": "500 g",
+   "kcal": 378
+  },
+  {
+   "id": "hrust-700",
+   "code": "4.15",
+   "name": "SLADUS HRUST",
+   "cat": "zavtrak",
+   "descr": {
+    "uz": "Kakaoli glazursiz makkajo‘xori mahsuloti, katta hajmdagi 700 g qadoq",
+    "ru": "Неглазированные кукурузные изделия с какао, экономичная упаковка 700 г",
+    "en": "Unglazed corn pieces with cocoa, value-size 700 g pack"
+   },
+   "net": "700 g",
+   "kcal": 378
   }
  ]
 }
