@@ -310,7 +310,7 @@
     }).join('');
 
     $('#awards').innerHTML = B.awards.map(function (a) {
-      return '<article class="award rv"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400">' +
+      return '<article class="award rv"><div class="award__ph"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400"></div>' +
         '<div class="award__b"><span>' + e(a.year) + '</span><h3>' + e(a.title) + '</h3><p>' + e(loc(a.text)) + '</p></div></article>';
     }).join('');
 
@@ -376,7 +376,7 @@
     }).join('');
 
     $('#awards').innerHTML = B.awards.map(function (a) {
-      return '<article class="award rv"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400">' +
+      return '<article class="award rv"><div class="award__ph"><img src="' + e(a.img) + '" alt="' + e(a.title) + '" loading="lazy" width="300" height="400"></div>' +
         '<div class="award__b"><span>' + e(a.year) + '</span><h3>' + e(a.title) + '</h3><p>' + e(loc(a.text)) + '</p></div></article>';
     }).join('');
 

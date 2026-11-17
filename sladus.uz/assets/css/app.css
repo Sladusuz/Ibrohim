@@ -445,11 +445,19 @@ p { text-wrap: pretty; }
 /* ---------- Mukofotlar ---------- */
 .awards { display: grid; gap: 1.1rem; grid-template-columns: repeat(auto-fit, minmax(238px, 1fr)); }
 .award { background: #fff; border: 1px solid var(--hair); border-radius: var(--r-m); overflow: hidden; display: flex; flex-direction: column; }
-.award img { aspect-ratio: 3/4; width: 100%; object-fit: cover; background: var(--shell-2); }
+.award__ph { aspect-ratio: 3/4; width: 100%; padding: 1rem; box-sizing: border-box; display: flex; align-items: center; justify-content: center; background: var(--shell-2); }
+.award__ph img { width: 100%; height: 100%; object-fit: contain; }
 .award__b { padding: 1.2rem; display: grid; gap: .45rem; }
 .award__b span { font-size: var(--t-xs); font-weight: 800; color: var(--gold); letter-spacing: .07em; }
 .award__b h3 { font-size: .98rem; }
 .award__b p { font-size: var(--t-sm); color: var(--mute); }
+@media (max-width: 640px) {
+  .awards { grid-template-columns: repeat(2, 1fr); gap: .7rem; }
+  .award__ph { padding: .6rem; }
+  .award__b { padding: .8rem; gap: .3rem; }
+  .award__b h3 { font-size: .86rem; }
+  .award__b p { font-size: .76rem; }
+}
 
 /* ---------- Tarix ---------- */
 .tl { display: grid; gap: 0; border-left: 2px solid var(--shell-2); padding-left: 1.8rem; }
