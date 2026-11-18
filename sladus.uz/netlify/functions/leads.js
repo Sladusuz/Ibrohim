@@ -8,8 +8,19 @@
 var neonMod = null;
 try { neonMod = require('@neondatabase/serverless'); } catch (e) { neonMod = null; }
 
-var DB_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
-  process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_PRISMA_URL;
+function findDbUrl() {
+  var named = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
+    process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_PRISMA_URL;
+  if (named) return named;
+  var keys = Object.keys(process.env);
+  for (var i = 0; i < keys.length; i++) {
+    var v = process.env[keys[i]];
+    if (typeof v === 'string' && /^postgres(ql)?:\/\//.test(v)) return v;
+  }
+  return null;
+}
+
+var DB_URL = findDbUrl();
 
 var sql = (neonMod && DB_URL) ? neonMod.neon(DB_URL) : null;
 var tableReady = false;
