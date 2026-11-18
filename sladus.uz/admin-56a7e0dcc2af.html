@@ -1842,11 +1842,24 @@ function updateLiveStatus(){
     : '<span class="dot offline"></span>Mahalliy rejim (brauzer xotirasi)';
 }
 
+function applyKeyFromUrl(){
+  try {
+    var u = new URL(location.href);
+    var k = u.searchParams.get('key');
+    if (!k) return false;
+    setAdminApiKey(k);
+    u.searchParams.delete('key');
+    history.replaceState(null, '', u.pathname + (u.search ? u.search : '') + u.hash);
+    return true;
+  } catch (e) { return false; }
+}
+
 function boot(){
+  var cameFromKeyLink = applyKeyFromUrl();
   DATA = loadData();
   updateLiveStatus();
   updateMsgBadge();
-  setTab('dash');
+  setTab(cameFromKeyLink ? 'msgs' : 'dash');
   fetchRemoteLeads(function () {
     updateMsgBadge();
     if (currentTab === 'msgs') render();
