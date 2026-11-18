@@ -97,6 +97,33 @@ window.SladusChat = (function () {
       body.scrollTop = body.scrollHeight;
     }
 
+    var LEAD_RE = /\[\[LEAD\s+name="([^"]*)"\s+contact="([^"]*)"\s+interest="([^"]*)"\]\]\s*$/;
+
+    function extractLead(text) {
+      var m = LEAD_RE.exec(text);
+      if (!m) return { text: text, lead: null };
+      return {
+        text: text.slice(0, m.index).replace(/\s+$/, ''),
+        lead: { name: m[1], contact: m[2], interest: m[3] }
+      };
+    }
+
+    function sendLead(lead) {
+      var isEmail = lead.contact.indexOf('@') > -1;
+      fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: lead.name,
+          phone: isEmail ? '' : lead.contact,
+          email: isEmail ? lead.contact : '',
+          message: lead.interest,
+          source: 'ai-chat',
+          lang: lang
+        })
+      }).catch(function () {});
+    }
+
     addBubble('bot', t('support.chat.greeting'));
 
     form.addEventListener('submit', function (ev) {
@@ -123,9 +150,11 @@ window.SladusChat = (function () {
           addBubble('err', (res.data && res.data.error) || t('support.chat.error'));
           return;
         }
-        addBubble('bot', res.data.reply);
-        addProductCards(matchProducts(res.data.reply));
-        history.push({ role: 'assistant', content: res.data.reply });
+        var parsed = extractLead(res.data.reply);
+        addBubble('bot', parsed.text);
+        addProductCards(matchProducts(parsed.text));
+        history.push({ role: 'assistant', content: parsed.text });
+        if (parsed.lead) sendLead(parsed.lead);
       }).catch(function () {
         typing.remove();
         addBubble('err', t('support.chat.error'));

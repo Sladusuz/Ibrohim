@@ -98,6 +98,13 @@ window.Store = (function () {
       var arr = readLocalMessages();
       arr.unshift(Object.assign({ id: makeId(), is_read: false, created_at: new Date().toISOString() }, clean));
       writeLocalMessages(arr);
+      /* Haqiqiy, barcha qurilmalardan ko‘rinadigan lidlar omboriga ham yuboriladi
+         (bu brauzerdagi nusxa — tarmoq bo‘lmasa ham arizani yo‘qotmaslik uchun zahira) */
+      fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.assign({ source: 'contact-form' }, clean))
+      }).catch(function () { /* zahira sifatida localStorage’da saqlanib qoldi */ });
       return Promise.resolve(true);
     }
     return fetch(BASE + '/messages', {

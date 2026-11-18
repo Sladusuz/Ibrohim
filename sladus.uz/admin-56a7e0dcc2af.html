@@ -423,6 +423,9 @@ var LS_USER = 'sladus_admin_user';
 var LS_PASS = 'sladus_admin_pass';
 var LS_SESSION = 'sladus_admin_session';
 var LS_SESSION_AT = 'sladus_admin_session_at';
+var LS_ADMIN_KEY = 'sladus_admin_api_key_v1';
+var REMOTE_LEADS = null;
+var REMOTE_LEADS_ERR = null;
 var LS_FAILS = 'sladus_admin_fails';
 var LS_LOCK_UNTIL = 'sladus_admin_lock_until';
 var IDLE_LIMIT_MS = 15 * 60 * 1000; /* 15 daqiqa harakatsizlikdan keyin avtomatik chiqish */
@@ -1661,12 +1664,59 @@ function closeConfirm(){
 /* ============================================================
    8b. So‘rovlar (contact formadan kelgan arizalar)
    ============================================================ */
-function getMessages(){ return (window.Store && window.Store.getMessages) ? window.Store.getMessages() : []; }
+function getAdminApiKey(){ try { return localStorage.getItem(LS_ADMIN_KEY) || ''; } catch (e) { return ''; } }
+function setAdminApiKey(k){ try { localStorage.setItem(LS_ADMIN_KEY, k); } catch (e) {} }
+
+function fetchRemoteLeads(cb){
+  var key = getAdminApiKey();
+  if (!key){ REMOTE_LEADS = null; REMOTE_LEADS_ERR = null; if (cb) cb(); return; }
+  fetch('/api/leads?key=' + encodeURIComponent(key)).then(function (r) {
+    return r.json().then(function (d) { return { ok: r.ok, data: d }; });
+  }).then(function (res) {
+    if (res.ok && res.data && Array.isArray(res.data.leads)) {
+      REMOTE_LEADS = res.data.leads;
+      REMOTE_LEADS_ERR = null;
+    } else {
+      REMOTE_LEADS_ERR = (res.data && res.data.error) || 'Ulanishda xato yuz berdi.';
+    }
+  }).catch(function () {
+    REMOTE_LEADS_ERR = 'Serverga ulanib bo‘lmadi.';
+  }).then(function () { if (cb) cb(); });
+}
+
+function remoteLeadAction(method, id, extra){
+  var key = getAdminApiKey();
+  if (!key) return Promise.resolve();
+  return fetch('/api/leads?key=' + encodeURIComponent(key), {
+    method: method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(Object.assign({ id: id }, extra || {}))
+  }).catch(function () {});
+}
+
+function getMessages(){
+  var local = (window.Store && window.Store.getMessages) ? window.Store.getMessages() : [];
+  var remote = REMOTE_LEADS || [];
+  var seen = {}, merged = [];
+  remote.concat(local).forEach(function (m) { if (m && !seen[m.id]) { seen[m.id] = 1; merged.push(m); } });
+  merged.sort(function (a, b) { return String(b.created_at).localeCompare(String(a.created_at)); });
+  return merged;
+}
 
 function renderMsgs(){
   var list = getMessages();
   var unread = list.filter(function(m){ return !m.is_read; }).length;
-  return (
+  var key = getAdminApiKey();
+  var connBox = !key ? (
+    '<div class="notice"><b>Masofaviy ombor ulanmagan</b>Hozir faqat shu brauzerda yuborilgan arizalar ko‘rinadi. Boshqa qurilmalardan (mijoz telefonidan AI chat yoki Aloqa formasi orqali) kelgan so‘rovlarni ham ko‘rish uchun, Vercel loyihasida o‘rnatgan <b>ADMIN_API_KEY</b> qiymatini shu yerga kiriting:'+
+      '<div style="display:flex; gap:.5rem; margin-top:.6rem; flex-wrap:wrap"><input type="password" id="m_key" placeholder="ADMIN_API_KEY" style="flex:1; min-width:200px"><button class="btn btn-dark" id="m_keySave">Ulash</button></div></div>'
+  ) : (REMOTE_LEADS_ERR ? (
+    '<div class="notice" style="border-color:var(--danger); background:rgba(199,54,46,.08)"><b>⚠ Masofaviy omborga ulanmadi</b>'+esc(REMOTE_LEADS_ERR)+' Kalitni tekshiring yoki qayta urining.'+
+      '<div style="display:flex; gap:.5rem; margin-top:.6rem; flex-wrap:wrap"><input type="password" id="m_key" placeholder="ADMIN_API_KEY" value="'+esc(key)+'" style="flex:1; min-width:200px"><button class="btn btn-dark" id="m_keySave">Qayta urinish</button></div></div>'
+  ) : (
+    '<div class="notice" style="border-color:var(--ok, #2f9e5b); background:rgba(47,158,91,.08)"><b>✓ Masofaviy ombor ulangan</b>Barcha qurilmalardan kelgan arizalar ko‘rinmoqda ('+(REMOTE_LEADS?REMOTE_LEADS.length:0)+' ta). <button class="btn btn-ghost" id="m_keyRefresh" style="margin-left:.4rem">↻ Yangilash</button> <button class="btn btn-ghost" id="m_keyForget">Uzish</button></div>'
+  ));
+  return connBox+
     '<div class="bar" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; flex-wrap:wrap; gap:.6rem">'+
       '<p class="d" style="margin:0; color:var(--mute); font-size:.85rem">'+list.length+' ta so‘rov, '+unread+' tasi o‘qilmagan</p>'+
       '<div style="display:flex; gap:.5rem">'+
@@ -1675,9 +1725,11 @@ function renderMsgs(){
       '</div>'+
     '</div>'+
     (list.length ? list.map(function(m){
+      var srcLabel = m.source === 'ai-chat' ? 'AI chat' : (m.source === 'contact-form' ? 'Aloqa formasi' : '');
       return '<div class="msg-card'+(m.is_read?'':' unread')+'" data-id="'+esc(m.id)+'">'+
         '<div class="msg-card__h"><b>'+esc(m.name)+(m.company?' · '+esc(m.company):'')+'</b>'+
           '<div class="msg-card__acts">'+
+            (srcLabel?'<span style="font-size:.72rem; font-weight:700; color:var(--mute); background:var(--hair); border-radius:999px; padding:.2rem .6rem; margin-right:.4rem">'+esc(srcLabel)+'</span>':'')+
             (m.is_read?'':'<button type="button" data-read="'+esc(m.id)+'" title="O‘qilgan qilish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></button>')+
             '<button type="button" class="danger" data-del="'+esc(m.id)+'" title="O‘chirish"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>'+
           '</div>'+
@@ -1690,8 +1742,7 @@ function renderMsgs(){
         '</div>'+
         (m.message?'<p>'+esc(m.message)+'</p>':'')+
       '</div>';
-    }).join('') : '<div class="panel-box"><h3>So‘rov yo‘q</h3><p class="d" style="margin-bottom:0">Saytdagi contact formadan kelgan arizalar shu yerga tushadi.</p></div>')
-  );
+    }).join('') : '<div class="panel-box"><h3>So‘rov yo‘q</h3><p class="d" style="margin-bottom:0">Saytdagi contact formadan va AI chatdan kelgan arizalar shu yerga tushadi.</p></div>');
 }
 
 function updateMsgBadge(){
@@ -1705,15 +1756,19 @@ function updateMsgBadge(){
 function wireMsgs(){
   document.querySelectorAll('[data-read]').forEach(function(btn){
     btn.addEventListener('click', function(){
-      window.Store.markMessageRead(btn.getAttribute('data-read'));
+      var id = btn.getAttribute('data-read');
+      window.Store.markMessageRead(id);
+      remoteLeadAction('PATCH', id, { is_read: true }).then(function(){ fetchRemoteLeads(function(){ updateMsgBadge(); render(); }); });
       updateMsgBadge();
       render();
     });
   });
   document.querySelectorAll('[data-del]').forEach(function(btn){
     btn.addEventListener('click', function(){
+      var id = btn.getAttribute('data-del');
       confirmDialog("So‘rovni o‘chirish", "Bu ariza butunlay o‘chiriladi.", function(){
-        window.Store.deleteMessage(btn.getAttribute('data-del'));
+        window.Store.deleteMessage(id);
+        remoteLeadAction('DELETE', id).then(function(){ fetchRemoteLeads(function(){ updateMsgBadge(); render(); }); });
         updateMsgBadge();
         toast("So‘rov o‘chirildi.");
         render();
@@ -1723,6 +1778,30 @@ function wireMsgs(){
   var allReadBtn = document.getElementById('m_allread');
   if (allReadBtn) allReadBtn.addEventListener('click', function(){
     window.Store.markAllMessagesRead();
+    (REMOTE_LEADS || []).forEach(function (m) { if (!m.is_read) remoteLeadAction('PATCH', m.id, { is_read: true }); });
+    setTimeout(function(){ fetchRemoteLeads(function(){ updateMsgBadge(); render(); }); }, 400);
+    updateMsgBadge();
+    render();
+  });
+  var keySaveBtn = document.getElementById('m_keySave');
+  if (keySaveBtn) keySaveBtn.addEventListener('click', function(){
+    var v = (document.getElementById('m_key').value || '').trim();
+    if (!v) { toast('Kalitni kiriting.', 'err'); return; }
+    setAdminApiKey(v);
+    fetchRemoteLeads(function(){
+      updateMsgBadge();
+      render();
+      toast(REMOTE_LEADS_ERR ? REMOTE_LEADS_ERR : 'Masofaviy ombor ulandi.', REMOTE_LEADS_ERR ? 'err' : undefined);
+    });
+  });
+  var keyRefreshBtn = document.getElementById('m_keyRefresh');
+  if (keyRefreshBtn) keyRefreshBtn.addEventListener('click', function(){
+    fetchRemoteLeads(function(){ updateMsgBadge(); render(); toast('Yangilandi.'); });
+  });
+  var keyForgetBtn = document.getElementById('m_keyForget');
+  if (keyForgetBtn) keyForgetBtn.addEventListener('click', function(){
+    setAdminApiKey('');
+    REMOTE_LEADS = null; REMOTE_LEADS_ERR = null;
     updateMsgBadge();
     render();
   });
@@ -1768,6 +1847,10 @@ function boot(){
   updateLiveStatus();
   updateMsgBadge();
   setTab('dash');
+  fetchRemoteLeads(function () {
+    updateMsgBadge();
+    if (currentTab === 'msgs') render();
+  });
 }
 
 window.__SLADUS_ADMIN_BOOTED__ = true;
