@@ -62,13 +62,25 @@ window.SladusChat = (function () {
       var seed = window.SLADUS_SEED;
       if (!seed || !seed.products || !text) return [];
       var up = text.toUpperCase(), found = [], seen = {};
-      seed.products.forEach(function (p) {
-        if (seen[p.id] || !p.name) return;
-        var key = p.name.toUpperCase().replace(/^SLADUS\s+/, '').trim();
-        if (key.length < 3) return;
-        var esc = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        if (new RegExp('\\b' + esc + '\\b').test(up)) { seen[p.id] = 1; found.push(p); }
-      });
+
+      function tryPass(keyFn) {
+        seed.products.forEach(function (p) {
+          if (seen[p.id] || !p.name) return;
+          var key = keyFn(p.name.toUpperCase()).trim();
+          if (key.length < 3) return;
+          var esc = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          if (new RegExp('\\b' + esc + '\\b').test(up)) { seen[p.id] = 1; found.push(p); }
+        });
+      }
+
+      /* 1-bosqich: to‘liq nomi bilan moslashtirish (masalan "RONDA HRUST"
+         butunligicha topilsa, shunga ustunlik beriladi — faqat "HRUST"
+         so‘ziga qarab oddiy mahsulotlar bilan aralashib ketmasligi uchun) */
+      tryPass(function (n) { return n; });
+      /* 2-bosqich: hech narsa topilmasa, "SLADUS" prefiksisiz qisqa nom
+         bilan ham urinib ko‘riladi (masalan faqat "HRUST" deyilgan bo‘lsa) */
+      if (!found.length) tryPass(function (n) { return n.replace(/^SLADUS\s+/, ''); });
+
       return found.slice(0, 3);
     }
 
