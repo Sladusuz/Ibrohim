@@ -268,8 +268,7 @@
     var C = B.company, P = DATA.products, years = new Date().getFullYear() - C.founded;
 
     $('#hero').innerHTML =
-      '<div class="hero__bg"><video autoplay muted loop playsinline poster="' + C.photo1 + '">' +
-        '<source src="' + C.video + '" type="video/mp4"></video></div>' +
+      '<div class="hero__bg"><img src="' + C.photo1 + '" alt="" loading="eager"></div>' +
       '<div class="wrap hero__in">' +
         '<span class="hero__tag"><span>' + e(t('hero.badgetxt')) + '</span><b>' + e(t('hero.badge')) + '</b></span>' +
         '<h1>' + e(t('hero.t1')) + ' <em>' + e(t('hero.t2')) + '</em></h1>' +
