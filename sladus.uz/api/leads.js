@@ -5,18 +5,39 @@
    PATCH /api/leads  — { id, is_read:true } — o‘qilgan deb belgilash, faqat key bilan
    DELETE /api/leads — { id } — o‘chirish, faqat key bilan
 
-   Vercel KV (Storage → KV) loyihaga ulanganda kerakli muhit o‘zgaruvchilari
-   (KV_REST_API_URL, KV_REST_API_TOKEN va h.k.) avtomatik qo‘shiladi.
+   Vercel loyihasiga Storage → Postgres (Neon) ulanganda kerakli muhit
+   o‘zgaruvchisi (DATABASE_URL yoki POSTGRES_URL) avtomatik qo‘shiladi.
    ADMIN_API_KEY — admin panel uchun o‘zingiz o‘ylab topgan parol, Environment
    Variables bo‘limiga qo‘lda qo‘shiladi.
    ============================================================ */
 'use strict';
 
-var kv = null;
-try { kv = require('@vercel/kv').kv; } catch (e) { kv = null; }
+var neonMod = null;
+try { neonMod = require('@neondatabase/serverless'); } catch (e) { neonMod = null; }
 
-var LIST_KEY = 'sladus:leads';
-var MAX_LEADS = 1000;
+var DB_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
+  process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_PRISMA_URL;
+
+var sql = (neonMod && DB_URL) ? neonMod.neon(DB_URL) : null;
+var tableReady = false;
+
+async function ensureTable() {
+  if (tableReady) return;
+  await sql`CREATE TABLE IF NOT EXISTS sladus_leads (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    phone TEXT,
+    email TEXT,
+    company TEXT,
+    country TEXT,
+    message TEXT,
+    source TEXT,
+    lang TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT now()
+  )`;
+  tableReady = true;
+}
 
 function cors(res) {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
@@ -42,12 +63,14 @@ function checkAdmin(req) {
 module.exports = async function handler(req, res) {
   cors(res);
 
-  if (!kv) {
+  if (!sql) {
     res.statusCode = 500;
-    return res.end(JSON.stringify({ error: 'Lidlar ombori sozlanmagan. Vercel loyihasiga Storage → KV ulanmagan.' }));
+    return res.end(JSON.stringify({ error: 'Lidlar ombori sozlanmagan. Vercel loyihasiga Storage → Postgres (Neon) ulanmagan.' }));
   }
 
   try {
+    await ensureTable();
+
     if (req.method === 'POST') {
       var body = parseBody(req);
       if (!body || !String(body.name || '').trim()) {
@@ -63,12 +86,10 @@ module.exports = async function handler(req, res) {
         country: String(body.country || '').slice(0, 80),
         message: String(body.message || body.interest || '').slice(0, 3000),
         source: String(body.source || 'contact').slice(0, 40),
-        lang: String(body.lang || '').slice(0, 5),
-        is_read: false,
-        created_at: new Date().toISOString()
+        lang: String(body.lang || '').slice(0, 5)
       };
-      await kv.lpush(LIST_KEY, JSON.stringify(lead));
-      await kv.ltrim(LIST_KEY, 0, MAX_LEADS - 1);
+      await sql`INSERT INTO sladus_leads (id, name, phone, email, company, country, message, source, lang, is_read)
+        VALUES (${lead.id}, ${lead.name}, ${lead.phone}, ${lead.email}, ${lead.company}, ${lead.country}, ${lead.message}, ${lead.source}, ${lead.lang}, false)`;
       res.statusCode = 200;
       return res.end(JSON.stringify({ ok: true, id: lead.id }));
     }
@@ -78,13 +99,10 @@ module.exports = async function handler(req, res) {
         res.statusCode = 401;
         return res.end(JSON.stringify({ error: 'Ruxsat yo‘q.' }));
       }
-      var raw = await kv.lrange(LIST_KEY, 0, MAX_LEADS - 1);
-      var leads = raw.map(function (s) {
-        if (typeof s === 'object') return s;
-        try { return JSON.parse(s); } catch (e) { return null; }
-      }).filter(Boolean);
+      var rows = await sql`SELECT id, name, phone, email, company, country, message, source, lang, is_read, created_at
+        FROM sladus_leads ORDER BY created_at DESC LIMIT 1000`;
       res.statusCode = 200;
-      return res.end(JSON.stringify({ leads: leads }));
+      return res.end(JSON.stringify({ leads: rows }));
     }
 
     if (req.method === 'PATCH' || req.method === 'DELETE') {
@@ -97,21 +115,11 @@ module.exports = async function handler(req, res) {
         res.statusCode = 400;
         return res.end(JSON.stringify({ error: 'id kerak.' }));
       }
-      var all = await kv.lrange(LIST_KEY, 0, MAX_LEADS - 1);
-      var items = all.map(function (s) {
-        if (typeof s === 'object') return s;
-        try { return JSON.parse(s); } catch (e) { return null; }
-      }).filter(Boolean);
 
       if (req.method === 'PATCH') {
-        items.forEach(function (it) { if (it.id === pbody.id) it.is_read = !!pbody.is_read; });
+        await sql`UPDATE sladus_leads SET is_read = ${!!pbody.is_read} WHERE id = ${pbody.id}`;
       } else {
-        items = items.filter(function (it) { return it.id !== pbody.id; });
-      }
-
-      await kv.del(LIST_KEY);
-      if (items.length) {
-        await kv.rpush.apply(kv, [LIST_KEY].concat(items.slice().reverse().map(function (it) { return JSON.stringify(it); })));
+        await sql`DELETE FROM sladus_leads WHERE id = ${pbody.id}`;
       }
       res.statusCode = 200;
       return res.end(JSON.stringify({ ok: true }));

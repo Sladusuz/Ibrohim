@@ -5,11 +5,32 @@
    ============================================================ */
 'use strict';
 
-var kv = null;
-try { kv = require('@vercel/kv').kv; } catch (e) { kv = null; }
+var neonMod = null;
+try { neonMod = require('@neondatabase/serverless'); } catch (e) { neonMod = null; }
 
-var LIST_KEY = 'sladus:leads';
-var MAX_LEADS = 1000;
+var DB_URL = process.env.DATABASE_URL || process.env.POSTGRES_URL ||
+  process.env.POSTGRES_URL_NON_POOLING || process.env.POSTGRES_PRISMA_URL;
+
+var sql = (neonMod && DB_URL) ? neonMod.neon(DB_URL) : null;
+var tableReady = false;
+
+async function ensureTable() {
+  if (tableReady) return;
+  await sql`CREATE TABLE IF NOT EXISTS sladus_leads (
+    id TEXT PRIMARY KEY,
+    name TEXT,
+    phone TEXT,
+    email TEXT,
+    company TEXT,
+    country TEXT,
+    message TEXT,
+    source TEXT,
+    lang TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMPTZ DEFAULT now()
+  )`;
+  tableReady = true;
+}
 
 function makeId() {
   return 'l' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -24,11 +45,13 @@ function checkAdmin(event) {
 exports.handler = async function (event) {
   var headers = { 'Content-Type': 'application/json; charset=utf-8' };
 
-  if (!kv) {
-    return { statusCode: 500, headers: headers, body: JSON.stringify({ error: 'Lidlar ombori sozlanmagan. Netlify loyihasiga KV ulanmagan.' }) };
+  if (!sql) {
+    return { statusCode: 500, headers: headers, body: JSON.stringify({ error: 'Lidlar ombori sozlanmagan. Postgres (Neon) ulanmagan.' }) };
   }
 
   try {
+    await ensureTable();
+
     if (event.httpMethod === 'POST') {
       var body;
       try { body = JSON.parse(event.body || '{}'); } catch (e) { body = null; }
@@ -44,12 +67,10 @@ exports.handler = async function (event) {
         country: String(body.country || '').slice(0, 80),
         message: String(body.message || body.interest || '').slice(0, 3000),
         source: String(body.source || 'contact').slice(0, 40),
-        lang: String(body.lang || '').slice(0, 5),
-        is_read: false,
-        created_at: new Date().toISOString()
+        lang: String(body.lang || '').slice(0, 5)
       };
-      await kv.lpush(LIST_KEY, JSON.stringify(lead));
-      await kv.ltrim(LIST_KEY, 0, MAX_LEADS - 1);
+      await sql`INSERT INTO sladus_leads (id, name, phone, email, company, country, message, source, lang, is_read)
+        VALUES (${lead.id}, ${lead.name}, ${lead.phone}, ${lead.email}, ${lead.company}, ${lead.country}, ${lead.message}, ${lead.source}, ${lead.lang}, false)`;
       return { statusCode: 200, headers: headers, body: JSON.stringify({ ok: true, id: lead.id }) };
     }
 
@@ -57,12 +78,9 @@ exports.handler = async function (event) {
       if (!checkAdmin(event)) {
         return { statusCode: 401, headers: headers, body: JSON.stringify({ error: 'Ruxsat yo‘q.' }) };
       }
-      var raw = await kv.lrange(LIST_KEY, 0, MAX_LEADS - 1);
-      var leads = raw.map(function (s) {
-        if (typeof s === 'object') return s;
-        try { return JSON.parse(s); } catch (e) { return null; }
-      }).filter(Boolean);
-      return { statusCode: 200, headers: headers, body: JSON.stringify({ leads: leads }) };
+      var rows = await sql`SELECT id, name, phone, email, company, country, message, source, lang, is_read, created_at
+        FROM sladus_leads ORDER BY created_at DESC LIMIT 1000`;
+      return { statusCode: 200, headers: headers, body: JSON.stringify({ leads: rows }) };
     }
 
     if (event.httpMethod === 'PATCH' || event.httpMethod === 'DELETE') {
@@ -74,21 +92,11 @@ exports.handler = async function (event) {
       if (!pbody.id) {
         return { statusCode: 400, headers: headers, body: JSON.stringify({ error: 'id kerak.' }) };
       }
-      var all = await kv.lrange(LIST_KEY, 0, MAX_LEADS - 1);
-      var items = all.map(function (s) {
-        if (typeof s === 'object') return s;
-        try { return JSON.parse(s); } catch (e) { return null; }
-      }).filter(Boolean);
 
       if (event.httpMethod === 'PATCH') {
-        items.forEach(function (it) { if (it.id === pbody.id) it.is_read = !!pbody.is_read; });
+        await sql`UPDATE sladus_leads SET is_read = ${!!pbody.is_read} WHERE id = ${pbody.id}`;
       } else {
-        items = items.filter(function (it) { return it.id !== pbody.id; });
-      }
-
-      await kv.del(LIST_KEY);
-      if (items.length) {
-        await kv.rpush.apply(kv, [LIST_KEY].concat(items.slice().reverse().map(function (it) { return JSON.stringify(it); })));
+        await sql`DELETE FROM sladus_leads WHERE id = ${pbody.id}`;
       }
       return { statusCode: 200, headers: headers, body: JSON.stringify({ ok: true }) };
     }
