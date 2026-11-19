@@ -58,7 +58,7 @@
   border: 1px solid var(--hair); border-radius: var(--r-l); background: #fff;
   display: flex; flex-direction: column; overflow: hidden;
   box-shadow: var(--lift); position: sticky; top: 1.5rem;
-  height: min(640px, 78vh);
+  height: min(760px, 86vh);
 }
 .chatw__h {
   display: flex; align-items: center; gap: .7rem;
@@ -110,5 +110,5 @@
 .chatw__prod img { width: 38px; height: 38px; border-radius: var(--r-s); object-fit: cover; flex-shrink: 0; background: #fff; }
 
 @media (max-width: 900px) {
-  .chatw { position: static; height: min(560px, 68dvh); }
+  .chatw { position: static; height: min(680px, 80dvh); }
 }
