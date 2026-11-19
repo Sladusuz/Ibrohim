@@ -27,7 +27,6 @@ window.SladusChat = (function () {
           '<div><h3>' + e(t('support.chat.title')) + '</h3><p>' + e(t('support.chat.sub')) + '</p></div>' +
         '</div>' +
         '<div class="chatw__body" id="chatBody"></div>' +
-        '<p class="chatw__disc">' + e(t('support.chat.disclaimer')) + '</p>' +
         '<form class="chatw__f" id="chatForm">' +
           '<input type="text" id="chatInput" maxlength="' + MAX_LEN + '" autocomplete="off" placeholder="' + e(t('support.chat.placeholder')) + '">' +
           '<button type="submit" aria-label="' + e(t('support.chat.placeholder')) + '">' +
